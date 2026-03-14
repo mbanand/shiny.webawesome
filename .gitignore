@@ -1,0 +1,27 @@
+# R session and workspace artifacts
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+
+# RStudio / Posit local state
+.Rproj.user/
+
+# Local Codex state
+.codex/
+
+# Build artifacts
+build/*
+report/*
+
+# Local working areas
+journals/
+scratch/
+scripts/
+
+# Downloaded upstream files
+vendor/*
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
