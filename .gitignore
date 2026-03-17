@@ -3,6 +3,9 @@
 .Rapp.history
 .RData
 .Ruserdata
+.Renviron
+*.Rcheck/
+shiny.webawesome_*.tar.gz
 
 # RStudio / Posit local state
 .Rproj.user/
@@ -11,7 +14,7 @@
 .codex/
 
 # Build artifacts
-build/*
+manifests/*
 report/*
 
 # Local working areas

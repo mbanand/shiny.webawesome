@@ -180,7 +180,7 @@ between upstream Web Awesome components and the generated package.
 These manifests are written to:
 
 ```text
-build/manifests/
+manifests/
 ```
 
 Examples include:
@@ -369,7 +369,6 @@ clean → fetch → prune → generate → test → report
 
 Generated artifacts, manifests, and reports should be treated as deterministic
 outputs of the build system.
-
 
 
 

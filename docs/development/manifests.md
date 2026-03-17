@@ -50,7 +50,7 @@ The repository separates **policy inputs**, **generated manifests**, and
 dev/manifests/
     component-coverage.policy.yaml
 
-build/manifests/
+manifests/
     generated-file-manifest.yaml
     component-coverage.yaml
     component-api-conformance.yaml
@@ -66,7 +66,7 @@ report/
 
 Human-maintained policy inputs used by the build process.
 
-### build/manifests/
+### manifests/
 
 Generated structured artifacts describing the package state.
 
@@ -82,7 +82,7 @@ Reports summarize coverage and conformance results for developers and CI.
 
 ## Reproducibility
 
-The `build/` and `report/` directories are fully regenerable.
+The `manifests/` and `report/` directories are fully regenerable.
 
 Running the build pipeline will recreate all manifest and report artifacts from
 upstream metadata and repository policy inputs.
@@ -116,7 +116,7 @@ During generation, the build system merges:
 to produce the final manifest written to:
 
 ```text
-build/manifests/
+manifests/
 ```
 
 Policy files contain **only human decisions**, while generated manifests contain

@@ -29,7 +29,7 @@ each implemented component.
 Coverage data is stored in:
 
 ```text
-build/manifests/component-coverage.yaml
+manifests/component-coverage.yaml
 ```
 
 Each entry corresponds to a single upstream component defined in
@@ -235,5 +235,4 @@ Typical values include:
 
 These statuses allow the report stage to clearly describe the current level of
 package support for upstream components.
-
 

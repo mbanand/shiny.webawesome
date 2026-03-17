@@ -44,7 +44,7 @@ max-options-visible → max_options_visible
 
 ---
 
-# Manifest Source of Truth
+# Component Metadata Source of Truth
 
 ## Decision
 
@@ -71,7 +71,7 @@ Using this file allows the package to automatically generate wrappers and remain
 inst/extdata/webawesome/
 ```
 
-* The manifest is used only during generation and is **not served to browsers**.
+* The component metadata is used only during generation and is **not served to browsers**.
 
 ---
 
@@ -382,6 +382,5 @@ The architectural decisions for `shiny.webawesome` emphasize:
 * robust automated testing
 
 These principles guide the implementation of the package and should remain stable as the project evolves.
-
 
 

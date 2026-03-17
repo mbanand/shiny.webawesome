@@ -191,7 +191,7 @@ Pruning decisions remain explicit in the pruning script.
 
 The generate step converts Web Awesome metadata into R code and Shiny bindings.
 
-The generator reads metadata from:
+The generator reads component metadata from:
 
 ```text
 inst/extdata/webawesome/custom-elements.json
@@ -209,7 +209,7 @@ The generator performs several tasks.
 
 ## Component Schema Construction
 
-The manifest metadata is converted into an intermediate **component schema** that describes:
+The component metadata is converted into an intermediate **component schema** that describes:
 
 * component names
 * attributes
@@ -410,7 +410,7 @@ The report stage produces both **machine-readable manifests** and
 Structured manifests are written to:
 
 ```text
-build/manifests/
+manifests/
 ```
 
 Manifests are generated from:
@@ -504,5 +504,3 @@ The pipeline:
 * generates reports
 
 By following this pipeline, the entire package can be rebuilt automatically from upstream metadata.
-
-

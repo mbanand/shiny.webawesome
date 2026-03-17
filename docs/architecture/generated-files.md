@@ -25,8 +25,8 @@ The following directories contain generated files:
 - `R/generated/`
 - `R/generated_updates/`
 - `inst/bindings/`
-- `build/`
-- `report`
+- `manifests/`
+- `report/`
 
 These files should not be edited directly.
 
@@ -99,7 +99,7 @@ generated package.
 These manifests are written to:
 
 ```text
-build/manifests/
+manifests/
 ```
 
 They are used by the reporting stage of the build pipeline to evaluate upstream

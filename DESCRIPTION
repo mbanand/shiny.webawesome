@@ -1,0 +1,13 @@
+Package: shiny.webawesome
+Title: Shiny Bindings for Web Awesome Components
+Version: 0.1.0
+Authors@R: 
+    person("M. B.", "Anand", , "anand@owlcyberlabs.com", role = c("aut", "cre"))
+Description: Provides an R and Shiny interface to the Web Awesome component
+    library. The package is generator-driven, exposing Web Awesome web
+    components as R functions that produce HTML tags and integrate with
+    Shiny's reactive model.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3

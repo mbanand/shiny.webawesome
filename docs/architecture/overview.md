@@ -115,7 +115,7 @@ The architecture pipeline is:
 ```
 Web Awesome dist
 → prune runtime assets
-→ extract manifest
+→ extract component metadata
 → build component schema
 → generate wrappers and bindings
 → run inside Shiny
@@ -173,7 +173,7 @@ This file is used by the code generator but is not served to browsers.
 
 # Component Metadata and Schema
 
-The Web Awesome manifest (`custom-elements.json`) is parsed to produce an intermediate **component schema**.
+The Web Awesome component metadata file (`custom-elements.json`) is parsed to produce an intermediate **component schema**.
 
 The schema normalizes Web Component metadata into a format suitable for R code generation.
 
@@ -340,7 +340,7 @@ These manifests serve as the foundation for coverage and conformance analysis.
 They are generated during the build process and written to:
 
 ```text
-build/manifests/
+manifests/
 ```
 
 Examples include:
@@ -365,7 +365,7 @@ This separation ensures that:
 - **manifests** capture structured information about the generated system
 - **reporting** evaluates and summarizes coverage and conformance
 
-Both the `build/` and `report/` directories are fully regenerable and are not
+Both the `manifests/` and `report/` directories are fully regenerable and are not
 bundled with the package itself.
 
 ---
@@ -382,6 +382,4 @@ The `shiny.webawesome` architecture combines:
 * a mechanism for generating manifests and reports of the build
 
 This design ensures that the R interface remains synchronized with Web Awesome while maintaining a small and maintainable package.
-
-
 
