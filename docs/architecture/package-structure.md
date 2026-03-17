@@ -222,6 +222,8 @@ inst/extdata/webawesome/
 This metadata is used by the code generator.
 
 It is **not served to browsers** and is only used during code generation.
+It is kept in the repository as build input and excluded from the built
+package via `.Rbuildignore`.
 
 ---
 
@@ -442,6 +444,7 @@ report/
 journals/
 scratch/
 scripts/
+inst/extdata/
 ```
 
 Top-level repository-only files may also be excluded when they are not part of
@@ -464,7 +467,7 @@ The repository structure separates responsibilities clearly:
 * `R/generated` contains generated wrappers
 * `R/generated_updates` contains generated update functions
 * `inst/www/webawesome` contains runtime assets
-* `inst/extdata/webawesome` contains metadata for code generation
+* `inst/extdata/webawesome` contains build-time metadata for code generation and is excluded from the built package
 * `inst/bindings` contains Shiny input bindings
 * `tests/testthat` contains automated tests
 * `tools` contains build scripts

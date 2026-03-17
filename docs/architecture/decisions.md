@@ -71,7 +71,7 @@ Using this file allows the package to automatically generate wrappers and remain
 inst/extdata/webawesome/
 ```
 
-* The component metadata is used only during generation and is **not served to browsers**.
+* The component metadata is used only during generation, is **not served to browsers**, and is excluded from the built package via `.Rbuildignore`.
 
 ---
 
@@ -382,5 +382,4 @@ The architectural decisions for `shiny.webawesome` emphasize:
 * robust automated testing
 
 These principles guide the implementation of the package and should remain stable as the project evolves.
-
 

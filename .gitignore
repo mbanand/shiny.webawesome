@@ -14,8 +14,13 @@ shiny.webawesome_*.tar.gz
 .codex/
 
 # Build artifacts
-manifests/*
-report/*
+R/generated/
+R/generated_updates/
+inst/bindings/
+inst/extdata/webawesome/
+inst/www/webawesome/
+manifests/
+report/
 
 # Local working areas
 journals/
@@ -23,7 +28,7 @@ scratch/
 scripts/
 
 # Downloaded upstream files
-vendor/*
+vendor/webawesome/
 
 # OS / editor noise
 .DS_Store

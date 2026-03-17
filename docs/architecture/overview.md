@@ -168,6 +168,8 @@ inst/extdata/webawesome/
 ```
 
 This file is used by the code generator but is not served to browsers.
+It is retained in the repository as build input and excluded from the built
+package via `.Rbuildignore`.
 
 ---
 
@@ -382,4 +384,3 @@ The `shiny.webawesome` architecture combines:
 * a mechanism for generating manifests and reports of the build
 
 This design ensures that the R interface remains synchronized with Web Awesome while maintaining a small and maintainable package.
-

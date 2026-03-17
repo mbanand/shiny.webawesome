@@ -69,6 +69,8 @@ R/generated/
 R/generated_updates/
 inst/bindings/
 inst/www/webawesome/
+manifests/
+report/
 ```
 ---
 
@@ -76,12 +78,13 @@ inst/www/webawesome/
 
 Performs a deeper cleanup.
 
-In addition to the normal clean operations, it also removes the cached upstream Web Awesome distribution.
+In addition to the normal clean operations, it also removes the cached upstream Web Awesome distribution and build-only metadata copies.
 
 Example directory removed:
 
 ```text
 vendor/webawesome/
+inst/extdata/webawesome/
 ```
 
 Distclean is useful when rebuilding the package from a fresh upstream download.
@@ -196,6 +199,9 @@ The generator reads component metadata from:
 ```text
 inst/extdata/webawesome/custom-elements.json
 ```
+
+This metadata copy is retained in the repository for generation but excluded
+from the built package via `.Rbuildignore`.
 
 The generator is implemented as:
 

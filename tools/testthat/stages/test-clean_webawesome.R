@@ -1,0 +1,122 @@
+source(file.path("..", "..", "clean_webawesome.R"))
+
+write_file <- function(path, lines = "x") {
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  writeLines(lines, path)
+}
+
+create_fake_repo <- function(root) {
+  dir.create(file.path(root, "docs"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
+  write_file(file.path(root, "DESCRIPTION"), "Package: fake")
+}
+
+testthat::test_that(
+  "clean removes generated output directories entirely",
+  {
+    root <- withr::local_tempdir()
+    create_fake_repo(root)
+
+    dir.create(file.path(root, "R", "generated"), recursive = TRUE)
+    dir.create(file.path(root, "R", "generated_updates"), recursive = TRUE)
+    dir.create(file.path(root, "inst", "bindings"), recursive = TRUE)
+    dir.create(file.path(root, "inst", "www", "webawesome"), recursive = TRUE)
+    dir.create(file.path(root, "manifests"), recursive = TRUE)
+    dir.create(file.path(root, "report"), recursive = TRUE)
+
+    write_file(file.path(root, "R", "generated", "wa_button.R"))
+    write_file(file.path(root, "R", "generated_updates", "update_wa_button.R"))
+    write_file(file.path(root, "inst", "bindings", "wa-button.js"))
+    write_file(file.path(root, "inst", "www", "webawesome", "loader.js"))
+    write_file(file.path(root, "manifests", "component-coverage.yaml"))
+    write_file(file.path(root, "report", "summary.md"))
+
+    result <- clean_webawesome(root = root, verbose = FALSE)
+
+    testthat::expect_false(dir.exists(file.path(root, "R", "generated")))
+    testthat::expect_false(
+      dir.exists(file.path(root, "R", "generated_updates"))
+    )
+    testthat::expect_false(dir.exists(file.path(root, "inst", "bindings")))
+    testthat::expect_false(
+      dir.exists(file.path(root, "inst", "www", "webawesome"))
+    )
+    testthat::expect_false(dir.exists(file.path(root, "manifests")))
+    testthat::expect_false(dir.exists(file.path(root, "report")))
+
+    testthat::expect_equal(result$level, "clean")
+    testthat::expect_setequal(
+      result$removed,
+      c(
+        "R/generated",
+        "R/generated_updates",
+        "inst/bindings",
+        "inst/www/webawesome",
+        "manifests",
+        "report"
+      )
+    )
+  }
+)
+
+testthat::test_that("distclean also removes vendor and extdata metadata", {
+  root <- withr::local_tempdir()
+  create_fake_repo(root)
+
+  dir.create(file.path(root, "manifests"), recursive = TRUE)
+  dir.create(file.path(root, "report"), recursive = TRUE)
+  dir.create(file.path(root, "vendor", "webawesome"), recursive = TRUE)
+  dir.create(file.path(root, "inst", "extdata", "webawesome"), recursive = TRUE)
+
+  write_file(file.path(root, "vendor", "webawesome", "VERSION"))
+  write_file(file.path(root, "inst", "extdata", "webawesome", "custom-elements.json"))
+
+  result <- clean_webawesome(level = "distclean", root = root, verbose = FALSE)
+
+  testthat::expect_false(dir.exists(file.path(root, "vendor", "webawesome")))
+  testthat::expect_false(
+    dir.exists(file.path(root, "inst", "extdata", "webawesome"))
+  )
+  testthat::expect_true("vendor/webawesome" %in% result$removed)
+  testthat::expect_true("inst/extdata/webawesome" %in% result$removed)
+})
+
+testthat::test_that("dry run reports actions without deleting anything", {
+  root <- withr::local_tempdir()
+  create_fake_repo(root)
+
+  dir.create(file.path(root, "R", "generated"), recursive = TRUE)
+  dir.create(file.path(root, "manifests"), recursive = TRUE)
+  write_file(file.path(root, "R", "generated", "wa_button.R"))
+  write_file(file.path(root, "manifests", "component-coverage.yaml"))
+
+  result <- clean_webawesome(root = root, dry_run = TRUE, verbose = FALSE)
+
+  testthat::expect_true(dir.exists(file.path(root, "R", "generated")))
+  testthat::expect_true(
+    file.exists(file.path(root, "manifests", "component-coverage.yaml"))
+  )
+  testthat::expect_true(result$dry_run)
+  testthat::expect_true("R/generated" %in% result$removed)
+  testthat::expect_true("manifests" %in% result$removed)
+})
+
+testthat::test_that("missing targets are tolerated and reported", {
+  root <- withr::local_tempdir()
+  create_fake_repo(root)
+
+  result <- clean_webawesome(root = root, verbose = FALSE)
+
+  testthat::expect_length(result$removed, 0L)
+  testthat::expect_true("R/generated" %in% result$missing)
+  testthat::expect_true("manifests" %in% result$missing)
+})
+
+testthat::test_that("root validation rejects non-repository directories", {
+  root <- withr::local_tempdir()
+
+  testthat::expect_error(
+    clean_webawesome(root = root, verbose = FALSE),
+    "`root` does not appear to be the repository root."
+  )
+})
