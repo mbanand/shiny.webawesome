@@ -18,9 +18,15 @@ create_fake_repo <- function(root) {
     winslash = "/",
     mustWork = TRUE
   )
+  source_cli <- normalizePath(
+    file.path("..", "..", "cli_ui.R"),
+    winslash = "/",
+    mustWork = TRUE
+  )
 
   file.copy(source_runner, file.path(root, "tools", "runners", "clean.R"))
   file.copy(source_stage, file.path(root, "tools", "clean_webawesome.R"))
+  file.copy(source_cli, file.path(root, "tools", "cli_ui.R"))
 }
 
 run_clean_runner <- function(root, args = character()) {
@@ -89,6 +95,18 @@ testthat::test_that("runner supports quiet mode", {
 
   testthat::expect_equal(result$status, 0)
   testthat::expect_match(result$stderr, "Clean complete: level=clean")
+})
+
+testthat::test_that("runner prints help", {
+  root <- withr::local_tempdir()
+  create_fake_repo(root)
+
+  result <- run_clean_runner(root, "--help")
+
+  testthat::expect_equal(result$status, 0)
+  testthat::expect_match(result$stdout, "Usage: Rscript tools/runners/clean.R")
+  testthat::expect_match(result$stdout, "Options:")
+  testthat::expect_match(result$stdout, "--dry-run")
 })
 
 testthat::test_that("runner rejects unknown arguments", {

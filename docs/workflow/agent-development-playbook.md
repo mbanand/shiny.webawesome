@@ -144,6 +144,40 @@ Internal handwritten functions should have either roxygen2-style comments or cle
 
 Generated exported functions should have generated roxygen docs if they are part of the package API.
 
+Handwritten build-tool entry points under `tools/` and `tools/runners/` should
+also use roxygen2-style documentation. Tool documentation is generated
+separately from package documentation; use `document_tools()` to regenerate the
+artifacts written to `tools/man/`. Tool roxygen blocks should strongly prefer
+ASCII-only text. (The current `document`-based workflow emits a benign warning
+about missing `Encoding: UTF-8` in its temporary fake package; with ASCII-only
+tool docs, this does not affect the generated output.)
+
+Handwritten tooling code is organized by role:
+
+- `tools/` for top-level tool entry points and reusable tool scripts
+- `tools/runners/` for thin CLI runners around stage functions
+- `tools/testthat/stages/` for reusable stage implementation tests
+- `tools/testthat/runners/` for thin runner tests
+- `tools/testthat/tools/` for top-level tool script tests
+- `tools/man/` for generated tool documentation artifacts; this directory is
+  generated and should not be kept as source in git
+
+CLI entry-point scripts should include a shebang, support direct execution from
+the repository root (for example `./tools/test_tools.R`), and be tracked in git
+with executable mode.
+Unless a script explicitly documents otherwise, CLI tooling should be invoked
+from the repository root.
+Direct execution is preferred for CLI entry points, but `Rscript path/to/script.R`
+should remain a supported invocation style as well.
+
+Top-level orchestration should remain explicit:
+
+- `test_tools.R` runs the tool test suite
+- `document_tools.R` regenerates tool documentation
+- `build_tools.R` orchestrates the top-level tool workflow
+- `build_package.R` runs `build_tools.R` first, then executes the currently
+  available package-build step scripts
+
 ---
 
 # Running Validation
@@ -153,6 +187,12 @@ Generated exported functions should have generated roxygen docs if they are part
 Handwritten R code should follow the Tidyverse style guide, available at https://style.tidyverse.org. 
 
 Use `{styler}` for formatting and `{lintr}` for style checks where applicable.
+
+For handwritten R files, including build-stage scripts under `tools/` and CLI
+runners under `tools/runners/`, prefer a small external surface per file.
+Typically a file should expose one main entry point, or at most a small number
+of intentionally external functions. Internal helpers should typically start
+with a leading underscore, for example `_parse_metadata()`.
 
 Agents should verify handwritten scripts that they can load cleanly, then run them, check output, and verify that they produce the expected artifacts. 
 
@@ -327,4 +367,3 @@ When working on this repository, agents should:
 - update documentation when architecture changes occur
 - prefer small, well-scoped tasks
 - make safe progress when possible but do not invent architecture
-
