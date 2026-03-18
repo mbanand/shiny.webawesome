@@ -106,8 +106,9 @@ tools/fetch_webawesome.R
 Typical responsibilities include:
 
 * downloading Web Awesome via npm
-* extracting the distribution
-* copying the upstream `dist` directory
+* using the version pinned in `dev/webawesome-version.txt` by default, unless a version override is supplied
+* extracting the fetched npm package in a temporary working directory
+* copying only the upstream `dist` directory into the repository
 * recording the upstream version
 
 The upstream files are stored in:
@@ -120,11 +121,23 @@ Example structure:
 
 ```text
 vendor/webawesome/
-  3.x/
+  3.0.0-beta.4/
     dist/
+    VERSION
 ```
 
-This directory contains the **unmodified upstream distribution**.
+Only the upstream `dist/` tree is retained in the repository at fetch time.
+The full downloaded npm package is treated as a temporary fetch artifact and is
+discarded after extraction.
+
+The pinned default fetch version is stored in:
+
+```text
+dev/webawesome-version.txt
+```
+
+This directory contains the fetched upstream runtime input for that specific
+version.
 
 It is used as the source for runtime pruning.
 

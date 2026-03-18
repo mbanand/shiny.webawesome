@@ -36,6 +36,7 @@ rm(`_bootstrap_cli_ui`)
     "tools/build_tools.R",
     "tools/clean_webawesome.R",
     "tools/document_tools.R",
+    "tools/fetch_webawesome.R",
     "tools/runners/clean.R",
     "tools/test_tools.R"
   )

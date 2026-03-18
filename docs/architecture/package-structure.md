@@ -422,6 +422,16 @@ Files that guide the package development and build are stored in `dev/`. These a
 
 A current example is a policy file that drives manifest and report generation (see details in `docs/development/component-coverage.md` and `docs/development/manifests.md`). Similar future mechanisms may use files that live in `dev/`.
 
+The pinned upstream Web Awesome version used by the fetch stage is stored in:
+
+```text
+dev/webawesome-version.txt
+```
+
+This file is a handwritten development input. It records the default upstream
+version that `tools/fetch_webawesome.R` should retrieve when no explicit
+version override is provided on the command line.
+
 Files generated during build that report on the build live in `manifests/` and `report/`. A current example is API coverage and conformance tracking (see details in `docs/development/component-coverage.md` and `docs/development/manifests.md`). Future additions may store other files in these directories.
 
 ---

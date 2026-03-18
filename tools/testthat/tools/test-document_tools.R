@@ -23,12 +23,24 @@ create_fake_repo <- function(root) {
     file.path(root, "tools", "document_tools.R")
   )
   file.copy(
+    normalizePath(file.path("..", "..", "build_package.R"), mustWork = TRUE),
+    file.path(root, "tools", "build_package.R")
+  )
+  file.copy(
+    normalizePath(file.path("..", "..", "build_tools.R"), mustWork = TRUE),
+    file.path(root, "tools", "build_tools.R")
+  )
+  file.copy(
     normalizePath(file.path("..", "..", "cli_ui.R"), mustWork = TRUE),
     file.path(root, "tools", "cli_ui.R")
   )
   file.copy(
     normalizePath(file.path("..", "..", "clean_webawesome.R"), mustWork = TRUE),
     file.path(root, "tools", "clean_webawesome.R")
+  )
+  file.copy(
+    normalizePath(file.path("..", "..", "fetch_webawesome.R"), mustWork = TRUE),
+    file.path(root, "tools", "fetch_webawesome.R")
   )
   file.copy(
     normalizePath(file.path("..", "..", "runners", "clean.R"), mustWork = TRUE),
@@ -62,6 +74,21 @@ testthat::test_that("document_tools generates docs into tools/man", {
   )
   testthat::expect_true(
     file.exists(file.path(root, "tools", "man", "run_clean.Rd"))
+  )
+})
+
+testthat::test_that("document_tools default file set includes fetch_webawesome", {
+  testthat::skip_if_not_installed("document")
+  withr::local_envvar(c(SHINY_WEBAWESOME_CLI_MODE = "quiet"))
+
+  root <- withr::local_tempdir()
+  create_fake_repo(root)
+
+  result <- document_tools(root = root, verbose = FALSE)
+
+  testthat::expect_true("fetch_webawesome.Rd" %in% result$generated)
+  testthat::expect_true(
+    file.exists(file.path(root, "tools", "man", "fetch_webawesome.Rd"))
   )
 })
 
