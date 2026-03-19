@@ -87,6 +87,27 @@
   )
 }
 
+.run_fetch_script_absolute <- function(root,
+                                       args = character(),
+                                       wd = tempdir()) {
+  processx::run(
+    command = normalizePath(
+      file.path(root, "tools", "fetch_webawesome.R"),
+      mustWork = TRUE
+    ),
+    args = args,
+    wd = wd,
+    echo = FALSE,
+    error_on_status = FALSE,
+    env = c(
+      SHINY_WEBAWESOME_NPM = normalizePath(
+        file.path(root, "bin", "npm"),
+        mustWork = TRUE
+      )
+    )
+  )
+}
+
 testthat::test_that("fetch tool prints help", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
@@ -142,6 +163,26 @@ testthat::test_that("fetch tool supports explicit version override", {
   testthat::expect_match(
     result$stderr,
     "Fetch complete: version=3.2.1, path=vendor/webawesome/3.2.1"
+  )
+})
+
+testthat::test_that("fetch tool supports absolute-path CLI invocation", {
+  root <- withr::local_tempdir()
+  run_dir <- withr::local_tempdir()
+  pinned_version <- .repo_pinned_version()
+  .create_fake_repo(root, version = pinned_version)
+
+  result <- .run_fetch_script_absolute(root, c("--root", root), wd = run_dir)
+
+  testthat::expect_equal(result$status, 0)
+  testthat::expect_match(
+    result$stderr,
+    paste0(
+      "Fetch complete: version=",
+      pinned_version,
+      ", path=vendor/webawesome/",
+      pinned_version
+    )
   )
 })
 

@@ -65,6 +65,21 @@
   )
 }
 
+.run_prune_script_absolute <- function(root,
+                                       args = character(),
+                                       wd = tempdir()) {
+  processx::run(
+    command = normalizePath(
+      file.path(root, "tools", "prune_webawesome.R"),
+      mustWork = TRUE
+    ),
+    args = args,
+    wd = wd,
+    echo = FALSE,
+    error_on_status = FALSE
+  )
+}
+
 testthat::test_that("prune tool prints help", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
@@ -108,6 +123,21 @@ testthat::test_that("prune tool supports explicit version override", {
   .create_fake_dist(root, version = "3.3.1")
 
   result <- .run_prune_script(root, c("--version", "3.3.1"))
+
+  testthat::expect_equal(result$status, 0)
+  testthat::expect_match(
+    result$stderr,
+    "Prune complete: version=3.3.1, runtime=inst/www/webawesome"
+  )
+})
+
+testthat::test_that("prune tool supports absolute-path CLI invocation", {
+  root <- withr::local_tempdir()
+  run_dir <- withr::local_tempdir()
+  .create_fake_repo(root)
+  .create_fake_dist(root)
+
+  result <- .run_prune_script_absolute(root, c("--root", root), wd = run_dir)
 
   testthat::expect_equal(result$status, 0)
   testthat::expect_match(

@@ -6,20 +6,35 @@
 # build-stage script. It is not package runtime code.
 
 # nolint start: object_usage_linter.
-# Source the shared CLI helpers from whichever path is available.
+# Source the shared CLI helpers relative to this script when possible.
 .bootstrap_cli_ui <- function() {
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  command_file <- if (length(file_arg) > 0L) {
+    sub("^--file=", "", tail(file_arg, 1))
+  } else {
+    ""
+  }
+
   ofiles <- vapply(
     sys.frames(),
     function(frame) if (is.null(frame$ofile)) "" else frame$ofile,
     character(1)
   )
-  current_file <- tail(ofiles[nzchar(ofiles)], 1)
-  current_dir <- if (length(current_file) == 0L) "." else dirname(current_file)
+  source_file <- tail(ofiles[nzchar(ofiles)], 1)
+  known_files <- c(command_file, source_file)
+  known_files <- known_files[nzchar(known_files)]
+  current_dir <- if (length(known_files) == 0L) {
+    "."
+  } else {
+    dirname(normalizePath(known_files[[1]], winslash = "/", mustWork = FALSE))
+  }
 
   candidates <- c(
-    file.path("tools", "cli_ui.R"),
     file.path(current_dir, "cli_ui.R"),
+    file.path(current_dir, "tools", "cli_ui.R"),
     file.path(current_dir, "..", "cli_ui.R"),
+    file.path("tools", "cli_ui.R"),
     "cli_ui.R"
   )
   existing <- unique(candidates[file.exists(candidates)])
