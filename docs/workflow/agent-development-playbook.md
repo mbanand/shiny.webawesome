@@ -140,7 +140,10 @@ Generator issues should be fixed at the source.
 
 Public/user-facing R functions must have roxygen2 documentation.
 
-Internal handwritten functions should have either roxygen2-style comments or clear inline comments as appropriate.
+Internal handwritten helpers should usually have a single concise comment line
+immediately above the function definition. Prefer comments that explain
+purpose or scope rather than restating the function name, and omit them for
+trivial helpers whose purpose is already obvious.
 
 Generated exported functions should have generated roxygen docs if they are part of the package API.
 
@@ -192,9 +195,18 @@ For handwritten R files, including build-stage scripts under `tools/` and CLI
 runners under `tools/runners/`, prefer a small external surface per file.
 Typically a file should expose one main entry point, or at most a small number
 of intentionally external functions. Internal helpers should typically start
-with a leading underscore, for example `_parse_metadata()`.
+with a leading period, for example `.parse_metadata()`. These helpers should
+usually have a single concise comment immediately above the function
+definition, unless the helper is trivial and already self-explanatory.
 
 Agents should verify handwritten scripts that they can load cleanly, then run them, check output, and verify that they produce the expected artifacts. 
+
+For handwritten code, do not defer all formatting and lint cleanup until the
+end of a long task. Run `{styler}` and `{lintr}` periodically after meaningful
+batches of edits so the diff stays reviewable and style drift is corrected
+early. For standalone tool scripts that source helpers dynamically at runtime,
+apply targeted lint suppressions only where static analysis would otherwise
+produce false positives.
 
 ---
 

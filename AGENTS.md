@@ -298,7 +298,8 @@ Agents should follow these rules:
 
 - User-facing functions must include `@export` in their roxygen2 documentation.
 - Internal helper functions should not include `@export`.
-- Internal helpers should typically start with a leading underscore (e.g. `_parse_metadata()`).
+- Internal helpers should typically start with a leading period (e.g. `.parse_metadata()`).
+- Internal helpers should usually have a single concise comment line immediately above the function definition; omit it for trivial helpers whose purpose is already obvious from the name.
 - After modifying exports, run `devtools::document()` to update the NAMESPACE.
 
 Generated wrapper functions should include roxygen2 documentation and `@export` if they are part of the package API.
@@ -369,6 +370,4 @@ clean → fetch → prune → generate → test → report
 
 Generated artifacts, manifests, and reports should be treated as deterministic
 outputs of the build system.
-
-
 

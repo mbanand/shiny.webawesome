@@ -5,7 +5,9 @@
 # This file is sourced by tests and other tool scripts. It is not package
 # runtime code.
 
-`_bootstrap_cli_ui` <- function() {
+# nolint start: object_usage_linter.
+# Source the shared CLI helpers from whichever path is available.
+.bootstrap_cli_ui <- function() {
   ofiles <- vapply(
     sys.frames(),
     function(frame) if (is.null(frame$ofile)) "" else frame$ofile,
@@ -27,10 +29,11 @@
   }
 }
 
-`_bootstrap_cli_ui`()
-rm(`_bootstrap_cli_ui`)
+.bootstrap_cli_ui()
+rm(.bootstrap_cli_ui)
 
-`_default_tool_doc_files` <- function() {
+# Return the default set of handwritten tool files to document.
+.default_tool_doc_files <- function() {
   c(
     "tools/build_package.R",
     "tools/build_tools.R",
@@ -42,34 +45,39 @@ rm(`_bootstrap_cli_ui`)
   )
 }
 
-`_is_repo_root` <- function(root) {
+# Check whether a path looks like the repository root.
+.is_repo_root <- function(root) {
   required_paths <- c("DESCRIPTION", "docs", "tools")
   all(file.exists(file.path(root, required_paths)))
 }
 
-`_strip_root_prefix` <- function(paths, root) {
+# Remove the repository root prefix from one or more absolute paths.
+.strip_root_prefix <- function(paths, root) {
   sub(paste0("^", root, "/?"), "", paths)
 }
 
-`_validate_tool_doc_files` <- function(files, root) {
+# Validate and normalize the requested tool documentation source files.
+.validate_tool_doc_files <- function(files, root) {
   normalized <- file.path(root, files)
 
   missing <- normalized[!file.exists(normalized)]
   if (length(missing) > 0L) {
     stop(
       "Tool documentation source files do not exist: ",
-      paste(`_strip_root_prefix`(missing, root), collapse = ", "),
+      paste(.strip_root_prefix(missing, root), collapse = ", "),
       call. = FALSE
     )
   }
 
-  sort(unique(`_strip_root_prefix`(
+  sort(unique(.strip_root_prefix(
     normalizePath(normalized, winslash = "/", mustWork = TRUE),
     root
   )))
 }
 
-`_list_generated_doc_files` <- function(output_dir) {
+# List generated documentation artifacts currently present in the output
+# directory.
+.list_generated_doc_files <- function(output_dir) {
   if (!dir.exists(output_dir)) {
     return(character())
   }
@@ -87,7 +95,8 @@ rm(`_bootstrap_cli_ui`)
   normalizePath(doc_files, winslash = "/", mustWork = TRUE)
 }
 
-`_copy_document_artifacts` <- function(file, output_dir, root, clean) {
+# Generate and copy documentation artifacts for one handwritten tool file.
+.copy_document_artifacts <- function(file, output_dir, root, clean) {
   temp_output_dir <- tempfile("tool-doc-")
   temp_working_dir <- tempfile("tool-doc-work-")
   dir.create(temp_output_dir, recursive = TRUE, showWarnings = FALSE)
@@ -143,7 +152,12 @@ rm(`_bootstrap_cli_ui`)
   generated <- normalizePath(generated, winslash = "/", mustWork = TRUE)
 
   if (length(generated) == 0L) {
-    stop("No documentation artifacts were generated for ", file, ".", call. = FALSE)
+    stop(
+      "No documentation artifacts were generated for ",
+      file,
+      ".",
+      call. = FALSE
+    )
   }
 
   copied_paths <- file.path(output_dir, basename(generated))
@@ -156,7 +170,8 @@ rm(`_bootstrap_cli_ui`)
   basename(copied_paths)
 }
 
-`_emit_tool_doc_summary` <- function(result) {
+# Emit a short summary for a documentation generation run.
+.emit_tool_doc_summary <- function(result) {
   if (length(result$generated) > 0L) {
     message("Generated: ", paste(result$generated, collapse = ", "))
   }
@@ -199,36 +214,39 @@ document_tools <- function(files = NULL,
                            verbose = interactive()) {
   root <- normalizePath(root, winslash = "/", mustWork = TRUE)
 
-  if (!`_is_repo_root`(root)) {
+  if (!.is_repo_root(root)) {
     stop("`root` does not appear to be the repository root.", call. = FALSE)
   }
 
   if (!requireNamespace("document", quietly = TRUE)) {
-    stop("The `document` package is required to generate tool docs.", call. = FALSE)
+    stop(
+      "The `document` package is required to generate tool docs.",
+      call. = FALSE
+    )
   }
 
   if (is.null(files)) {
-    files <- `_default_tool_doc_files`()
+    files <- .default_tool_doc_files()
   }
 
-  files <- `_validate_tool_doc_files`(files, root)
+  files <- .validate_tool_doc_files(files, root)
 
   output_dir <- file.path(root, output_dir)
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
   output_dir <- normalizePath(output_dir, winslash = "/", mustWork = TRUE)
 
-  existing_docs <- `_list_generated_doc_files`(output_dir)
+  existing_docs <- .list_generated_doc_files(output_dir)
   generated_docs <- character()
-  ui <- `_cli_ui_new`()
+  ui <- .cli_ui_new()
 
-  `_cli_step_start`(ui, "Documenting tools")
+  .cli_step_start(ui, "Documenting tools")
 
   tryCatch(
     {
       for (i in seq_along(files)) {
         file <- files[[i]]
         label <- basename(file)
-        `_cli_step_update`(
+        .cli_step_update(
           ui = ui,
           label = label,
           index = i,
@@ -236,14 +254,14 @@ document_tools <- function(files = NULL,
         )
         generated_docs <- c(
           generated_docs,
-          `_copy_document_artifacts`(
+          .copy_document_artifacts(
             file = file,
             output_dir = output_dir,
             root = root,
             clean = clean
           )
         )
-        `_cli_substep_pass`(
+        .cli_substep_pass(
           ui = ui,
           label = label,
           index = i,
@@ -266,20 +284,21 @@ document_tools <- function(files = NULL,
         removed = sort(basename(stale_docs))
       )
       if (isTRUE(verbose) && !isTRUE(ui$fancy) && FALSE) {
-        `_emit_tool_doc_summary`(result)
+        .emit_tool_doc_summary(result)
       }
 
-      `_cli_step_finish`(ui, status = "Done")
+      .cli_step_finish(ui, status = "Done")
 
       result
     },
     error = function(condition) {
-      `_cli_step_fail`(ui, details = conditionMessage(condition))
-      stop(condition)
+      .cli_step_fail(ui, details = conditionMessage(condition))
+      .cli_abort_handled(conditionMessage(condition))
     }
   )
 }
 
 if (sys.nframe() == 0L) {
-  invisible(document_tools())
+  .cli_run_main(function() invisible(document_tools()))
 }
+# nolint end

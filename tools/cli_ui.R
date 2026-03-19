@@ -3,7 +3,17 @@
 # This file is sourced by CLI entry points under tools/ and tools/runners/. It
 # is not package runtime code.
 
-`_cli_ui_new` <- function() {
+# Provide a local null-coalescing operator for tool scripts.
+`%||%` <- function(x, y) {
+  if (is.null(x)) {
+    y
+  } else {
+    x
+  }
+}
+
+# Create a CLI state container that selects plain or fancy output mode.
+.cli_ui_new <- function() {
   mode <- Sys.getenv("SHINY_WEBAWESOME_CLI_MODE", "")
   has_isatty <- exists("isatty", envir = baseenv(), inherits = FALSE)
   tty_ready <- if (has_isatty) {
@@ -29,7 +39,8 @@
   ui
 }
 
-`_cli_plain_line` <- function(label, status, status_col) {
+# Format one dotted status line for plain CLI output.
+.cli_plain_line <- function(label, status, status_col) {
   base <- paste0(label, " ")
   dots_needed <- max(
     2L,
@@ -38,17 +49,19 @@
   paste0(base, strrep(".", dots_needed), " ", status)
 }
 
-`_cli_step_line` <- function(ui, label, status) {
+# Format a full step status line using the current UI mode widths.
+.cli_step_line <- function(ui, label, status) {
   status_col <- if (isTRUE(ui$fancy)) {
     ui$fancy_step_status_col
   } else {
     ui$plain_step_status_col
   }
 
-  `_cli_plain_line`(label, status, status_col)
+  .cli_plain_line(label, status, status_col)
 }
 
-`_cli_step_start` <- function(ui, label) {
+# Start a top-level CLI step and prime the UI state for updates.
+.cli_step_start <- function(ui, label) {
   if (isTRUE(ui$quiet)) {
     return(invisible(NULL))
   }
@@ -64,7 +77,8 @@
   }
 }
 
-`_cli_step_update` <- function(ui, label, index = NULL, total = NULL) {
+# Refresh the current step with optional substep progress counters.
+.cli_step_update <- function(ui, label, index = NULL, total = NULL) {
   if (isTRUE(ui$quiet)) {
     return(invisible(NULL))
   }
@@ -83,60 +97,69 @@
   }
 }
 
-`_cli_step_finish` <- function(ui, status = "Done") {
+# Finish the current CLI step and print its final status line.
+.cli_step_finish <- function(ui, status = "Done") {
   if (isTRUE(ui$quiet)) {
     ui$has_substep <- FALSE
     ui$current_step <- NULL
     return(invisible(NULL))
   }
 
-  label <- ui$current_step %||% "Step"
+  label <- if (is.null(ui$current_step)) "Step" else ui$current_step
 
   if (isTRUE(ui$fancy)) {
     if (isTRUE(ui$has_substep)) {
       cat("\r\033[2K", sep = "")
     }
-    cat("\033[1A\r\033[2K", `_cli_step_line`(ui, label, status), "\n", sep = "")
+    cat("\033[1A\r\033[2K", .cli_step_line(ui, label, status), "\n", sep = "")
     flush.console()
   } else {
-    message(`_cli_step_line`(ui, label, status))
+    message(.cli_step_line(ui, label, status))
   }
 
   ui$has_substep <- FALSE
   ui$current_step <- NULL
 }
 
-`_cli_step_fail` <- function(ui, details = character()) {
+# Mark the current CLI step as failed and emit any supplied details.
+.cli_step_fail <- function(ui, details = character()) {
   if (isTRUE(ui$quiet)) {
     if (length(details) > 0L) {
-      cat(paste(details, collapse = "\n"), "\n", sep = "")
+      cat(paste(details, collapse = "\n"), "\n", file = stderr(), sep = "")
     }
     ui$has_substep <- FALSE
     ui$current_step <- NULL
     return(invisible(NULL))
   }
 
-  label <- ui$current_step %||% "Step"
+  label <- if (is.null(ui$current_step)) "Step" else ui$current_step
 
   if (isTRUE(ui$fancy)) {
     if (isTRUE(ui$has_substep)) {
       cat("\r\033[2K", sep = "")
     }
-    cat("\033[1A\r\033[2K", `_cli_step_line`(ui, label, "Fail"), "\n", sep = "")
+    cat("\033[1A\r\033[2K", .cli_step_line(ui, label, "Fail"), "\n", sep = "")
     flush.console()
   } else {
-    message(`_cli_step_line`(ui, label, "Fail"))
+    message(.cli_step_line(ui, label, "Fail"))
   }
 
   if (length(details) > 0L) {
-    cat(paste(details, collapse = "\n"), "\n", sep = "")
+    cat(paste(details, collapse = "\n"), "\n", file = stderr(), sep = "")
   }
 
   ui$has_substep <- FALSE
   ui$current_step <- NULL
 }
 
-`_cli_substep_pass` <- function(ui, label, index = NULL, total = NULL, status = "pass") {
+# Report a completed substep when running in plain output mode.
+.cli_substep_pass <- function(
+  ui,
+  label,
+  index = NULL,
+  total = NULL,
+  status = "pass"
+) {
   if (isTRUE(ui$quiet)) {
     return(invisible(NULL))
   }
@@ -152,21 +175,26 @@
     return(invisible(NULL))
   }
 
-  message(`_cli_plain_line`(text, status, ui$plain_substep_status_col))
+  message(.cli_plain_line(text, status, ui$plain_substep_status_col))
 }
 
-`_cli_spinner_frames` <- function() {
+# Return the spinner frames used while fancy-mode child commands run.
+.cli_spinner_frames <- function() {
   c("[   ]", "[.  ]", "[.. ]", "[...]", "[ ..]", "[  .]")
 }
 
-`_cli_run_command` <- function(ui,
-                               label,
-                               command,
-                               args = character(),
-                               wd = ".",
-                               env = character()) {
+# Run a child command and adapt output handling to the selected UI mode.
+.cli_run_command <- function(ui,
+                             label,
+                             command,
+                             args = character(),
+                             wd = ".",
+                             env = character()) {
   if (!requireNamespace("processx", quietly = TRUE)) {
-    stop("The `processx` package is required for CLI orchestration.", call. = FALSE)
+    stop(
+      "The `processx` package is required for CLI orchestration.",
+      call. = FALSE
+    )
   }
 
   if (!isTRUE(ui$fancy)) {
@@ -194,7 +222,7 @@
 
   stdout_lines <- character()
   stderr_lines <- character()
-  frames <- `_cli_spinner_frames`()
+  frames <- .cli_spinner_frames()
   tick <- 1L
 
   while (proc$is_alive()) {
@@ -216,10 +244,26 @@
   )
 }
 
-`%||%` <- function(x, y) {
-  if (is.null(x)) {
-    y
-  } else {
-    x
-  }
+# Raise an error that has already been rendered by the CLI layer.
+.cli_abort_handled <- function(message) {
+  condition <- structure(
+    list(message = message, call = NULL),
+    class = c("shiny_webawesome_cli_error", "error", "condition")
+  )
+
+  stop(condition)
+}
+
+# Run a direct CLI entry point and suppress duplicate handled error output.
+.cli_run_main <- function(main) {
+  tryCatch(
+    main(),
+    shiny_webawesome_cli_error = function(condition) {
+      quit(save = "no", status = 1L, runLast = FALSE)
+    },
+    error = function(condition) {
+      message("Error: ", conditionMessage(condition))
+      quit(save = "no", status = 1L, runLast = FALSE)
+    }
+  )
 }

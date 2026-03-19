@@ -5,7 +5,9 @@
 # This file is both sourceable by tests and directly executable as a top-level
 # build-stage script. It is not package runtime code.
 
-`_bootstrap_cli_ui` <- function() {
+# nolint start: object_usage_linter.
+# Source the shared CLI helpers from whichever path is available.
+.bootstrap_cli_ui <- function() {
   ofiles <- vapply(
     sys.frames(),
     function(frame) if (is.null(frame$ofile)) "" else frame$ofile,
@@ -27,43 +29,51 @@
   }
 }
 
-`_bootstrap_cli_ui`()
-rm(`_bootstrap_cli_ui`)
+.bootstrap_cli_ui()
+rm(.bootstrap_cli_ui)
 
-`_fetch_usage` <- function() {
+# Return the CLI usage string for the fetch stage.
+.fetch_usage <- function() {
   paste(
     "Usage: ./tools/fetch_webawesome.R",
     "[--version <version>] [--root <path>] [--quiet] [--help]"
   )
 }
 
-`_fetch_description` <- function() {
+# Return the short CLI description for the fetch stage.
+.fetch_description <- function() {
   "Fetch a pinned Web Awesome dist bundle into vendor/webawesome/."
 }
 
-`_fetch_option_lines` <- function() {
+# List supported CLI options for the fetch stage.
+.fetch_option_lines <- function() {
   c(
     "--version, -v <version>  Upstream Web Awesome version to fetch.",
-    "--root <path>            Repository root. Defaults to the current directory.",
+    paste(
+      "--root <path>            Repository root.",
+      "Defaults to the current directory."
+    ),
     "--quiet                  Suppress stage-level progress messages.",
     "--help, -h               Print this help text."
   )
 }
 
-`_print_fetch_help` <- function() {
+# Print the CLI help text for the fetch stage.
+.print_fetch_help <- function() {
   writeLines(
     c(
-      `_fetch_description`(),
+      .fetch_description(),
       "",
-      `_fetch_usage`(),
+      .fetch_usage(),
       "",
       "Options:",
-      `_fetch_option_lines`()
+      .fetch_option_lines()
     )
   )
 }
 
-`_fetch_defaults` <- function() {
+# Define default CLI option values for the fetch stage.
+.fetch_defaults <- function() {
   list(
     version = NULL,
     root = ".",
@@ -72,8 +82,9 @@ rm(`_bootstrap_cli_ui`)
   )
 }
 
-`_parse_fetch_args` <- function(args) {
-  options <- `_fetch_defaults`()
+# Parse command-line arguments for the fetch stage.
+.parse_fetch_args <- function(args) {
+  options <- .fetch_defaults()
   skip_next <- FALSE
 
   for (i in seq_along(args)) {
@@ -125,7 +136,7 @@ rm(`_bootstrap_cli_ui`)
     }
 
     stop(
-      paste0("Unknown argument: ", arg, "\n", `_fetch_usage`()),
+      paste0("Unknown argument: ", arg, "\n", .fetch_usage()),
       call. = FALSE
     )
   }
@@ -133,20 +144,24 @@ rm(`_bootstrap_cli_ui`)
   options
 }
 
-`_is_repo_root` <- function(root) {
+# Check whether a path looks like the repository root.
+.is_repo_root <- function(root) {
   required_paths <- c("DESCRIPTION", "docs", "tools")
   all(file.exists(file.path(root, required_paths)))
 }
 
-`_strip_root_prefix` <- function(paths, root) {
+# Remove the repository root prefix from one or more absolute paths.
+.strip_root_prefix <- function(paths, root) {
   sub(paste0("^", root, "/?"), "", paths)
 }
 
-`_default_webawesome_package` <- function() {
+# Return the default upstream npm package name.
+.default_webawesome_package <- function() {
   "@awesome.me/webawesome"
 }
 
-`_fetch_npm_command` <- function() {
+# Resolve the npm command used by the fetch stage.
+.fetch_npm_command <- function() {
   command <- trimws(Sys.getenv("SHINY_WEBAWESOME_NPM", "npm"))
 
   if (!nzchar(command)) {
@@ -156,16 +171,21 @@ rm(`_bootstrap_cli_ui`)
   command
 }
 
-`_default_webawesome_version_file` <- function() {
+# Return the default relative path to the pinned version file.
+.default_version_file <- function() {
   file.path("dev", "webawesome-version.txt")
 }
 
-`_read_lines_trimmed` <- function(path) {
+# Read and trim lines from a text file using UTF-8.
+.read_lines_trimmed <- function(path) {
   trimws(readLines(path, warn = FALSE, encoding = "UTF-8"))
 }
 
-`_read_pinned_webawesome_version` <- function(root,
-                                              version_file = `_default_webawesome_version_file`()) {
+# Read the pinned Web Awesome version from the repository input file.
+.read_pinned_version <- function(
+  root,
+  version_file = .default_version_file()
+) {
   version_path <- file.path(root, version_file)
 
   if (!file.exists(version_path)) {
@@ -176,12 +196,15 @@ rm(`_bootstrap_cli_ui`)
     )
   }
 
-  lines <- `_read_lines_trimmed`(version_path)
+  lines <- .read_lines_trimmed(version_path)
   lines <- lines[nzchar(lines) & !startsWith(lines, "#")]
 
   if (length(lines) != 1L) {
     stop(
-      "Pinned Web Awesome version file must contain exactly one version string: ",
+      paste(
+        "Pinned Web Awesome version file must contain exactly one",
+        "version string:"
+      ),
       version_file,
       call. = FALSE
     )
@@ -190,7 +213,8 @@ rm(`_bootstrap_cli_ui`)
   lines[[1]]
 }
 
-`_validate_fetch_version` <- function(version) {
+# Validate and normalize a requested Web Awesome version string.
+.validate_fetch_version <- function(version) {
   version <- trimws(version %||% "")
 
   if (!nzchar(version)) {
@@ -204,20 +228,26 @@ rm(`_bootstrap_cli_ui`)
   version
 }
 
-`_fetch_target_dir` <- function(root, version) {
+# Build the version-specific vendor target directory path.
+.fetch_target_dir <- function(root, version) {
   file.path(root, "vendor", "webawesome", version)
 }
 
-`_fetch_dist_dir` <- function(root, version) {
-  file.path(`_fetch_target_dir`(root, version), "dist")
+# Build the version-specific vendor dist directory path.
+.fetch_dist_dir <- function(root, version) {
+  file.path(.fetch_target_dir(root, version), "dist")
 }
 
-`_run_fetch_command` <- function(command,
-                                 args = character(),
-                                 wd = ".",
-                                 env = character()) {
+# Run one external fetch command and normalize execution failures.
+.run_fetch_command <- function(command,
+                               args = character(),
+                               wd = ".",
+                               env = character()) {
   if (!requireNamespace("processx", quietly = TRUE)) {
-    stop("The `processx` package is required to fetch Web Awesome.", call. = FALSE)
+    stop(
+      "The `processx` package is required to fetch Web Awesome.",
+      call. = FALSE
+    )
   }
 
   tryCatch(
@@ -235,7 +265,8 @@ rm(`_bootstrap_cli_ui`)
   )
 }
 
-`_last_non_empty_line` <- function(text) {
+# Extract the final non-empty line from command output text.
+.last_non_empty_line <- function(text) {
   lines <- unlist(strsplit(text %||% "", "\n", fixed = TRUE))
   lines <- trimws(lines)
   lines <- lines[nzchar(lines)]
@@ -247,7 +278,8 @@ rm(`_bootstrap_cli_ui`)
   tail(lines, 1L)
 }
 
-`_copy_directory` <- function(source_dir, target_dir) {
+# Copy a directory tree into the repository fetch target.
+.copy_directory <- function(source_dir, target_dir) {
   dir.create(dirname(target_dir), recursive = TRUE, showWarnings = FALSE)
   copied <- file.copy(source_dir, dirname(target_dir), recursive = TRUE)
 
@@ -262,11 +294,13 @@ rm(`_bootstrap_cli_ui`)
   invisible(target_dir)
 }
 
-`_write_fetch_version_file` <- function(target_dir, version) {
+# Write the fetched upstream version marker file.
+.write_fetch_version_file <- function(target_dir, version) {
   writeLines(version, file.path(target_dir, "VERSION"), useBytes = TRUE)
 }
 
-`_emit_fetch_summary` <- function(result) {
+# Emit a short summary for a programmatic fetch result.
+.emit_fetch_summary <- function(result) {
   message(
     "Fetched version ",
     result$version,
@@ -286,7 +320,8 @@ rm(`_bootstrap_cli_ui`)
 #' Downloads a specific version of the upstream Web Awesome npm package using
 #' `npm pack`, extracts the package tarball in a temporary directory, and
 #' copies only the upstream `dist/` tree into `vendor/webawesome/<version>/`.
-#' The fetched version is also recorded in `vendor/webawesome/<version>/VERSION`.
+#' The fetched version is also recorded in
+#' `vendor/webawesome/<version>/VERSION`.
 #'
 #' If `version` is `NULL`, the version pinned in `dev/webawesome-version.txt`
 #' is used.
@@ -308,33 +343,33 @@ rm(`_bootstrap_cli_ui`)
 #' @examples
 #' \dontrun{
 #' fetch_webawesome()
-#' fetch_webawesome(version = "3.0.0-beta.4")
+#' fetch_webawesome(version = "3.3.1")
 #' }
 fetch_webawesome <- function(version = NULL,
                              root = ".",
-                             package_name = `_default_webawesome_package`(),
-                             version_file = `_default_webawesome_version_file`(),
-                             command_runner = `_run_fetch_command`,
+                             package_name = .default_webawesome_package(),
+                             version_file = .default_version_file(),
+                             command_runner = .run_fetch_command,
                              verbose = interactive()) {
   root <- normalizePath(root, winslash = "/", mustWork = TRUE)
 
-  if (!`_is_repo_root`(root)) {
+  if (!.is_repo_root(root)) {
     stop("`root` does not appear to be the repository root.", call. = FALSE)
   }
 
-  version <- version %||% `_read_pinned_webawesome_version`(
+  version <- version %||% .read_pinned_version(
     root = root,
     version_file = version_file
   )
-  version <- `_validate_fetch_version`(version)
+  version <- .validate_fetch_version(version)
 
-  target_dir <- `_fetch_target_dir`(root, version)
-  dist_target_dir <- `_fetch_dist_dir`(root, version)
+  target_dir <- .fetch_target_dir(root, version)
+  dist_target_dir <- .fetch_dist_dir(root, version)
 
   if (dir.exists(target_dir) || file.exists(target_dir)) {
     stop(
       "Fetched upstream version already exists: ",
-      `_strip_root_prefix`(target_dir, root),
+      .strip_root_prefix(target_dir, root),
       ". Remove it first or run clean_webawesome(level = \"distclean\").",
       call. = FALSE
     )
@@ -349,7 +384,7 @@ fetch_webawesome <- function(version = NULL,
 
   package_spec <- paste0(package_name, "@", version)
   run_result <- command_runner(
-    command = `_fetch_npm_command`(),
+    command = .fetch_npm_command(),
     args = c("pack", package_spec),
     wd = pack_dir,
     env = character()
@@ -368,7 +403,7 @@ fetch_webawesome <- function(version = NULL,
     )
   }
 
-  tarball_name <- `_last_non_empty_line`(run_result$stdout)
+  tarball_name <- .last_non_empty_line(run_result$stdout)
   if (is.null(tarball_name)) {
     stop("npm pack did not report a tarball name.", call. = FALSE)
   }
@@ -392,8 +427,8 @@ fetch_webawesome <- function(version = NULL,
   }
 
   dir.create(target_dir, recursive = TRUE, showWarnings = FALSE)
-  `_copy_directory`(dist_source_dir, dist_target_dir)
-  `_write_fetch_version_file`(target_dir, version)
+  .copy_directory(dist_source_dir, dist_target_dir)
+  .write_fetch_version_file(target_dir, version)
 
   result <- list(
     version = version,
@@ -401,9 +436,9 @@ fetch_webawesome <- function(version = NULL,
     package_spec = package_spec,
     root = root,
     version_file = version_file,
-    target_dir = `_strip_root_prefix`(target_dir, root),
-    dist_dir = `_strip_root_prefix`(dist_target_dir, root),
-    version_record = `_strip_root_prefix`(
+    target_dir = .strip_root_prefix(target_dir, root),
+    dist_dir = .strip_root_prefix(dist_target_dir, root),
+    version_record = .strip_root_prefix(
       file.path(target_dir, "VERSION"),
       root
     ),
@@ -411,13 +446,14 @@ fetch_webawesome <- function(version = NULL,
   )
 
   if (isTRUE(verbose)) {
-    `_emit_fetch_summary`(result)
+    .emit_fetch_summary(result)
   }
 
   result
 }
 
-`_emit_fetch_runner_summary` <- function(result) {
+# Emit a short summary for the fetch CLI runner.
+.emit_fetch_runner_summary <- function(result) {
   message(
     "Fetch complete: version=",
     result$version,
@@ -451,20 +487,20 @@ fetch_webawesome <- function(version = NULL,
 #' @examples
 #' \dontrun{
 #' run_fetch_webawesome()
-#' run_fetch_webawesome(c("--version", "3.0.0-beta.4"))
+#' run_fetch_webawesome(c("--version", "3.3.1"))
 #' run_fetch_webawesome("--help")
 #' }
 run_fetch_webawesome <- function(args = commandArgs(trailingOnly = TRUE)) {
-  options <- `_parse_fetch_args`(args)
+  options <- .parse_fetch_args(args)
 
   if (isTRUE(options$help)) {
-    `_print_fetch_help`()
+    .print_fetch_help()
     return(invisible(NULL))
   }
 
-  ui <- `_cli_ui_new`()
+  ui <- .cli_ui_new()
   ui$quiet <- !isTRUE(options$verbose)
-  `_cli_step_start`(ui, "Fetching Web Awesome")
+  .cli_step_start(ui, "Fetching Web Awesome")
 
   result <- tryCatch(
     {
@@ -475,17 +511,18 @@ run_fetch_webawesome <- function(args = commandArgs(trailingOnly = TRUE)) {
       )
     },
     error = function(condition) {
-      `_cli_step_fail`(ui, details = conditionMessage(condition))
-      stop(condition)
+      .cli_step_fail(ui, details = conditionMessage(condition))
+      .cli_abort_handled(conditionMessage(condition))
     }
   )
 
-  `_cli_step_finish`(ui, status = "Done")
-  `_emit_fetch_runner_summary`(result)
+  .cli_step_finish(ui, status = "Done")
+  .emit_fetch_runner_summary(result)
 
   invisible(result)
 }
 
 if (sys.nframe() == 0L) {
-  run_fetch_webawesome()
+  .cli_run_main(run_fetch_webawesome)
 }
+# nolint end

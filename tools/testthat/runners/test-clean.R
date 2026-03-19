@@ -1,12 +1,16 @@
-write_file <- function(path, lines = "x") {
+.write_file <- function(path, lines = "x") {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   writeLines(lines, path)
 }
 
-create_fake_repo <- function(root) {
+.create_fake_repo <- function(root) {
   dir.create(file.path(root, "docs"), recursive = TRUE, showWarnings = FALSE)
-  dir.create(file.path(root, "tools", "runners"), recursive = TRUE, showWarnings = FALSE)
-  write_file(file.path(root, "DESCRIPTION"), "Package: fake")
+  dir.create(
+    file.path(root, "tools", "runners"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
+  .write_file(file.path(root, "DESCRIPTION"), "Package: fake")
 
   source_runner <- normalizePath(
     file.path("..", "..", "runners", "clean.R"),
@@ -29,7 +33,7 @@ create_fake_repo <- function(root) {
   file.copy(source_cli, file.path(root, "tools", "cli_ui.R"))
 }
 
-run_clean_runner <- function(root, args = character()) {
+.run_clean_runner <- function(root, args = character()) {
   processx::run(
     "Rscript",
     c(file.path("tools", "runners", "clean.R"), args),
@@ -41,12 +45,12 @@ run_clean_runner <- function(root, args = character()) {
 
 testthat::test_that("runner defaults to clean and removes generated outputs", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
   dir.create(file.path(root, "R", "generated"), recursive = TRUE)
-  write_file(file.path(root, "R", "generated", "wa_button.R"))
+  .write_file(file.path(root, "R", "generated", "wa_button.R"))
 
-  result <- run_clean_runner(root)
+  result <- .run_clean_runner(root)
 
   testthat::expect_equal(result$status, 0)
   testthat::expect_false(dir.exists(file.path(root, "R", "generated")))
@@ -55,12 +59,12 @@ testthat::test_that("runner defaults to clean and removes generated outputs", {
 
 testthat::test_that("runner supports distclean", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
   dir.create(file.path(root, "vendor", "webawesome"), recursive = TRUE)
-  write_file(file.path(root, "vendor", "webawesome", "VERSION"))
+  .write_file(file.path(root, "vendor", "webawesome", "VERSION"))
 
-  result <- run_clean_runner(root, c("--level", "distclean"))
+  result <- .run_clean_runner(root, c("--level", "distclean"))
 
   testthat::expect_equal(result$status, 0)
   testthat::expect_false(dir.exists(file.path(root, "vendor", "webawesome")))
@@ -69,12 +73,12 @@ testthat::test_that("runner supports distclean", {
 
 testthat::test_that("runner supports dry run", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
   dir.create(file.path(root, "manifests"), recursive = TRUE)
-  write_file(file.path(root, "manifests", "component-coverage.yaml"))
+  .write_file(file.path(root, "manifests", "component-coverage.yaml"))
 
-  result <- run_clean_runner(root, "--dry-run")
+  result <- .run_clean_runner(root, "--dry-run")
 
   testthat::expect_equal(result$status, 0)
   testthat::expect_true(dir.exists(file.path(root, "manifests")))
@@ -86,12 +90,12 @@ testthat::test_that("runner supports dry run", {
 
 testthat::test_that("runner supports quiet mode", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
   dir.create(file.path(root, "R", "generated"), recursive = TRUE)
-  write_file(file.path(root, "R", "generated", "wa_button.R"))
+  .write_file(file.path(root, "R", "generated", "wa_button.R"))
 
-  result <- run_clean_runner(root, "--quiet")
+  result <- .run_clean_runner(root, "--quiet")
 
   testthat::expect_equal(result$status, 0)
   testthat::expect_match(result$stderr, "Clean complete: level=clean")
@@ -99,9 +103,9 @@ testthat::test_that("runner supports quiet mode", {
 
 testthat::test_that("runner prints help", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
-  result <- run_clean_runner(root, "--help")
+  result <- .run_clean_runner(root, "--help")
 
   testthat::expect_equal(result$status, 0)
   testthat::expect_match(result$stdout, "Usage: Rscript tools/runners/clean.R")
@@ -111,9 +115,9 @@ testthat::test_that("runner prints help", {
 
 testthat::test_that("runner rejects unknown arguments", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
-  result <- run_clean_runner(root, "--bogus")
+  result <- .run_clean_runner(root, "--bogus")
 
   testthat::expect_true(result$status != 0)
   testthat::expect_match(result$stderr, "Unknown argument: --bogus")
@@ -121,9 +125,9 @@ testthat::test_that("runner rejects unknown arguments", {
 
 testthat::test_that("runner rejects missing level values", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
-  result <- run_clean_runner(root, "--level")
+  result <- .run_clean_runner(root, "--level")
 
   testthat::expect_true(result$status != 0)
   testthat::expect_match(result$stderr, "Missing value for --level.")
@@ -131,9 +135,9 @@ testthat::test_that("runner rejects missing level values", {
 
 testthat::test_that("runner rejects invalid level values", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
-  result <- run_clean_runner(root, c("--level", "bogus"))
+  result <- .run_clean_runner(root, c("--level", "bogus"))
 
   testthat::expect_true(result$status != 0)
   testthat::expect_match(

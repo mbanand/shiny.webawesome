@@ -1,21 +1,21 @@
 source(file.path("..", "..", "clean_webawesome.R"))
 
-write_file <- function(path, lines = "x") {
+.write_file <- function(path, lines = "x") {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   writeLines(lines, path)
 }
 
-create_fake_repo <- function(root) {
+.create_fake_repo <- function(root) {
   dir.create(file.path(root, "docs"), recursive = TRUE, showWarnings = FALSE)
   dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
-  write_file(file.path(root, "DESCRIPTION"), "Package: fake")
+  .write_file(file.path(root, "DESCRIPTION"), "Package: fake")
 }
 
 testthat::test_that(
   "clean removes generated output directories entirely",
   {
     root <- withr::local_tempdir()
-    create_fake_repo(root)
+    .create_fake_repo(root)
 
     dir.create(file.path(root, "R", "generated"), recursive = TRUE)
     dir.create(file.path(root, "R", "generated_updates"), recursive = TRUE)
@@ -24,12 +24,12 @@ testthat::test_that(
     dir.create(file.path(root, "manifests"), recursive = TRUE)
     dir.create(file.path(root, "report"), recursive = TRUE)
 
-    write_file(file.path(root, "R", "generated", "wa_button.R"))
-    write_file(file.path(root, "R", "generated_updates", "update_wa_button.R"))
-    write_file(file.path(root, "inst", "bindings", "wa-button.js"))
-    write_file(file.path(root, "inst", "www", "webawesome", "loader.js"))
-    write_file(file.path(root, "manifests", "component-coverage.yaml"))
-    write_file(file.path(root, "report", "summary.md"))
+    .write_file(file.path(root, "R", "generated", "wa_button.R"))
+    .write_file(file.path(root, "R", "generated_updates", "update_wa_button.R"))
+    .write_file(file.path(root, "inst", "bindings", "wa-button.js"))
+    .write_file(file.path(root, "inst", "www", "webawesome", "loader.js"))
+    .write_file(file.path(root, "manifests", "component-coverage.yaml"))
+    .write_file(file.path(root, "report", "summary.md"))
 
     result <- clean_webawesome(root = root, verbose = FALSE)
 
@@ -61,15 +61,17 @@ testthat::test_that(
 
 testthat::test_that("distclean also removes vendor and extdata metadata", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
   dir.create(file.path(root, "manifests"), recursive = TRUE)
   dir.create(file.path(root, "report"), recursive = TRUE)
   dir.create(file.path(root, "vendor", "webawesome"), recursive = TRUE)
   dir.create(file.path(root, "inst", "extdata", "webawesome"), recursive = TRUE)
 
-  write_file(file.path(root, "vendor", "webawesome", "VERSION"))
-  write_file(file.path(root, "inst", "extdata", "webawesome", "custom-elements.json"))
+  .write_file(file.path(root, "vendor", "webawesome", "VERSION"))
+  .write_file(
+    file.path(root, "inst", "extdata", "webawesome", "custom-elements.json")
+  )
 
   result <- clean_webawesome(level = "distclean", root = root, verbose = FALSE)
 
@@ -83,12 +85,12 @@ testthat::test_that("distclean also removes vendor and extdata metadata", {
 
 testthat::test_that("dry run reports actions without deleting anything", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
   dir.create(file.path(root, "R", "generated"), recursive = TRUE)
   dir.create(file.path(root, "manifests"), recursive = TRUE)
-  write_file(file.path(root, "R", "generated", "wa_button.R"))
-  write_file(file.path(root, "manifests", "component-coverage.yaml"))
+  .write_file(file.path(root, "R", "generated", "wa_button.R"))
+  .write_file(file.path(root, "manifests", "component-coverage.yaml"))
 
   result <- clean_webawesome(root = root, dry_run = TRUE, verbose = FALSE)
 
@@ -103,7 +105,7 @@ testthat::test_that("dry run reports actions without deleting anything", {
 
 testthat::test_that("missing targets are tolerated and reported", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
   result <- clean_webawesome(root = root, verbose = FALSE)
 

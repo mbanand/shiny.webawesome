@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
-`_bootstrap_cli_ui` <- function() {
+# nolint start: object_usage_linter.
+# Source the shared CLI helpers from whichever path is available.
+.bootstrap_cli_ui <- function() {
   ofiles <- vapply(
     sys.frames(),
     function(frame) if (is.null(frame$ofile)) "" else frame$ofile,
@@ -22,38 +24,43 @@
   }
 }
 
-`_bootstrap_cli_ui`()
-rm(`_bootstrap_cli_ui`)
+.bootstrap_cli_ui()
+rm(.bootstrap_cli_ui)
 
-`_test_tools_usage` <- function() {
+# Return the CLI usage string for the tool test runner.
+.test_tools_usage <- function() {
   "Usage: Rscript tools/test_tools.R [--filter <pattern>] [--help]"
 }
 
-`_test_tools_description` <- function() {
+# Return the short CLI description for the tool test runner.
+.test_tools_description <- function() {
   "Run build-tool tests under tools/testthat."
 }
 
-`_test_tools_option_lines` <- function() {
+# List supported CLI options for the tool test runner.
+.test_tools_option_lines <- function() {
   c(
     "--filter, -f <pattern>  Restrict execution to matching test files.",
     "--help, -h              Print this help text."
   )
 }
 
-`_print_test_tools_help` <- function() {
+# Print the CLI help text for the tool test runner.
+.print_test_tools_help <- function() {
   writeLines(
     c(
-      `_test_tools_description`(),
+      .test_tools_description(),
       "",
-      `_test_tools_usage`(),
+      .test_tools_usage(),
       "",
       "Options:",
-      `_test_tools_option_lines`()
+      .test_tools_option_lines()
     )
   )
 }
 
-`_parse_test_tools_args` <- function(args) {
+# Parse command-line arguments for the tool test runner.
+.parse_test_tools_args <- function(args) {
   filter <- NULL
   help <- FALSE
   skip_next <- FALSE
@@ -87,7 +94,7 @@ rm(`_bootstrap_cli_ui`)
     }
 
     stop(
-      paste0("Unknown argument: ", arg, "\n", `_test_tools_usage`()),
+      paste0("Unknown argument: ", arg, "\n", .test_tools_usage()),
       call. = FALSE
     )
   }
@@ -95,7 +102,8 @@ rm(`_bootstrap_cli_ui`)
   list(filter = filter, help = help)
 }
 
-`_find_tool_test_files` <- function(test_dir = file.path("tools", "testthat")) {
+# Discover tool test files in deterministic path order.
+.find_tool_test_files <- function(test_dir = file.path("tools", "testthat")) {
   test_files <- sort(
     list.files(
       test_dir,
@@ -112,7 +120,8 @@ rm(`_bootstrap_cli_ui`)
   test_files
 }
 
-`_filter_tool_test_files` <- function(test_files, filter = NULL) {
+# Apply an optional path filter to the discovered tool test files.
+.filter_tool_test_files <- function(test_files, filter = NULL) {
   if (is.null(filter)) {
     return(test_files)
   }
@@ -126,11 +135,13 @@ rm(`_bootstrap_cli_ui`)
   filtered_files
 }
 
-`_run_tool_test_file` <- function(test_file, reporter) {
+# Execute one tool test file with the supplied reporter.
+.run_tool_test_file <- function(test_file, reporter) {
   testthat::test_file(test_file, reporter = reporter)
 }
 
-`_expectation_types` <- function(expectations) {
+# Extract expectation type labels from a reporter expectation list.
+.expectation_types <- function(expectations) {
   vapply(
     expectations,
     function(expectation) testthat:::expectation_type(expectation),
@@ -138,8 +149,11 @@ rm(`_bootstrap_cli_ui`)
   )
 }
 
-`_failed_expectation_lines` <- function(expectations) {
-  failed <- expectations[`_expectation_types`(expectations) %in% c("failure", "error")]
+# Collect failure and error messages from a reporter expectation list.
+.failed_expectation_lines <- function(expectations) {
+  failed <- expectations[
+    .expectation_types(expectations) %in% c("failure", "error")
+  ]
 
   vapply(
     failed,
@@ -171,10 +185,10 @@ rm(`_bootstrap_cli_ui`)
 #' run_tool_tests("--help")
 #' }
 run_tool_tests <- function(args = commandArgs(trailingOnly = TRUE)) {
-  options <- `_parse_test_tools_args`(args)
+  options <- .parse_test_tools_args(args)
 
   if (isTRUE(options$help)) {
-    `_print_test_tools_help`()
+    .print_test_tools_help()
     return(invisible(NULL))
   }
 
@@ -182,13 +196,13 @@ run_tool_tests <- function(args = commandArgs(trailingOnly = TRUE)) {
     stop("The `testthat` package is required to run tool tests.", call. = FALSE)
   }
 
-  ui <- `_cli_ui_new`()
-  test_files <- `_filter_tool_test_files`(
-    test_files = `_find_tool_test_files`(),
+  ui <- .cli_ui_new()
+  test_files <- .filter_tool_test_files(
+    test_files = .find_tool_test_files(),
     filter = options$filter
   )
 
-  `_cli_step_start`(ui, "Testing tools")
+  .cli_step_start(ui, "Testing tools")
 
   tryCatch(
     {
@@ -197,31 +211,31 @@ run_tool_tests <- function(args = commandArgs(trailingOnly = TRUE)) {
         reporter <- testthat::SilentReporter$new()
         label <- tools::file_path_sans_ext(basename(test_file))
 
-        `_cli_step_update`(
+        .cli_step_update(
           ui = ui,
           label = label,
           index = i,
           total = length(test_files)
         )
-        `_run_tool_test_file`(test_file = test_file, reporter = reporter)
+        .run_tool_test_file(test_file = test_file, reporter = reporter)
 
-        failed_lines <- `_failed_expectation_lines`(reporter$expectations())
+        failed_lines <- .failed_expectation_lines(reporter$expectations())
         if (length(failed_lines) > 0L) {
           stop(paste(failed_lines, collapse = "\n"), call. = FALSE)
         }
 
-        `_cli_substep_pass`(
+        .cli_substep_pass(
           ui = ui,
           label = label,
           index = i,
           total = length(test_files)
         )
       }
-      `_cli_step_finish`(ui, status = "Pass")
+      .cli_step_finish(ui, status = "Pass")
     },
     error = function(condition) {
-      `_cli_step_fail`(ui, details = conditionMessage(condition))
-      stop(condition)
+      .cli_step_fail(ui, details = conditionMessage(condition))
+      .cli_abort_handled(conditionMessage(condition))
     }
   )
 
@@ -229,5 +243,6 @@ run_tool_tests <- function(args = commandArgs(trailingOnly = TRUE)) {
 }
 
 if (sys.nframe() == 0L) {
-  run_tool_tests()
+  .cli_run_main(run_tool_tests)
 }
+# nolint end

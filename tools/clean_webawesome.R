@@ -3,7 +3,8 @@
 # This file is sourced by stage runners under tools/runners/ and may also be
 # sourced directly by tests. It is not package runtime code.
 
-`_clean_target_sets` <- function() {
+# Define the path sets removed by each clean level.
+.clean_target_sets <- function() {
   list(
     clean = list(
       remove = c(
@@ -30,12 +31,14 @@
   )
 }
 
-`_is_repo_root` <- function(root) {
+# Check whether a path looks like the repository root.
+.is_repo_root <- function(root) {
   required_paths <- c("DESCRIPTION", "docs", "tools")
   all(file.exists(file.path(root, required_paths)))
 }
 
-`_remove_path` <- function(path, dry_run = FALSE) {
+# Remove one path unless running in dry-run mode.
+.remove_path <- function(path, dry_run = FALSE) {
   if (!dry_run) {
     unlink(path, recursive = TRUE, force = TRUE)
   }
@@ -43,11 +46,13 @@
   path
 }
 
-`_strip_root_prefix` <- function(paths, root) {
+# Remove the repository root prefix from one or more absolute paths.
+.strip_root_prefix <- function(paths, root) {
   sub(paste0("^", root, "/?"), "", paths)
 }
 
-`_emit_clean_summary` <- function(result) {
+# Emit a short summary for a clean operation result.
+.emit_clean_summary <- function(result) {
   action <- if (result$dry_run) "Would remove" else "Removed"
 
   if (length(result$removed) > 0L) {
@@ -87,11 +92,11 @@ clean_webawesome <- function(level = c("clean", "distclean"),
   level <- match.arg(level)
   root <- normalizePath(root, winslash = "/", mustWork = TRUE)
 
-  if (!`_is_repo_root`(root)) {
+  if (!.is_repo_root(root)) {
     stop("`root` does not appear to be the repository root.", call. = FALSE)
   }
 
-  target_set <- `_clean_target_sets`()[[level]]
+  target_set <- .clean_target_sets()[[level]]
 
   remove_targets <- file.path(root, target_set$remove)
   existing_remove <- remove_targets[file.exists(remove_targets)]
@@ -102,7 +107,7 @@ clean_webawesome <- function(level = c("clean", "distclean"),
     for (path in sort(existing_remove)) {
       removed_paths <- c(
         removed_paths,
-        `_remove_path`(path, dry_run = dry_run)
+        .remove_path(path, dry_run = dry_run)
       )
     }
   }
@@ -111,14 +116,14 @@ clean_webawesome <- function(level = c("clean", "distclean"),
     level = level,
     root = root,
     requested_remove = sort(target_set$remove),
-    existing_remove = sort(`_strip_root_prefix`(existing_remove, root)),
-    removed = sort(`_strip_root_prefix`(removed_paths, root)),
-    missing = sort(`_strip_root_prefix`(missing, root)),
+    existing_remove = sort(.strip_root_prefix(existing_remove, root)),
+    removed = sort(.strip_root_prefix(removed_paths, root)),
+    missing = sort(.strip_root_prefix(missing, root)),
     dry_run = dry_run
   )
 
   if (isTRUE(verbose)) {
-    `_emit_clean_summary`(result)
+    .emit_clean_summary(result)
   }
 
   result

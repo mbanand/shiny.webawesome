@@ -121,7 +121,7 @@ Example structure:
 
 ```text
 vendor/webawesome/
-  3.0.0-beta.4/
+  3.3.1/
     dist/
     VERSION
 ```

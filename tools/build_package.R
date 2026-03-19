@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
-`_bootstrap_cli_ui` <- function() {
+# nolint start: object_usage_linter.
+# Source the shared CLI helpers from whichever path is available.
+.bootstrap_cli_ui <- function() {
   ofiles <- vapply(
     sys.frames(),
     function(frame) if (is.null(frame$ofile)) "" else frame$ofile,
@@ -22,49 +24,55 @@
   }
 }
 
-`_bootstrap_cli_ui`()
-rm(`_bootstrap_cli_ui`)
+.bootstrap_cli_ui()
+rm(.bootstrap_cli_ui)
 
-`_build_package_usage` <- function() {
+# Return the CLI usage string for the package build orchestrator.
+.build_package_usage <- function() {
   paste(
     "Usage: ./tools/build_package.R",
     "[--skip-tools] [--help]"
   )
 }
 
-`_build_package_description` <- function() {
+# Return the short CLI description for the package build orchestrator.
+.build_package_description <- function() {
   "Run the package build orchestration workflow."
 }
 
-`_build_package_option_lines` <- function() {
+# List supported CLI options for the package build orchestrator.
+.build_package_option_lines <- function() {
   c(
     "--skip-tools  Skip the prerequisite tool build workflow.",
     "--help, -h    Print this help text."
   )
 }
 
-`_print_build_package_help` <- function() {
+# Print the CLI help text for the package build orchestrator.
+.print_build_package_help <- function() {
   writeLines(
     c(
-      `_build_package_description`(),
+      .build_package_description(),
       "",
-      `_build_package_usage`(),
+      .build_package_usage(),
       "",
       "Options:",
-      `_build_package_option_lines`()
+      .build_package_option_lines()
     )
   )
 }
 
-`_build_package_defaults` <- function() {
+# Define default CLI option values for the package build orchestrator.
+.build_package_defaults <- function() {
   list(
     run_tools = TRUE,
     help = FALSE
   )
 }
 
-`_parse_build_package_args` <- function(args) {
-  options <- `_build_package_defaults`()
+# Parse command-line arguments for the package build orchestrator.
+.parse_build_package_args <- function(args) {
+  options <- .build_package_defaults()
 
   for (arg in args) {
     if (arg == "--skip-tools") {
@@ -78,7 +86,7 @@ rm(`_bootstrap_cli_ui`)
     }
 
     stop(
-      paste0("Unknown argument: ", arg, "\n", `_build_package_usage`()),
+      paste0("Unknown argument: ", arg, "\n", .build_package_usage()),
       call. = FALSE
     )
   }
@@ -86,7 +94,8 @@ rm(`_bootstrap_cli_ui`)
   options
 }
 
-`_existing_package_build_steps` <- function() {
+# Discover currently implemented package build-stage scripts.
+.existing_package_build_steps <- function() {
   candidate_steps <- c(
     "tools/fetch_webawesome.R",
     "tools/prune_webawesome.R",
@@ -96,8 +105,9 @@ rm(`_bootstrap_cli_ui`)
   candidate_steps[file.exists(candidate_steps)]
 }
 
-`_run_package_build_tools` <- function(ui) {
-  `_cli_run_command`(
+# Run the tool-build prerequisite as a child CLI command.
+.run_package_build_tools <- function(ui) {
+  .cli_run_command(
     ui = ui,
     label = "Building tools",
     command = "./tools/build_tools.R",
@@ -106,8 +116,9 @@ rm(`_bootstrap_cli_ui`)
   )
 }
 
-`_run_package_build_step` <- function(step_script, ui) {
-  `_cli_run_command`(
+# Run one package build-stage script as a child CLI command.
+.run_package_build_step <- function(step_script, ui) {
+  .cli_run_command(
     ui = ui,
     label = paste0("Running ", basename(step_script)),
     command = paste0("./", step_script),
@@ -116,14 +127,18 @@ rm(`_bootstrap_cli_ui`)
   )
 }
 
-`_child_output_lines` <- function(run_result) {
+# Split combined child-process output into non-empty lines.
+.child_output_lines <- function(run_result) {
   combined <- c(run_result$stdout, run_result$stderr)
-  lines <- unlist(strsplit(paste(combined, collapse = "\n"), "\n", fixed = TRUE))
+  lines <- unlist(
+    strsplit(paste(combined, collapse = "\n"), "\n", fixed = TRUE)
+  )
   lines[nzchar(lines)]
 }
 
-`_emit_child_output` <- function(run_result) {
-  lines <- `_child_output_lines`(run_result)
+# Emit child-process output indented under the parent orchestrator step.
+.emit_child_output <- function(run_result) {
+  lines <- .child_output_lines(run_result)
 
   if (length(lines) > 0L) {
     indented <- paste0("  ", lines)
@@ -151,51 +166,54 @@ rm(`_bootstrap_cli_ui`)
 #' }
 run_build_package <- function(args = commandArgs(trailingOnly = TRUE)) {
   if (!requireNamespace("processx", quietly = TRUE)) {
-    stop("The `processx` package is required to run build tools.", call. = FALSE)
+    stop(
+      "The `processx` package is required to run build tools.",
+      call. = FALSE
+    )
   }
 
-  options <- `_parse_build_package_args`(args)
+  options <- .parse_build_package_args(args)
 
   if (isTRUE(options$help)) {
-    `_print_build_package_help`()
+    .print_build_package_help()
     return(invisible(NULL))
   }
 
-  ui <- `_cli_ui_new`()
+  ui <- .cli_ui_new()
   ui$plain_step_status_col <- 62L
 
   if (isTRUE(options$run_tools)) {
-    `_cli_step_start`(ui, "Building tools")
-    tool_run <- `_run_package_build_tools`(ui)
+    .cli_step_start(ui, "Building tools")
+    tool_run <- .run_package_build_tools(ui)
     if (!identical(tool_run$status, 0L)) {
-      `_cli_step_fail`(
+      .cli_step_fail(
         ui,
         details = c(tool_run$stdout, tool_run$stderr)
       )
-      stop("Tool build workflow failed.", call. = FALSE)
+      .cli_abort_handled("Tool build workflow failed.")
     }
     if (!isTRUE(ui$fancy)) {
-      `_emit_child_output`(tool_run)
+      .emit_child_output(tool_run)
     }
-    `_cli_step_finish`(ui, status = "Done")
+    .cli_step_finish(ui, status = "Done")
   }
 
-  steps <- `_existing_package_build_steps`()
+  steps <- .existing_package_build_steps()
 
   for (step in steps) {
-    `_cli_step_start`(ui, paste0("Running ", basename(step)))
-    step_run <- `_run_package_build_step`(step, ui)
+    .cli_step_start(ui, paste0("Running ", basename(step)))
+    step_run <- .run_package_build_step(step, ui)
     if (!identical(step_run$status, 0L)) {
-      `_cli_step_fail`(
+      .cli_step_fail(
         ui,
         details = c(step_run$stdout, step_run$stderr)
       )
-      stop("Package build step failed: ", step, call. = FALSE)
+      .cli_abort_handled(paste0("Package build step failed: ", step))
     }
     if (!isTRUE(ui$fancy)) {
-      `_emit_child_output`(step_run)
+      .emit_child_output(step_run)
     }
-    `_cli_step_finish`(ui, status = "Done")
+    .cli_step_finish(ui, status = "Done")
   }
 
   invisible(
@@ -207,5 +225,6 @@ run_build_package <- function(args = commandArgs(trailingOnly = TRUE)) {
 }
 
 if (sys.nframe() == 0L) {
-  run_build_package()
+  .cli_run_main(run_build_package)
 }
+# nolint end

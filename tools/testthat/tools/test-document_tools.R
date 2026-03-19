@@ -1,14 +1,18 @@
 source(file.path("..", "..", "document_tools.R"))
 
-write_file <- function(path, lines = "x") {
+.write_file <- function(path, lines = "x") {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   writeLines(lines, path)
 }
 
-create_fake_repo <- function(root) {
+.create_fake_repo <- function(root) {
   dir.create(file.path(root, "docs"), recursive = TRUE, showWarnings = FALSE)
-  dir.create(file.path(root, "tools", "runners"), recursive = TRUE, showWarnings = FALSE)
-  write_file(file.path(root, "DESCRIPTION"), c(
+  dir.create(
+    file.path(root, "tools", "runners"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
+  .write_file(file.path(root, "DESCRIPTION"), c(
     "Package: fake",
     "Title: Fake",
     "Version: 0.0.0.9000",
@@ -17,7 +21,7 @@ create_fake_repo <- function(root) {
     "Encoding: UTF-8",
     "Roxygen: list(markdown = TRUE)"
   ))
-  write_file(file.path(root, "LICENSE"), "MIT")
+  .write_file(file.path(root, "LICENSE"), "MIT")
   file.copy(
     normalizePath(file.path("..", "..", "document_tools.R"), mustWork = TRUE),
     file.path(root, "tools", "document_tools.R")
@@ -57,7 +61,7 @@ testthat::test_that("document_tools generates docs into tools/man", {
   withr::local_envvar(c(SHINY_WEBAWESOME_CLI_MODE = "quiet"))
 
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
   result <- document_tools(
     files = c("tools/clean_webawesome.R", "tools/runners/clean.R"),
@@ -77,27 +81,30 @@ testthat::test_that("document_tools generates docs into tools/man", {
   )
 })
 
-testthat::test_that("document_tools default file set includes fetch_webawesome", {
-  testthat::skip_if_not_installed("document")
-  withr::local_envvar(c(SHINY_WEBAWESOME_CLI_MODE = "quiet"))
+testthat::test_that(
+  "document_tools default file set includes fetch_webawesome",
+  {
+    testthat::skip_if_not_installed("document")
+    withr::local_envvar(c(SHINY_WEBAWESOME_CLI_MODE = "quiet"))
 
-  root <- withr::local_tempdir()
-  create_fake_repo(root)
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
 
-  result <- document_tools(root = root, verbose = FALSE)
+    result <- document_tools(root = root, verbose = FALSE)
 
-  testthat::expect_true("fetch_webawesome.Rd" %in% result$generated)
-  testthat::expect_true(
-    file.exists(file.path(root, "tools", "man", "fetch_webawesome.Rd"))
-  )
-})
+    testthat::expect_true("fetch_webawesome.Rd" %in% result$generated)
+    testthat::expect_true(
+      file.exists(file.path(root, "tools", "man", "fetch_webawesome.Rd"))
+    )
+  }
+)
 
 testthat::test_that("document_tools rejects missing source files", {
   testthat::skip_if_not_installed("document")
   withr::local_envvar(c(SHINY_WEBAWESOME_CLI_MODE = "quiet"))
 
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
   testthat::expect_error(
     document_tools(files = "tools/missing.R", root = root, verbose = FALSE),

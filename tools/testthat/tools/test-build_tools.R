@@ -1,12 +1,12 @@
-write_file <- function(path, lines = "x") {
+.write_file <- function(path, lines = "x") {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   writeLines(lines, path)
 }
 
-create_fake_repo <- function(root) {
+.create_fake_repo <- function(root) {
   dir.create(file.path(root, "docs"), recursive = TRUE, showWarnings = FALSE)
   dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
-  write_file(file.path(root, "DESCRIPTION"), "Package: fake")
+  .write_file(file.path(root, "DESCRIPTION"), "Package: fake")
 
   file.copy(
     normalizePath(file.path("..", "..", "build_tools.R"), mustWork = TRUE),
@@ -16,11 +16,11 @@ create_fake_repo <- function(root) {
     normalizePath(file.path("..", "..", "cli_ui.R"), mustWork = TRUE),
     file.path(root, "tools", "cli_ui.R")
   )
-  write_file(file.path(root, "tools", "test_tools.R"), c(
+  .write_file(file.path(root, "tools", "test_tools.R"), c(
     "#!/usr/bin/env Rscript",
     "cat('test tools invoked\\n')"
   ))
-  write_file(file.path(root, "tools", "document_tools.R"), c(
+  .write_file(file.path(root, "tools", "document_tools.R"), c(
     "#!/usr/bin/env Rscript",
     "cat('document tools invoked\\n')"
   ))
@@ -29,7 +29,7 @@ create_fake_repo <- function(root) {
   Sys.chmod(file.path(root, "tools", "document_tools.R"), mode = "0755")
 }
 
-run_build_tools_script <- function(root, args = character()) {
+.run_build_tools_script <- function(root, args = character()) {
   processx::run(
     command = "./tools/build_tools.R",
     args = args,
@@ -41,9 +41,9 @@ run_build_tools_script <- function(root, args = character()) {
 
 testthat::test_that("build_tools prints help", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
-  result <- run_build_tools_script(root, "--help")
+  result <- .run_build_tools_script(root, "--help")
 
   testthat::expect_equal(result$status, 0)
   testthat::expect_match(result$stdout, "Usage: ./tools/build_tools.R")
@@ -53,9 +53,9 @@ testthat::test_that("build_tools prints help", {
 
 testthat::test_that("build_tools runs tests and docs by default", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
-  result <- run_build_tools_script(root)
+  result <- .run_build_tools_script(root)
 
   testthat::expect_equal(result$status, 0)
   testthat::expect_match(result$stderr, "Testing tools")
@@ -66,10 +66,10 @@ testthat::test_that("build_tools runs tests and docs by default", {
 
 testthat::test_that("build_tools supports skipping tests or docs", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
-  skip_tests <- run_build_tools_script(root, "--skip-tests")
-  skip_docs <- run_build_tools_script(root, "--skip-docs")
+  skip_tests <- .run_build_tools_script(root, "--skip-tests")
+  skip_docs <- .run_build_tools_script(root, "--skip-docs")
 
   testthat::expect_equal(skip_tests$status, 0)
   testthat::expect_no_match(skip_tests$stderr, "Testing tools")

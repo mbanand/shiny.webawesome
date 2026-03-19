@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
-`_bootstrap_cli_ui` <- function() {
+# nolint start: object_usage_linter.
+# Source the shared CLI helpers from whichever path is available.
+.bootstrap_cli_ui <- function() {
   ofiles <- vapply(
     sys.frames(),
     function(frame) if (is.null(frame$ofile)) "" else frame$ofile,
@@ -22,21 +24,24 @@
   }
 }
 
-`_bootstrap_cli_ui`()
-rm(`_bootstrap_cli_ui`)
+.bootstrap_cli_ui()
+rm(.bootstrap_cli_ui)
 
-`_clean_usage` <- function() {
+# Return the CLI usage string for the clean runner.
+.clean_usage <- function() {
   paste(
     "Usage: Rscript tools/runners/clean.R",
     "[--level clean|distclean] [--dry-run] [--quiet] [--help]"
   )
 }
 
-`_clean_description` <- function() {
+# Return the short CLI description for the clean runner.
+.clean_description <- function() {
   "Remove generated build artifacts from the shiny.webawesome repository."
 }
 
-`_clean_option_lines` <- function() {
+# List supported CLI options for the clean runner.
+.clean_option_lines <- function() {
   c(
     "--level, -l <clean|distclean>  Cleanup level to run.",
     "--dry-run                      Report actions without deleting files.",
@@ -45,20 +50,22 @@ rm(`_bootstrap_cli_ui`)
   )
 }
 
-`_print_clean_help` <- function() {
+# Print the CLI help text for the clean runner.
+.print_clean_help <- function() {
   writeLines(
     c(
-      `_clean_description`(),
+      .clean_description(),
       "",
-      `_clean_usage`(),
+      .clean_usage(),
       "",
       "Options:",
-      `_clean_option_lines`()
+      .clean_option_lines()
     )
   )
 }
 
-`_clean_runner_defaults` <- function() {
+# Define default CLI option values for the clean runner.
+.clean_runner_defaults <- function() {
   list(
     level = "clean",
     dry_run = FALSE,
@@ -67,8 +74,9 @@ rm(`_bootstrap_cli_ui`)
   )
 }
 
-`_parse_clean_args` <- function(args) {
-  options <- `_clean_runner_defaults`()
+# Parse command-line arguments for the clean runner.
+.parse_clean_args <- function(args) {
+  options <- .clean_runner_defaults()
   skip_next <- FALSE
 
   for (i in seq_along(args)) {
@@ -110,7 +118,7 @@ rm(`_bootstrap_cli_ui`)
     }
 
     stop(
-      paste0("Unknown argument: ", arg, "\n", `_clean_usage`()),
+      paste0("Unknown argument: ", arg, "\n", .clean_usage()),
       call. = FALSE
     )
   }
@@ -118,7 +126,8 @@ rm(`_bootstrap_cli_ui`)
   options
 }
 
-`_emit_clean_runner_summary` <- function(result) {
+# Emit a short summary for the clean runner result.
+.emit_clean_runner_summary <- function(result) {
   summary_prefix <- if (result$dry_run) "Dry run complete" else "Clean complete"
   message(
     summary_prefix,
@@ -152,17 +161,17 @@ rm(`_bootstrap_cli_ui`)
 #' run_clean("--help")
 #' }
 run_clean <- function(args = commandArgs(trailingOnly = TRUE)) {
-  options <- `_parse_clean_args`(args)
+  options <- .parse_clean_args(args)
 
   if (isTRUE(options$help)) {
-    `_print_clean_help`()
+    .print_clean_help()
     return(invisible(NULL))
   }
 
   source(file.path("tools", "clean_webawesome.R"))
-  ui <- `_cli_ui_new`()
+  ui <- .cli_ui_new()
 
-  `_cli_step_start`(ui, "Cleaning repository")
+  .cli_step_start(ui, "Cleaning repository")
 
   result <- tryCatch(
     {
@@ -174,24 +183,25 @@ run_clean <- function(args = commandArgs(trailingOnly = TRUE)) {
       )
     },
     error = function(condition) {
-      `_cli_step_fail`(ui, details = conditionMessage(condition))
-      stop(condition)
+      .cli_step_fail(ui, details = conditionMessage(condition))
+      .cli_abort_handled(conditionMessage(condition))
     }
   )
 
   if (isTRUE(options$verbose) && !isTRUE(ui$fancy)) {
-    `_emit_clean_summary`(result)
+    .emit_clean_summary(result)
   }
 
-  `_cli_step_finish`(
+  .cli_step_finish(
     ui,
     status = if (isTRUE(result$dry_run)) "Done" else "Done"
   )
-  `_emit_clean_runner_summary`(result)
+  .emit_clean_runner_summary(result)
 
   invisible(result)
 }
 
 if (sys.nframe() == 0L) {
-  run_clean()
+  .cli_run_main(run_clean)
 }
+# nolint end

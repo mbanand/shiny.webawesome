@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
-`_bootstrap_cli_ui` <- function() {
+# nolint start: object_usage_linter.
+# Source the shared CLI helpers from whichever path is available.
+.bootstrap_cli_ui <- function() {
   ofiles <- vapply(
     sys.frames(),
     function(frame) if (is.null(frame$ofile)) "" else frame$ofile,
@@ -22,21 +24,24 @@
   }
 }
 
-`_bootstrap_cli_ui`()
-rm(`_bootstrap_cli_ui`)
+.bootstrap_cli_ui()
+rm(.bootstrap_cli_ui)
 
-`_build_tools_usage` <- function() {
+# Return the CLI usage string for the top-level tool builder.
+.build_tools_usage <- function() {
   paste(
     "Usage: ./tools/build_tools.R",
     "[--skip-tests] [--skip-docs] [--help]"
   )
 }
 
-`_build_tools_description` <- function() {
+# Return the short CLI description for the top-level tool builder.
+.build_tools_description <- function() {
   "Run the top-level tool build workflow."
 }
 
-`_build_tools_option_lines` <- function() {
+# List supported CLI options for the top-level tool builder.
+.build_tools_option_lines <- function() {
   c(
     "--skip-tests  Skip the tool test suite.",
     "--skip-docs   Skip tool documentation generation.",
@@ -44,20 +49,22 @@ rm(`_bootstrap_cli_ui`)
   )
 }
 
-`_print_build_tools_help` <- function() {
+# Print the CLI help text for the top-level tool builder.
+.print_build_tools_help <- function() {
   writeLines(
     c(
-      `_build_tools_description`(),
+      .build_tools_description(),
       "",
-      `_build_tools_usage`(),
+      .build_tools_usage(),
       "",
       "Options:",
-      `_build_tools_option_lines`()
+      .build_tools_option_lines()
     )
   )
 }
 
-`_build_tools_defaults` <- function() {
+# Define default CLI option values for the top-level tool builder.
+.build_tools_defaults <- function() {
   list(
     run_tests = TRUE,
     run_docs = TRUE,
@@ -65,8 +72,9 @@ rm(`_bootstrap_cli_ui`)
   )
 }
 
-`_parse_build_tools_args` <- function(args) {
-  options <- `_build_tools_defaults`()
+# Parse command-line arguments for the top-level tool builder.
+.parse_build_tools_args <- function(args) {
+  options <- .build_tools_defaults()
 
   for (arg in args) {
     if (arg == "--skip-tests") {
@@ -85,7 +93,7 @@ rm(`_bootstrap_cli_ui`)
     }
 
     stop(
-      paste0("Unknown argument: ", arg, "\n", `_build_tools_usage`()),
+      paste0("Unknown argument: ", arg, "\n", .build_tools_usage()),
       call. = FALSE
     )
   }
@@ -93,8 +101,9 @@ rm(`_bootstrap_cli_ui`)
   options
 }
 
-`_run_build_tools_tests` <- function(ui) {
-  `_cli_run_command`(
+# Run the tool test suite as a child CLI command.
+.run_build_tools_tests <- function(ui) {
+  .cli_run_command(
     ui = ui,
     label = "Testing tools",
     command = "./tools/test_tools.R",
@@ -103,8 +112,9 @@ rm(`_bootstrap_cli_ui`)
   )
 }
 
-`_run_build_tools_docs` <- function(ui) {
-  `_cli_run_command`(
+# Regenerate tool documentation as a child CLI command.
+.run_build_tools_docs <- function(ui) {
+  .cli_run_command(
     ui = ui,
     label = "Documenting tools",
     command = "./tools/document_tools.R",
@@ -113,14 +123,18 @@ rm(`_bootstrap_cli_ui`)
   )
 }
 
-`_child_output_lines` <- function(run_result) {
+# Split combined child-process output into non-empty lines.
+.child_output_lines <- function(run_result) {
   combined <- c(run_result$stdout, run_result$stderr)
-  lines <- unlist(strsplit(paste(combined, collapse = "\n"), "\n", fixed = TRUE))
+  lines <- unlist(
+    strsplit(paste(combined, collapse = "\n"), "\n", fixed = TRUE)
+  )
   lines[nzchar(lines)]
 }
 
-`_emit_child_section_details` <- function(run_result, parent_label) {
-  lines <- `_child_output_lines`(run_result)
+# Emit nested child-process details without repeating wrapper step lines.
+.emit_child_section_details <- function(run_result, parent_label) {
+  lines <- .child_output_lines(run_result)
   if (length(lines) == 0L) {
     return(invisible(NULL))
   }
@@ -153,48 +167,51 @@ rm(`_bootstrap_cli_ui`)
 #' }
 run_build_tools <- function(args = commandArgs(trailingOnly = TRUE)) {
   if (!requireNamespace("processx", quietly = TRUE)) {
-    stop("The `processx` package is required to run build tools.", call. = FALSE)
+    stop(
+      "The `processx` package is required to run build tools.",
+      call. = FALSE
+    )
   }
 
-  options <- `_parse_build_tools_args`(args)
+  options <- .parse_build_tools_args(args)
 
   if (isTRUE(options$help)) {
-    `_print_build_tools_help`()
+    .print_build_tools_help()
     return(invisible(NULL))
   }
 
-  ui <- `_cli_ui_new`()
+  ui <- .cli_ui_new()
 
   if (isTRUE(options$run_tests)) {
-    `_cli_step_start`(ui, "Testing tools")
-    test_run <- `_run_build_tools_tests`(ui)
+    .cli_step_start(ui, "Testing tools")
+    test_run <- .run_build_tools_tests(ui)
     if (!identical(test_run$status, 0L)) {
-      `_cli_step_fail`(
+      .cli_step_fail(
         ui,
         details = c(test_run$stdout, test_run$stderr)
       )
-      stop("Tool tests failed.", call. = FALSE)
+      .cli_abort_handled("Tool tests failed.")
     }
     if (!isTRUE(ui$fancy)) {
-      `_emit_child_section_details`(test_run, "Testing tools")
+      .emit_child_section_details(test_run, "Testing tools")
     }
-    `_cli_step_finish`(ui, status = "Pass")
+    .cli_step_finish(ui, status = "Pass")
   }
 
   if (isTRUE(options$run_docs)) {
-    `_cli_step_start`(ui, "Documenting tools")
-    doc_run <- `_run_build_tools_docs`(ui)
+    .cli_step_start(ui, "Documenting tools")
+    doc_run <- .run_build_tools_docs(ui)
     if (!identical(doc_run$status, 0L)) {
-      `_cli_step_fail`(
+      .cli_step_fail(
         ui,
         details = c(doc_run$stdout, doc_run$stderr)
       )
-      stop("Tool documentation generation failed.", call. = FALSE)
+      .cli_abort_handled("Tool documentation generation failed.")
     }
     if (!isTRUE(ui$fancy)) {
-      `_emit_child_section_details`(doc_run, "Documenting tools")
+      .emit_child_section_details(doc_run, "Documenting tools")
     }
-    `_cli_step_finish`(ui, status = "Done")
+    .cli_step_finish(ui, status = "Done")
   }
 
   invisible(
@@ -206,5 +223,6 @@ run_build_tools <- function(args = commandArgs(trailingOnly = TRUE)) {
 }
 
 if (sys.nframe() == 0L) {
-  run_build_tools()
+  .cli_run_main(run_build_tools)
 }
+# nolint end

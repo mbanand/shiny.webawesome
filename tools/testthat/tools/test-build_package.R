@@ -1,12 +1,12 @@
-write_file <- function(path, lines = "x") {
+.write_file <- function(path, lines = "x") {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
   writeLines(lines, path)
 }
 
-create_fake_repo <- function(root) {
+.create_fake_repo <- function(root) {
   dir.create(file.path(root, "docs"), recursive = TRUE, showWarnings = FALSE)
   dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
-  write_file(file.path(root, "DESCRIPTION"), "Package: fake")
+  .write_file(file.path(root, "DESCRIPTION"), "Package: fake")
 
   file.copy(
     normalizePath(file.path("..", "..", "build_package.R"), mustWork = TRUE),
@@ -16,15 +16,15 @@ create_fake_repo <- function(root) {
     normalizePath(file.path("..", "..", "cli_ui.R"), mustWork = TRUE),
     file.path(root, "tools", "cli_ui.R")
   )
-  write_file(file.path(root, "tools", "build_tools.R"), c(
+  .write_file(file.path(root, "tools", "build_tools.R"), c(
     "#!/usr/bin/env Rscript",
     "cat('build tools invoked\\n')"
   ))
-  write_file(file.path(root, "tools", "fetch_webawesome.R"), c(
+  .write_file(file.path(root, "tools", "fetch_webawesome.R"), c(
     "#!/usr/bin/env Rscript",
     "cat('fetch invoked\\n')"
   ))
-  write_file(file.path(root, "tools", "prune_webawesome.R"), c(
+  .write_file(file.path(root, "tools", "prune_webawesome.R"), c(
     "#!/usr/bin/env Rscript",
     "cat('prune invoked\\n')"
   ))
@@ -34,7 +34,7 @@ create_fake_repo <- function(root) {
   Sys.chmod(file.path(root, "tools", "prune_webawesome.R"), mode = "0755")
 }
 
-run_build_package_script <- function(root, args = character()) {
+.run_build_package_script <- function(root, args = character()) {
   processx::run(
     command = "./tools/build_package.R",
     args = args,
@@ -46,9 +46,9 @@ run_build_package_script <- function(root, args = character()) {
 
 testthat::test_that("build_package prints help", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
-  result <- run_build_package_script(root, "--help")
+  result <- .run_build_package_script(root, "--help")
 
   testthat::expect_equal(result$status, 0)
   testthat::expect_match(result$stdout, "Usage: ./tools/build_package.R")
@@ -57,24 +57,36 @@ testthat::test_that("build_package prints help", {
 
 testthat::test_that("build_package runs build_tools first when present", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
-  result <- run_build_package_script(root)
+  result <- .run_build_package_script(root)
 
   testthat::expect_equal(result$status, 0)
   testthat::expect_match(result$stderr, "Building tools \\.{2,} Done")
-  testthat::expect_match(result$stderr, "Running fetch_webawesome\\.R \\.{2,} Done")
-  testthat::expect_match(result$stderr, "Running prune_webawesome\\.R \\.{2,} Done")
+  testthat::expect_match(
+    result$stderr,
+    "Running fetch_webawesome\\.R \\.{2,} Done"
+  )
+  testthat::expect_match(
+    result$stderr,
+    "Running prune_webawesome\\.R \\.{2,} Done"
+  )
 })
 
 testthat::test_that("build_package supports skipping the tool workflow", {
   root <- withr::local_tempdir()
-  create_fake_repo(root)
+  .create_fake_repo(root)
 
-  result <- run_build_package_script(root, "--skip-tools")
+  result <- .run_build_package_script(root, "--skip-tools")
 
   testthat::expect_equal(result$status, 0)
   testthat::expect_no_match(result$stderr, "Building tools")
-  testthat::expect_match(result$stderr, "Running fetch_webawesome\\.R \\.{2,} Done")
-  testthat::expect_match(result$stderr, "Running prune_webawesome\\.R \\.{2,} Done")
+  testthat::expect_match(
+    result$stderr,
+    "Running fetch_webawesome\\.R \\.{2,} Done"
+  )
+  testthat::expect_match(
+    result$stderr,
+    "Running prune_webawesome\\.R \\.{2,} Done"
+  )
 })
