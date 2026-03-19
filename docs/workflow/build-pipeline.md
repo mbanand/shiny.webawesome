@@ -60,6 +60,7 @@ Examples include:
 * generated R wrapper files
 * generated update functions
 * generated Shiny bindings
+* copied generation metadata under `inst/extdata/webawesome/`
 * pruned Web Awesome runtime bundle
 
 Typical directories removed:
@@ -68,6 +69,7 @@ Typical directories removed:
 R/generated/
 R/generated_updates/
 inst/bindings/
+inst/extdata/webawesome/
 inst/www/webawesome/
 manifests/
 report/
@@ -159,10 +161,13 @@ The pruner performs tasks such as:
 
 * copying runtime JavaScript modules
 * copying required CSS files
+* copying `custom-elements.json` and version metadata for downstream generation
 * removing development artifacts
 * removing TypeScript declaration files
 * removing editor integration files
 * removing framework integrations (such as React)
+* validating that the fetched upstream bundle contains the required prune inputs
+* failing if prune-owned output locations already contain content
 
 The resulting runtime bundle is written to:
 
@@ -187,9 +192,11 @@ inst/www/webawesome/
 
 ## Runtime Reachability Analysis
 
-The pruner may optionally perform **import graph analysis** on JavaScript and CSS files.
+The pruner performs **import graph analysis** on JavaScript and CSS files.
 
-This analysis walks the import graph starting from the Web Awesome loader and records which files are reachable through module imports.
+This analysis walks the import graph starting from the Web Awesome loader and
+the retained runtime entry directories and records which files are reachable
+through module imports.
 
 The purpose of this analysis is to:
 
@@ -197,7 +204,25 @@ The purpose of this analysis is to:
 * detect missing dependencies
 * assist developers when refining pruning rules
 
-The analysis produces a **diagnostic report** but does not automatically remove files based on reachability.
+If the analysis discovers that a referenced runtime file is missing from the
+fetched upstream bundle, prune fails with a clear diagnostic error.
+
+If the analysis discovers present but unreached runtime files, prune does not
+fail; those files are recorded in the prune report for inspection.
+
+The analysis produces versioned **diagnostic reports** under:
+
+```text
+report/prune/<version>/
+```
+
+Typical outputs include:
+
+```text
+report/prune/<version>/
+  summary.md
+  reachability.md
+```
 
 Pruning decisions remain explicit in the pruning script.
 
@@ -492,6 +517,22 @@ devtools::document()
 ```
 
 This sequence rebuilds the entire package from upstream metadata and verifies the resulting implementation.
+
+Before `generate_components()` exists and produces a real package surface,
+`build_package.R` should remain limited to the currently implemented package
+stage scripts rather than trying to run package-level `devtools::*`
+validation prematurely.
+
+Once generation is implemented, package-level validation should be added to
+`build_package.R` as separate top-level orchestration steps rather than as one
+combined "package generation" action. Typical steps are:
+
+- `Documenting package` via `devtools::document()`
+- `Testing package` via `devtools::test()`
+- `Checking package` via `devtools::check()`
+
+These steps should support explicit skip flags, and `devtools::check()` should
+be treated as the heaviest optional local gate.
 
 ---
 

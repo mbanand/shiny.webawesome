@@ -11,6 +11,7 @@
         "R/generated",
         "R/generated_updates",
         "inst/bindings",
+        "inst/extdata/webawesome",
         "inst/www/webawesome",
         "manifests",
         "report"
@@ -21,11 +22,11 @@
         "R/generated",
         "R/generated_updates",
         "inst/bindings",
+        "inst/extdata/webawesome",
         "inst/www/webawesome",
         "manifests",
         "report",
-        "vendor/webawesome",
-        "inst/extdata/webawesome"
+        "vendor/webawesome"
       )
     )
   )
@@ -67,7 +68,8 @@
 #' Remove generated build artifacts from the repository
 #'
 #' Executes the `clean` stage of the build pipeline. The default `clean` level
-#' removes generated package artifacts and the pruned runtime bundle.
+#' removes generated package artifacts, copied generation metadata, and the
+#' pruned runtime bundle.
 #' `distclean` additionally removes fetched upstream inputs and copied metadata.
 #'
 #' @param level Cleanup level. Must be one of `"clean"` or `"distclean"`.

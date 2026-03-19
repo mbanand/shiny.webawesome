@@ -286,9 +286,11 @@ tools/
 
 Responsibilities of examples:
 
-* `clean_webawesome.R` removes generated artifacts and pruned runtime assets.
+* `clean_webawesome.R` removes generated artifacts, copied metadata, and
+  pruned runtime assets.
 * `fetch_webawesome.R` downloads a pinned Web Awesome release.
-* `prune_webawesome.R` creates the minimal runtime bundle.
+* `prune_webawesome.R` creates the minimal runtime bundle, copies generation
+  metadata into `inst/extdata/webawesome/`, and writes versioned prune reports.
 * `generate_components.R` generates wrappers and bindings.
 
 The clean tool supports two levels of cleanup:
@@ -432,7 +434,12 @@ This file is a handwritten development input. It records the default upstream
 version that `tools/fetch_webawesome.R` should retrieve when no explicit
 version override is provided on the command line.
 
-Files generated during build that report on the build live in `manifests/` and `report/`. A current example is API coverage and conformance tracking (see details in `docs/development/component-coverage.md` and `docs/development/manifests.md`). Future additions may store other files in these directories.
+Files generated during build that report on the build live in `manifests/` and
+`report/`. Current examples include API coverage and conformance tracking (see
+details in `docs/development/component-coverage.md` and
+`docs/development/manifests.md`) and versioned prune diagnostics written under
+`report/prune/<version>/`. Future additions may store other files in these
+directories.
 
 ---
 

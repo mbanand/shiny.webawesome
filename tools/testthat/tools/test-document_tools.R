@@ -47,6 +47,10 @@ source(file.path("..", "..", "document_tools.R"))
     file.path(root, "tools", "fetch_webawesome.R")
   )
   file.copy(
+    normalizePath(file.path("..", "..", "prune_webawesome.R"), mustWork = TRUE),
+    file.path(root, "tools", "prune_webawesome.R")
+  )
+  file.copy(
     normalizePath(file.path("..", "..", "runners", "clean.R"), mustWork = TRUE),
     file.path(root, "tools", "runners", "clean.R")
   )
@@ -82,7 +86,7 @@ testthat::test_that("document_tools generates docs into tools/man", {
 })
 
 testthat::test_that(
-  "document_tools default file set includes fetch_webawesome",
+  "document_tools default file set includes fetch and prune stages",
   {
     testthat::skip_if_not_installed("document")
     withr::local_envvar(c(SHINY_WEBAWESOME_CLI_MODE = "quiet"))
@@ -93,8 +97,12 @@ testthat::test_that(
     result <- document_tools(root = root, verbose = FALSE)
 
     testthat::expect_true("fetch_webawesome.Rd" %in% result$generated)
+    testthat::expect_true("prune_webawesome.Rd" %in% result$generated)
     testthat::expect_true(
       file.exists(file.path(root, "tools", "man", "fetch_webawesome.Rd"))
+    )
+    testthat::expect_true(
+      file.exists(file.path(root, "tools", "man", "prune_webawesome.Rd"))
     )
   }
 )

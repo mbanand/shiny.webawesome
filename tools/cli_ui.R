@@ -40,24 +40,29 @@
 }
 
 # Format one dotted status line for plain CLI output.
-.cli_plain_line <- function(label, status, status_col) {
+.cli_plain_line <- function(label, status, status_col, comment = NULL) {
   base <- paste0(label, " ")
   dots_needed <- max(
     2L,
     status_col - nchar(base, type = "width") - nchar(status, type = "width")
   )
-  paste0(base, strrep(".", dots_needed), " ", status)
+  suffix <- if (is.null(comment) || !nzchar(comment)) {
+    ""
+  } else {
+    paste0("    ", comment)
+  }
+  paste0(base, strrep(".", dots_needed), " ", status, suffix)
 }
 
 # Format a full step status line using the current UI mode widths.
-.cli_step_line <- function(ui, label, status) {
+.cli_step_line <- function(ui, label, status, comment = NULL) {
   status_col <- if (isTRUE(ui$fancy)) {
     ui$fancy_step_status_col
   } else {
     ui$plain_step_status_col
   }
 
-  .cli_plain_line(label, status, status_col)
+  .cli_plain_line(label, status, status_col, comment = comment)
 }
 
 # Start a top-level CLI step and prime the UI state for updates.
@@ -98,7 +103,7 @@
 }
 
 # Finish the current CLI step and print its final status line.
-.cli_step_finish <- function(ui, status = "Done") {
+.cli_step_finish <- function(ui, status = "Done", comment = NULL) {
   if (isTRUE(ui$quiet)) {
     ui$has_substep <- FALSE
     ui$current_step <- NULL
@@ -111,10 +116,15 @@
     if (isTRUE(ui$has_substep)) {
       cat("\r\033[2K", sep = "")
     }
-    cat("\033[1A\r\033[2K", .cli_step_line(ui, label, status), "\n", sep = "")
+    cat(
+      "\033[1A\r\033[2K",
+      .cli_step_line(ui, label, status, comment = comment),
+      "\n",
+      sep = ""
+    )
     flush.console()
   } else {
-    message(.cli_step_line(ui, label, status))
+    message(.cli_step_line(ui, label, status, comment = comment))
   }
 
   ui$has_substep <- FALSE
@@ -122,7 +132,7 @@
 }
 
 # Mark the current CLI step as failed and emit any supplied details.
-.cli_step_fail <- function(ui, details = character()) {
+.cli_step_fail <- function(ui, details = character(), comment = NULL) {
   if (isTRUE(ui$quiet)) {
     if (length(details) > 0L) {
       cat(paste(details, collapse = "\n"), "\n", file = stderr(), sep = "")
@@ -138,10 +148,15 @@
     if (isTRUE(ui$has_substep)) {
       cat("\r\033[2K", sep = "")
     }
-    cat("\033[1A\r\033[2K", .cli_step_line(ui, label, "Fail"), "\n", sep = "")
+    cat(
+      "\033[1A\r\033[2K",
+      .cli_step_line(ui, label, "Fail", comment = comment),
+      "\n",
+      sep = ""
+    )
     flush.console()
   } else {
-    message(.cli_step_line(ui, label, "Fail"))
+    message(.cli_step_line(ui, label, "Fail", comment = comment))
   }
 
   if (length(details) > 0L) {
@@ -158,7 +173,8 @@
   label,
   index = NULL,
   total = NULL,
-  status = "pass"
+  status = "pass",
+  comment = NULL
 ) {
   if (isTRUE(ui$quiet)) {
     return(invisible(NULL))
@@ -175,7 +191,14 @@
     return(invisible(NULL))
   }
 
-  message(.cli_plain_line(text, status, ui$plain_substep_status_col))
+  message(
+    .cli_plain_line(
+      text,
+      status,
+      ui$plain_substep_status_col,
+      comment = comment
+    )
+  )
 }
 
 # Return the spinner frames used while fancy-mode child commands run.

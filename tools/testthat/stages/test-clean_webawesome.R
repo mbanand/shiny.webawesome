@@ -20,6 +20,10 @@ testthat::test_that(
     dir.create(file.path(root, "R", "generated"), recursive = TRUE)
     dir.create(file.path(root, "R", "generated_updates"), recursive = TRUE)
     dir.create(file.path(root, "inst", "bindings"), recursive = TRUE)
+    dir.create(
+      file.path(root, "inst", "extdata", "webawesome"),
+      recursive = TRUE
+    )
     dir.create(file.path(root, "inst", "www", "webawesome"), recursive = TRUE)
     dir.create(file.path(root, "manifests"), recursive = TRUE)
     dir.create(file.path(root, "report"), recursive = TRUE)
@@ -27,6 +31,9 @@ testthat::test_that(
     .write_file(file.path(root, "R", "generated", "wa_button.R"))
     .write_file(file.path(root, "R", "generated_updates", "update_wa_button.R"))
     .write_file(file.path(root, "inst", "bindings", "wa-button.js"))
+    .write_file(
+      file.path(root, "inst", "extdata", "webawesome", "custom-elements.json")
+    )
     .write_file(file.path(root, "inst", "www", "webawesome", "loader.js"))
     .write_file(file.path(root, "manifests", "component-coverage.yaml"))
     .write_file(file.path(root, "report", "summary.md"))
@@ -38,6 +45,9 @@ testthat::test_that(
       dir.exists(file.path(root, "R", "generated_updates"))
     )
     testthat::expect_false(dir.exists(file.path(root, "inst", "bindings")))
+    testthat::expect_false(
+      dir.exists(file.path(root, "inst", "extdata", "webawesome"))
+    )
     testthat::expect_false(
       dir.exists(file.path(root, "inst", "www", "webawesome"))
     )
@@ -51,6 +61,7 @@ testthat::test_that(
         "R/generated",
         "R/generated_updates",
         "inst/bindings",
+        "inst/extdata/webawesome",
         "inst/www/webawesome",
         "manifests",
         "report"
@@ -59,7 +70,7 @@ testthat::test_that(
   }
 )
 
-testthat::test_that("distclean also removes vendor and extdata metadata", {
+testthat::test_that("distclean also removes vendor inputs", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
 
@@ -76,9 +87,6 @@ testthat::test_that("distclean also removes vendor and extdata metadata", {
   result <- clean_webawesome(level = "distclean", root = root, verbose = FALSE)
 
   testthat::expect_false(dir.exists(file.path(root, "vendor", "webawesome")))
-  testthat::expect_false(
-    dir.exists(file.path(root, "inst", "extdata", "webawesome"))
-  )
   testthat::expect_true("vendor/webawesome" %in% result$removed)
   testthat::expect_true("inst/extdata/webawesome" %in% result$removed)
 })

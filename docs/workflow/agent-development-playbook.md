@@ -181,6 +181,15 @@ Top-level orchestration should remain explicit:
 - `build_package.R` runs `build_tools.R` first, then executes the currently
   available package-build step scripts
 
+Do not wire package-level `devtools::document()`, `devtools::test()`, or
+`devtools::check()` into `build_package.R` before the generate stage exists and
+produces a real package surface to validate.
+
+Once generation exists, these package-level actions should be added as
+separate top-level `build_package.R` steps, not collapsed into one combined
+"generate package" action. They should also support explicit skip flags, and
+`devtools::check()` should be treated as the heaviest optional local gate.
+
 ---
 
 # Running Validation
@@ -260,6 +269,11 @@ devtools::check()
 ```
 
 `devtools::check()` runs a full package validation similar to CRAN checks.
+
+This package-level validation flow applies once generated package code exists.
+Before the generate stage is implemented, `build_package.R` should stop at the
+currently implemented package stage scripts instead of trying to run
+package-level `devtools::*` steps prematurely.
 
 Agents should ensure that:
 
@@ -376,6 +390,7 @@ When working on this repository, agents should:
 - modify generator logic rather than generated files
 - follow the clean → fetch → prune → generate → test → report workflow
 - run validation checks including `devtools::test()` and `devtools::check()`
+  once generated package surface exists
 - update documentation when architecture changes occur
 - prefer small, well-scoped tasks
 - make safe progress when possible but do not invent architecture
