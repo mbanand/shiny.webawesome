@@ -158,7 +158,11 @@ source(file.path("..", "..", "generate_components.R"))
     recursive = TRUE,
     showWarnings = FALSE
   )
-  template_files <- c("wrapper.R.tmpl", "update.R.tmpl", "binding.js.tmpl")
+  template_files <- c(
+    "wrapper.R.tmpl",
+    "update.R.tmpl",
+    "binding.js.tmpl"
+  )
 
   for (template in template_files) {
     file.copy(
@@ -247,9 +251,25 @@ testthat::test_that("generate writes debug artifacts when requested", {
   )
 
   testthat::expect_true(dir.exists(result$debug$directory))
+  testthat::expect_equal(
+    dirname(result$debug$directory),
+    file.path(root, "scratch", "debug")
+  )
+  testthat::expect_match(
+    basename(result$debug$directory),
+    "^generate-components-[0-9]{8}-[0-9]{6}-[0-9]+$"
+  )
   testthat::expect_true(file.exists(result$debug$metadata_summary))
   testthat::expect_true(file.exists(result$debug$schema))
   testthat::expect_true(file.exists(result$debug$filters))
+  testthat::expect_equal(
+    result$debug$relative_directory,
+    sub(
+      paste0("^", normalizePath(root, winslash = "/", mustWork = TRUE), "/"),
+      "",
+      result$debug$directory
+    )
+  )
 
   schema_debug <- jsonlite::fromJSON(result$debug$schema, simplifyVector = FALSE)
   testthat::expect_equal(schema_debug$summary$component_count, 4L)
@@ -268,13 +288,13 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   )
 
   testthat::expect_true(
-    file.exists(file.path(root, "R", "generated", "wa_card.R"))
+    file.exists(file.path(root, "R", "wa_card.R"))
   )
   testthat::expect_true(
-    file.exists(file.path(root, "R", "generated", "wa_checkbox.R"))
+    file.exists(file.path(root, "R", "wa_checkbox.R"))
   )
   testthat::expect_true(
-    file.exists(file.path(root, "R", "generated", "wa_select.R"))
+    file.exists(file.path(root, "R", "wa_select.R"))
   )
   testthat::expect_true(
     file.exists(file.path(root, "inst", "bindings", "wa_checkbox.js"))
@@ -283,11 +303,12 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     file.exists(file.path(root, "inst", "bindings", "wa_select.js"))
   )
   testthat::expect_true(
-    file.exists(file.path(root, "R", "generated_updates", "update_wa_select.R"))
+    file.exists(file.path(root, "R", "wa_select.R"))
   )
   testthat::expect_equal(length(result$written$wrappers), 3L)
   testthat::expect_equal(length(result$written$bindings), 2L)
   testthat::expect_equal(length(result$written$updates), 1L)
+  testthat::expect_true("R/wa_select.R" %in% result$written$updates)
 })
 
 testthat::test_that("generate asks for prune when vendor metadata exists", {

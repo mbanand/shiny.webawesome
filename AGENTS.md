@@ -88,8 +88,7 @@ Agents should prefer **improving the generator** rather than manually modifying 
 Generated code lives in:
 
 ```
-R/generated/
-R/generated_updates/
+R/
 inst/bindings/
 ```
 
@@ -370,4 +369,3 @@ clean → fetch → prune → generate → test → report
 
 Generated artifacts, manifests, and reports should be treated as deterministic
 outputs of the build system.
-

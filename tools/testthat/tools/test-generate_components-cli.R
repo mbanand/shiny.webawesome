@@ -105,7 +105,11 @@
     recursive = TRUE,
     showWarnings = FALSE
   )
-  template_files <- c("wrapper.R.tmpl", "update.R.tmpl", "binding.js.tmpl")
+  template_files <- c(
+    "wrapper.R.tmpl",
+    "update.R.tmpl",
+    "binding.js.tmpl"
+  )
   for (template in template_files) {
     file.copy(
       normalizePath(
@@ -175,7 +179,9 @@ testthat::test_that("generate tool builds filtered schema and reports success", 
     result$stderr,
     paste0(
       "Generate schema complete: components=1, metadata=",
-      "inst/extdata/webawesome/custom-elements.json, debug=.*wrappers=1, bindings=0, updates=0"
+      "inst/extdata/webawesome/custom-elements.json, debug=",
+      ".*scratch/debug/generate-components-[0-9]{8}-[0-9]{6}-[0-9]+, ",
+      "wrappers=1, bindings=0, updates=0"
     )
   )
 })

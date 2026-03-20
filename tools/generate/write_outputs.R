@@ -1,14 +1,9 @@
 # Output writing helpers for the generate stage.
 # nolint start: object_usage_linter.
 
-# Return the wrapper output directory.
-.wrapper_output_dir <- function(root) {
-  file.path(root, "R", "generated")
-}
-
-# Return the update-function output directory.
-.update_output_dir <- function(root) {
-  file.path(root, "R", "generated_updates")
+# Return the top-level R source directory.
+.r_output_dir <- function(root) {
+  file.path(root, "R")
 }
 
 # Return the binding output directory.
@@ -36,30 +31,29 @@
   )
 
   for (component in components) {
-    wrapper_path <- file.path(
-      .wrapper_output_dir(root),
-      paste0(component$r_function_name, ".R")
-    )
+    wrapper_path <- file.path(.r_output_dir(root), paste0(component$r_function_name, ".R"))
+    wrapper_text <- .render_wrapper_file(component, wrapper_template)
+    update_text <- .render_update_file(component, update_template)
+
+    if (!is.null(update_text)) {
+      wrapper_text <- paste(wrapper_text, update_text, sep = "\n\n")
+    }
+
     written$wrappers <- c(
       written$wrappers,
       .strip_root_prefix(
         .write_text_file(
           wrapper_path,
-          .render_wrapper_file(component, wrapper_template)
+          wrapper_text
         ),
         root
       )
     )
 
-    update_text <- .render_update_file(component, update_template)
     if (!is.null(update_text)) {
-      update_path <- file.path(
-        .update_output_dir(root),
-        paste0("update_", component$r_function_name, ".R")
-      )
       written$updates <- c(
         written$updates,
-        .strip_root_prefix(.write_text_file(update_path, update_text), root)
+        .strip_root_prefix(wrapper_path, root)
       )
     }
 

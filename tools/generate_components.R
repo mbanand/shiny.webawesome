@@ -131,7 +131,7 @@ rm(.bootstrap_cli_ui, .bootstrap_generate_helpers)
       "wa_* function names to exclude."
     ),
     "--schema-only            Build schema only and skip writing outputs.",
-    "--debug                  Write metadata/schema snapshots to tempdir().",
+    "--debug                  Write metadata/schema snapshots under scratch/debug/.",
     "--quiet                  Suppress stage-level progress messages.",
     "--help, -h               Print this help text."
   )
@@ -251,9 +251,23 @@ rm(.bootstrap_cli_ui, .bootstrap_generate_helpers)
   options
 }
 
+# Return the repository-local directory used for generate debug artifacts.
+.generate_debug_root <- function(root) {
+  file.path(root, "scratch", "debug")
+}
+
+# Return one persistent generate debug directory path.
+.generate_debug_dir <- function(root) {
+  stamp <- format(Sys.time(), "%Y%m%d-%H%M%S", tz = "UTC")
+  file.path(
+    .generate_debug_root(root),
+    paste0("generate-components-", stamp, "-", Sys.getpid())
+  )
+}
+
 # Write schema debug artifacts and return their relative paths.
 .write_debug_artifacts <- function(result, root) {
-  debug_dir <- tempfile("generate-components-")
+  debug_dir <- .generate_debug_dir(root)
   dir.create(debug_dir, recursive = TRUE, showWarnings = FALSE)
 
   metadata_summary_path <- file.path(debug_dir, "metadata-summary.json")
@@ -318,7 +332,7 @@ rm(.bootstrap_cli_ui, .bootstrap_generate_helpers)
 #'   `wa_*` function names to exclude.
 #' @param emit Logical scalar. If `TRUE`, writes generated output files.
 #' @param debug Logical scalar. If `TRUE`, writes JSON debug snapshots under
-#'   `tempdir()`.
+#'   `scratch/debug/`.
 #' @param verbose Logical scalar. If `TRUE`, emits a short summary.
 #'
 #' @return A list describing the parsed metadata and intermediate schema.
@@ -430,7 +444,7 @@ generate_components <- function(
 #' - `--filter` to include only selected components
 #' - `--exclude` to omit selected components
 #' - `--schema-only` to skip writing generated outputs
-#' - `--debug` to write JSON snapshots under `tempdir()`
+#' - `--debug` to write JSON snapshots under `scratch/debug/`
 #' - `--quiet` to suppress stage-level progress messages
 #' - `--help` / `-h` to print CLI help
 #'

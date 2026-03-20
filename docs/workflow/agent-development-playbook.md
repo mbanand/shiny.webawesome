@@ -225,14 +225,12 @@ Generated R files should be formatted using the tidyverse style guide.
 
 After generating or modifying code under generated directories such as:
 
-- R/generated/
-- R/generated_updates/
+- top-level `R/`
 
 agents should run on the relevant directory, such as:
 
 ```r
-styler::style_dir("R/generated")
-styler::style_dir("R/generated_updates")
+styler::style_dir("R")
 ```
 
 This ensures generated code follows consistent formatting and prevents
@@ -261,8 +259,7 @@ Typical validation flow is:
 Typical commands:
 
 ```r
-styler::style_dir("R/generated")
-styler::style_dir("R/generated_updates")
+styler::style_dir("R")
 devtools::document()
 devtools::test()
 devtools::check()

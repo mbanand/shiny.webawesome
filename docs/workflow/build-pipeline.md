@@ -66,8 +66,7 @@ Examples include:
 Typical directories removed:
 
 ```text
-R/generated/
-R/generated_updates/
+generated component files under R/
 inst/bindings/
 inst/extdata/webawesome/
 inst/www/webawesome/
@@ -296,13 +295,13 @@ The generator produces R wrapper functions for each Web Awesome component.
 Generated files are written to:
 
 ```text
-R/generated/
+R/
 ```
 
 Example output:
 
 ```text
-R/generated/
+R/
   wa_button.R
   wa_select.R
   wa_input.R
@@ -314,17 +313,14 @@ R/generated/
 
 Interactive components receive generated update functions.
 
-Generated files are written to:
-
-```text
-R/generated_updates/
-```
+Generated files are also written under top-level `R/`, typically in the same
+file as the corresponding wrapper when that keeps a component API together.
 
 Example:
 
 ```text
-update_wa_select.R
-update_wa_input.R
+wa_select.R
+wa_input.R
 ```
 
 ---

@@ -18,12 +18,11 @@ then be regenerated.
 
 ---
 
-# Generated Directories
+# Generated Package Source Areas
 
-The following directories contain generated files:
+The following package source areas contain generated files:
 
-- `R/generated/`
-- `R/generated_updates/`
+- generated component files under `R/` such as `R/wa_select.R`
 - `inst/bindings/`
 - `manifests/`
 - `report/`
@@ -45,7 +44,7 @@ the pruning or bundling logic.
 Agents and developers should generally make changes in handwritten source areas
 such as:
 
-- `R/core/`
+- handwritten helper files under `R/`
 - `tools/`
 - documentation under `docs/`
 - tests under `tests/testthat/`

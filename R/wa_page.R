@@ -5,8 +5,10 @@
 #' page level and temporarily suppresses duplicate wrapper-level attachment
 #' while evaluating its children.
 #'
-#' This is a package-level Shiny helper, not a wrapper for the upstream
-#' Web Awesome Pro `wa-page` component.
+#' This is a package-level Shiny helper, NOT a wrapper for the upstream
+#' Web Awesome Pro `wa-page` component. It is an explicit exception to the
+#' usual upstream-mirroring rule because it follows Shiny's page-helper model
+#' (`fluidPage()`, etc.) for dependency attachment and full-page scaffolding.
 #'
 #' @param ... UI content to place in the page body.
 #' @param title Optional page title.
@@ -29,11 +31,24 @@ wa_page <- function(...,
                     title = NULL,
                     lang = NULL,
                     body_class = NULL) {
-  .wa_page_impl(
-    ...,
-    title = title,
+  content <- .wa_without_dependency(htmltools::tagList(...))
+
+  head_children <- list()
+  if (!is.null(title)) {
+    head_children <- c(head_children, list(htmltools::tags$title(title)))
+  }
+
+  head_tag <- do.call(htmltools::tags$head, head_children)
+
+  page <- htmltools::tags$html(
     lang = lang,
-    body_class = body_class
+    head_tag,
+    htmltools::tags$body(
+      class = body_class,
+      content
+    )
   )
+
+  htmltools::attachDependencies(page, .wa_dependency())
 }
 # nolint end

@@ -1,6 +1,17 @@
 {{HEADER}}
 
-# Generated update helper for `{{TAG_NAME}}`.
+#' Update a `{{TAG_NAME}}` component
+#'
+#' Generated update helper for the Web Awesome `{{TAG_NAME}}` component.
+#'
+#' @param session Shiny session object.
+#' @param input_id Input id of the component to update.
+{{PARAM_DOCS}}
+#'
+#' @return Invisibly returns `NULL`.
+#'
+#' @rdname {{RDNAME}}
+#' @export
 {{FUNCTION_NAME}} <- function(session,
                               input_id,
                               value = NULL,
@@ -18,4 +29,5 @@
   )
 
   session$sendInputMessage(input_id, message)
+  invisible(NULL)
 }

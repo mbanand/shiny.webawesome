@@ -46,24 +46,26 @@ Each section has a specific purpose.
 
 The `R/` directory contains all R source code included in the package.
 
-It is divided into several subdirectories to distinguish between **handwritten code and generated code**.
+Both handwritten and generated package source files live directly under `R/`.
 
 ```text
 R/
-  core/
-  generated/
-  generated_updates/
+  wa_dependency.R
+  wa_page.R
+  wa_card.R
+  wa_select.R
+  package.R
 ```
 
 ---
 
-## Core R Code
+## Handwritten R Code
 
 ```text
-R/core/
+R/
 ```
 
-This directory contains **handwritten R code** that implements core package functionality.
+Handwritten files under `R/` implement core package functionality.
 
 Examples include:
 
@@ -87,10 +89,10 @@ These files are **maintained manually** and should not be overwritten by generat
 ## Generated Component Wrappers
 
 ```text
-R/generated/
+R/
 ```
 
-This directory contains **automatically generated component wrapper functions**.
+Top-level `R/` also contains **automatically generated component wrapper functions**.
 
 Each Web Awesome component has a corresponding wrapper.
 
@@ -113,18 +115,16 @@ They are regenerated whenever Web Awesome metadata changes.
 
 ## Generated Update Functions
 
-```text
-R/generated_updates/
-```
-
-This directory contains generated `update_wa_*()` functions for interactive components.
+Generated `update_wa_*()` functions for interactive components also live under
+top-level `R/`, typically colocated with the corresponding wrapper when that
+keeps a component API together.
 
 Examples:
 
 ```text
-update_wa_select.R
-update_wa_input.R
-update_wa_checkbox.R
+wa_select.R
+wa_input.R
+wa_checkbox.R
 ```
 
 These functions allow Shiny servers to update component state in the browser.
@@ -161,7 +161,7 @@ Instead, overrides must be implemented in dedicated locations that coexist with 
 
 Typical approaches include:
 
-* defining helper functions in `R/core/`
+* defining helper functions in handwritten top-level `R/` files
 * customizing generator templates
 * adding special-case logic in generator scripts
 
@@ -480,9 +480,7 @@ This ensures that the built package only contains runtime code and assets requir
 
 The repository structure separates responsibilities clearly:
 
-* `R/core` contains handwritten code
-* `R/generated` contains generated wrappers
-* `R/generated_updates` contains generated update functions
+* top-level `R` contains both handwritten and generated package source files
 * `inst/www/webawesome` contains runtime assets
 * `inst/extdata/webawesome` contains build-time metadata for code generation and is excluded from the built package
 * `inst/bindings` contains Shiny input bindings

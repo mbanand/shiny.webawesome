@@ -25,8 +25,10 @@ page level and temporarily suppresses duplicate wrapper-level attachment
 while evaluating its children.
 }
 \details{
-This is a package-level Shiny helper, not a wrapper for the upstream
-Web Awesome Pro \code{wa-page} component.
+This is a package-level Shiny helper, NOT a wrapper for the upstream
+Web Awesome Pro \code{wa-page} component. It is an explicit exception to the
+usual upstream-mirroring rule because it follows Shiny's page-helper model
+(\code{fluidPage()}, etc.) for dependency attachment and full-page scaffolding.
 }
 \examples{
 if (interactive()) {

@@ -104,8 +104,7 @@ The generator produces:
 Generated files are written to:
 
 ```text
-R/generated/
-R/generated_updates/
+R/
 inst/bindings/
 ```
 
@@ -382,4 +381,3 @@ The architectural decisions for `shiny.webawesome` emphasize:
 * robust automated testing
 
 These principles guide the implementation of the package and should remain stable as the project evolves.
-

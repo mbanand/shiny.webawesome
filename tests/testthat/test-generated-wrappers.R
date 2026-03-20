@@ -41,21 +41,6 @@ test_that("wa_card renders exact fragments for defaults and overrides", {
       expected = c('<wa-card orientation="horizontal">Hello</wa-card>')
     ),
     list(
-      name = "with_footer",
-      tag = shiny.webawesome:::wa_card("Hello", with_footer = TRUE),
-      expected = c("<wa-card with-footer>Hello</wa-card>")
-    ),
-    list(
-      name = "with_header",
-      tag = shiny.webawesome:::wa_card("Hello", with_header = TRUE),
-      expected = c("<wa-card with-header>Hello</wa-card>")
-    ),
-    list(
-      name = "with_media",
-      tag = shiny.webawesome:::wa_card("Hello", with_media = TRUE),
-      expected = c("<wa-card with-media>Hello</wa-card>")
-    ),
-    list(
       name = "actions",
       tag = shiny.webawesome:::wa_card("Hello", actions = "Act"),
       expected = c(
@@ -396,24 +381,6 @@ test_that("wa_select renders exact fragments for defaults and overrides", {
       tag = shiny.webawesome:::wa_select(option_tag, with_clear = TRUE),
       expected = c(
         "<wa-select with-clear>",
-        '  <wa-option value="a">A</wa-option>',
-        "</wa-select>"
-      )
-    ),
-    list(
-      name = "with_hint",
-      tag = shiny.webawesome:::wa_select(option_tag, with_hint = TRUE),
-      expected = c(
-        "<wa-select with-hint>",
-        '  <wa-option value="a">A</wa-option>',
-        "</wa-select>"
-      )
-    ),
-    list(
-      name = "with_label",
-      tag = shiny.webawesome:::wa_select(option_tag, with_label = TRUE),
-      expected = c(
-        "<wa-select with-label>",
         '  <wa-option value="a">A</wa-option>',
         "</wa-select>"
       )

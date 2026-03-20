@@ -1,6 +1,61 @@
 # Wrapper rendering helpers for the generate stage.
 # nolint start: object_usage_linter,line_length_linter.
 
+# Return whether one attribute belongs in the user-facing wrapper surface.
+.wrapper_supports_attribute <- function(attr) {
+  name <- attr$name %||% ""
+  description <- attr$description %||% ""
+
+  if (identical(name, "did-ssr")) {
+    return(FALSE)
+  }
+
+  if (
+    nzchar(description) &&
+      grepl(
+        "only needed for SSR|used for SSR purposes",
+        description,
+        ignore.case = TRUE
+      )
+  ) {
+    return(FALSE)
+  }
+
+  TRUE
+}
+
+# Normalize one documentation string for generated roxygen output.
+.doc_text <- function(text, fallback = "") {
+  if (length(text) == 0L || all(is.na(text))) {
+    text <- fallback
+  }
+
+  text <- as.character(text[[1]])
+  trimws(gsub("[[:space:]]+", " ", text))
+}
+
+# Return one concise parameter description for a wrapper attribute.
+.wrapper_attr_param_doc <- function(attr) {
+  description <- .doc_text(attr$description)
+
+  if (!nzchar(description)) {
+    return("Optional Web Awesome attribute.")
+  }
+
+  description
+}
+
+# Return one concise parameter description for a wrapper slot.
+.wrapper_slot_param_doc <- function(slot) {
+  description <- .doc_text(slot$description)
+
+  if (!nzchar(description)) {
+    return("Optional slot content.")
+  }
+
+  description
+}
+
 # Return the slot argument names to surface in the wrapper signature.
 .wrapper_slots <- function(component) {
   slots <- component$slots %||% list()
@@ -49,7 +104,8 @@
   attrs <- attrs[vapply(
     attrs,
     function(attr) {
-      !all(is.na(c(attr$type, attr$default, attr$description)))
+      !all(is.na(c(attr$type, attr$default, attr$description))) &&
+        .wrapper_supports_attribute(attr)
     },
     logical(1)
   )]
@@ -175,10 +231,65 @@
 
 # Render one generated wrapper file from template.
 .render_wrapper_file <- function(component, template_path) {
+  description <- .doc_text(
+    component$description,
+    fallback = paste(
+      "Generated wrapper for the Web Awesome",
+      paste0("`", component$tag_name, "`"),
+      "component."
+    )
+  )
+
+  param_docs <- c("#' @param ... Child content for the component's default slot.")
+
+  if (.wrapper_uses_id(component)) {
+    param_docs <- c(param_docs, "#' @param id Optional DOM id attribute.")
+  }
+
+  attrs <- .wrapper_attributes(component)
+  if (length(attrs) > 0L) {
+    param_docs <- c(
+      param_docs,
+      vapply(
+        attrs,
+        function(attr) {
+          paste0(
+            "#' @param ",
+            attr$argument_name,
+            " ",
+            .wrapper_attr_param_doc(attr)
+          )
+        },
+        character(1)
+      )
+    )
+  }
+
+  slots <- .wrapper_slots(component)
+  if (length(slots) > 0L) {
+    param_docs <- c(
+      param_docs,
+      vapply(
+        slots,
+        function(slot) {
+          paste0(
+            "#' @param ",
+            slot$wrapper_argument_name,
+            " ",
+            .wrapper_slot_param_doc(slot)
+          )
+        },
+        character(1)
+      )
+    )
+  }
+
   values <- c(
     HEADER = .generated_header(),
     FUNCTION_NAME = component$r_function_name,
-    FUNCTION_TITLE = paste("Generated wrapper for", paste0("`", component$tag_name, "`")),
+    FUNCTION_TITLE = paste("Create a", paste0("`", component$tag_name, "`"), "component"),
+    FUNCTION_DESCRIPTION = description,
+    PARAM_DOCS = paste(param_docs, collapse = "\n"),
     TAG_NAME = .r_string(component$tag_name),
     SIGNATURE = .render_wrapper_signature(component),
     ATTRS = .render_wrapper_attrs(component),

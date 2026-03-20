@@ -209,8 +209,7 @@ Templates are used to generate consistent code for all components.
 Generated files are written to directories such as:
 
 ```
-R/generated/
-R/generated_updates/
+R/
 inst/bindings/
 ```
 
