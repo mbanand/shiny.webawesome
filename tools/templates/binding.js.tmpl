@@ -1,0 +1,32 @@
+{{HEADER}}
+
+const binding = new Shiny.InputBinding();
+
+$.extend(binding, {
+  find(scope) {
+    return $(scope).find('{{FIND_SELECTOR}}');
+  },
+
+  getId(el) {
+    return el.id;
+  },
+
+  getValue(el) {
+    {{GET_VALUE}}
+  },
+
+  subscribe(el, callback) {
+    el.addEventListener('{{SUBSCRIBE_EVENT}}', callback);
+  },
+
+  unsubscribe(el, callback) {
+    el.removeEventListener('{{SUBSCRIBE_EVENT}}', callback);
+  },
+
+  receiveMessage(el, data) {
+    {{SET_VALUE}}
+    $(el).trigger('change');
+  }
+});
+
+Shiny.inputBindings.register(binding, '{{BINDING_NAME}}');

@@ -1,0 +1,129 @@
+# Return the relative script paths for generated Shiny bindings.
+.wa_binding_scripts <- function() {
+  binding_dir <- system.file("bindings", package = "shiny.webawesome")
+
+  if (!nzchar(binding_dir)) {
+    binding_dir <- file.path("inst", "bindings")
+  }
+
+  if (!dir.exists(binding_dir)) {
+    return(character())
+  }
+
+  scripts <- list.files(
+    binding_dir,
+    pattern = "\\.js$",
+    full.names = FALSE
+  )
+
+  if (length(scripts) == 0L) {
+    return(character())
+  }
+
+  paste0("bindings/", sort(scripts))
+}
+
+# Build the package dependency object for the shipped Web Awesome runtime.
+.wa_dependency <- function() {
+  scripts <- c("www/webawesome-init.js", .wa_binding_scripts())
+  scripts <- lapply(
+    scripts,
+    function(path) list(src = path, type = "module")
+  )
+
+  htmltools::htmlDependency(
+    name = "shiny.webawesome",
+    version = as.character(utils::packageVersion("shiny.webawesome")),
+    package = "shiny.webawesome",
+    src = c(file = "."),
+    stylesheet = "www/webawesome/styles/webawesome.css",
+    script = scripts
+  )
+}
+
+# Return whether wrapper-level dependency attachment is currently enabled.
+.wa_dependency_enabled <- function() {
+  isTRUE(getOption("shiny.webawesome.attach_dependency", TRUE))
+}
+
+# Evaluate code with wrapper-level dependency attachment temporarily disabled.
+.wa_without_dependency <- function(code) {
+  old <- options(shiny.webawesome.attach_dependency = FALSE)
+  on.exit(options(old), add = TRUE)
+  force(code)
+}
+
+# Attach the package dependency when wrapper-level attachment is enabled.
+.wa_attach_dependency <- function(tag) {
+  if (!.wa_dependency_enabled()) {
+    return(tag)
+  }
+
+  htmltools::attachDependencies(tag, .wa_dependency())
+}
+
+# Normalize component attributes for deterministic HTML emission.
+.wa_normalize_attrs <- function(attrs, boolean_names = character()) {
+  attrs <- Filter(Negate(is.null), attrs)
+
+  if (length(attrs) == 0L) {
+    return(list())
+  }
+
+  attrs <- Map(
+    function(name, value) {
+      if (!(name %in% boolean_names)) {
+        return(value)
+      }
+
+      if (isFALSE(value)) {
+        return(NULL)
+      }
+
+      if (isTRUE(value)) {
+        return(NA_character_)
+      }
+
+      value
+    },
+    names(attrs),
+    attrs
+  )
+  attrs <- stats::setNames(attrs, names(attrs))
+  Filter(Negate(is.null), attrs)
+}
+
+# Attach one slot name to each child in a slot payload.
+.wa_slot <- function(content, slot) {
+  if (is.null(content)) {
+    return(NULL)
+  }
+
+  content <- as.list(htmltools::tagList(content))
+  if (length(content) == 0L) {
+    return(NULL)
+  }
+
+  htmltools::tagList(lapply(
+    content,
+    function(child) {
+      if (inherits(child, "shiny.tag")) {
+        return(htmltools::tagAppendAttributes(child, slot = slot))
+      }
+
+      htmltools::tags$span(slot = slot, child)
+    }
+  ))
+}
+
+# Build one Web Awesome tag and attach the package dependency when enabled.
+.wa_component <- function(tag_name, ..., .attrs = list()) {
+  children <- list(...)
+  tag <- htmltools::tag(tag_name, children)
+
+  if (length(.attrs) > 0L) {
+    tag <- do.call(htmltools::tagAppendAttributes, c(list(tag), .attrs))
+  }
+
+  .wa_attach_dependency(tag)
+}

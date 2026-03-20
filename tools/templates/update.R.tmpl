@@ -1,0 +1,21 @@
+{{HEADER}}
+
+# Generated update helper for `{{TAG_NAME}}`.
+{{FUNCTION_NAME}} <- function(session,
+                              input_id,
+                              value = NULL,
+                              label = NULL,
+                              hint = NULL,
+                              disabled = NULL) {
+  message <- Filter(
+    Negate(is.null),
+    list(
+      value = value,
+      label = label,
+      hint = hint,
+      disabled = disabled
+    )
+  )
+
+  session$sendInputMessage(input_id, message)
+}

@@ -1,0 +1,22 @@
+{{HEADER}}
+
+# {{FUNCTION_TITLE}}
+# Generated from Web Awesome metadata.
+{{FUNCTION_NAME}} <- function(
+  {{SIGNATURE}}
+) {
+  {{CHILDREN}}
+
+  attrs <- .wa_normalize_attrs(
+    {{ATTRS}},
+    boolean_names = {{BOOLEAN_ATTRS}}
+  )
+
+  do.call(
+    .wa_component,
+    c(
+      list({{TAG_NAME}}, .attrs = attrs),
+      children
+    )
+  )
+}
