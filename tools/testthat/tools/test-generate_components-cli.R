@@ -17,7 +17,7 @@
 
 .create_fake_vendor_metadata <- function(root, version = "3.3.1") {
   .write_json(
-    file.path(root, "vendor", "webawesome", version, "dist", "custom-elements.json"),
+    file.path(root, "vendor", "webawesome", version, "dist-cdn", "custom-elements.json"),
     .fake_custom_elements()
   )
 }
@@ -241,7 +241,7 @@ testthat::test_that("generate tool asks for fetch and prune when nothing is fetc
   testthat::expect_true(result$status != 0)
   testthat::expect_match(
     result$stderr,
-    "No fetched Web Awesome dist was found under vendor/webawesome/."
+    "No fetched Web Awesome dist-cdn runtime was found under vendor/webawesome/."
   )
   testthat::expect_match(
     result$stderr,

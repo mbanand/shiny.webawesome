@@ -177,7 +177,7 @@ source(file.path("..", "..", "generate_components.R"))
 
 .create_fake_vendor_metadata <- function(root, version = "3.3.1") {
   .write_json(
-    file.path(root, "vendor", "webawesome", version, "dist", "custom-elements.json"),
+    file.path(root, "vendor", "webawesome", version, "dist-cdn", "custom-elements.json"),
     .fake_custom_elements()
   )
 }
@@ -309,6 +309,23 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_equal(length(result$written$bindings), 2L)
   testthat::expect_equal(length(result$written$updates), 1L)
   testthat::expect_true("R/wa_select.R" %in% result$written$updates)
+
+  checkbox_binding <- readLines(
+    file.path(root, "inst", "bindings", "wa_checkbox.js"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "__shinyWebawesomeCallback = \\(\\) => callback\\(\\);",
+    checkbox_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "removeEventListener\\('change', el\\.__shinyWebawesomeCallback\\);",
+    checkbox_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "dispatchEvent\\(new Event\\('change', \\{ bubbles: true \\}\\)\\);",
+    checkbox_binding
+  )))
 })
 
 testthat::test_that("generate asks for prune when vendor metadata exists", {
@@ -329,7 +346,7 @@ testthat::test_that("generate asks for fetch and prune when vendor metadata is m
   testthat::expect_error(
     generate_components(root = root, emit = FALSE, verbose = FALSE),
     paste(
-      "No fetched Web Awesome dist was found under vendor/webawesome/.",
+      "No fetched Web Awesome dist-cdn runtime was found under vendor/webawesome/.",
       "Run fetch_webawesome\\(\\) and then prune_webawesome\\(\\) first."
     )
   )

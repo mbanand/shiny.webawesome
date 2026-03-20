@@ -1,6 +1,12 @@
 import { setBasePath } from "./webawesome/utilities/base-path.js";
+import { startLoader } from "./webawesome/utilities/autoloader.js";
 
 const basePath = new URL("./webawesome/", import.meta.url).toString();
 
 setBasePath(basePath);
-void import("./webawesome/webawesome.loader.js");
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", startLoader, { once: true });
+} else {
+  startLoader();
+}

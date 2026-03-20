@@ -50,7 +50,8 @@
     file.path(root, "tools", "cli_ui.R")
   )
 
-  npm_script <- npm_lines %||% c(
+  if (is.null(npm_lines)) {
+    npm_lines <- c(
     "#!/usr/bin/env bash",
     "set -eu",
     "if [ \"$1\" != \"pack\" ]; then",
@@ -58,14 +59,15 @@
     "  exit 1",
     "fi",
     "pkgdir=\"$PWD/package\"",
-    "mkdir -p \"$pkgdir/dist/components\" \"$pkgdir/dist/styles\"",
-    "printf 'button\\n' > \"$pkgdir/dist/components/wa-button.js\"",
-    "printf 'css\\n' > \"$pkgdir/dist/styles/webawesome.css\"",
+    "mkdir -p \"$pkgdir/dist-cdn/components\" \"$pkgdir/dist-cdn/styles\"",
+    "printf 'button\\n' > \"$pkgdir/dist-cdn/components/wa-button.js\"",
+    "printf 'css\\n' > \"$pkgdir/dist-cdn/styles/webawesome.css\"",
     "tarball=\"webawesome-cli.tgz\"",
     "tar -czf \"$tarball\" -C \"$PWD\" package",
     "printf '%s\\n' \"$tarball\""
-  )
-  .write_file(file.path(root, "bin", "npm"), npm_script)
+    )
+  }
+  .write_file(file.path(root, "bin", "npm"), npm_lines)
 
   Sys.chmod(file.path(root, "tools", "fetch_webawesome.R"), mode = "0755")
   Sys.chmod(file.path(root, "bin", "npm"), mode = "0755")
@@ -145,7 +147,7 @@ testthat::test_that("fetch tool uses the pinned version and reports success", {
         "vendor",
         "webawesome",
         pinned_version,
-        "dist",
+        "dist-cdn",
         "components",
         "wa-button.js"
       )

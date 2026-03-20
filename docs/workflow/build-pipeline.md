@@ -109,7 +109,7 @@ Typical responsibilities include:
 * downloading Web Awesome via npm
 * using the version pinned in `dev/webawesome-version.txt` by default, unless a version override is supplied
 * extracting the fetched npm package in a temporary working directory
-* copying only the upstream `dist` directory into the repository
+* copying the preferred browser-ready upstream runtime tree into the repository
 * recording the upstream version
 
 The upstream files are stored in:
@@ -123,13 +123,16 @@ Example structure:
 ```text
 vendor/webawesome/
   3.3.1/
-    dist/
+    dist-cdn/
     VERSION
 ```
 
-Only the upstream `dist/` tree is retained in the repository at fetch time.
-The full downloaded npm package is treated as a temporary fetch artifact and is
-discarded after extraction.
+The repository retains the fetched browser-runtime input under
+`vendor/webawesome/<version>/dist-cdn/`.
+
+Fetch requires the upstream npm package's browser-ready `dist-cdn/` tree and
+copies it into this repository path. The full downloaded npm package is
+treated as a temporary fetch artifact and is discarded after extraction.
 
 The pinned default fetch version is stored in:
 

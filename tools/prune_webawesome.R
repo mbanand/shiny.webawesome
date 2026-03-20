@@ -57,7 +57,7 @@ rm(.bootstrap_cli_ui)
 
 # Return the short CLI description for the prune stage.
 .prune_description <- function() {
-  "Prune a fetched Web Awesome dist bundle into package runtime assets."
+  "Prune a fetched Web Awesome dist-cdn bundle into package runtime assets."
 }
 
 # List supported CLI options for the prune stage.
@@ -232,9 +232,9 @@ rm(.bootstrap_cli_ui)
   file.path(root, "vendor", "webawesome", version)
 }
 
-# Build the version-specific vendor dist directory path.
-.fetch_dist_dir <- function(root, version) {
-  file.path(.fetch_target_dir(root, version), "dist")
+# Build the version-specific vendored browser-runtime directory path.
+.fetch_runtime_dir <- function(root, version) {
+  file.path(.fetch_target_dir(root, version), "dist-cdn")
 }
 
 # Build the pruned runtime output directory path.
@@ -383,7 +383,7 @@ rm(.bootstrap_cli_ui)
 
   if (!dir.exists(dist_dir)) {
     stop(
-      "Fetched upstream version is missing dist/: ",
+      "Fetched upstream version is missing dist-cdn/: ",
       .strip_root_prefix(dist_dir, root),
       call. = FALSE
     )
@@ -691,7 +691,7 @@ rm(.bootstrap_cli_ui)
   )
 }
 
-#' Prune a fetched Web Awesome dist bundle
+#' Prune a fetched Web Awesome dist-cdn bundle
 #'
 #' This tool supports both direct command-line execution and sourcing from R.
 #'
@@ -699,8 +699,8 @@ rm(.bootstrap_cli_ui)
 #' the prune stage programmatically. Use `run_prune_webawesome()` as the
 #' command-line entry point when invoking `./tools/prune_webawesome.R`.
 #'
-#' Reads one fetched Web Awesome `dist/` tree from
-#' `vendor/webawesome/<version>/dist/`, validates that the expected runtime
+#' Reads one fetched Web Awesome `dist-cdn/` tree from
+#' `vendor/webawesome/<version>/dist-cdn/`, validates that the expected runtime
 #' inputs are present, copies the pruned browser runtime bundle into
 #' `inst/www/webawesome/`, copies `custom-elements.json` and `VERSION` into
 #' `inst/extdata/webawesome/`, and writes deterministic prune reports under
@@ -740,7 +740,7 @@ prune_webawesome <- function(version = NULL,
   )
   version <- .validate_prune_version(version)
 
-  dist_dir <- .fetch_dist_dir(root, version)
+  dist_dir <- .fetch_runtime_dir(root, version)
   runtime_dir <- .prune_runtime_dir(root)
   extdata_dir <- .prune_extdata_dir(root)
   report_dir <- .prune_report_dir(root, version)
@@ -765,7 +765,7 @@ prune_webawesome <- function(version = NULL,
     stop(
       paste(
         "Prune could not find the required loader entry file",
-        "in the fetched dist."
+        "in the fetched dist-cdn bundle."
       ),
       call. = FALSE
     )

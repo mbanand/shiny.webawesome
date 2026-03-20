@@ -24,7 +24,7 @@
 }
 
 .create_fake_dist <- function(root, version = "3.3.1") {
-  dist_root <- file.path(root, "vendor", "webawesome", version, "dist")
+  dist_root <- file.path(root, "vendor", "webawesome", version, "dist-cdn")
   version_root <- file.path(root, "vendor", "webawesome", version)
   .write_file(file.path(version_root, "VERSION"), version)
   .write_file(file.path(dist_root, "custom-elements.json"), "{}")

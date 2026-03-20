@@ -129,15 +129,27 @@ Each stage is described below.
 
 Web Awesome is distributed through npm.
 
-The upstream distribution contains a `dist` directory with:
+The upstream package contains browser/runtime artifacts in `dist-cdn/` plus a
+bundler-oriented `dist/` tree.
+
+The browser-ready distribution contains:
 
 * component modules
 * shared runtime chunks
 * CSS styles
 * metadata files
-* TypeScript definitions
+* loader/autoloader utilities
 
-Not all of these are needed at runtime, and the full distribution is potentially larger than what can be shipped directly in a CRAN package.
+The build pipeline vendors the browser-ready tree into:
+
+```text
+vendor/webawesome/<version>/dist-cdn/
+```
+
+The upstream npm package's `dist-cdn/` tree is the source for the vendored
+browser runtime because it is already rewritten for direct browser loading.
+
+Not all of these files are needed at runtime, and the full distribution is potentially larger than what can be shipped directly in a CRAN package.
 
 Therefore the package build process downloads the upstream distribution and extracts only the runtime assets required for the browser.
 
@@ -252,9 +264,9 @@ These assets include:
 When a Shiny page includes a Web Awesome component, the following process occurs.
 
 1. The `shiny.webawesome` R wrapper function that is called generates the corresponding HTML tag.
-2. The `shiny.webawesome` dependency loads the Web Awesome loader.
-3. The loader scans the page for Web Awesome component tags.
-4. The loader dynamically imports the component module.
+2. The `shiny.webawesome` dependency initializes the Web Awesome base path and starts the autoloader.
+3. The autoloader scans the page for Web Awesome component tags.
+4. The autoloader dynamically imports the component module.
 5. The browser upgrades the tag into a custom element.
 6. Shiny input bindings interact with the component.
 

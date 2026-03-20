@@ -47,19 +47,19 @@
 .vendor_metadata_candidates <- function(root) {
   sort(
     Sys.glob(
-      file.path(root, "vendor", "webawesome", "*", "dist", "custom-elements.json")
+      file.path(root, "vendor", "webawesome", "*", "dist-cdn", "custom-elements.json")
     )
   )
 }
 
-# Return whether at least one fetched upstream Web Awesome dist exists.
-.has_fetched_webawesome_dist <- function(root) {
+# Return whether at least one fetched upstream Web Awesome dist-cdn exists.
+.has_fetched_webawesome_dist_cdn <- function(root) {
   length(.vendor_metadata_candidates(root)) > 0L
 }
 
 # Build the missing-input remediation message for the generate stage.
 .generate_input_error <- function(root, metadata_file) {
-  if (.has_fetched_webawesome_dist(root)) {
+  if (.has_fetched_webawesome_dist_cdn(root)) {
     return(
       paste(
         "Generator metadata does not exist:",
@@ -72,7 +72,7 @@
   paste(
     "Generator metadata does not exist:",
     metadata_file,
-    "No fetched Web Awesome dist was found under vendor/webawesome/.",
+    "No fetched Web Awesome dist-cdn runtime was found under vendor/webawesome/.",
     "Run fetch_webawesome() and then prune_webawesome() first."
   )
 }

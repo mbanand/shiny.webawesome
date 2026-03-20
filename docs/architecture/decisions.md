@@ -182,13 +182,8 @@ The pruned runtime bundle excludes:
 
 ## Decision
 
-The package uses the Web Awesome loader:
-
-```text
-webawesome.loader.js
-```
-
-rather than the monolithic runtime entry.
+The package uses the Web Awesome autoloader/runtime loader utilities rather
+than the monolithic runtime entry.
 
 ## Rationale
 
@@ -206,8 +201,9 @@ The runtime bootstrap process is:
 
 1. `wa_dependency()` loads a bootstrap script.
 2. The bootstrap script initializes the Web Awesome base path.
-3. The bootstrap script loads `webawesome.loader.js`.
-4. The loader registers Web Awesome components dynamically.
+3. The bootstrap script loads the browser-ready autoloader utility.
+4. The bootstrap script starts the loader.
+5. The loader registers Web Awesome components dynamically.
 
 ---
 

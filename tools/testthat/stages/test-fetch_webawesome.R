@@ -47,11 +47,15 @@ source(file.path("..", "..", "fetch_webawesome.R"))
                                  dist_files = c(
                                    "components/wa-button.js",
                                    "styles/webawesome.css"
-                                 )) {
+                                 ),
+                                 dist_cdn_files = dist_files) {
   package_root <- file.path(output_dir, "package")
   dir.create(package_root, recursive = TRUE, showWarnings = FALSE)
   for (dist_file in dist_files) {
     .write_file(file.path(package_root, "dist", dist_file), dist_file)
+  }
+  for (dist_file in dist_cdn_files) {
+    .write_file(file.path(package_root, "dist-cdn", dist_file), dist_file)
   }
 
   tarball_path <- file.path(output_dir, tarball_name)
@@ -67,11 +71,13 @@ source(file.path("..", "..", "fetch_webawesome.R"))
                                  "components/wa-button.js",
                                  "styles/webawesome.css"
                                ),
+                               dist_cdn_files = dist_files,
                                status = 0L,
                                stdout = NULL,
                                stderr = "") {
   force(tarball_name)
   force(dist_files)
+  force(dist_cdn_files)
   force(status)
   force(stdout)
   force(stderr)
@@ -81,7 +87,8 @@ source(file.path("..", "..", "fetch_webawesome.R"))
       .create_fake_tarball(
         output_dir = wd,
         tarball_name = tarball_name,
-        dist_files = dist_files
+        dist_files = dist_files,
+        dist_cdn_files = dist_cdn_files
       )
     }
 
@@ -106,7 +113,7 @@ testthat::test_that("fetch uses the pinned version by default", {
 
   testthat::expect_equal(result$version, pinned_version)
   testthat::expect_true(
-    dir.exists(file.path(root, "vendor", "webawesome", pinned_version, "dist"))
+    dir.exists(file.path(root, "vendor", "webawesome", pinned_version, "dist-cdn"))
   )
   testthat::expect_true(
     file.exists(
@@ -123,7 +130,7 @@ testthat::test_that("fetch uses the pinned version by default", {
 })
 
 testthat::test_that(
-  "fetch creates versioned vendor directories and copies only dist",
+  "fetch creates versioned vendor directories and copies only dist-cdn",
   {
     root <- withr::local_tempdir()
     .create_fake_repo(root)
@@ -139,14 +146,39 @@ testthat::test_that(
 
     testthat::expect_equal(result$target_dir, "vendor/webawesome/3.0.0-beta.5")
     testthat::expect_true(
-      file.exists(file.path(version_root, "dist", "components", "wa-button.js"))
+      file.exists(file.path(version_root, "dist-cdn", "components", "wa-button.js"))
     )
     testthat::expect_true(
-      file.exists(file.path(version_root, "dist", "styles", "webawesome.css"))
+      file.exists(file.path(version_root, "dist-cdn", "styles", "webawesome.css"))
     )
     testthat::expect_false(file.exists(file.path(version_root, "package")))
   }
 )
+
+testthat::test_that("fetch requires dist-cdn when the tarball provides both", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  result <- fetch_webawesome(
+    version = "3.0.0-beta.5",
+    root = root,
+    command_runner = .fake_fetch_runner(
+      dist_files = c("components/from-dist.js"),
+      dist_cdn_files = c("components/from-dist-cdn.js")
+    ),
+    verbose = FALSE
+  )
+
+  version_root <- file.path(root, "vendor", "webawesome", "3.0.0-beta.5")
+
+  testthat::expect_equal(result$target_dir, "vendor/webawesome/3.0.0-beta.5")
+  testthat::expect_true(
+    file.exists(file.path(version_root, "dist-cdn", "components", "from-dist-cdn.js"))
+  )
+  testthat::expect_false(
+    file.exists(file.path(version_root, "dist-cdn", "components", "from-dist.js"))
+  )
+})
 
 testthat::test_that("fetch rejects existing fetched versions", {
   root <- withr::local_tempdir()
@@ -186,7 +218,7 @@ testthat::test_that("fetch reports npm pack failures", {
   )
 })
 
-testthat::test_that("fetch fails if dist is absent from the tarball", {
+testthat::test_that("fetch fails if dist-cdn is absent from the tarball", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
 
@@ -196,7 +228,7 @@ testthat::test_that("fetch fails if dist is absent from the tarball", {
       command_runner = .fake_fetch_runner(dist_files = character()),
       verbose = FALSE
     ),
-    "Fetched package did not contain a dist/ directory."
+    "Fetched package did not contain a dist-cdn/ directory."
   )
 })
 

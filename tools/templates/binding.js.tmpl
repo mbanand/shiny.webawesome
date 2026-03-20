@@ -16,16 +16,20 @@ $.extend(binding, {
   },
 
   subscribe(el, callback) {
-    el.addEventListener('{{SUBSCRIBE_EVENT}}', callback);
+    el.__shinyWebawesomeCallback = () => callback();
+    el.addEventListener('{{SUBSCRIBE_EVENT}}', el.__shinyWebawesomeCallback);
   },
 
   unsubscribe(el, callback) {
-    el.removeEventListener('{{SUBSCRIBE_EVENT}}', callback);
+    if (el.__shinyWebawesomeCallback) {
+      el.removeEventListener('{{SUBSCRIBE_EVENT}}', el.__shinyWebawesomeCallback);
+      delete el.__shinyWebawesomeCallback;
+    }
   },
 
   receiveMessage(el, data) {
     {{SET_VALUE}}
-    $(el).trigger('change');
+    el.dispatchEvent(new Event('change', { bubbles: true }));
   }
 });
 

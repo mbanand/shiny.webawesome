@@ -17,7 +17,7 @@ source(file.path("..", "..", "prune_webawesome.R"))
 .create_fake_dist <- function(root,
                               version = "3.3.1",
                               loader_import = "./chunks/chunk.loader.js") {
-  dist_root <- file.path(root, "vendor", "webawesome", version, "dist")
+  dist_root <- file.path(root, "vendor", "webawesome", version, "dist-cdn")
   version_root <- file.path(root, "vendor", "webawesome", version)
 
   .write_file(file.path(version_root, "VERSION"), version)
@@ -209,7 +209,7 @@ testthat::test_that("prune rejects incomplete fetched artifacts", {
       "vendor",
       "webawesome",
       "3.3.1",
-      "dist",
+      "dist-cdn",
       "custom-elements.json"
     )
   )
@@ -253,7 +253,7 @@ testthat::test_that("prune ignores bare package imports during reachability", {
       "vendor",
       "webawesome",
       "3.3.1",
-      "dist",
+      "dist-cdn",
       "utilities",
       "set-base-path.js"
     ),

@@ -248,9 +248,9 @@ rm(.bootstrap_cli_ui)
   file.path(root, "vendor", "webawesome", version)
 }
 
-# Build the version-specific vendor dist directory path.
-.fetch_dist_dir <- function(root, version) {
-  file.path(.fetch_target_dir(root, version), "dist")
+# Build the version-specific vendored browser-runtime directory path.
+.fetch_runtime_dir <- function(root, version) {
+  file.path(.fetch_target_dir(root, version), "dist-cdn")
 }
 
 # Run one external fetch command and normalize execution failures.
@@ -295,10 +295,63 @@ rm(.bootstrap_cli_ui)
 
 # Copy a directory tree into the repository fetch target.
 .copy_directory <- function(source_dir, target_dir) {
-  dir.create(dirname(target_dir), recursive = TRUE, showWarnings = FALSE)
-  copied <- file.copy(source_dir, dirname(target_dir), recursive = TRUE)
+  dir.create(target_dir, recursive = TRUE, showWarnings = FALSE)
 
-  if (!isTRUE(copied)) {
+  entries <- list.files(
+    source_dir,
+    recursive = TRUE,
+    all.files = TRUE,
+    no.. = TRUE,
+    full.names = TRUE,
+    include.dirs = TRUE
+  )
+
+  if (length(entries) == 0L) {
+    return(invisible(target_dir))
+  }
+
+  relative_entries <- .strip_root_prefix(
+    normalizePath(entries, winslash = "/", mustWork = TRUE),
+    normalizePath(source_dir, winslash = "/", mustWork = TRUE)
+  )
+
+  is_dir <- dir.exists(entries)
+  dir_entries <- entries[is_dir]
+  if (length(dir_entries) > 0L) {
+    invisible(vapply(
+      dir_entries,
+      function(path) {
+        dir.create(
+          file.path(
+            target_dir,
+            .strip_root_prefix(
+              normalizePath(path, winslash = "/", mustWork = TRUE),
+              normalizePath(source_dir, winslash = "/", mustWork = TRUE)
+            )
+          ),
+          recursive = TRUE,
+          showWarnings = FALSE
+        )
+        path
+      },
+      character(1)
+    ))
+  }
+
+  file_entries <- entries[!is_dir]
+  file_relative <- relative_entries[!is_dir]
+
+  copied <- vapply(
+    seq_along(file_entries),
+    function(index) {
+      target_path <- file.path(target_dir, file_relative[[index]])
+      dir.create(dirname(target_path), recursive = TRUE, showWarnings = FALSE)
+      isTRUE(file.copy(file_entries[[index]], target_path, overwrite = TRUE))
+    },
+    logical(1)
+  )
+
+  if (!all(copied)) {
     stop(
       "Failed to copy directory into repository: ",
       basename(source_dir),
@@ -324,7 +377,7 @@ rm(.bootstrap_cli_ui)
   )
 }
 
-#' Fetch a pinned Web Awesome dist bundle
+#' Fetch a pinned Web Awesome dist-cdn bundle
 #'
 #' This tool supports both direct command-line execution and sourcing from R.
 #'
@@ -334,8 +387,8 @@ rm(.bootstrap_cli_ui)
 #'
 #' Downloads a specific version of the upstream Web Awesome npm package using
 #' `npm pack`, extracts the package tarball in a temporary directory, and
-#' copies only the upstream `dist/` tree into `vendor/webawesome/<version>/`.
-#' The fetched version is also recorded in
+#' copies the upstream browser-ready `dist-cdn/` tree into
+#' `vendor/webawesome/<version>/dist-cdn/`. The fetched version is also recorded in
 #' `vendor/webawesome/<version>/VERSION`.
 #'
 #' If `version` is `NULL`, the version pinned in `dev/webawesome-version.txt`
@@ -379,7 +432,7 @@ fetch_webawesome <- function(version = NULL,
   version <- .validate_fetch_version(version)
 
   target_dir <- .fetch_target_dir(root, version)
-  dist_target_dir <- .fetch_dist_dir(root, version)
+  dist_target_dir <- .fetch_runtime_dir(root, version)
 
   if (dir.exists(target_dir) || file.exists(target_dir)) {
     stop(
@@ -435,10 +488,13 @@ fetch_webawesome <- function(version = NULL,
   utils::untar(tarball_path, exdir = extract_dir)
 
   package_dir <- file.path(extract_dir, "package")
-  dist_source_dir <- file.path(package_dir, "dist")
+  dist_source_dir <- file.path(package_dir, "dist-cdn")
 
   if (!dir.exists(dist_source_dir)) {
-    stop("Fetched package did not contain a dist/ directory.", call. = FALSE)
+    stop(
+      "Fetched package did not contain a dist-cdn/ directory.",
+      call. = FALSE
+    )
   }
 
   dir.create(target_dir, recursive = TRUE, showWarnings = FALSE)
