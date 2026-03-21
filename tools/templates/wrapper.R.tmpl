@@ -1,4 +1,5 @@
 {{HEADER}}
+# nolint start: object_usage_linter.
 
 #' {{FUNCTION_TITLE}}
 #'
@@ -13,10 +14,10 @@
 {{FUNCTION_NAME}} <- function(
   {{SIGNATURE}}
 ) {
-  {{CHILDREN}}
+{{CHILDREN}}
 
   attrs <- .wa_normalize_attrs(
-    {{ATTRS}},
+{{ATTRS}},
     boolean_names = {{BOOLEAN_ATTRS}}
   )
 
@@ -28,3 +29,4 @@
     )
   )
 }
+# nolint end

@@ -131,7 +131,10 @@ rm(.bootstrap_cli_ui, .bootstrap_generate_helpers)
       "wa_* function names to exclude."
     ),
     "--schema-only            Build schema only and skip writing outputs.",
-    "--debug                  Write metadata/schema snapshots under scratch/debug/.",
+    paste(
+      "--debug                  Write metadata/schema snapshots under",
+      "scratch/debug/."
+    ),
     "--quiet                  Suppress stage-level progress messages.",
     "--help, -h               Print this help text."
   )
@@ -275,7 +278,10 @@ rm(.bootstrap_cli_ui, .bootstrap_generate_helpers)
   filters_path <- file.path(debug_dir, "filters.json")
 
   .write_debug_json(metadata_summary_path, result$metadata)
-  .write_debug_json(schema_path, result$schema)
+  debug_schema <- result$schema
+  debug_schema$components <- .components_by_tag(debug_schema$components)
+
+  .write_debug_json(schema_path, debug_schema)
   .write_debug_json(
     filters_path,
     list(

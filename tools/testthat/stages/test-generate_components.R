@@ -72,7 +72,9 @@ source(file.path("..", "..", "generate_components.R"))
             tagName = "wa-select",
             description = "Select component.",
             attributes = list(
+              list(name = "multiple", fieldName = "multiple", type = list(text = "boolean")),
               list(name = "size", fieldName = "size", type = list(text = "'small' | 'large'")),
+              list(name = "placeholder", fieldName = "placeholder", type = list(text = "string")),
               list(name = "value", fieldName = "value", type = list(text = "string")),
               list(name = "with-clear", fieldName = "withClear", type = list(text = "boolean"))
             ),
@@ -216,6 +218,15 @@ testthat::test_that("generate builds deterministic intermediate schema", {
   checkbox_properties <- vapply(checkbox$properties, `[[`, character(1), "name")
   testthat::expect_equal(checkbox_properties, c("checked", "hint", "input"))
   testthat::expect_true(is.na(checkbox$properties[[1]]$attribute_name))
+  testthat::expect_equal(card$classification$mode, "wrapper")
+  testthat::expect_equal(checkbox$classification$mode, "wrapper-binding")
+  testthat::expect_true(isTRUE(checkbox$classification$binding))
+  select <- result$schema$components[[4]]
+  testthat::expect_equal(select$classification$mode, "wrapper-binding-update")
+  testthat::expect_true(isTRUE(select$classification$update))
+  testthat::expect_equal(result$schema$summary$classification$wrapper_only, 1L)
+  testthat::expect_equal(result$schema$summary$classification$binding, 3L)
+  testthat::expect_equal(result$schema$summary$classification$update, 1L)
 })
 
 testthat::test_that("generate supports component filters and exclusions", {
@@ -273,6 +284,14 @@ testthat::test_that("generate writes debug artifacts when requested", {
 
   schema_debug <- jsonlite::fromJSON(result$debug$schema, simplifyVector = FALSE)
   testthat::expect_equal(schema_debug$summary$component_count, 4L)
+  testthat::expect_equal(
+    names(schema_debug$components),
+    c("wa-button", "wa-card", "wa-checkbox", "wa-select")
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-card"]]$r_function_name,
+    "wa_card"
+  )
 })
 
 testthat::test_that("generate writes wrapper, binding, and update outputs", {
@@ -310,6 +329,26 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_equal(length(result$written$updates), 1L)
   testthat::expect_true("R/wa_select.R" %in% result$written$updates)
 
+  card_wrapper <- readLines(file.path(root, "R", "wa_card.R"), warn = FALSE)
+  testthat::expect_true(any(grepl(
+    "@param id Optional DOM id attribute for HTML, CSS, and JS targeting\\.",
+    card_wrapper
+  )))
+
+  select_wrapper <- readLines(file.path(root, "R", "wa_select.R"), warn = FALSE)
+  testthat::expect_true(any(grepl(
+    "@param input_id Shiny input id for the component\\.",
+    select_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^wa_select <- function\\($",
+    select_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^  input_id,$",
+    select_wrapper
+  )))
+
   checkbox_binding <- readLines(
     file.path(root, "inst", "bindings", "wa_checkbox.js"),
     warn = FALSE
@@ -319,7 +358,7 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     checkbox_binding
   )))
   testthat::expect_true(any(grepl(
-    "removeEventListener\\('change', el\\.__shinyWebawesomeCallback\\);",
+    "removeEventListener\\('wa-change', el.__shinyWebawesomeCallback\\);",
     checkbox_binding
   )))
   testthat::expect_true(any(grepl(

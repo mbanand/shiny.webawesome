@@ -111,3 +111,17 @@
 
   invisible(path)
 }
+
+# Return one named list keyed by component tag for human-readable debug output.
+.components_by_tag <- function(components) {
+  if (is.null(components) || length(components) == 0L) {
+    return(list())
+  }
+
+  tags <- vapply(components, `[[`, character(1), "tag_name")
+  order_idx <- order(tags)
+  components <- components[order_idx]
+  tags <- tags[order_idx]
+  names(components) <- tags
+  components
+}

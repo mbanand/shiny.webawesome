@@ -119,6 +119,73 @@
   normalized[order(keys)]
 }
 
+# Return relevant event names for Shiny input binding heuristics.
+.binding_event_names <- function() {
+  c("change", "input", "click", "toggle", "wa-change", "wa-input", "wa-toggle")
+}
+
+# Return event names that should not drive binding classification.
+.ignored_binding_event_names <- function() {
+  c(
+    "blur", "focus", "slotchange", "wa-invalid",
+    "wa-show", "wa-hide", "wa-after-show", "wa-after-hide", "wa-hover"
+  )
+}
+
+# Return state field names that may indicate update-capable controls.
+.update_state_field_names <- function() {
+  c("value", "checked", "selected", "open", "active")
+}
+
+# Return supporting attribute names that suggest richer writable value controls.
+.update_support_field_names <- function() {
+  c(
+    "placeholder", "multiple", "rows", "min", "max", "step",
+    "maxlength", "minlength", "range"
+  )
+}
+
+# Classify one component for wrapper, binding, and update support.
+.classify_component_support <- function(attributes, properties, events) {
+  attribute_names <- vapply(attributes, `[[`, character(1), "name")
+  property_names <- vapply(properties, `[[`, character(1), "name")
+  event_names <- vapply(events, `[[`, character(1), "name")
+
+  matched_binding_events <- intersect(event_names, .binding_event_names())
+  matched_update_state_fields <- intersect(
+    unique(c(attribute_names, property_names)),
+    .update_state_field_names()
+  )
+  matched_update_support_fields <- intersect(
+    attribute_names,
+    .update_support_field_names()
+  )
+
+  has_binding <- length(matched_binding_events) > 0L
+  has_update <- has_binding &&
+    length(matched_update_state_fields) > 0L &&
+    length(matched_update_support_fields) >= 2L
+
+  list(
+    mode = if (has_update) {
+      "wrapper-binding-update"
+    } else if (has_binding) {
+      "wrapper-binding"
+    } else {
+      "wrapper"
+    },
+    wrapper = TRUE,
+    binding = has_binding,
+    update = has_update,
+    reasons = list(
+      binding_events = matched_binding_events,
+      ignored_events = intersect(event_names, .ignored_binding_event_names()),
+      update_state_fields = matched_update_state_fields,
+      update_support_fields = matched_update_support_fields
+    )
+  )
+}
+
 # Build the intermediate component schema from declaration records.
 .build_component_schema <- function(records,
                                     filter = character(),
@@ -162,6 +229,11 @@
     )
     events <- .normalize_sorted(declaration$events, .normalize_event)
     slots <- .normalize_sorted(declaration$slots, .normalize_slot)
+    classification <- .classify_component_support(
+      attributes = attributes,
+      properties = properties,
+      events = events
+    )
 
     components[[length(components) + 1L]] <- list(
       tag_name = tag_name,
@@ -173,6 +245,7 @@
         .or_default(declaration$description, declaration$summary),
         fallback = NA_character_
       ),
+      classification = classification,
       attributes = attributes,
       properties = properties,
       events = events,
@@ -188,6 +261,15 @@
   components[order(keys)]
 }
 
+# Summarize component classification counts for debug and reporting.
+.classification_summary <- function(components) {
+  list(
+    wrapper_only = sum(!vapply(components, function(comp) comp$classification$binding, logical(1))),
+    binding = sum(vapply(components, function(comp) comp$classification$binding, logical(1))),
+    update = sum(vapply(components, function(comp) comp$classification$update, logical(1)))
+  )
+}
+
 # Build one machine-readable schema payload including summary metadata.
 .build_schema_payload <- function(metadata,
                                   records,
@@ -201,6 +283,7 @@
     filter = filter,
     exclude = exclude
   )
+  classification_counts <- .classification_summary(components)
 
   list(
     schema_version = 1L,
@@ -228,6 +311,7 @@
     ),
     summary = list(
       component_count = length(components),
+      classification = classification_counts,
       tags = vapply(components, `[[`, character(1), "tag_name")
     ),
     components = components

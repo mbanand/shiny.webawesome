@@ -6,6 +6,7 @@
 \usage{
 wa_card(
   ...,
+  id = NULL,
   appearance = NULL,
   dir = NULL,
   lang = NULL,
@@ -21,6 +22,8 @@ wa_card(
 \arguments{
 \item{...}{Child content for the component's default slot.}
 
+\item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
 \item{appearance}{The card's visual appearance.}
 
 \item{dir}{Optional Web Awesome attribute.}
@@ -29,17 +32,21 @@ wa_card(
 
 \item{orientation}{Renders the card's orientation *}
 
-\item{actions}{An optional actions section to render at the end for the horizontal card.}
+\item{actions}{An optional actions section to render at the end for the
+horizontal card.}
 
 \item{footer}{An optional footer for the card.}
 
-\item{footer_actions}{An optional actions section to render in the footer of the vertical card.}
+\item{footer_actions}{An optional actions section to render in the
+footer of the vertical card.}
 
 \item{header}{An optional header for the card.}
 
-\item{header_actions}{An optional actions section to render in the header of the vertical card.}
+\item{header_actions}{An optional actions section to render in the
+header of the vertical card.}
 
-\item{media}{An optional media section to render at the start of the card.}
+\item{media}{An optional media section to render at the start of the
+card.}
 }
 \value{
 An HTML tag for the component.

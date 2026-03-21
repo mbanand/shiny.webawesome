@@ -12,19 +12,14 @@
 #'
 #' @rdname {{RDNAME}}
 #' @export
-{{FUNCTION_NAME}} <- function(session,
-                              input_id,
-                              value = NULL,
-                              label = NULL,
-                              hint = NULL,
-                              disabled = NULL) {
+{{FUNCTION_NAME}} <- function(
+  session,
+  input_id{{PARAM_SIGNATURE}}
+) {
   message <- Filter(
     Negate(is.null),
     list(
-      value = value,
-      label = label,
-      hint = hint,
-      disabled = disabled
+{{MESSAGE_FIELDS}}
     )
   )
 

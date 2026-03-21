@@ -55,6 +55,9 @@
             ),
             members = list(
               list(name = "checked", kind = "field", type = list(text = "boolean"))
+            ),
+            events = list(
+              list(name = "change", type = list(text = "Event"))
             )
           )
         )
@@ -184,6 +187,11 @@ testthat::test_that("generate tool builds filtered schema and reports success", 
       "wrappers=1, bindings=0, updates=0"
     )
   )
+  testthat::expect_true(file.exists(file.path(root, "R", "wa_card.R")))
+  testthat::expect_false(file.exists(file.path(root, "R", "wa_checkbox.R")))
+  testthat::expect_false(
+    file.exists(file.path(root, "inst", "bindings", "wa_checkbox.js"))
+  )
 })
 
 testthat::test_that("generate tool supports absolute-path CLI invocation", {
@@ -201,6 +209,11 @@ testthat::test_that("generate tool supports absolute-path CLI invocation", {
       "inst/extdata/webawesome/custom-elements.json, wrappers=2, bindings=1, updates=0"
     )
   )
+  testthat::expect_true(file.exists(file.path(root, "R", "wa_card.R")))
+  testthat::expect_true(file.exists(file.path(root, "R", "wa_checkbox.R")))
+  testthat::expect_true(
+    file.exists(file.path(root, "inst", "bindings", "wa_checkbox.js"))
+  )
 })
 
 testthat::test_that("generate tool supports schema-only mode", {
@@ -210,7 +223,10 @@ testthat::test_that("generate tool supports schema-only mode", {
   result <- .run_generate_script(root, c("--schema-only", "--filter", "wa-card"))
 
   testthat::expect_equal(result$status, 0)
-  testthat::expect_false(file.exists(file.path(root, "R", "generated", "wa_card.R")))
+  testthat::expect_false(file.exists(file.path(root, "R", "wa_card.R")))
+  testthat::expect_false(
+    file.exists(file.path(root, "inst", "bindings", "wa_card.js"))
+  )
   testthat::expect_match(
     result$stderr,
     "Generate schema complete: components=1, metadata=inst/extdata/webawesome/custom-elements.json"

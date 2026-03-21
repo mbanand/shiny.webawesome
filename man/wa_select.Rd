@@ -6,8 +6,8 @@
 \title{Create a \code{wa-select} component}
 \usage{
 wa_select(
+  input_id,
   ...,
-  id = NULL,
   value = NULL,
   disabled = NULL,
   label = NULL,
@@ -44,9 +44,9 @@ update_wa_select(
 )
 }
 \arguments{
-\item{...}{Child content for the component's default slot.}
+\item{input_id}{Input id of the component to update.}
 
-\item{id}{Optional DOM id attribute.}
+\item{...}{Child content for the component's default slot.}
 
 \item{value}{Optional value to send to the component.}
 
@@ -56,7 +56,8 @@ update_wa_select(
 
 \item{hint}{Optional hint text to send to the component.}
 
-\item{name}{The name of the select, submitted as a name/value pair with form data.}
+\item{name}{The name of the select, submitted as a name/value pair with
+form data.}
 
 \item{appearance}{The select's visual appearance.}
 
@@ -66,17 +67,26 @@ update_wa_select(
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{max_options_visible}{The maximum number of selected options to show when \code{multiple} is true. After the maximum, "+n" will be shown to indicate the number of additional items that are selected. Set to 0 to remove the limit.}
+\item{max_options_visible}{The maximum number of selected options to
+show when \code{multiple} is true. After the maximum, "+n" will be shown to
+indicate the number of additional items that are selected. Set to 0 to
+remove the limit.}
 
 \item{multiple}{Allows more than one option to be selected.}
 
-\item{open}{Indicates whether or not the select is open. You can toggle this attribute to show and hide the menu, or you can use the \code{show()} and \code{hide()} methods and this attribute will reflect the select's open state.}
+\item{open}{Indicates whether or not the select is open. You can toggle
+this attribute to show and hide the menu, or you can use the \code{show()}
+and \code{hide()} methods and this attribute will reflect the select's open
+state.}
 
 \item{pill}{Draws a pill-style select with rounded edges.}
 
-\item{placeholder}{Placeholder text to show as a hint when the select is empty.}
+\item{placeholder}{Placeholder text to show as a hint when the select
+is empty.}
 
-\item{placement}{The preferred placement of the select's menu. Note that the actual placement may vary as needed to keep the listbox inside of the viewport.}
+\item{placement}{The preferred placement of the select's menu. Note
+that the actual placement may vary as needed to keep the listbox inside
+of the viewport.}
 
 \item{required}{The select's required attribute.}
 
@@ -86,19 +96,22 @@ update_wa_select(
 
 \item{clear_icon}{An icon to use in lieu of the default clear icon.}
 
-\item{end}{An element, such as \verb{<wa-icon>}, placed at the end of the combobox.}
+\item{end}{An element, such as \verb{<wa-icon>}, placed at the end of the
+combobox.}
 
-\item{expand_icon}{The icon to show when the control is expanded and collapsed. Rotates on open and close.}
+\item{expand_icon}{The icon to show when the control is expanded and
+collapsed. Rotates on open and close.}
 
-\item{hint_slot}{Text that describes how to use the input. Alternatively, you can use the \code{hint} attribute.}
+\item{hint_slot}{Text that describes how to use the input.
+Alternatively, you can use the \code{hint} attribute.}
 
-\item{label_slot}{The input's label. Alternatively, you can use the \code{label} attribute.}
+\item{label_slot}{The input's label. Alternatively, you can use the
+\code{label} attribute.}
 
-\item{start}{An element, such as \verb{<wa-icon>}, placed at the start of the combobox.}
+\item{start}{An element, such as \verb{<wa-icon>}, placed at the start of
+the combobox.}
 
 \item{session}{Shiny session object.}
-
-\item{input_id}{Input id of the component to update.}
 }
 \value{
 An HTML tag for the component.

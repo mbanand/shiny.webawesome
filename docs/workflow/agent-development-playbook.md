@@ -239,6 +239,14 @@ unnecessary diffs caused by whitespace or indentation differences.
 Styling should be applied only after generation is complete, not during
 template construction.
 
+This is an explicit required step after every generate run that writes package
+files under top-level `R/`. Do not treat post-generate styling as optional,
+because template-correct code can still drift from tidyverse formatting after
+generator changes or debug passes.
+
+After styling generated files, run a relevant lint pass as a separate
+validation step so formatting fixes and lint findings are not conflated.
+
 ---
 
 ## Generated code validation
@@ -251,6 +259,7 @@ Typical validation flow is:
 
 - generating components
 - styling generated code
+- running a relevant lint pass
 - running documentation generation
 - running unit tests
 - running functional tests
@@ -260,6 +269,7 @@ Typical commands:
 
 ```r
 styler::style_dir("R")
+lintr::lint("R")
 devtools::document()
 devtools::test()
 devtools::check()

@@ -32,6 +32,15 @@ wa_dialog()
 
 * HTML attributes become R arguments.
 * Attribute names convert from kebab-case to snake_case.
+* Wrapper-only components use `id` for the DOM `id` attribute.
+* Components with generated Shiny input bindings use `input_id` as the
+  user-facing Shiny identifier, and that value is also written to the
+  rendered DOM `id` attribute.
+* For components with generated Shiny input bindings, `input_id` is the
+  first positional argument in the generated R wrapper signature.
+* Generated roxygen for identity arguments must document this distinction
+  explicitly so users can tell whether a wrapper argument is a generic DOM id
+  or a Shiny input id that also becomes the DOM id.
 
 Example:
 

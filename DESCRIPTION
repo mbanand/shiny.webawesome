@@ -15,6 +15,7 @@ Imports:
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests:
+    chromote,
     document,
     jsonlite,
     processx,

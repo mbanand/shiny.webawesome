@@ -25,7 +25,13 @@ test_that("representative components work end to end in a browser", {
     paste(
       "Boolean(window.customElements.get('wa-card'))",
       "&& Boolean(window.customElements.get('wa-checkbox'))",
-      "&& Boolean(window.customElements.get('wa-select'))"
+      "&& Boolean(window.customElements.get('wa-switch'))",
+      "&& Boolean(window.customElements.get('wa-rating'))",
+      "&& Boolean(window.customElements.get('wa-radio-group'))",
+      "&& Boolean(window.customElements.get('wa-select'))",
+      "&& Boolean(window.customElements.get('wa-input'))",
+      "&& Boolean(window.customElements.get('wa-textarea'))",
+      "&& Boolean(window.customElements.get('wa-slider'))"
     )
   )
 
@@ -45,6 +51,39 @@ test_that("representative components work end to end in a browser", {
 
   app$run_js(
     paste(
+      "const el = document.getElementById('switch');",
+      "el.checked = true;",
+      "el.dispatchEvent(new Event('change', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('switch_value').innerText.trim() === 'TRUE'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('rating');",
+      "el.value = 4;",
+      "el.dispatchEvent(new Event('change', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('rating_value').innerText.trim() === '4'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('radio_group');",
+      "el.value = 'beta';",
+      "el.dispatchEvent(new Event('change', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('radio_group_value').innerText.trim() === 'beta'"
+  )
+
+  app$run_js(
+    paste(
       "const el = document.getElementById('select');",
       "el.value = 'a';",
       "el.dispatchEvent(new Event('change', { bubbles: true }));"
@@ -52,6 +91,39 @@ test_that("representative components work end to end in a browser", {
   )
   app$wait_for_js(
     "document.getElementById('select_value').innerText.trim() === 'a'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('text_input');",
+      "el.value = 'alpha';",
+      "el.dispatchEvent(new Event('change', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('text_input_value').innerText.trim() === 'alpha'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('text_area');",
+      "el.value = 'delta';",
+      "el.dispatchEvent(new Event('change', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('text_area_value').innerText.trim() === 'delta'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('slider');",
+      "el.value = 5;",
+      "el.dispatchEvent(new Event('change', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('slider_value').innerText.trim() === '5'"
   )
 
   app$click("update_select")
@@ -62,6 +134,39 @@ test_that("representative components work end to end in a browser", {
       "&& el.label === 'Updated label'",
       "&& el.hint === 'Updated hint'",
       "&& document.getElementById('select_value').innerText.trim() === 'b'"
+    )
+  )
+
+  app$click("update_input")
+  app$wait_for_js(
+    paste(
+      "const el = document.getElementById('text_input');",
+      "el.value === 'beta'",
+      "&& el.label === 'Updated input label'",
+      "&& el.hint === 'Updated input hint'",
+      "&& document.getElementById('text_input_value').innerText.trim() === 'beta'"
+    )
+  )
+
+  app$click("update_textarea")
+  app$wait_for_js(
+    paste(
+      "const el = document.getElementById('text_area');",
+      "el.value === 'gamma'",
+      "&& el.label === 'Updated textarea label'",
+      "&& el.hint === 'Updated textarea hint'",
+      "&& document.getElementById('text_area_value').innerText.trim() === 'gamma'"
+    )
+  )
+
+  app$click("update_slider")
+  app$wait_for_js(
+    paste(
+      "const el = document.getElementById('slider');",
+      "String(el.value) === '7'",
+      "&& el.label === 'Updated slider label'",
+      "&& el.hint === 'Updated slider hint'",
+      "&& document.getElementById('slider_value').innerText.trim() === '7'"
     )
   )
 })

@@ -31,6 +31,8 @@
   }
 
   text <- as.character(text[[1]])
+  text <- gsub("\\]\\([^)]+\\)", "]", text, perl = TRUE)
+  text <- gsub("\\[([^]]+)\\]", "\\1", text, perl = TRUE)
   trimws(gsub("[[:space:]]+", " ", text))
 }
 
@@ -43,6 +45,30 @@
   }
 
   description
+}
+
+# Return wrapped roxygen lines for one text fragment.
+.roxygen_lines <- function(text, width = 72L) {
+  paste0("#' ", strwrap(text, width = width))
+}
+
+# Return wrapped roxygen lines for one parameter description.
+.roxygen_param_lines <- function(name, description) {
+  .roxygen_lines(paste("@param", name, description))
+}
+
+# Return one generated roxygen line for the wrapper identity argument.
+.wrapper_id_param_doc <- function(component) {
+  if (.component_has_binding(component)) {
+    return(
+      paste(
+        "Shiny input id for the component.",
+        "This is also used as the rendered DOM `id` attribute."
+      )
+    )
+  }
+
+  "Optional DOM id attribute for HTML, CSS, and JS targeting."
 }
 
 # Return one concise parameter description for a wrapper slot.
@@ -72,7 +98,7 @@
     character(1),
     "argument_name"
   )
-  reserved <- c(attr_args, "id")
+  reserved <- c(attr_args, "id", "input_id")
 
   lapply(
     slots,
@@ -90,7 +116,12 @@
 
 # Return whether a component should accept an id argument.
 .wrapper_uses_id <- function(component) {
-  component$tag_name %in% c("wa-checkbox", "wa-select")
+  TRUE
+}
+
+# Return whether a component should expose input_id instead of id.
+.wrapper_uses_input_id <- function(component) {
+  .component_has_binding(component)
 }
 
 # Return the preferred wrapper argument order for component attributes.
@@ -125,7 +156,9 @@
 .render_wrapper_signature <- function(component) {
   args <- c("...")
 
-  if (.wrapper_uses_id(component)) {
+  if (.wrapper_uses_input_id(component)) {
+    args <- c("input_id", args)
+  } else if (.wrapper_uses_id(component)) {
     args <- c(args, "id = NULL")
   }
 
@@ -161,7 +194,9 @@
   attrs <- .wrapper_attributes(component)
   lines <- character()
 
-  if (.wrapper_uses_id(component)) {
+  if (.wrapper_uses_input_id(component)) {
+    lines <- c(lines, "\"id\" = input_id")
+  } else if (.wrapper_uses_id(component)) {
     lines <- c(lines, "\"id\" = id")
   }
 
@@ -179,13 +214,14 @@
   }
 
   if (length(lines) == 0L) {
-    return("list()")
+    return("    list()")
   }
 
-  paste0(
-    "list(\n    ",
-    paste(lines, collapse = ",\n    "),
-    "\n  )"
+  paste(
+    "    list(",
+    paste0("      ", paste(lines, collapse = ",\n      ")),
+    "    )",
+    sep = "\n"
   )
 }
 
@@ -199,7 +235,15 @@
   }
 
   values <- vapply(booleans, function(attr) .r_string(attr$name), character(1))
-  paste0("c(", paste(values, collapse = ", "), ")")
+  if (length(values) <= 3L) {
+    return(paste0("c(", paste(values, collapse = ", "), ")"))
+  }
+
+  paste0(
+    "c(\n      ",
+    paste(values, collapse = ",\n      "),
+    "\n    )"
+  )
 }
 
 # Render slot-child assembly code for one wrapper.
@@ -213,12 +257,20 @@
       vapply(
         slots,
         function(slot) {
-          paste0(
-            "children <- c(children, list(.wa_slot(",
-            slot$wrapper_argument_name,
-            ", ",
-            .r_string(slot$name),
-            ")))"
+          paste(
+            "children <- c(",
+            "  children,",
+            "  list(",
+            paste0(
+              "    .wa_slot(",
+              slot$wrapper_argument_name,
+              ", ",
+              .r_string(slot$name),
+              ")"
+            ),
+            "  )",
+            ")",
+            sep = "\n"
           )
         },
         character(1)
@@ -226,7 +278,7 @@
     )
   }
 
-  paste(lines, collapse = "\n  ")
+  paste0("  ", gsub("\n", "\n  ", paste(lines, collapse = "\n"), fixed = TRUE))
 }
 
 # Render one generated wrapper file from template.
@@ -240,10 +292,17 @@
     )
   )
 
-  param_docs <- c("#' @param ... Child content for the component's default slot.")
+  param_docs <- .roxygen_param_lines(
+    "...",
+    "Child content for the component's default slot."
+  )
 
   if (.wrapper_uses_id(component)) {
-    param_docs <- c(param_docs, "#' @param id Optional DOM id attribute.")
+    param_name <- if (.wrapper_uses_input_id(component)) "input_id" else "id"
+    param_docs <- c(
+      param_docs,
+      .roxygen_param_lines(param_name, .wrapper_id_param_doc(component))
+    )
   }
 
   attrs <- .wrapper_attributes(component)
@@ -253,11 +312,12 @@
       vapply(
         attrs,
         function(attr) {
-          paste0(
-            "#' @param ",
-            attr$argument_name,
-            " ",
-            .wrapper_attr_param_doc(attr)
+          paste(
+            .roxygen_param_lines(
+              attr$argument_name,
+              .wrapper_attr_param_doc(attr)
+            ),
+            collapse = "\n"
           )
         },
         character(1)
@@ -272,11 +332,12 @@
       vapply(
         slots,
         function(slot) {
-          paste0(
-            "#' @param ",
-            slot$wrapper_argument_name,
-            " ",
-            .wrapper_slot_param_doc(slot)
+          paste(
+            .roxygen_param_lines(
+              slot$wrapper_argument_name,
+              .wrapper_slot_param_doc(slot)
+            ),
+            collapse = "\n"
           )
         },
         character(1)
