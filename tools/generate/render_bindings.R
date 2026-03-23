@@ -6,6 +6,11 @@
   isTRUE(component$classification$binding)
 }
 
+# Return the binding mode for one component.
+.component_binding_mode <- function(component) {
+  .scalar_string(component$classification$binding_mode, fallback = "none")
+}
+
 # Return one component's attribute names.
 .component_attribute_names <- function(component) {
   vapply(component$attributes %||% list(), `[[`, character(1), "name")
@@ -28,8 +33,20 @@
 
 # Return the preferred DOM event to subscribe to for a binding.
 .binding_subscribe_event <- function(component) {
+  override_event <- .scalar_string(
+    component$classification$binding_event,
+    fallback = NA_character_
+  )
+
+  if (!is.na(override_event)) {
+    return(override_event)
+  }
+
   events <- .component_event_names(component)
-  preferred <- c("change", "input", "click", "toggle", "wa-change", "wa-input", "wa-toggle")
+  preferred <- c(
+    "change", "input", "click", "toggle",
+    "wa-change", "wa-input", "wa-toggle"
+  )
   matched <- preferred[preferred %in% events]
 
   if (length(matched) == 0L) {
@@ -51,6 +68,10 @@
 
 # Return JS for extracting the current component value.
 .binding_get_value <- function(component) {
+  if (identical(.component_binding_mode(component), "action")) {
+    return("return $(el).data(\"val\") || 0;")
+  }
+
   if (.component_has_state_field(component, "checked")) {
     return("return !!el.checked;")
   }
@@ -66,6 +87,10 @@
 
 # Return one supported list of fields for receiveMessage.
 .binding_receive_fields <- function(component) {
+  if (identical(.component_binding_mode(component), "action")) {
+    return(character())
+  }
+
   supported <- c("value", "checked", "label", "hint", "disabled")
   fields <- supported[supported %in% unique(c(
     .component_attribute_names(component),
@@ -122,13 +147,75 @@
   paste(lines, collapse = "\n    ")
 }
 
+# Return the optional JS getType() method block for one component.
+.binding_get_type_method <- function(component) {
+  if (!identical(.component_binding_mode(component), "action")) {
+    return("")
+  }
+
+  paste(
+    "  getType(el) {",
+    "    return \"shiny.action\";",
+    "  },",
+    sep = "\n"
+  )
+}
+
+# Return the JS subscription callback body for one component.
+.binding_subscribe_body <- function(component) {
+  if (!identical(.component_binding_mode(component), "action")) {
+    return("el.__shinyWebawesomeCallback = () => callback();")
+  }
+
+  paste(
+    "el.__shinyWebawesomeCallback = () => {",
+    "  const val = $(el).data(\"val\") || 0;",
+    "  $(el).data(\"val\", val + 1);",
+    "  callback(false);",
+    "};",
+    sep = "\n    "
+  )
+}
+
+# Return the JS receiveMessage() body for one component.
+.binding_receive_message <- function(component) {
+  if (!identical(.component_binding_mode(component), "action")) {
+    body <- .binding_set_value(component)
+
+    if (!nzchar(body)) {
+      return("el.dispatchEvent(new Event('change', { bubbles: true }));")
+    }
+
+    return(
+      paste(
+        body,
+        "el.dispatchEvent(new Event('change', { bubbles: true }));",
+        sep = "\n    "
+      )
+    )
+  }
+
+  paste(
+    "if (Object.prototype.hasOwnProperty.call(data, \"disabled\")) {",
+    "  if (data.disabled) {",
+    "    el.setAttribute(\"disabled\", \"\");",
+    "  } else {",
+    "    el.removeAttribute(\"disabled\");",
+    "  }",
+    "}",
+    sep = "\n    "
+  )
+}
+
 # Render JS binding behavior values for one component.
 .binding_values <- function(component) {
   c(
     FIND_SELECTOR = .binding_selector(component),
     BINDING_NAME = .binding_name(component),
     GET_VALUE = .binding_get_value(component),
-    SET_VALUE = .binding_set_value(component),
+    GET_TYPE_METHOD = .binding_get_type_method(component),
+    SUBSCRIBE_BODY = .binding_subscribe_body(component),
+    RECEIVE_MESSAGE = .binding_receive_message(component),
     SUBSCRIBE_EVENT = .binding_subscribe_event(component)
   )
 }

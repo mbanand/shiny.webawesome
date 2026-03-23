@@ -5,8 +5,8 @@
 \title{Create a \code{wa-button} component}
 \usage{
 wa_button(
+  input_id,
   ...,
-  id = NULL,
   value = NULL,
   disabled = NULL,
   name = NULL,
@@ -35,9 +35,10 @@ wa_button(
 )
 }
 \arguments{
-\item{...}{Child content for the component's default slot.}
+\item{input_id}{Shiny input id for the component. This is also used as
+the rendered DOM \code{id} attribute.}
 
-\item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+\item{...}{Child content for the component's default slot.}
 
 \item{value}{The value of the button, submitted as a pair with the
 button's name as part of the form data, but only when this button is

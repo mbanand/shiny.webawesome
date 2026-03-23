@@ -12,6 +12,11 @@ source(file.path("..", "..", "document_tools.R"))
     recursive = TRUE,
     showWarnings = FALSE
   )
+  dir.create(
+    file.path(root, "tools", "generate"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
   .write_file(file.path(root, "DESCRIPTION"), c(
     "Package: fake",
     "Title: Fake",
@@ -50,6 +55,23 @@ source(file.path("..", "..", "document_tools.R"))
     normalizePath(file.path("..", "..", "prune_webawesome.R"), mustWork = TRUE),
     file.path(root, "tools", "prune_webawesome.R")
   )
+  file.copy(
+    normalizePath(
+      file.path("..", "..", "review_binding_candidates.R"),
+      mustWork = TRUE
+    ),
+    file.path(root, "tools", "review_binding_candidates.R")
+  )
+  helper_files <- c("utils.R", "policy.R", "metadata.R", "schema.R")
+  for (helper in helper_files) {
+    file.copy(
+      normalizePath(
+        file.path("..", "..", "generate", helper),
+        mustWork = TRUE
+      ),
+      file.path(root, "tools", "generate", helper)
+    )
+  }
   file.copy(
     normalizePath(file.path("..", "..", "runners", "clean.R"), mustWork = TRUE),
     file.path(root, "tools", "runners", "clean.R")
@@ -98,11 +120,20 @@ testthat::test_that(
 
     testthat::expect_true("fetch_webawesome.Rd" %in% result$generated)
     testthat::expect_true("prune_webawesome.Rd" %in% result$generated)
+    testthat::expect_true("review_binding_candidates.Rd" %in% result$generated)
     testthat::expect_true(
       file.exists(file.path(root, "tools", "man", "fetch_webawesome.Rd"))
     )
     testthat::expect_true(
       file.exists(file.path(root, "tools", "man", "prune_webawesome.Rd"))
+    )
+    testthat::expect_true(
+      file.exists(file.path(
+        root,
+        "tools",
+        "man",
+        "review_binding_candidates.Rd"
+      ))
     )
   }
 )

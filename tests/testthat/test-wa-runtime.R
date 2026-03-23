@@ -48,6 +48,7 @@ test_that("package dependency points at the shipped bootstrap assets", {
   expect_equal(dep$stylesheet, "www/wa/styles/webawesome.css")
   expect_equal(script_src[[1]], "www/webawesome-init.js")
   expect_equal(dep$script[[1]]$type, "module")
+  expect_true("bindings/wa_button.js" %in% script_src)
   expect_true("bindings/wa_checkbox.js" %in% script_src)
   expect_true("bindings/wa_color_picker.js" %in% script_src)
   expect_true("bindings/wa_input.js" %in% script_src)

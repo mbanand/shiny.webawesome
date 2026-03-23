@@ -14,9 +14,10 @@ $.extend(binding, {
   getValue(el) {
     {{GET_VALUE}}
   },
+{{GET_TYPE_METHOD}}
 
   subscribe(el, callback) {
-    el.__shinyWebawesomeCallback = () => callback();
+    {{SUBSCRIBE_BODY}}
     el.addEventListener('{{SUBSCRIBE_EVENT}}', el.__shinyWebawesomeCallback);
   },
 
@@ -28,8 +29,7 @@ $.extend(binding, {
   },
 
   receiveMessage(el, data) {
-    {{SET_VALUE}}
-    el.dispatchEvent(new Event('change', { bubbles: true }));
+    {{RECEIVE_MESSAGE}}
   }
 });
 

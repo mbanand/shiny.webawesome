@@ -240,6 +240,15 @@ Key principles:
 - Generated code remains the default implementation.
 - Manual overrides are used only when necessary.
 - Overrides are implemented in dedicated locations rather than by editing generated files directly.
+- Override policy should be expressed as narrow handwritten build inputs when
+  possible, rather than as ad hoc patches to generated outputs.
+
+One concrete use case is **binding support-model overrides** for components
+whose Shiny-relevant interaction semantics are not fully represented in
+upstream metadata. In such cases, a small handwritten policy layer may declare
+that a component should use a specific generated binding mode even when the
+upstream `custom-elements.json` file does not expose the needed event
+information directly.
 
 The exact structure of this override layer is defined in:
 
@@ -336,6 +345,14 @@ Shiny event automatically.
 High-frequency or interaction-only events, such as hover telemetry, should
 generally remain browser-side and be handled with client-side JavaScript
 unless a future design explicitly introduces an opt-in forwarding mechanism.
+
+The default generated binding model is therefore **value-oriented**. However,
+the architecture also allows a narrow, explicit policy seam for exceptional
+cases where a component should behave like a Shiny **action** input rather than
+like a value-bearing input. This is intended for rare situations where the
+component's effective interaction contract is clear, but the upstream metadata
+does not declare the relevant native or inherited event in a way the generator
+can classify automatically.
 
 Typical behavior:
 

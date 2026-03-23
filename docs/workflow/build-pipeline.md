@@ -278,10 +278,18 @@ Typical override situations include:
 * component-specific Shiny integration behavior
 * special event handling
 * compatibility fixes for upstream components
+* support-model overrides when upstream metadata does not fully expose the
+  Shiny-relevant interaction contract of a component
 
 Overrides are intentionally limited and should remain small relative to the generated codebase.
 
 Overrides are applied during generation so that the **final output remains deterministic and reproducible**.
+
+When possible, these overrides should be expressed as narrow handwritten policy
+inputs under `dev/` rather than as broad hard-coded exceptions scattered
+through generator code. For example, a binding override policy may explicitly
+mark a component as action-bound when the component semantically mirrors a
+native control but the relevant event is not declared in upstream metadata.
 
 The override mechanism and its locations are defined in:
 
@@ -331,6 +339,14 @@ wa_input.R
 ## Shiny Binding Generation
 
 JavaScript bindings are generated for components that interact with Shiny inputs.
+
+The default generated support model is a **value-oriented input binding** that
+subscribes to a supported value/commit event and then reads the component's
+current value.
+
+In rare cases, generation may instead emit an **action-oriented binding** when
+an explicit policy input declares that the component should behave like a
+Shiny action input despite incomplete upstream metadata.
 
 Generated files are written to:
 

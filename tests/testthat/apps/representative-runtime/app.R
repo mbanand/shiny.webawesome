@@ -43,8 +43,8 @@ ui <- wa_page(
     variant = "brand"
   ),
   wa_button(
+    "button",
     "Run",
-    id = "button",
     variant = "brand"
   ),
   wa_callout(

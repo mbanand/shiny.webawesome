@@ -63,28 +63,60 @@
   source_file <- tail(ofiles[nzchar(ofiles)], 1)
   known_files <- c(command_file, source_file)
   known_files <- known_files[nzchar(known_files)]
-  current_dir <- if (length(known_files) == 0L) {
-    "."
-  } else {
-    dirname(normalizePath(known_files[[1]], winslash = "/", mustWork = FALSE))
-  }
-
-  helper_paths <- c(
-    file.path(current_dir, "generate", "utils.R"),
-    file.path(current_dir, "generate", "metadata.R"),
-    file.path(current_dir, "generate", "schema.R"),
-    file.path(current_dir, "generate", "render_utils.R"),
-    file.path(current_dir, "generate", "render_wrappers.R"),
-    file.path(current_dir, "generate", "render_updates.R"),
-    file.path(current_dir, "generate", "render_bindings.R"),
-    file.path(current_dir, "generate", "write_outputs.R")
+  helper_files <- c(
+    "utils.R",
+    "policy.R",
+    "metadata.R",
+    "schema.R",
+    "render_utils.R",
+    "render_wrappers.R",
+    "render_updates.R",
+    "render_bindings.R",
+    "write_outputs.R"
   )
 
-  missing <- helper_paths[!file.exists(helper_paths)]
-  if (length(missing) > 0L) {
+  base_dirs <- unique(c(
+    vapply(
+      known_files[known_files != "-"],
+      function(path) {
+        dirname(normalizePath(path, winslash = "/", mustWork = FALSE))
+      },
+      character(1)
+    ),
+    "."
+  ))
+  helper_dir_candidates <- unique(c(
+    unlist(lapply(base_dirs, function(dir) file.path(dir, "generate"))),
+    unlist(
+      lapply(base_dirs, function(dir) file.path(dir, "tools", "generate"))
+    ),
+    unlist(lapply(base_dirs, function(dir) file.path(dir, "..", "generate"))),
+    unlist(
+      lapply(
+        base_dirs,
+        function(dir) file.path(dir, "..", "tools", "generate")
+      )
+    ),
+    file.path("tools", "generate"),
+    "generate"
+  ))
+  existing_helper_dirs <- helper_dir_candidates[
+    dir.exists(helper_dir_candidates)
+  ]
+
+  helper_paths <- NULL
+  for (helper_dir in existing_helper_dirs) {
+    candidate_paths <- file.path(helper_dir, helper_files)
+    if (all(file.exists(candidate_paths))) {
+      helper_paths <- candidate_paths
+      break
+    }
+  }
+
+  if (is.null(helper_paths)) {
     stop(
       "Generate helper files do not exist: ",
-      paste(basename(missing), collapse = ", "),
+      paste(helper_files, collapse = ", "),
       call. = FALSE
     )
   }
@@ -332,6 +364,8 @@ rm(.bootstrap_cli_ui, .bootstrap_generate_helpers)
 #'   relative to the repository root.
 #' @param version_file Path to the copied Web Awesome version file, relative to
 #'   the repository root.
+#' @param binding_policy_file Path to the handwritten binding-override policy
+#'   file, relative to the repository root.
 #' @param filter Optional character vector of tags, component names, or
 #'   `wa_*` function names to include.
 #' @param exclude Optional character vector of tags, component names, or
@@ -354,6 +388,7 @@ generate_components <- function(
   root = ".",
   metadata_file = .default_metadata_file(),
   version_file = .default_metadata_version_file(),
+  binding_policy_file = .default_binding_policy_file(),
   filter = character(),
   exclude = character(),
   emit = TRUE,
@@ -373,12 +408,17 @@ generate_components <- function(
   filter <- .normalize_filter_tokens(filter)
   exclude <- .normalize_filter_tokens(exclude)
   metadata_version <- .read_metadata_version(root, version_file = version_file)
+  binding_policy <- .read_binding_override_policy(
+    root = root,
+    policy_file = binding_policy_file
+  )
   schema <- .build_schema_payload(
     metadata = metadata,
     records = records,
     root = root,
     metadata_file = metadata_file,
     metadata_version = metadata_version,
+    binding_policy = binding_policy,
     filter = filter,
     exclude = exclude
   )
@@ -387,6 +427,7 @@ generate_components <- function(
     root = root,
     metadata_path = .strip_root_prefix(metadata_path, root),
     metadata = schema$metadata,
+    binding_policy = schema$binding_policy,
     schema = schema,
     filter = filter,
     exclude = exclude,

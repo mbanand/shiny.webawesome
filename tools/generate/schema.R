@@ -145,8 +145,25 @@
   )
 }
 
+# Return one normalized binding override entry for a component tag.
+.binding_override_for <- function(binding_policy, tag_name) {
+  components <- .or_default(binding_policy$components, list())
+
+  if (length(components) == 0L || !tag_name %in% names(components)) {
+    return(NULL)
+  }
+
+  components[[tag_name]]$binding
+}
+
 # Classify one component for wrapper, binding, and update support.
-.classify_component_support <- function(attributes, properties, events) {
+.classify_component_support <- function(
+  tag_name,
+  attributes,
+  properties,
+  events,
+  binding_policy = list()
+) {
   attribute_names <- vapply(attributes, `[[`, character(1), "name")
   property_names <- vapply(properties, `[[`, character(1), "name")
   event_names <- vapply(events, `[[`, character(1), "name")
@@ -160,34 +177,66 @@
     attribute_names,
     .update_support_field_names()
   )
+  binding_override <- .binding_override_for(binding_policy, tag_name)
+  binding_mode <- if (is.null(binding_override)) "none" else binding_override$mode
+  binding_event <- if (is.null(binding_override)) NA_character_ else binding_override$event
+  binding_policy_reason <- if (is.null(binding_override)) {
+    NA_character_
+  } else {
+    binding_override$rationale
+  }
 
-  has_binding <- length(matched_binding_events) > 0L
-  has_update <- has_binding &&
-    length(matched_update_state_fields) > 0L &&
-    length(matched_update_support_fields) >= 2L
+  if (identical(binding_mode, "action")) {
+    has_binding <- TRUE
+    has_update <- FALSE
+  } else if (identical(binding_mode, "value")) {
+    has_binding <- TRUE
+    has_update <- length(matched_update_state_fields) > 0L &&
+      length(matched_update_support_fields) >= 2L
+  } else {
+    has_binding <- length(matched_binding_events) > 0L
+    has_update <- has_binding &&
+      length(matched_update_state_fields) > 0L &&
+      length(matched_update_support_fields) >= 2L
+    binding_mode <- if (has_binding) "value" else "none"
+    binding_event <- if (length(matched_binding_events) == 0L) {
+      NA_character_
+    } else {
+      matched_binding_events[[1]]
+    }
+  }
+
+  mode <- if (identical(binding_mode, "action")) {
+    "wrapper-binding-action"
+  } else if (has_update) {
+    "wrapper-binding-update"
+  } else if (has_binding) {
+    "wrapper-binding"
+  } else {
+    "wrapper"
+  }
 
   list(
-    mode = if (has_update) {
-      "wrapper-binding-update"
-    } else if (has_binding) {
-      "wrapper-binding"
-    } else {
-      "wrapper"
-    },
+    mode = mode,
     wrapper = TRUE,
     binding = has_binding,
+    binding_mode = binding_mode,
+    binding_event = binding_event,
+    binding_source = if (is.null(binding_override)) "metadata" else "policy",
     update = has_update,
     reasons = list(
       binding_events = matched_binding_events,
       ignored_events = intersect(event_names, .ignored_binding_event_names()),
       update_state_fields = matched_update_state_fields,
-      update_support_fields = matched_update_support_fields
+      update_support_fields = matched_update_support_fields,
+      binding_policy_reason = binding_policy_reason
     )
   )
 }
 
 # Build the intermediate component schema from declaration records.
 .build_component_schema <- function(records,
+                                    binding_policy = list(),
                                     filter = character(),
                                     exclude = character()) {
   filter <- .normalize_filter_tokens(filter)
@@ -230,9 +279,11 @@
     events <- .normalize_sorted(declaration$events, .normalize_event)
     slots <- .normalize_sorted(declaration$slots, .normalize_slot)
     classification <- .classify_component_support(
+      tag_name = tag_name,
       attributes = attributes,
       properties = properties,
-      events = events
+      events = events,
+      binding_policy = binding_policy
     )
 
     components[[length(components) + 1L]] <- list(
@@ -276,10 +327,12 @@
                                   root,
                                   metadata_file,
                                   metadata_version = NA_character_,
+                                  binding_policy = list(),
                                   filter = character(),
                                   exclude = character()) {
   components <- .build_component_schema(
     records = records,
+    binding_policy = binding_policy,
     filter = filter,
     exclude = exclude
   )
@@ -304,6 +357,11 @@
       source_version = metadata_version,
       module_count = length(.metadata_modules(metadata)),
       declaration_count = length(records)
+    ),
+    binding_policy = list(
+      path = .scalar_string(binding_policy$path, fallback = NA_character_),
+      exists = isTRUE(binding_policy$exists),
+      component_count = length(.or_default(binding_policy$components, list()))
     ),
     filters = list(
       include = if (length(filter) == 0L) NULL else .normalize_filter_tokens(filter),

@@ -651,8 +651,8 @@ test_that("broadened heuristic-classified wrappers render expected fragments", {
   expect_exact_html(
     render_html(
       shiny.webawesome:::wa_button(
+        "button",
         "Run",
-        id = "button",
         variant = "brand"
       )
     ),

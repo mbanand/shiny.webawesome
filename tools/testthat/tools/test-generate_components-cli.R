@@ -86,6 +86,7 @@
   )
   helper_files <- c(
     "utils.R",
+    "policy.R",
     "metadata.R",
     "schema.R",
     "render_utils.R",

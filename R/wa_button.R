@@ -7,7 +7,8 @@
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
-#' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param input_id Shiny input id for the component. This is also used as
+#' the rendered DOM `id` attribute.
 #' @param value The value of the button, submitted as a pair with the
 #' button's name as part of the form data, but only when this button is
 #' the submitter. This attribute is ignored when `href` is present.
@@ -67,8 +68,8 @@
 #'
 #' @export
 wa_button <- function(
+  input_id,
   ...,
-  id = NULL,
   value = NULL,
   disabled = NULL,
   name = NULL,
@@ -198,7 +199,7 @@ wa_button <- function(
 
   attrs <- .wa_normalize_attrs(
     list(
-      "id" = id,
+      "id" = input_id,
       "value" = value,
       "disabled" = disabled,
       "name" = name,

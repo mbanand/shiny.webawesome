@@ -24,6 +24,22 @@ source(file.path("..", "..", "generate_components.R"))
   .write_file(file.path(root, "inst", "extdata", "webawesome", "VERSION"), version)
 }
 
+.create_fake_binding_policy <- function(root) {
+  .write_file(
+    file.path(root, "dev", "generation", "binding-overrides.yaml"),
+    c(
+      "schema_version: 1",
+      "",
+      "components:",
+      "  - tag: wa-button",
+      "    binding:",
+      "      mode: action",
+      "      event: click",
+      "      rationale: Native click semantics are expected for button-like controls."
+    )
+  )
+}
+
 .fake_custom_elements <- function() {
   list(
     schemaVersion = "1.0.0",
@@ -131,9 +147,6 @@ source(file.path("..", "..", "generate_components.R"))
             ),
             members = list(
               list(name = "variant", kind = "field", type = list(text = "'brand' | 'neutral'"))
-            ),
-            events = list(
-              list(name = "click", type = list(text = "MouseEvent"))
             )
           )
         )
@@ -189,6 +202,7 @@ testthat::test_that("generate builds deterministic intermediate schema", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
   .create_fake_metadata(root)
+  .create_fake_binding_policy(root)
 
   result <- generate_components(root = root, emit = FALSE, verbose = FALSE)
 
@@ -221,6 +235,16 @@ testthat::test_that("generate builds deterministic intermediate schema", {
   testthat::expect_equal(checkbox_properties, c("checked", "hint", "input"))
   testthat::expect_true(is.na(checkbox$properties[[1]]$attribute_name))
   testthat::expect_equal(card$classification$mode, "wrapper")
+  button <- result$schema$components[[1]]
+  testthat::expect_equal(button$classification$mode, "wrapper-binding-action")
+  testthat::expect_true(isTRUE(button$classification$binding))
+  testthat::expect_equal(button$classification$binding_mode, "action")
+  testthat::expect_equal(button$classification$binding_event, "click")
+  testthat::expect_equal(button$classification$binding_source, "policy")
+  testthat::expect_match(
+    button$classification$reasons$binding_policy_reason,
+    "Native click semantics"
+  )
   testthat::expect_equal(checkbox$classification$mode, "wrapper-binding")
   testthat::expect_true(isTRUE(checkbox$classification$binding))
   select <- result$schema$components[[4]]
@@ -235,6 +259,7 @@ testthat::test_that("generate supports component filters and exclusions", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
   .create_fake_metadata(root)
+  .create_fake_binding_policy(root)
 
   result <- generate_components(
     root = root,
@@ -255,6 +280,7 @@ testthat::test_that("generate writes debug artifacts when requested", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
   .create_fake_metadata(root)
+  .create_fake_binding_policy(root)
 
   result <- generate_components(
     root = root,
@@ -310,20 +336,32 @@ testthat::test_that("generate writes debug artifacts when requested", {
     names(schema_debug$components[["wa-select"]]$events),
     c("wa-change", "wa-input")
   )
+  testthat::expect_equal(
+    schema_debug$components[["wa-button"]]$classification$binding_mode,
+    "action"
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-button"]]$classification$binding_source,
+    "policy"
+  )
 })
 
 testthat::test_that("generate writes wrapper, binding, and update outputs", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
   .create_fake_metadata(root)
+  .create_fake_binding_policy(root)
   .copy_generate_templates(root)
 
   result <- generate_components(
     root = root,
-    filter = c("wa-card", "wa-checkbox", "wa-select"),
+    filter = c("wa-button", "wa-card", "wa-checkbox", "wa-select"),
     verbose = FALSE
   )
 
+  testthat::expect_true(
+    file.exists(file.path(root, "R", "wa_button.R"))
+  )
   testthat::expect_true(
     file.exists(file.path(root, "R", "wa_card.R"))
   )
@@ -334,6 +372,9 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     file.exists(file.path(root, "R", "wa_select.R"))
   )
   testthat::expect_true(
+    file.exists(file.path(root, "inst", "bindings", "wa_button.js"))
+  )
+  testthat::expect_true(
     file.exists(file.path(root, "inst", "bindings", "wa_checkbox.js"))
   )
   testthat::expect_true(
@@ -342,10 +383,24 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_true(
     file.exists(file.path(root, "R", "wa_select.R"))
   )
-  testthat::expect_equal(length(result$written$wrappers), 3L)
-  testthat::expect_equal(length(result$written$bindings), 2L)
+  testthat::expect_equal(length(result$written$wrappers), 4L)
+  testthat::expect_equal(length(result$written$bindings), 3L)
   testthat::expect_equal(length(result$written$updates), 1L)
   testthat::expect_true("R/wa_select.R" %in% result$written$updates)
+
+  button_wrapper <- readLines(file.path(root, "R", "wa_button.R"), warn = FALSE)
+  testthat::expect_true(any(grepl(
+    "@param input_id Shiny input id for the component\\.",
+    button_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^wa_button <- function\\($",
+    button_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^  input_id,$",
+    button_wrapper
+  )))
 
   card_wrapper <- readLines(file.path(root, "R", "wa_card.R"), warn = FALSE)
   testthat::expect_true(any(grepl(
@@ -389,6 +444,27 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_true(any(grepl(
     "^    appearance <- \\.wa_match_arg\\($",
     card_wrapper
+  )))
+
+  button_binding <- readLines(
+    file.path(root, "inst", "bindings", "wa_button.js"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "return \\$\\(el\\)\\.data\\(\"val\"\\) \\|\\| 0;",
+    button_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "return \"shiny.action\";",
+    button_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "\\$\\(el\\)\\.data\\(\"val\", val \\+ 1\\);",
+    button_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "callback\\(false\\);",
+    button_binding
   )))
 
   checkbox_binding <- readLines(

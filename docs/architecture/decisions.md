@@ -145,6 +145,10 @@ Providing a formal override mechanism prevents developers from needing to edit g
 - Generated files should not be edited directly.
 - Overrides are implemented in designated locations defined by the package structure.
 - The override layer should remain small and explicit.
+- When a metadata gap affects support-model classification, prefer a narrow
+  handwritten policy input over broad hard-coded generator exceptions.
+- Policy overrides should adjust generator decisions, not patch generated files
+  after the fact.
 
 ---
 
@@ -221,7 +225,9 @@ The runtime bootstrap process is:
 ## Decision
 
 Generated Shiny input bindings subscribe only to **state-commit,
-input-value events** that fit Shiny's reactive input model.
+input-value events** that fit Shiny's reactive input model by default, with a
+small explicit exception path for action-style controls that require a
+different support model.
 
 ## Rationale
 
@@ -244,19 +250,34 @@ This is especially important for high-frequency or transient interaction
 events such as hover telemetry, which are better handled in browser-side
 JavaScript unless a specific feature explicitly opts into forwarding them.
 
+At the same time, some components semantically mirror native interactive
+controls whose expected Shiny behavior is **action-oriented** rather than
+value-oriented. In rare cases, upstream metadata may omit the relevant native
+or inherited event from the component event declarations even though the
+component should still participate in Shiny as an action input.
+
+These cases should not be forced through the value-input model. Instead, they
+justify a narrow generator policy seam that can explicitly classify a
+component as an **action binding** when the metadata alone is insufficient.
+
 ## Implementation Rules
 
 * Binding classification should prefer events that mean "the component's
   current input value changed".
 * Generated bindings should subscribe to one supported value/commit event and
   then read the component's current value for delivery to Shiny.
+* Action-style bindings must be opt-in through a narrow handwritten policy
+  layer; they must not be inferred casually from arbitrary browser events.
+* Action-style bindings should use dedicated action semantics appropriate for
+  Shiny event inputs, rather than pretending the component exposes a useful
+  value payload.
 * Upstream custom events must not be forwarded to Shiny automatically merely
   because they exist in component metadata.
 * High-frequency or interaction-only events should remain browser-side by
   default.
 * The exact supported event-name heuristics may evolve as component coverage
   broadens, but they should remain constrained to the value-oriented event
-  model above.
+  model above unless an explicit action-binding policy entry says otherwise.
 
 ## Deferred Follow-up
 

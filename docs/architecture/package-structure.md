@@ -164,10 +164,19 @@ Typical approaches include:
 * defining helper functions in handwritten top-level `R/` files
 * customizing generator templates
 * adding special-case logic in generator scripts
+* supplying narrow handwritten policy files under `dev/` that influence
+  generator classification or support-model selection
 
 The override layer should remain **small and explicit**.
 
 Generated code remains the primary implementation mechanism.
+
+One concrete use of this layer is a **binding override policy** for components
+whose Shiny interaction semantics are known, but whose upstream
+`custom-elements.json` metadata does not fully declare the event information
+required for automatic classification. These policy files should remain
+focused on generator decisions such as binding mode selection, not broad
+component rewrites.
 
 ---
 
@@ -422,7 +431,23 @@ The vendor directory is excluded from the built R package using:
 
 Files that guide the package development and build are stored in `dev/`. These are not documentation files; rather they are machine-readable files that direct the package build or enforce policy. 
 
-A current example is a policy file that drives manifest and report generation (see details in `docs/development/component-coverage.md` and `docs/development/manifests.md`). Similar future mechanisms may use files that live in `dev/`.
+A current example is a policy file that drives manifest and report generation
+(see details in `docs/development/component-coverage.md` and
+`docs/development/manifests.md`). The repository may also store narrowly scoped
+generation-policy inputs under `dev/` when upstream metadata is insufficient to
+classify a component correctly.
+
+Example locations include:
+
+```text
+dev/manifests/
+dev/generation/
+```
+
+For example, a future file such as
+`dev/generation/binding-overrides.yaml` may declare a small number of explicit
+binding-mode overrides for components whose support model cannot be derived
+reliably from metadata alone.
 
 The pinned upstream Web Awesome version used by the fetch stage is stored in:
 

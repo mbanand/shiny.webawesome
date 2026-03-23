@@ -1,0 +1,8 @@
+schema_version: 1
+
+components:
+  - tag: wa-button
+    binding:
+      mode: action
+      event: click
+      rationale: Native click behavior is expected for button-like controls, but upstream metadata does not declare click as a component event for wa-button.

@@ -46,7 +46,8 @@ wa_popover <- function(
   children <- list(...)
   if (!is.null(placement)) {
     placement <- .wa_match_arg(
-      placement, "placement",
+      placement,
+      "placement",
       c(
         "bottom",
         "bottom-end",
