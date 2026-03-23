@@ -367,6 +367,51 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   )))
 })
 
+testthat::test_that("generate backticks reserved R argument names in wrappers", {
+  root <- withr::local_tempdir()
+  metadata <- .fake_custom_elements()
+  metadata$modules[[length(metadata$modules) + 1L]] <- list(
+    path = "components/overlay/tooltip.js",
+    declarations = list(
+      list(
+        kind = "class",
+        name = "WaTooltip",
+        tagName = "wa-tooltip",
+        attributes = list(
+          list(name = "for", fieldName = "for", type = list(text = "string")),
+          list(name = "trigger", fieldName = "trigger", type = list(text = "string"))
+        ),
+        members = list(
+          list(name = "for", kind = "field", type = list(text = "string")),
+          list(name = "trigger", kind = "field", type = list(text = "string"))
+        )
+      )
+    )
+  )
+
+  .create_fake_repo(root)
+  .write_json(
+    file.path(root, "inst", "extdata", "webawesome", "custom-elements.json"),
+    metadata
+  )
+  .copy_generate_templates(root)
+
+  result <- generate_components(
+    root = root,
+    filter = "wa-tooltip",
+    verbose = FALSE
+  )
+
+  testthat::expect_equal(length(result$written$wrappers), 1L)
+
+  tooltip_wrapper <- readLines(
+    file.path(root, "R", "wa_tooltip.R"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl("^  `for` = NULL,$", tooltip_wrapper)))
+  testthat::expect_true(any(grepl('"for" = `for`', tooltip_wrapper, fixed = TRUE)))
+})
+
 testthat::test_that("generate asks for prune when vendor metadata exists", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)

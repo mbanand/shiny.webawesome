@@ -216,6 +216,110 @@ The runtime bootstrap process is:
 
 ---
 
+# Shiny Event Binding Scope
+
+## Decision
+
+Generated Shiny input bindings subscribe only to **state-commit,
+input-value events** that fit Shiny's reactive input model.
+
+## Rationale
+
+Web Awesome exposes browser events for many purposes, including value
+commit, interaction feedback, visibility changes, and other component-local
+behavior.
+
+Shiny input bindings, however, should represent changes to the component's
+reactive input value rather than mirror every browser event emitted by the
+component.
+
+Restricting generated bindings to value-oriented events keeps the package's
+reactive surface smaller, avoids unnecessary server chatter, and preserves a
+clear separation between:
+
+* browser-local interaction handling
+* Shiny server-side reactive input updates
+
+This is especially important for high-frequency or transient interaction
+events such as hover telemetry, which are better handled in browser-side
+JavaScript unless a specific feature explicitly opts into forwarding them.
+
+## Implementation Rules
+
+* Binding classification should prefer events that mean "the component's
+  current input value changed".
+* Generated bindings should subscribe to one supported value/commit event and
+  then read the component's current value for delivery to Shiny.
+* Upstream custom events must not be forwarded to Shiny automatically merely
+  because they exist in component metadata.
+* High-frequency or interaction-only events should remain browser-side by
+  default.
+* The exact supported event-name heuristics may evolve as component coverage
+  broadens, but they should remain constrained to the value-oriented event
+  model above.
+
+## Deferred Follow-up
+
+The package may eventually offer an **opt-in client-side helper layer** that
+makes it easier for app authors to attach focused JavaScript handlers to
+component-specific Web Awesome events without routing those events through
+Shiny's server input mechanism.
+
+This is deferred. It is not part of the current generator or binding model.
+
+---
+
+# Component Method Exposure
+
+## Decision
+
+Upstream Web Awesome component methods are **not** part of the generated
+package API at this stage.
+
+## Rationale
+
+Web Awesome components may expose imperative browser methods such as
+`focus()`, `blur()`, `show()`, and `hide()`.
+
+These methods are useful, but they are not the same thing as Shiny input
+value changes and should not be folded into the input-binding model.
+
+Keeping methods out of the current generated surface avoids prematurely
+mixing three distinct concerns:
+
+* reactive value synchronization with the Shiny server
+* imperative server-to-browser commands
+* client-side component-local behavior
+
+## Implementation Rules
+
+* Generated input bindings and update helpers should continue to focus on
+  reactive value transport, not general imperative method calls.
+* The metadata and schema may eventually track upstream methods for reporting
+  or future generation, but methods are not currently exposed automatically
+  in generated R wrappers, bindings, or update helpers.
+
+## Deferred Follow-up
+
+If method support is added later, it should stay explicitly separate from the
+reactive input-value model and likely take two opt-in forms:
+
+* a **server-side command layer** for imperative browser actions, for example
+  helper functions that send a targeted message instructing one component
+  instance to call a supported method such as `focus()` or `blur()`
+* a **client-side helper layer** that makes it easier for app authors to call
+  component methods from JavaScript without inventing ad hoc selectors and
+  event wiring for each app
+
+Any future method surface should be selective and capability-based rather than
+blindly exposing every upstream method automatically. Common UI methods such
+as `focus()` and `blur()` are much better candidates than complex
+component-specific methods with richer argument contracts.
+
+This is deferred. It is not part of the current generator or binding model.
+
+---
+
 # Dependency Attachment Strategy
 
 ## Decision

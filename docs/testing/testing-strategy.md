@@ -138,6 +138,28 @@ These tests verify the full integration between:
 * JavaScript bindings
 * the Shiny reactive system
 
+Functional tests should be understood as covering **two complementary
+assertion layers**:
+
+1. **browser/component assertions**
+   These verify the Web Component instance itself in the browser, including
+   property updates, DOM state, and event-driven behavior.
+
+2. **Shiny reactive-state assertions**
+   These verify that the browser interaction is reflected correctly in
+   Shiny `input`, `output`, or exported reactive values.
+
+At the current stage of the project, the functional test suite leans more
+heavily on explicit browser/component assertions, with representative checks
+that the resulting state also reaches Shiny.
+
+This is intentional while the generated component surface and binding/update
+support model are still stabilizing.
+
+As the generated surface becomes broader and more stable, the functional test
+suite should also grow its use of direct Shiny reactive-state assertions so
+that both layers remain well covered.
+
 ---
 
 # Test Harness Applications
@@ -149,6 +171,11 @@ These applications:
 * render a small set of components
 * display reactive values in the UI
 * allow automated interaction via the test framework
+
+When a representative harness app includes many components in its UI, the
+component instances should be listed in **alphabetical order by component
+function** where practical. This keeps the harness easy for humans to scan
+and update as the representative surface broadens over time.
 
 Example conceptual structure:
 
@@ -163,6 +190,17 @@ The harness apps allow automated tests to:
 * simulate user interaction
 * observe server responses
 * verify component state changes
+
+Depending on what is being validated, tests may observe server responses
+either indirectly through rendered outputs in the harness UI or directly
+through `shinytest2` value helpers that read Shiny `input`, `output`, and
+exported reactive values.
+
+Both approaches are valid. UI-rendered outputs are often convenient during
+early representative integration work because they keep the browser and Shiny
+surfaces visible at the same time. Direct `shinytest2` value access should be
+used more heavily as the generated surface stabilizes and the package adds
+broader reactive-state coverage.
 
 ---
 
@@ -319,6 +357,4 @@ Together these tests ensure that:
 * updates and events propagate correctly
 
 This layered approach provides confidence that the package remains stable as Web Awesome evolves.
-
-
 

@@ -323,6 +323,20 @@ For interactive components, the generator creates **Shiny input bindings**.
 
 Input bindings connect Web Component properties and events to Shiny's reactive system.
 
+These bindings are intentionally limited to **state-commit, input-value events**
+that fit Shiny's reactive input model.
+
+In practice, this means the binding should subscribe to an event that signals
+"the component's current input value changed" and then read the component's
+current value for delivery to the Shiny server.
+
+The package does **not** treat every upstream Web Awesome custom event as a
+Shiny event automatically.
+
+High-frequency or interaction-only events, such as hover telemetry, should
+generally remain browser-side and be handled with client-side JavaScript
+unless a future design explicitly introduces an opt-in forwarding mechanism.
+
 Typical behavior:
 
 * component event triggers change

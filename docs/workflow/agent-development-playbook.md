@@ -383,9 +383,28 @@ It should contain:
 * Date and time of journal 
 * Bullet list of tasks completed, correctly interspersed with commits and branch changes
 * Bullet list of three proposed next steps
+* A dedicated `Deferred items` section listing any intentionally deferred work,
+  open architectural questions, or consciously postponed follow-ups that
+  remain active after the session
 * List of docs updated, if any
 * Short summary of any discussions, and decisions made
 * Notes on any pitfalls/reminders, and pointers for future
+
+Deferred items should not be buried only in discussion notes or next-step
+lists. They should be kept in their own section so they are easy to review at
+the start of the next session.
+
+When writing a new journal, explicitly review the prior journal's deferred
+items and carry forward every item that is still active.
+
+Only remove a deferred item when one of the following is true:
+
+* it was completed in the current session
+* it was explicitly rejected or struck off
+* it was replaced by a more precise deferred item that supersedes it
+
+If a deferred item is carried forward in revised form, the new wording should
+make that relationship clear enough that continuity is preserved.
 
 ---
 

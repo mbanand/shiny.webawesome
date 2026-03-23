@@ -168,7 +168,7 @@
       args,
       vapply(
         attrs,
-        function(attr) paste0(attr$argument_name, " = NULL"),
+        function(attr) paste0(.as_r_symbol(attr$argument_name), " = NULL"),
         character(1)
       )
     )
@@ -180,7 +180,7 @@
       args,
       vapply(
         slots,
-        function(slot) paste0(slot$wrapper_argument_name, " = NULL"),
+        function(slot) paste0(.as_r_symbol(slot$wrapper_argument_name), " = NULL"),
         character(1)
       )
     )
@@ -206,7 +206,7 @@
       vapply(
         attrs,
         function(attr) {
-          paste0(.r_string(attr$name), " = ", attr$argument_name)
+          paste0(.r_string(attr$name), " = ", .as_r_symbol(attr$argument_name))
         },
         character(1)
       )
@@ -263,7 +263,7 @@
             "  list(",
             paste0(
               "    .wa_slot(",
-              slot$wrapper_argument_name,
+              .as_r_symbol(slot$wrapper_argument_name),
               ", ",
               .r_string(slot$name),
               ")"

@@ -16,8 +16,42 @@ make_wa_radio <- function(value, label) {
   )
 }
 
+make_wa_tab <- function(panel, label) {
+  htmltools::tagAppendAttributes(
+    htmltools::tag("wa-tab", label),
+    panel = panel
+  )
+}
+
+make_wa_tab_panel <- function(name, label) {
+  htmltools::tagAppendAttributes(
+    htmltools::tag("wa-tab-panel", label),
+    name = name
+  )
+}
+
 ui <- wa_page(
   title = "Representative runtime",
+  wa_avatar(
+    id = "avatar",
+    initials = "AV",
+    label = "Avatar"
+  ),
+  wa_badge(
+    "Beta",
+    id = "badge",
+    variant = "brand"
+  ),
+  wa_button(
+    "Run",
+    id = "button",
+    variant = "brand"
+  ),
+  wa_callout(
+    "Heads up",
+    id = "callout",
+    appearance = "outlined"
+  ),
   tagAppendAttributes(
     wa_card(
       "Card body",
@@ -25,19 +59,64 @@ ui <- wa_page(
     ),
     id = "card"
   ),
+  wa_carousel(
+    htmltools::tag("wa-carousel-item", "Slide 1"),
+    htmltools::tag("wa-carousel-item", "Slide 2"),
+    id = "carousel"
+  ),
   wa_checkbox(
     "Accept terms",
     input_id = "checkbox",
     value = "accepted"
   ),
-  wa_switch(
-    input_id = "switch",
-    "Enable notifications",
-    value = "enabled"
+  wa_color_picker(
+    input_id = "color_picker",
+    label = "Color",
+    value = "#112233"
   ),
-  wa_rating(
-    input_id = "rating",
+  wa_copy_button(
+    "Copy",
+    id = "copy_button",
+    value = "Copy me"
+  ),
+  wa_details(
+    "Details body",
+    id = "details",
+    summary = "More"
+  ),
+  wa_dialog(
+    "Dialog body",
+    id = "dialog",
+    label = "Dialog title"
+  ),
+  wa_divider(id = "divider"),
+  wa_input(
+    input_id = "text_input",
+    label = "Input label"
+  ),
+  wa_number_input(
+    input_id = "number_input",
+    label = "Number label",
+    max = 10,
+    min = 0,
     value = 2
+  ),
+  htmltools::tagList(
+    tags$button(
+      id = "popover_target",
+      type = "button",
+      "Popover target"
+    ),
+    wa_popover(
+      "Popover body",
+      id = "popover",
+      `for` = "popover_target",
+      placement = "top"
+    )
+  ),
+  wa_popup(
+    "Popup body",
+    id = "popup"
   ),
   wa_radio_group(
     input_id = "radio_group",
@@ -45,19 +124,15 @@ ui <- wa_page(
     make_wa_radio("beta", "Beta"),
     label = "Pick one"
   ),
+  wa_rating(
+    input_id = "rating",
+    value = 2
+  ),
   wa_select(
     make_wa_option("a", "Alpha"),
     make_wa_option("b", "Beta"),
     input_id = "select",
     label = "Pick one"
-  ),
-  wa_input(
-    input_id = "text_input",
-    label = "Input label"
-  ),
-  wa_textarea(
-    input_id = "text_area",
-    label = "Textarea label"
   ),
   wa_slider(
     input_id = "slider",
@@ -66,19 +141,57 @@ ui <- wa_page(
     max = 10,
     value = 2
   ),
-  actionButton("update_select", "Update select"),
+  wa_switch(
+    input_id = "switch",
+    "Enable notifications",
+    value = "enabled"
+  ),
+  wa_tab_group(
+    make_wa_tab_panel("first", "First panel"),
+    make_wa_tab_panel("second", "Second panel"),
+    id = "tab_group",
+    nav = htmltools::tagList(
+      make_wa_tab("first", "First"),
+      make_wa_tab("second", "Second")
+    )
+  ),
+  wa_tag(
+    "Tag",
+    id = "tag",
+    variant = "brand"
+  ),
+  wa_textarea(
+    input_id = "text_area",
+    label = "Textarea label"
+  ),
+  htmltools::tagList(
+    tags$button(
+      id = "tooltip_target",
+      type = "button",
+      "Tooltip target"
+    ),
+    wa_tooltip(
+      "Tooltip body",
+      id = "tooltip",
+      `for` = "tooltip_target",
+      trigger = "manual"
+    )
+  ),
   actionButton("update_input", "Update input"),
-  actionButton("update_textarea", "Update textarea"),
+  actionButton("update_number_input", "Update number input"),
+  actionButton("update_select", "Update select"),
   actionButton("update_slider", "Update slider"),
+  actionButton("update_textarea", "Update textarea"),
   verbatimTextOutput("checkbox_value"),
-  verbatimTextOutput("switch_value"),
-  verbatimTextOutput("rating_value"),
+  verbatimTextOutput("color_picker_value"),
+  verbatimTextOutput("number_input_value"),
   verbatimTextOutput("radio_group_value"),
-  verbatimTextOutput("select_value")
-  ,
-  verbatimTextOutput("text_input_value"),
+  verbatimTextOutput("rating_value"),
+  verbatimTextOutput("select_value"),
+  verbatimTextOutput("slider_value"),
+  verbatimTextOutput("switch_value"),
   verbatimTextOutput("text_area_value"),
-  verbatimTextOutput("slider_value")
+  verbatimTextOutput("text_input_value")
 )
 
 server <- function(input, output, session) {
@@ -94,6 +207,38 @@ server <- function(input, output, session) {
     "FALSE"
   })
 
+  output$color_picker_value <- renderText({
+    if (is.null(input$color_picker) || identical(input$color_picker, "")) {
+      return("<null>")
+    }
+
+    input$color_picker
+  })
+
+  output$number_input_value <- renderText({
+    if (is.null(input$number_input) || identical(input$number_input, "")) {
+      return("<null>")
+    }
+
+    as.character(input$number_input)
+  })
+
+  output$radio_group_value <- renderText({
+    if (is.null(input$radio_group) || identical(input$radio_group, "")) {
+      return("<null>")
+    }
+
+    input$radio_group
+  })
+
+  output$rating_value <- renderText({
+    if (is.null(input$rating) || identical(input$rating, "")) {
+      return("<null>")
+    }
+
+    as.character(input$rating)
+  })
+
   output$select_value <- renderText({
     if (is.null(input$select) || identical(input$select, "")) {
       return("<null>")
@@ -104,6 +249,14 @@ server <- function(input, output, session) {
     }
 
     input$select
+  })
+
+  output$slider_value <- renderText({
+    if (is.null(input$slider) || identical(input$slider, "")) {
+      return("<null>")
+    }
+
+    as.character(input$slider)
   })
 
   output$switch_value <- renderText({
@@ -118,30 +271,6 @@ server <- function(input, output, session) {
     "FALSE"
   })
 
-  output$rating_value <- renderText({
-    if (is.null(input$rating) || identical(input$rating, "")) {
-      return("<null>")
-    }
-
-    as.character(input$rating)
-  })
-
-  output$radio_group_value <- renderText({
-    if (is.null(input$radio_group) || identical(input$radio_group, "")) {
-      return("<null>")
-    }
-
-    input$radio_group
-  })
-
-  output$text_input_value <- renderText({
-    if (is.null(input$text_input) || identical(input$text_input, "")) {
-      return("<null>")
-    }
-
-    input$text_input
-  })
-
   output$text_area_value <- renderText({
     if (is.null(input$text_area) || identical(input$text_area, "")) {
       return("<null>")
@@ -150,22 +279,12 @@ server <- function(input, output, session) {
     input$text_area
   })
 
-  output$slider_value <- renderText({
-    if (is.null(input$slider) || identical(input$slider, "")) {
+  output$text_input_value <- renderText({
+    if (is.null(input$text_input) || identical(input$text_input, "")) {
       return("<null>")
     }
 
-    as.character(input$slider)
-  })
-
-  observeEvent(input$update_select, {
-    update_wa_select(
-      session = session,
-      input_id = "select",
-      value = "b",
-      label = "Updated label",
-      hint = "Updated hint"
-    )
+    input$text_input
   })
 
   observeEvent(input$update_input, {
@@ -178,13 +297,23 @@ server <- function(input, output, session) {
     )
   })
 
-  observeEvent(input$update_textarea, {
-    update_wa_textarea(
+  observeEvent(input$update_number_input, {
+    update_wa_number_input(
       session = session,
-      input_id = "text_area",
-      value = "gamma",
-      label = "Updated textarea label",
-      hint = "Updated textarea hint"
+      input_id = "number_input",
+      value = 6,
+      label = "Updated number label",
+      hint = "Updated number hint"
+    )
+  })
+
+  observeEvent(input$update_select, {
+    update_wa_select(
+      session = session,
+      input_id = "select",
+      value = "b",
+      label = "Updated label",
+      hint = "Updated hint"
     )
   })
 
@@ -195,6 +324,16 @@ server <- function(input, output, session) {
       value = 7,
       label = "Updated slider label",
       hint = "Updated slider hint"
+    )
+  })
+
+  observeEvent(input$update_textarea, {
+    update_wa_textarea(
+      session = session,
+      input_id = "text_area",
+      value = "gamma",
+      label = "Updated textarea label",
+      hint = "Updated textarea hint"
     )
   })
 }

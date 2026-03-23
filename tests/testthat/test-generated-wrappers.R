@@ -12,6 +12,20 @@ make_wa_radio <- function(value, label) {
   )
 }
 
+make_wa_tab <- function(panel, label) {
+  htmltools::tagAppendAttributes(
+    htmltools::tag("wa-tab", label),
+    panel = panel
+  )
+}
+
+make_wa_tab_panel <- function(name, label) {
+  htmltools::tagAppendAttributes(
+    htmltools::tag("wa-tab-panel", label),
+    name = name
+  )
+}
+
 render_html <- function(tag) {
   as.character(htmltools::renderTags(tag)$html)
 }
@@ -491,9 +505,73 @@ test_that("update_wa_select sends only non-null values", {
   )
 })
 
-test_that("new heuristic-classified wrappers render expected fragments", {
+test_that("broadened heuristic-classified wrappers render expected fragments", {
   radio_a <- make_wa_radio("alpha", "Alpha")
   radio_b <- make_wa_radio("beta", "Beta")
+  tab_a <- make_wa_tab("first", "First")
+  tab_b <- make_wa_tab("second", "Second")
+  panel_a <- make_wa_tab_panel("first", "First panel")
+  panel_b <- make_wa_tab_panel("second", "Second panel")
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_avatar(
+        id = "avatar",
+        label = "Avatar",
+        initials = "AV"
+      )
+    ),
+    c('<wa-avatar id="avatar" label="Avatar" initials="AV"></wa-avatar>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_badge(
+        "Beta",
+        id = "badge",
+        variant = "brand"
+      )
+    ),
+    c('<wa-badge id="badge" variant="brand">Beta</wa-badge>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_button(
+        "Run",
+        id = "button",
+        variant = "brand"
+      )
+    ),
+    c('<wa-button id="button" variant="brand">Run</wa-button>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_callout(
+        "Heads up",
+        id = "callout",
+        appearance = "outlined"
+      )
+    ),
+    c('<wa-callout id="callout" appearance="outlined">Heads up</wa-callout>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_carousel(
+        htmltools::tag("wa-carousel-item", "Slide 1"),
+        htmltools::tag("wa-carousel-item", "Slide 2"),
+        id = "carousel"
+      )
+    ),
+    c(
+      '<wa-carousel id="carousel">',
+      "  <wa-carousel-item>Slide 1</wa-carousel-item>",
+      "  <wa-carousel-item>Slide 2</wa-carousel-item>",
+      "</wa-carousel>"
+    )
+  )
 
   expect_exact_html(
     render_html(shiny.webawesome:::wa_switch("sw", "On")),
@@ -553,6 +631,134 @@ test_that("new heuristic-classified wrappers render expected fragments", {
     ),
     c('<wa-slider id="slider" value="2" max="10" min="0"></wa-slider>')
   )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_color_picker(
+        "color_picker",
+        value = "#112233",
+        label = "Color"
+      )
+    ),
+    c('<wa-color-picker id="color_picker" value="#112233" label="Color"></wa-color-picker>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_copy_button(
+        "Copy",
+        id = "copy_button",
+        value = "Copy me"
+      )
+    ),
+    c('<wa-copy-button id="copy_button" value="Copy me">Copy</wa-copy-button>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_details(
+        "Details body",
+        id = "details",
+        summary = "More"
+      )
+    ),
+    c('<wa-details id="details" summary="More">Details body</wa-details>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_dialog(
+        "Dialog body",
+        id = "dialog",
+        label = "Dialog title"
+      )
+    ),
+    c('<wa-dialog id="dialog" label="Dialog title">Dialog body</wa-dialog>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_divider(id = "divider")
+    ),
+    c('<wa-divider id="divider"></wa-divider>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_number_input(
+        "number_input",
+        value = 2,
+        label = "Number"
+      )
+    ),
+    c('<wa-number-input id="number_input" value="2" label="Number"></wa-number-input>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_popover(
+        "Popover body",
+        id = "popover",
+        `for` = "popover_target",
+        placement = "top"
+      )
+    ),
+    c('<wa-popover id="popover" for="popover_target" placement="top">Popover body</wa-popover>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_popup(
+        "Popup body",
+        id = "popup"
+      )
+    ),
+    c('<wa-popup id="popup">Popup body</wa-popup>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_tab_group(
+        panel_a,
+        panel_b,
+        id = "tab_group",
+        nav = htmltools::tagList(tab_a, tab_b)
+      )
+    ),
+    c(
+      '<wa-tab-group id="tab_group">',
+      '  <wa-tab-panel name="first">First panel</wa-tab-panel>',
+      '  <wa-tab-panel name="second">Second panel</wa-tab-panel>',
+      "  <span slot=\"nav\">",
+      "    <wa-tab panel=\"first\">First</wa-tab>",
+      "    <wa-tab panel=\"second\">Second</wa-tab>",
+      "  </span>",
+      "</wa-tab-group>"
+    )
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_tag(
+        "Tag",
+        id = "tag",
+        variant = "brand"
+      )
+    ),
+    c('<wa-tag id="tag" variant="brand">Tag</wa-tag>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_tooltip(
+        "Tooltip body",
+        id = "tooltip",
+        `for` = "tooltip_target",
+        trigger = "manual"
+      )
+    ),
+    c('<wa-tooltip id="tooltip" for="tooltip_target" trigger="manual">Tooltip body</wa-tooltip>')
+  )
 })
 
 test_that("new update helpers send only non-null values", {
@@ -590,6 +796,20 @@ test_that("new update helpers send only non-null values", {
   testthat::expect_equal(
     seen$message,
     list(value = "beta", label = "Notes")
+  )
+
+  shiny.webawesome:::update_wa_number_input(
+    session = session,
+    input_id = "number_input",
+    value = 6,
+    label = "Amount",
+    hint = "Count",
+    disabled = TRUE
+  )
+  testthat::expect_equal(seen$input_id, "number_input")
+  testthat::expect_equal(
+    seen$message,
+    list(value = 6, label = "Amount", hint = "Count", disabled = TRUE)
   )
 
   shiny.webawesome:::update_wa_slider(

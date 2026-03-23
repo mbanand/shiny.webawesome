@@ -36,6 +36,30 @@
   tolower(value)
 }
 
+# Return whether one name is reserved in R syntax.
+.is_reserved_r_word <- function(value) {
+  value %in% c(
+    "if", "else", "repeat", "while", "function", "for", "in",
+    "next", "break", "TRUE", "FALSE", "NULL", "Inf", "NaN",
+    "NA", "NA_integer_", "NA_real_", "NA_complex_", "NA_character_"
+  )
+}
+
+# Return one name as a safe R symbol for generated code.
+.as_r_symbol <- function(value) {
+  value <- .scalar_string(value, fallback = "")
+
+  if (!nzchar(value)) {
+    return(value)
+  }
+
+  if (identical(make.names(value), value) && !.is_reserved_r_word(value)) {
+    return(value)
+  }
+
+  paste0("`", value, "`")
+}
+
 # Normalize whitespace in one text scalar.
 .squish_ws <- function(value) {
   value <- .scalar_string(value, fallback = "")

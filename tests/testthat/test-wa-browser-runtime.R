@@ -23,20 +23,46 @@ test_that("representative components work end to end in a browser", {
   app$wait_for_idle()
   app$wait_for_js(
     paste(
-      "Boolean(window.customElements.get('wa-card'))",
+      "Boolean(window.customElements.get('wa-avatar'))",
+      "&& Boolean(window.customElements.get('wa-badge'))",
+      "&& Boolean(window.customElements.get('wa-button'))",
+      "&& Boolean(window.customElements.get('wa-callout'))",
+      "&& Boolean(window.customElements.get('wa-card'))",
+      "&& Boolean(window.customElements.get('wa-carousel'))",
       "&& Boolean(window.customElements.get('wa-checkbox'))",
-      "&& Boolean(window.customElements.get('wa-switch'))",
-      "&& Boolean(window.customElements.get('wa-rating'))",
-      "&& Boolean(window.customElements.get('wa-radio-group'))",
-      "&& Boolean(window.customElements.get('wa-select'))",
+      "&& Boolean(window.customElements.get('wa-color-picker'))",
+      "&& Boolean(window.customElements.get('wa-copy-button'))",
+      "&& Boolean(window.customElements.get('wa-details'))",
+      "&& Boolean(window.customElements.get('wa-dialog'))",
+      "&& Boolean(window.customElements.get('wa-divider'))",
       "&& Boolean(window.customElements.get('wa-input'))",
+      "&& Boolean(window.customElements.get('wa-number-input'))",
+      "&& Boolean(window.customElements.get('wa-popover'))",
+      "&& Boolean(window.customElements.get('wa-popup'))",
+      "&& Boolean(window.customElements.get('wa-radio-group'))",
+      "&& Boolean(window.customElements.get('wa-rating'))",
+      "&& Boolean(window.customElements.get('wa-select'))",
+      "&& Boolean(window.customElements.get('wa-slider'))",
+      "&& Boolean(window.customElements.get('wa-switch'))",
+      "&& Boolean(window.customElements.get('wa-tab-group'))",
+      "&& Boolean(window.customElements.get('wa-tag'))",
       "&& Boolean(window.customElements.get('wa-textarea'))",
-      "&& Boolean(window.customElements.get('wa-slider'))"
+      "&& Boolean(window.customElements.get('wa-tooltip'))"
     )
   )
 
+  testthat::expect_match(app$get_html("#avatar"), "initials=\"AV\"")
+  testthat::expect_match(app$get_html("#badge"), "Beta")
+  testthat::expect_match(app$get_html("#button"), "Run")
+  testthat::expect_match(app$get_html("#callout"), "Heads up")
   testthat::expect_match(app$get_html("#card"), "Card body")
   testthat::expect_match(app$get_html("#card"), "Card header")
+  testthat::expect_match(app$get_html("#copy_button"), "Copy")
+  testthat::expect_match(app$get_html("#details"), "summary=\"More\"")
+  testthat::expect_match(app$get_html("#dialog"), "Dialog title")
+  testthat::expect_match(app$get_html("#popover"), "Popover body")
+  testthat::expect_match(app$get_html("#tag"), "Tag")
+  testthat::expect_match(app$get_html("#tooltip"), "Tooltip body")
 
   app$run_js(
     paste(
@@ -47,6 +73,28 @@ test_that("representative components work end to end in a browser", {
   )
   app$wait_for_js(
     "document.getElementById('checkbox_value').innerText.trim() === 'TRUE'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('color_picker');",
+      "el.value = '#445566';",
+      "el.dispatchEvent(new Event('change', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('color_picker_value').innerText.trim() === '#445566'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('number_input');",
+      "el.value = 4;",
+      "el.dispatchEvent(new Event('change', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('number_input_value').innerText.trim() === '4'"
   )
 
   app$run_js(
@@ -124,6 +172,17 @@ test_that("representative components work end to end in a browser", {
   )
   app$wait_for_js(
     "document.getElementById('slider_value').innerText.trim() === '5'"
+  )
+
+  app$click("update_number_input")
+  app$wait_for_js(
+    paste(
+      "const el = document.getElementById('number_input');",
+      "String(el.value) === '6'",
+      "&& el.label === 'Updated number label'",
+      "&& el.hint === 'Updated number hint'",
+      "&& document.getElementById('number_input_value').innerText.trim() === '6'"
+    )
   )
 
   app$click("update_select")
