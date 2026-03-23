@@ -23,20 +23,24 @@ wa_avatar(
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
 
 \item{label}{A label to use to describe the avatar to assistive
-devices.}
+devices. Defaults to `` when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
-\item{image}{The image source to use for the avatar.}
+\item{image}{The image source to use for the avatar. Defaults to ``
+when omitted.}
 
 \item{initials}{Initials to use as a fallback when no image is
-available (1-2 characters max recommended).}
+available (1-2 characters max recommended). Defaults to `` when
+omitted.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{loading}{Indicates how the browser should load the image.}
+\item{loading}{Indicates how the browser should load the image. Must be
+one of \code{"eager"}, \code{"lazy"}. Defaults to \code{eager} when omitted.}
 
-\item{shape}{The shape of the avatar.}
+\item{shape}{The shape of the avatar. Must be one of \code{"circle"},
+\code{"rounded"}, \code{"square"}. Defaults to \code{circle} when omitted.}
 
 \item{icon}{The default icon to use when no image or initials are
 present. Works best with \verb{<wa-icon>}.}

@@ -11,41 +11,50 @@
 #' the rendered DOM `id` attribute.
 #' @param value The default value of the form control. Primarily used for
 #' resetting the form control.
-#' @param disabled Disables the color picker.
+#' @param disabled Disables the color picker. Defaults to `false` when
+#' omitted.
 #' @param label The color picker's label. This will not be displayed, but
 #' it will be announced by assistive devices. If you need to display HTML,
-#' you can use the `label` slot` instead.
+#' you can use the `label` slot` instead. Defaults to `` when omitted.
 #' @param hint The color picker's hint. If you need to display HTML, use
-#' the `hint` slot instead.
+#' the `hint` slot instead. Defaults to `` when omitted.
 #' @param name The name of the form control, submitted as a name/value
-#' pair with form data.
-#' @param custom_error Optional Web Awesome attribute.
+#' pair with form data. Defaults to `null` when omitted.
+#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
+#' when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param format The format to use. If opacity is enabled, these will
 #' translate to HEXA, RGBA, HSLA, and HSVA respectively. The color picker
 #' will accept user input in any format (including CSS color names) and
-#' convert it to the desired format.
+#' convert it to the desired format. Must be one of `"hex"`, `"hsl"`,
+#' `"hsv"`, `"rgb"`. Defaults to `hex` when omitted.
 #' @param lang Optional Web Awesome attribute.
 #' @param opacity Shows the opacity slider. Enabling this will cause the
-#' formatted value to be HEXA, RGBA, or HSLA.
+#' formatted value to be HEXA, RGBA, or HSLA. Defaults to `false` when
+#' omitted.
 #' @param open Indicates whether or not the popup is open. You can toggle
 #' this attribute to show and hide the popup, or you can use the `show()`
 #' and `hide()` methods and this attribute will reflect the popup's open
-#' state.
-#' @param required Makes the color picker a required field.
-#' @param size Determines the size of the color picker's trigger
+#' state. Defaults to `false` when omitted.
+#' @param required Makes the color picker a required field. Defaults to
+#' `false` when omitted.
+#' @param size Determines the size of the color picker's trigger Must be
+#' one of `"large"`, `"medium"`, `"small"`. Defaults to `medium` when
+#' omitted.
 #' @param swatches One or more predefined color swatches to display as
 #' presets in the color picker. Can include any format the color picker
 #' can parse, including HEX(A), RGB(A), HSL(A), HSV(A), and CSS color
 #' names. Each color must be separated by a semicolon (`;`).
 #' Alternatively, you can pass an array of color values to this property
-#' using JavaScript.
+#' using JavaScript. Defaults to `` when omitted.
 #' @param uppercase By default, values are lowercase. With this attribute,
-#' values will be uppercase instead.
-#' @param with_hint Optional Web Awesome attribute.
-#' @param with_label Optional Web Awesome attribute.
+#' values will be uppercase instead. Defaults to `false` when omitted.
+#' @param with_hint Optional Web Awesome attribute. Defaults to `false`
+#' when omitted.
+#' @param with_label Optional Web Awesome attribute. Defaults to `false`
+#' when omitted.
 #' @param without_format_toggle Removes the button that lets users toggle
-#' between format.
+#' between format. Defaults to `false` when omitted.
 #' @param hint_slot The color picker's form hint. Alternatively, you can
 #' use the `hint` attribute.
 #' @param label_slot The color picker's form label. Alternatively, you can
@@ -91,6 +100,30 @@ wa_color_picker <- function(
       .wa_slot(label_slot, "label")
     )
   )
+  if (!is.null(format)) {
+    format <- .wa_match_arg(
+      format,
+      "format",
+      c(
+        "hex",
+        "hsl",
+        "hsv",
+        "rgb"
+      )
+    )
+  }
+
+  if (!is.null(size)) {
+    size <- .wa_match_arg(
+      size,
+      "size",
+      c(
+        "large",
+        "medium",
+        "small"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

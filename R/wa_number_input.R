@@ -11,44 +11,58 @@
 #' the rendered DOM `id` attribute.
 #' @param value The default value of the form control. Primarily used for
 #' resetting the form control.
-#' @param disabled Disables the form control.
+#' @param disabled Disables the form control. Defaults to `false` when
+#' omitted.
 #' @param label The input's label. If you need to display HTML, use the
-#' `label` slot instead.
+#' `label` slot instead. Defaults to `` when omitted.
 #' @param hint The input's hint. If you need to display HTML, use the
-#' `hint` slot instead.
+#' `hint` slot instead. Defaults to `` when omitted.
 #' @param name The name of the input, submitted as a name/value pair with
-#' form data.
-#' @param appearance The input's visual appearance.
+#' form data. Defaults to `null` when omitted.
+#' @param appearance The input's visual appearance. Must be one of
+#' `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to `outlined`
+#' when omitted.
 #' @param autocomplete Specifies what permission the browser has to
 #' provide assistance in filling out form field values. Refer to this page
 #' on MDN for available values.
 #' @param autofocus Indicates that the input should receive focus on page
 #' load.
-#' @param custom_error Optional Web Awesome attribute.
+#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
+#' when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param enterkeyhint Used to customize the label or icon of the Enter
-#' key on virtual keyboards.
+#' key on virtual keyboards. Must be one of `"done"`, `"enter"`, `"go"`,
+#' `"next"`, `"previous"`, `"search"`, `"send"`.
 #' @param inputmode Tells the browser what type of data will be entered by
 #' the user, allowing it to display the appropriate virtual keyboard on
-#' supportive devices.
+#' supportive devices. Must be one of `"decimal"`, `"numeric"`. Defaults
+#' to `numeric` when omitted.
 #' @param lang Optional Web Awesome attribute.
 #' @param max The input's maximum value.
 #' @param min The input's minimum value.
-#' @param pill Draws a pill-style input with rounded edges.
+#' @param pill Draws a pill-style input with rounded edges. Defaults to
+#' `false` when omitted.
 #' @param placeholder Placeholder text to show as a hint when the input is
-#' empty.
-#' @param readonly Makes the input readonly.
-#' @param required Makes the input a required field.
-#' @param size The input's size.
+#' empty. Defaults to `` when omitted.
+#' @param readonly Makes the input readonly. Defaults to `false` when
+#' omitted.
+#' @param required Makes the input a required field. Defaults to `false`
+#' when omitted.
+#' @param size The input's size. Must be one of `"large"`, `"medium"`,
+#' `"small"`. Defaults to `medium` when omitted.
 #' @param step Specifies the granularity that the value must adhere to, or
 #' the special value `any` which means no stepping is implied, allowing
-#' any numeric value.
-#' @param title Optional Web Awesome attribute.
+#' any numeric value. Defaults to `1` when omitted.
+#' @param title Optional Web Awesome attribute. Defaults to `` when
+#' omitted.
 #' @param with_hint Used for SSR. Will determine if the SSRed component
-#' will have the hint slot rendered on initial paint.
+#' will have the hint slot rendered on initial paint. Defaults to `false`
+#' when omitted.
 #' @param with_label Used for SSR. Will determine if the SSRed component
-#' will have the label slot rendered on initial paint.
+#' will have the label slot rendered on initial paint. Defaults to `false`
+#' when omitted.
 #' @param without_steppers Hides the increment/decrement stepper buttons.
+#' Defaults to `false` when omitted.
 #' @param decrement_icon An icon to use in lieu of the default decrement
 #' icon.
 #' @param end An element, such as `<wa-icon>`, placed at the end of the
@@ -137,6 +151,56 @@ wa_number_input <- function(
       .wa_slot(start, "start")
     )
   )
+  if (!is.null(appearance)) {
+    appearance <- .wa_match_arg(
+      appearance,
+      "appearance",
+      c(
+        "filled",
+        "filled-outlined",
+        "outlined"
+      )
+    )
+  }
+
+  if (!is.null(enterkeyhint)) {
+    enterkeyhint <- .wa_match_arg(
+      enterkeyhint,
+      "enterkeyhint",
+      c(
+        "done",
+        "enter",
+        "go",
+        "next",
+        "previous",
+        "search",
+        "send"
+      )
+    )
+  }
+
+  if (!is.null(inputmode)) {
+    inputmode <- .wa_match_arg(
+      inputmode,
+      "inputmode",
+      c(
+        "decimal",
+        "numeric"
+      )
+    )
+  }
+
+  if (!is.null(size)) {
+    size <- .wa_match_arg(
+      size,
+      "size",
+      c(
+        "large",
+        "medium",
+        "small"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(
@@ -223,6 +287,10 @@ update_wa_number_input <- function(
       disabled = disabled
     )
   )
+
+  if (length(message) == 0L) {
+    return(invisible(NULL))
+  }
 
   session$sendInputMessage(input_id, message)
   invisible(NULL)

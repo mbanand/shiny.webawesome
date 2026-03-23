@@ -134,6 +134,20 @@ test_that("wa_card renders exact fragments for defaults and overrides", {
   }
 })
 
+test_that("generated wrappers validate enum arguments exactly", {
+  testthat::expect_error(
+    shiny.webawesome:::wa_card("Hello", appearance = "invalid"),
+    "`appearance` must be one of "
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_card("Hello", appearance = "filled")
+    ),
+    c('<wa-card appearance="filled">Hello</wa-card>')
+  )
+})
+
 test_that("wa_checkbox renders exact fragments for defaults and overrides", {
   checkbox_cases <- list(
     list(
@@ -158,7 +172,11 @@ test_that("wa_checkbox renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "disabled",
-      tag = shiny.webawesome:::wa_checkbox("checkbox", "Label", disabled = TRUE),
+      tag = shiny.webawesome:::wa_checkbox(
+        "checkbox",
+        "Label",
+        disabled = TRUE
+      ),
       expected = c('<wa-checkbox id="checkbox" disabled>Label</wa-checkbox>')
     ),
     list(
@@ -168,13 +186,25 @@ test_that("wa_checkbox renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "name",
-      tag = shiny.webawesome:::wa_checkbox("checkbox", "Label", name = "choice"),
-      expected = c('<wa-checkbox id="checkbox" name="choice">Label</wa-checkbox>')
+      tag = shiny.webawesome:::wa_checkbox(
+        "checkbox",
+        "Label",
+        name = "choice"
+      ),
+      expected = c(
+        '<wa-checkbox id="checkbox" name="choice">Label</wa-checkbox>'
+      )
     ),
     list(
       name = "custom_error",
-      tag = shiny.webawesome:::wa_checkbox("checkbox", "Label", custom_error = "Nope"),
-      expected = c('<wa-checkbox id="checkbox" custom-error="Nope">Label</wa-checkbox>')
+      tag = shiny.webawesome:::wa_checkbox(
+        "checkbox",
+        "Label",
+        custom_error = "Nope"
+      ),
+      expected = c(
+        '<wa-checkbox id="checkbox" custom-error="Nope">Label</wa-checkbox>'
+      )
     ),
     list(
       name = "dir",
@@ -183,8 +213,14 @@ test_that("wa_checkbox renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "indeterminate",
-      tag = shiny.webawesome:::wa_checkbox("checkbox", "Label", indeterminate = TRUE),
-      expected = c('<wa-checkbox id="checkbox" indeterminate>Label</wa-checkbox>')
+      tag = shiny.webawesome:::wa_checkbox(
+        "checkbox",
+        "Label",
+        indeterminate = TRUE
+      ),
+      expected = c(
+        '<wa-checkbox id="checkbox" indeterminate>Label</wa-checkbox>'
+      )
     ),
     list(
       name = "lang",
@@ -193,22 +229,38 @@ test_that("wa_checkbox renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "required",
-      tag = shiny.webawesome:::wa_checkbox("checkbox", "Label", required = TRUE),
+      tag = shiny.webawesome:::wa_checkbox(
+        "checkbox",
+        "Label",
+        required = TRUE
+      ),
       expected = c('<wa-checkbox id="checkbox" required>Label</wa-checkbox>')
     ),
     list(
       name = "size",
       tag = shiny.webawesome:::wa_checkbox("checkbox", "Label", size = "large"),
-      expected = c('<wa-checkbox id="checkbox" size="large">Label</wa-checkbox>')
+      expected = c(
+        '<wa-checkbox id="checkbox" size="large">Label</wa-checkbox>'
+      )
     ),
     list(
       name = "title",
-      tag = shiny.webawesome:::wa_checkbox("checkbox", "Label", title = "Title"),
-      expected = c('<wa-checkbox id="checkbox" title="Title">Label</wa-checkbox>')
+      tag = shiny.webawesome:::wa_checkbox(
+        "checkbox",
+        "Label",
+        title = "Title"
+      ),
+      expected = c(
+        '<wa-checkbox id="checkbox" title="Title">Label</wa-checkbox>'
+      )
     ),
     list(
       name = "hint_slot",
-      tag = shiny.webawesome:::wa_checkbox("checkbox", "Label", hint_slot = "Hint slot"),
+      tag = shiny.webawesome:::wa_checkbox(
+        "checkbox",
+        "Label",
+        hint_slot = "Hint slot"
+      ),
       expected = c(
         '<wa-checkbox id="checkbox">',
         "  Label",
@@ -266,7 +318,11 @@ test_that("wa_select renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "label",
-      tag = shiny.webawesome:::wa_select("select", option_tag, label = "Pick one"),
+      tag = shiny.webawesome:::wa_select(
+        "select",
+        option_tag,
+        label = "Pick one"
+      ),
       expected = c(
         '<wa-select id="select" label="Pick one">',
         '  <wa-option value="a">A</wa-option>',
@@ -293,7 +349,11 @@ test_that("wa_select renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "appearance",
-      tag = shiny.webawesome:::wa_select("select", option_tag, appearance = "filled"),
+      tag = shiny.webawesome:::wa_select(
+        "select",
+        option_tag,
+        appearance = "filled"
+      ),
       expected = c(
         '<wa-select id="select" appearance="filled">',
         '  <wa-option value="a">A</wa-option>',
@@ -302,7 +362,11 @@ test_that("wa_select renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "custom_error",
-      tag = shiny.webawesome:::wa_select("select", option_tag, custom_error = "Nope"),
+      tag = shiny.webawesome:::wa_select(
+        "select",
+        option_tag,
+        custom_error = "Nope"
+      ),
       expected = c(
         '<wa-select id="select" custom-error="Nope">',
         '  <wa-option value="a">A</wa-option>',
@@ -329,7 +393,11 @@ test_that("wa_select renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "max_options_visible",
-      tag = shiny.webawesome:::wa_select("select", option_tag, max_options_visible = 5),
+      tag = shiny.webawesome:::wa_select(
+        "select",
+        option_tag,
+        max_options_visible = 5
+      ),
       expected = c(
         '<wa-select id="select" max-options-visible="5">',
         '  <wa-option value="a">A</wa-option>',
@@ -378,7 +446,11 @@ test_that("wa_select renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "placement",
-      tag = shiny.webawesome:::wa_select("select", option_tag, placement = "top"),
+      tag = shiny.webawesome:::wa_select(
+        "select",
+        option_tag,
+        placement = "top"
+      ),
       expected = c(
         '<wa-select id="select" placement="top">',
         '  <wa-option value="a">A</wa-option>',
@@ -405,7 +477,11 @@ test_that("wa_select renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "with_clear",
-      tag = shiny.webawesome:::wa_select("select", option_tag, with_clear = TRUE),
+      tag = shiny.webawesome:::wa_select(
+        "select",
+        option_tag,
+        with_clear = TRUE
+      ),
       expected = c(
         '<wa-select id="select" with-clear>',
         '  <wa-option value="a">A</wa-option>',
@@ -414,7 +490,11 @@ test_that("wa_select renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "clear_icon",
-      tag = shiny.webawesome:::wa_select("select", option_tag, clear_icon = "X"),
+      tag = shiny.webawesome:::wa_select(
+        "select",
+        option_tag,
+        clear_icon = "X"
+      ),
       expected = c(
         '<wa-select id="select">',
         '  <wa-option value="a">A</wa-option>',
@@ -434,7 +514,11 @@ test_that("wa_select renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "expand_icon",
-      tag = shiny.webawesome:::wa_select("select", option_tag, expand_icon = "Expand"),
+      tag = shiny.webawesome:::wa_select(
+        "select",
+        option_tag,
+        expand_icon = "Expand"
+      ),
       expected = c(
         '<wa-select id="select">',
         '  <wa-option value="a">A</wa-option>',
@@ -444,7 +528,11 @@ test_that("wa_select renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "hint_slot",
-      tag = shiny.webawesome:::wa_select("select", option_tag, hint_slot = "Hint slot"),
+      tag = shiny.webawesome:::wa_select(
+        "select",
+        option_tag,
+        hint_slot = "Hint slot"
+      ),
       expected = c(
         '<wa-select id="select">',
         '  <wa-option value="a">A</wa-option>',
@@ -454,7 +542,11 @@ test_that("wa_select renders exact fragments for defaults and overrides", {
     ),
     list(
       name = "label_slot",
-      tag = shiny.webawesome:::wa_select("select", option_tag, label_slot = "Label slot"),
+      tag = shiny.webawesome:::wa_select(
+        "select",
+        option_tag,
+        label_slot = "Label slot"
+      ),
       expected = c(
         '<wa-select id="select">',
         '  <wa-option value="a">A</wa-option>',
@@ -503,6 +595,27 @@ test_that("update_wa_select sends only non-null values", {
     seen$message,
     list(value = "a", hint = "Help", disabled = TRUE)
   )
+})
+
+test_that("update helpers skip sendInputMessage for all-NULL updates", {
+  sent <- FALSE
+  session <- list(
+    sendInputMessage = function(input_id, message) {
+      sent <<- TRUE
+    }
+  )
+
+  result <- shiny.webawesome:::update_wa_select(
+    session = session,
+    input_id = "sel",
+    value = NULL,
+    label = NULL,
+    hint = NULL,
+    disabled = NULL
+  )
+
+  testthat::expect_false(sent)
+  testthat::expect_null(result)
 })
 
 test_that("broadened heuristic-classified wrappers render expected fragments", {
@@ -640,7 +753,12 @@ test_that("broadened heuristic-classified wrappers render expected fragments", {
         label = "Color"
       )
     ),
-    c('<wa-color-picker id="color_picker" value="#112233" label="Color"></wa-color-picker>')
+    c(
+      paste0(
+        '<wa-color-picker id="color_picker" value="#112233" ',
+        'label="Color"></wa-color-picker>'
+      )
+    )
   )
 
   expect_exact_html(
@@ -691,7 +809,12 @@ test_that("broadened heuristic-classified wrappers render expected fragments", {
         label = "Number"
       )
     ),
-    c('<wa-number-input id="number_input" value="2" label="Number"></wa-number-input>')
+    c(
+      paste0(
+        '<wa-number-input id="number_input" value="2" ',
+        'label="Number"></wa-number-input>'
+      )
+    )
   )
 
   expect_exact_html(
@@ -703,7 +826,12 @@ test_that("broadened heuristic-classified wrappers render expected fragments", {
         placement = "top"
       )
     ),
-    c('<wa-popover id="popover" for="popover_target" placement="top">Popover body</wa-popover>')
+    c(
+      paste0(
+        '<wa-popover id="popover" for="popover_target" placement="top">',
+        "Popover body</wa-popover>"
+      )
+    )
   )
 
   expect_exact_html(
@@ -757,7 +885,12 @@ test_that("broadened heuristic-classified wrappers render expected fragments", {
         trigger = "manual"
       )
     ),
-    c('<wa-tooltip id="tooltip" for="tooltip_target" trigger="manual">Tooltip body</wa-tooltip>')
+    c(
+      paste0(
+        '<wa-tooltip id="tooltip" for="tooltip_target" trigger="manual">',
+        "Tooltip body</wa-tooltip>"
+      )
+    )
   )
 })
 

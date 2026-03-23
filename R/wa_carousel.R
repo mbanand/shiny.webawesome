@@ -9,26 +9,33 @@
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param autoplay When set, the slides will scroll automatically when the
-#' user is not interacting with them.
+#' user is not interacting with them. Defaults to `false` when omitted.
 #' @param autoplay_interval Specifies the amount of time, in milliseconds,
-#' between each automatic scroll.
-#' @param current_slide Optional Web Awesome attribute.
+#' between each automatic scroll. Defaults to `3000` when omitted.
+#' @param current_slide Optional Web Awesome attribute. Defaults to `0`
+#' when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
 #' @param loop When set, allows the user to navigate the carousel in the
-#' same direction indefinitely.
+#' same direction indefinitely. Defaults to `false` when omitted.
 #' @param mouse_dragging When set, it is possible to scroll through the
-#' slides by dragging them with the mouse.
-#' @param navigation When set, show the carousel's navigation.
+#' slides by dragging them with the mouse. Defaults to `false` when
+#' omitted.
+#' @param navigation When set, show the carousel's navigation. Defaults to
+#' `false` when omitted.
 #' @param orientation Specifies the orientation in which the carousel will
-#' lay out.
+#' lay out. Must be one of `"horizontal"`, `"vertical"`. Defaults to
+#' `horizontal` when omitted.
 #' @param pagination When set, show the carousel's pagination indicators.
-#' @param slides Optional Web Awesome attribute.
+#' Defaults to `false` when omitted.
+#' @param slides Optional Web Awesome attribute. Defaults to `0` when
+#' omitted.
 #' @param slides_per_move Specifies the number of slides the carousel will
 #' advance when scrolling, useful when specifying a `slides-per-page`
-#' greater than one. It can't be higher than `slides-per-page`.
+#' greater than one. It can't be higher than `slides-per-page`. Defaults
+#' to `1` when omitted.
 #' @param slides_per_page Specifies how many slides should be shown at a
-#' given time.
+#' given time. Defaults to `1` when omitted.
 #' @param next_icon Optional next icon to use instead of the default.
 #' Works best with `<wa-icon>`.
 #' @param previous_icon Optional previous icon to use instead of the
@@ -69,6 +76,16 @@ wa_carousel <- function(
       .wa_slot(previous_icon, "previous-icon")
     )
   )
+  if (!is.null(orientation)) {
+    orientation <- .wa_match_arg(
+      orientation,
+      "orientation",
+      c(
+        "horizontal",
+        "vertical"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

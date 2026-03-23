@@ -8,13 +8,20 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
-#' @param appearance The badge's visual appearance.
-#' @param attention Adds an animation to draw attention to the badge.
+#' @param appearance The badge's visual appearance. Must be one of
+#' `"accent"`, `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to
+#' `accent` when omitted.
+#' @param attention Adds an animation to draw attention to the badge. Must
+#' be one of `"bounce"`, `"none"`, `"pulse"`. Defaults to `none` when
+#' omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
-#' @param pill Draws a pill-style badge with rounded edges.
+#' @param pill Draws a pill-style badge with rounded edges. Defaults to
+#' `false` when omitted.
 #' @param variant The badge's theme variant. Defaults to `brand` if not
-#' within another element with a variant.
+#' within another element with a variant. Must be one of `"brand"`,
+#' `"danger"`, `"neutral"`, `"success"`, `"warning"`. Defaults to `brand`
+#' when omitted.
 #' @param end An element, such as `<wa-icon>`, placed after the label.
 #' @param start An element, such as `<wa-icon>`, placed before the label.
 #'
@@ -46,6 +53,44 @@ wa_badge <- function(
       .wa_slot(start, "start")
     )
   )
+  if (!is.null(appearance)) {
+    appearance <- .wa_match_arg(
+      appearance,
+      "appearance",
+      c(
+        "accent",
+        "filled",
+        "filled-outlined",
+        "outlined"
+      )
+    )
+  }
+
+  if (!is.null(attention)) {
+    attention <- .wa_match_arg(
+      attention,
+      "attention",
+      c(
+        "bounce",
+        "none",
+        "pulse"
+      )
+    )
+  }
+
+  if (!is.null(variant)) {
+    variant <- .wa_match_arg(
+      variant,
+      "variant",
+      c(
+        "brand",
+        "danger",
+        "neutral",
+        "success",
+        "warning"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

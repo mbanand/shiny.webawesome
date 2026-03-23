@@ -41,7 +41,29 @@
   description <- .doc_text(attr$description)
 
   if (!nzchar(description)) {
-    return("Optional Web Awesome attribute.")
+    description <- "Optional Web Awesome attribute."
+  }
+
+  enum_values <- attr$enum_values %||% character()
+  if (length(enum_values) > 0L) {
+    description <- paste(
+      description,
+      "Must be one of",
+      paste(sprintf('`"%s"`', enum_values), collapse = ", "),
+      sep = " "
+    )
+    description <- paste0(description, ".")
+  }
+
+  default <- .scalar_string(attr$default, fallback = NA_character_)
+  if (!is.na(default) && nzchar(default)) {
+    default <- sub("^'(.*)'$", "\\1", default, perl = TRUE)
+    description <- paste(
+      description,
+      "Defaults to",
+      paste0("`", default, "`"),
+      "when omitted."
+    )
   }
 
   description
@@ -281,6 +303,56 @@
   paste0("  ", gsub("\n", "\n  ", paste(lines, collapse = "\n"), fixed = TRUE))
 }
 
+# Render enum validation lines for one wrapper.
+.render_wrapper_validations <- function(component) {
+  attrs <- .wrapper_attributes(component)
+  attrs <- attrs[vapply(
+    attrs,
+    function(attr) length(attr$enum_values %||% character()) > 0L,
+    logical(1)
+  )]
+
+  if (length(attrs) == 0L) {
+    return("")
+  }
+
+  lines <- vapply(
+    attrs,
+    function(attr) {
+      choices <- paste0(
+        "c(\n",
+        paste0(
+          "        ",
+          sprintf('"%s"', attr$enum_values),
+          collapse = ",\n"
+        ),
+        "\n      )"
+      )
+
+      paste0(
+        "  if (!is.null(",
+        .as_r_symbol(attr$argument_name),
+        ")) {\n",
+        "    ",
+        .as_r_symbol(attr$argument_name),
+        " <- .wa_match_arg(\n",
+        "      ",
+        .as_r_symbol(attr$argument_name),
+        ",\n",
+        "      ",
+        .r_string(attr$argument_name),
+        ",\n      ",
+        choices,
+        "\n    )\n",
+        "  }"
+      )
+    },
+    character(1)
+  )
+
+  paste(lines, collapse = "\n\n")
+}
+
 # Render one generated wrapper file from template.
 .render_wrapper_file <- function(component, template_path) {
   description <- .doc_text(
@@ -353,6 +425,7 @@
     PARAM_DOCS = paste(param_docs, collapse = "\n"),
     TAG_NAME = .r_string(component$tag_name),
     SIGNATURE = .render_wrapper_signature(component),
+    VALIDATIONS = .render_wrapper_validations(component),
     ATTRS = .render_wrapper_attrs(component),
     BOOLEAN_ATTRS = .render_wrapper_booleans(component),
     CHILDREN = .render_wrapper_children(component)

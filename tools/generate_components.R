@@ -279,7 +279,7 @@ rm(.bootstrap_cli_ui, .bootstrap_generate_helpers)
 
   .write_debug_json(metadata_summary_path, result$metadata)
   debug_schema <- result$schema
-  debug_schema$components <- .components_by_tag(debug_schema$components)
+  debug_schema$components <- .debug_components_by_tag(debug_schema$components)
 
   .write_debug_json(schema_path, debug_schema)
   .write_debug_json(

@@ -27,19 +27,21 @@ wa_copy_button(
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
 
-\item{value}{The text value to copy.}
+\item{value}{The text value to copy. Defaults to `` when omitted.}
 
-\item{disabled}{Disables the copy button.}
+\item{disabled}{Disables the copy button. Defaults to \code{false} when
+omitted.}
 
-\item{copy_label}{A custom label to show in the tooltip.}
+\item{copy_label}{A custom label to show in the tooltip. Defaults to ``
+when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{error_label}{A custom label to show in the tooltip when a copy
-error occurs.}
+error occurs. Defaults to `` when omitted.}
 
 \item{feedback_duration}{The length of time to show feedback before
-restoring the default trigger.}
+restoring the default trigger. Defaults to \code{1000} when omitted.}
 
 \item{from}{An id that references an element in the same document from
 which data will be copied. If both this and \code{value} are present, this
@@ -47,14 +49,16 @@ value will take precedence. By default, the target element's
 \code{textContent} will be copied. To copy an attribute, append the
 attribute name wrapped in square brackets, e.g. \code{from="elvalue"}. To
 copy a property, append a dot and the property name, e.g.
-\code{from="el.value"}.}
+\code{from="el.value"}. Defaults to `` when omitted.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
 \item{success_label}{A custom label to show in the tooltip after
-copying.}
+copying. Defaults to `` when omitted.}
 
-\item{tooltip_placement}{The preferred placement of the tooltip.}
+\item{tooltip_placement}{The preferred placement of the tooltip. Must
+be one of \code{"bottom"}, \code{"left"}, \code{"right"}, \code{"top"}. Defaults to \code{top}
+when omitted.}
 
 \item{copy_icon}{The icon to show in the default copy state. Works best
 with \verb{<wa-icon>}.}

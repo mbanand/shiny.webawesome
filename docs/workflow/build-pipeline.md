@@ -69,7 +69,7 @@ Typical directories removed:
 generated component files under R/
 inst/bindings/
 inst/extdata/webawesome/
-inst/www/webawesome/
+inst/www/wa/
 manifests/
 report/
 ```
@@ -174,13 +174,13 @@ The pruner performs tasks such as:
 The resulting runtime bundle is written to:
 
 ```text
-inst/www/webawesome/
+inst/www/wa/
 ```
 
 Example structure:
 
 ```text
-inst/www/webawesome/
+inst/www/wa/
   webawesome.loader.js
   webawesome-init.js
   components/

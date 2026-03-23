@@ -25,11 +25,12 @@ the rendered DOM \code{id} attribute.}
 
 \item{...}{Child content for the component's default slot.}
 
-\item{value}{The current rating.}
+\item{value}{The current rating. Defaults to \code{0} when omitted.}
 
-\item{disabled}{Disables the rating.}
+\item{disabled}{Disables the rating. Defaults to \code{false} when omitted.}
 
-\item{label}{A label that describes the rating to assistive devices.}
+\item{label}{A label that describes the rating to assistive devices.
+Defaults to `` when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
@@ -40,15 +41,17 @@ at the specified value. Works well with \verb{<wa-icon>} elements.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{max}{The highest rating to show.}
+\item{max}{The highest rating to show. Defaults to \code{5} when omitted.}
 
 \item{precision}{The precision at which the rating will increase and
 decrease. For example, to allow half-star ratings, set this attribute
-to \code{0.5}.}
+to \code{0.5}. Defaults to \code{1} when omitted.}
 
-\item{readonly}{Makes the rating readonly.}
+\item{readonly}{Makes the rating readonly. Defaults to \code{false} when
+omitted.}
 
-\item{size}{The component's size.}
+\item{size}{The component's size. Must be one of \code{"large"}, \code{"medium"},
+\code{"small"}. Defaults to \code{medium} when omitted.}
 }
 \value{
 An HTML tag for the component.

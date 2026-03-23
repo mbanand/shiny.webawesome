@@ -15,7 +15,8 @@ wa_divider(..., id = NULL, dir = NULL, lang = NULL, orientation = NULL)
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{orientation}{Sets the divider's orientation.}
+\item{orientation}{Sets the divider's orientation. Must be one of
+\code{"horizontal"}, \code{"vertical"}. Defaults to \code{horizontal} when omitted.}
 }
 \value{
 An HTML tag for the component.

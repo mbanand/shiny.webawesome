@@ -24,18 +24,20 @@ wa_tab_group(
 \item{activation}{When set to auto, navigating tabs with the arrow keys
 will instantly show the corresponding tab panel. When set to manual,
 the tab will receive focus but will not show until the user presses
-spacebar or enter.}
+spacebar or enter. Must be one of \code{"auto"}, \code{"manual"}. Defaults to
+\code{auto} when omitted.}
 
-\item{active}{Sets the active tab.}
+\item{active}{Sets the active tab. Defaults to `` when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{placement}{The placement of the tabs.}
+\item{placement}{The placement of the tabs. Must be one of \code{"bottom"},
+\code{"end"}, \code{"start"}, \code{"top"}. Defaults to \code{top} when omitted.}
 
 \item{without_scroll_controls}{Disables the scroll arrows that appear
-when tabs overflow.}
+when tabs overflow. Defaults to \code{false} when omitted.}
 
 \item{nav}{Used for grouping tabs in the tab group. Must be \verb{<wa-tab>}
 elements. Note that \verb{<wa-tab>} will set this slot on itself

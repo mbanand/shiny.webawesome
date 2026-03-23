@@ -36,7 +36,7 @@
     version = as.character(utils::packageVersion("shiny.webawesome")),
     package = "shiny.webawesome",
     src = c(file = "."),
-    stylesheet = "www/webawesome/styles/webawesome.css",
+    stylesheet = "www/wa/styles/webawesome.css",
     script = scripts
   )
 }
@@ -91,6 +91,34 @@
   )
   attrs <- stats::setNames(attrs, names(attrs))
   Filter(Negate(is.null), attrs)
+}
+
+# Validate one optional wrapper enum argument against exact allowed values.
+.wa_match_arg <- function(value, name, values) {
+  if (is.null(value)) {
+    return(NULL)
+  }
+
+  if (!is.character(value) || length(value) != 1L || is.na(value)) {
+    stop(
+      sprintf("`%s` must be one non-missing string.", name),
+      call. = FALSE
+    )
+  }
+
+  matched <- match(value, values)
+  if (is.na(matched)) {
+    stop(
+      sprintf(
+        "`%s` must be one of %s.",
+        name,
+        paste(sprintf('"%s"', values), collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+
+  values[[matched]]
 }
 
 # Attach one slot name to each child in a slot payload.

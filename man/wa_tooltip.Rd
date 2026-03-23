@@ -26,39 +26,47 @@ wa_tooltip(
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
 
-\item{disabled}{Disables the tooltip so it won't show when triggered.}
+\item{disabled}{Disables the tooltip so it won't show when triggered.
+Defaults to \code{false} when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{distance}{The distance in pixels from which to offset the tooltip
-away from its target.}
+away from its target. Defaults to \code{8} when omitted.}
 
-\item{for}{Optional Web Awesome attribute.}
+\item{for}{Optional Web Awesome attribute. Defaults to \code{null} when
+omitted.}
 
 \item{hide_delay}{The amount of time to wait before hiding the tooltip
-when the user mouses out.}
+when the user mouses out. Defaults to \code{0} when omitted.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
 \item{open}{Indicates whether or not the tooltip is open. You can use
-this in lieu of the show/hide methods.}
+this in lieu of the show/hide methods. Defaults to \code{false} when
+omitted.}
 
 \item{placement}{The preferred placement of the tooltip. Note that the
 actual placement may vary as needed to keep the tooltip inside of the
-viewport.}
+viewport. Must be one of \code{"bottom"}, \code{"bottom-end"}, \code{"bottom-start"},
+\code{"left"}, \code{"left-end"}, \code{"left-start"}, \code{"right"}, \code{"right-end"},
+\code{"right-start"}, \code{"top"}, \code{"top-end"}, \code{"top-start"}. Defaults to \code{top}
+when omitted.}
 
 \item{show_delay}{The amount of time to wait before showing the tooltip
-when the user mouses in.}
+when the user mouses in. Defaults to \code{150} when omitted.}
 
 \item{skidding}{The distance in pixels from which to offset the tooltip
-along its target.}
+along its target. Defaults to \code{0} when omitted.}
 
 \item{trigger}{Controls how the tooltip is activated. Possible options
 include \code{click}, \code{hover}, \code{focus}, and \code{manual}. Multiple options can
 be passed by separating them with a space. When manual is used, the
-tooltip must be activated programmatically.}
+tooltip must be activated programmatically. Defaults to \verb{hover focus}
+when omitted.}
 
-\item{without_arrow}{Removes the arrow from the tooltip.}
+\item{without_arrow}{Removes the arrow from the tooltip. Defaults to
+\code{false} when omitted.}
 }
 \value{
 An HTML tag for the component.

@@ -34,30 +34,35 @@ with form data.}
 \item{checked}{The default value of the form control. Primarily used
 for resetting the form control.}
 
-\item{disabled}{Disables the checkbox.}
+\item{disabled}{Disables the checkbox. Defaults to \code{false} when
+omitted.}
 
 \item{hint}{The checkbox's hint. If you need to display HTML, use the
-\code{hint} slot instead.}
+\code{hint} slot instead. Defaults to `` when omitted.}
 
 \item{name}{The name of the checkbox, submitted as a name/value pair
-with form data.}
+with form data. Defaults to \code{null} when omitted.}
 
-\item{custom_error}{Optional Web Awesome attribute.}
+\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
+when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{indeterminate}{Draws the checkbox in an indeterminate state. This
 is usually applied to checkboxes that represents a "select all/none"
 behavior when associated checkboxes have a mix of checked and unchecked
-states.}
+states. Defaults to \code{false} when omitted.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{required}{Makes the checkbox a required field.}
+\item{required}{Makes the checkbox a required field. Defaults to
+\code{false} when omitted.}
 
-\item{size}{The checkbox's size.}
+\item{size}{The checkbox's size. Must be one of \code{"large"}, \code{"medium"},
+\code{"small"}. Defaults to \code{medium} when omitted.}
 
-\item{title}{Optional Web Awesome attribute.}
+\item{title}{Optional Web Awesome attribute. Defaults to `` when
+omitted.}
 
 \item{hint_slot}{Text that describes how to use the checkbox.
 Alternatively, you can use the \code{hint} attribute.}

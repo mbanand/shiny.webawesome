@@ -11,35 +11,45 @@
 #' the rendered DOM `id` attribute.
 #' @param value The select's value. This will be a string for single
 #' select or an array for multi-select.
-#' @param disabled Disables the select control.
+#' @param disabled Disables the select control. Defaults to `false` when
+#' omitted.
 #' @param label The select's label. If you need to display HTML, use the
-#' `label` slot instead.
+#' `label` slot instead. Defaults to `` when omitted.
 #' @param hint The select's hint. If you need to display HTML, use the
-#' `hint` slot instead.
+#' `hint` slot instead. Defaults to `` when omitted.
 #' @param name The name of the select, submitted as a name/value pair with
-#' form data.
-#' @param appearance The select's visual appearance.
-#' @param custom_error Optional Web Awesome attribute.
+#' form data. Defaults to `` when omitted.
+#' @param appearance The select's visual appearance. Must be one of
+#' `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to `outlined`
+#' when omitted.
+#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
+#' when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
 #' @param max_options_visible The maximum number of selected options to
 #' show when `multiple` is true. After the maximum, "+n" will be shown to
 #' indicate the number of additional items that are selected. Set to 0 to
-#' remove the limit.
-#' @param multiple Allows more than one option to be selected.
+#' remove the limit. Defaults to `3` when omitted.
+#' @param multiple Allows more than one option to be selected. Defaults to
+#' `false` when omitted.
 #' @param open Indicates whether or not the select is open. You can toggle
 #' this attribute to show and hide the menu, or you can use the `show()`
 #' and `hide()` methods and this attribute will reflect the select's open
-#' state.
-#' @param pill Draws a pill-style select with rounded edges.
+#' state. Defaults to `false` when omitted.
+#' @param pill Draws a pill-style select with rounded edges. Defaults to
+#' `false` when omitted.
 #' @param placeholder Placeholder text to show as a hint when the select
-#' is empty.
+#' is empty. Defaults to `` when omitted.
 #' @param placement The preferred placement of the select's menu. Note
 #' that the actual placement may vary as needed to keep the listbox inside
-#' of the viewport.
-#' @param required The select's required attribute.
-#' @param size The select's size.
+#' of the viewport. Must be one of `"bottom"`, `"top"`. Defaults to
+#' `bottom` when omitted.
+#' @param required The select's required attribute. Defaults to `false`
+#' when omitted.
+#' @param size The select's size. Must be one of `"large"`, `"medium"`,
+#' `"small"`. Defaults to `medium` when omitted.
 #' @param with_clear Adds a clear button when the select is not empty.
+#' Defaults to `false` when omitted.
 #' @param clear_icon An icon to use in lieu of the default clear icon.
 #' @param end An element, such as `<wa-icon>`, placed at the end of the
 #' combobox.
@@ -120,6 +130,40 @@ wa_select <- function(
       .wa_slot(start, "start")
     )
   )
+  if (!is.null(appearance)) {
+    appearance <- .wa_match_arg(
+      appearance,
+      "appearance",
+      c(
+        "filled",
+        "filled-outlined",
+        "outlined"
+      )
+    )
+  }
+
+  if (!is.null(placement)) {
+    placement <- .wa_match_arg(
+      placement,
+      "placement",
+      c(
+        "bottom",
+        "top"
+      )
+    )
+  }
+
+  if (!is.null(size)) {
+    size <- .wa_match_arg(
+      size,
+      "size",
+      c(
+        "large",
+        "medium",
+        "small"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(
@@ -197,6 +241,10 @@ update_wa_select <- function(
       disabled = disabled
     )
   )
+
+  if (length(message) == 0L) {
+    return(invisible(NULL))
+  }
 
   session$sendInputMessage(input_id, message)
   invisible(NULL)

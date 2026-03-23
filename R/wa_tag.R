@@ -8,14 +8,21 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
-#' @param appearance The tag's visual appearance.
+#' @param appearance The tag's visual appearance. Must be one of
+#' `"accent"`, `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to
+#' `filled-outlined` when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
-#' @param pill Draws a pill-style tag with rounded edges.
-#' @param size The tag's size.
+#' @param pill Draws a pill-style tag with rounded edges. Defaults to
+#' `false` when omitted.
+#' @param size The tag's size. Must be one of `"large"`, `"medium"`,
+#' `"small"`. Defaults to `medium` when omitted.
 #' @param variant The tag's theme variant. Defaults to `neutral` if not
-#' within another element with a variant.
+#' within another element with a variant. Must be one of `"brand"`,
+#' `"danger"`, `"neutral"`, `"success"`, `"warning"`. Defaults to
+#' `neutral` when omitted.
 #' @param with_remove Makes the tag removable and shows a remove button.
+#' Defaults to `false` when omitted.
 #'
 #' @return An HTML tag for the component.
 #'
@@ -32,6 +39,44 @@ wa_tag <- function(
   with_remove = NULL
 ) {
   children <- list(...)
+  if (!is.null(appearance)) {
+    appearance <- .wa_match_arg(
+      appearance,
+      "appearance",
+      c(
+        "accent",
+        "filled",
+        "filled-outlined",
+        "outlined"
+      )
+    )
+  }
+
+  if (!is.null(size)) {
+    size <- .wa_match_arg(
+      size,
+      "size",
+      c(
+        "large",
+        "medium",
+        "small"
+      )
+    )
+  }
+
+  if (!is.null(variant)) {
+    variant <- .wa_match_arg(
+      variant,
+      "variant",
+      c(
+        "brand",
+        "danger",
+        "neutral",
+        "success",
+        "warning"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

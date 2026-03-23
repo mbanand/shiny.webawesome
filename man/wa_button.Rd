@@ -43,15 +43,18 @@ wa_button(
 button's name as part of the form data, but only when this button is
 the submitter. This attribute is ignored when \code{href} is present.}
 
-\item{disabled}{Disables the button.}
+\item{disabled}{Disables the button. Defaults to \code{false} when omitted.}
 
 \item{name}{The name of the button, submitted as a name/value pair with
 form data, but only when this button is the submitter. This attribute
-is ignored when \code{href} is present.}
+is ignored when \code{href} is present. Defaults to \code{null} when omitted.}
 
-\item{appearance}{The button's visual appearance.}
+\item{appearance}{The button's visual appearance. Must be one of
+\code{"accent"}, \code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}, \code{"plain"}.
+Defaults to \code{accent} when omitted.}
 
-\item{custom_error}{Optional Web Awesome attribute.}
+\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
+when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
@@ -61,9 +64,11 @@ filename. Only used when \code{href} is present.}
 \item{formaction}{Used to override the form owner's \code{action} attribute.}
 
 \item{formenctype}{Used to override the form owner's \code{enctype}
-attribute.}
+attribute. Must be one of \code{"application/x-www-form-urlencoded"},
+\code{"multipart/form-data"}, \code{"text/plain"}.}
 
-\item{formmethod}{Used to override the form owner's \code{method} attribute.}
+\item{formmethod}{Used to override the form owner's \code{method} attribute.
+Must be one of \code{"get"}, \code{"post"}.}
 
 \item{formnovalidate}{Used to override the form owner's \code{novalidate}
 attribute.}
@@ -75,30 +80,39 @@ attribute.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{loading}{Draws the button in a loading state.}
+\item{loading}{Draws the button in a loading state. Defaults to \code{false}
+when omitted.}
 
-\item{pill}{Draws a pill-style button with rounded edges.}
+\item{pill}{Draws a pill-style button with rounded edges. Defaults to
+\code{false} when omitted.}
 
 \item{rel}{When using \code{href}, this attribute will map to the underlying
 link's \code{rel} attribute.}
 
-\item{size}{The button's size.}
+\item{size}{The button's size. Must be one of \code{"large"}, \code{"medium"},
+\code{"small"}. Defaults to \code{medium} when omitted.}
 
 \item{target}{Tells the browser where to open the link. Only used when
-\code{href} is present.}
+\code{href} is present. Must be one of \code{"_blank"}, \code{"_parent"}, \code{"_self"},
+\code{"_top"}.}
 
-\item{title}{Optional Web Awesome attribute.}
+\item{title}{Optional Web Awesome attribute. Defaults to `` when
+omitted.}
 
 \item{type}{The type of button. Note that the default value is \code{button}
 instead of \code{submit}, which is opposite of how native \verb{<button>}
 elements behave. When the type is \code{submit}, the button will submit the
-surrounding form.}
+surrounding form. Must be one of \code{"button"}, \code{"reset"}, \code{"submit"}.
+Defaults to \code{button} when omitted.}
 
 \item{variant}{The button's theme variant. Defaults to \code{neutral} if not
-within another element with a variant.}
+within another element with a variant. Must be one of \code{"brand"},
+\code{"danger"}, \code{"neutral"}, \code{"success"}, \code{"warning"}. Defaults to
+\code{neutral} when omitted.}
 
 \item{with_caret}{Draws the button with a caret. Used to indicate that
-the button triggers a dropdown menu or similar behavior.}
+the button triggers a dropdown menu or similar behavior. Defaults to
+\code{false} when omitted.}
 
 \item{end}{An element, such as \verb{<wa-icon>}, placed after the label.}
 

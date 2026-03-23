@@ -112,7 +112,7 @@ testthat::test_that("prune uses the pinned version by default", {
   testthat::expect_equal(result$version, "3.3.1")
   testthat::expect_true(
     file.exists(
-      file.path(root, "inst", "www", "webawesome", "webawesome.loader.js")
+      file.path(root, "inst", "www", "wa", "webawesome.loader.js")
     )
   )
   testthat::expect_true(
@@ -135,7 +135,7 @@ testthat::test_that("prune copies reached runtime files and metadata only", {
 
   result <- prune_webawesome(root = root, verbose = FALSE)
 
-  runtime_root <- file.path(root, "inst", "www", "webawesome")
+  runtime_root <- file.path(root, "inst", "www", "wa")
   extdata_root <- file.path(root, "inst", "extdata", "webawesome")
 
   testthat::expect_true(
@@ -224,7 +224,7 @@ testthat::test_that("prune rejects non-empty prune outputs", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
   .create_fake_dist(root)
-  .write_file(file.path(root, "inst", "www", "webawesome", "stale.js"), "stale")
+  .write_file(file.path(root, "inst", "www", "wa", "stale.js"), "stale")
 
   testthat::expect_error(
     prune_webawesome(root = root, verbose = FALSE),

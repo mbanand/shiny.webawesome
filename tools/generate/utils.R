@@ -149,3 +149,59 @@
   names(components) <- tags
   components
 }
+
+# Return one named list keyed by element name for human-readable debug output.
+.debug_items_by_name <- function(items, field = "name") {
+  if (is.null(items) || length(items) == 0L) {
+    return(list())
+  }
+
+  item_names <- vapply(items, `[[`, character(1), field)
+  order_idx <- order(item_names)
+  items <- items[order_idx]
+  item_names <- item_names[order_idx]
+  names(items) <- item_names
+  items
+}
+
+# Return one readable debug key for one slot definition.
+.debug_slot_key <- function(slot) {
+  key <- .scalar_string(slot$name, fallback = "")
+
+  if (nzchar(key)) {
+    return(key)
+  }
+
+  .scalar_string(slot$argument_name, fallback = "")
+}
+
+# Return one component rewritten for human-readable debug-schema inspection.
+.debug_component_view <- function(component) {
+  component$attributes <- .debug_items_by_name(component$attributes)
+  component$properties <- .debug_items_by_name(component$properties)
+  component$events <- .debug_items_by_name(component$events)
+  component$slots <- .debug_items_by_name(
+    component$slots,
+    field = "argument_name"
+  )
+
+  if (length(component$slots) > 0L) {
+    slot_names <- vapply(component$slots, .debug_slot_key, character(1))
+    order_idx <- order(slot_names)
+    component$slots <- component$slots[order_idx]
+    names(component$slots) <- slot_names[order_idx]
+  }
+
+  component
+}
+
+# Return components rewritten for the debug schema artifact.
+.debug_components_by_tag <- function(components) {
+  components <- .components_by_tag(components)
+
+  if (length(components) == 0L) {
+    return(components)
+  }
+
+  lapply(components, .debug_component_view)
+}

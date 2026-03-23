@@ -32,7 +32,7 @@ These files should not be edited directly.
 Depending on the build workflow, generated or derived runtime assets may also
 exist under:
 
-- `inst/www/webawesome/`
+- `inst/www/wa/`
 
 Runtime assets should not be manually edited unless the intended change is to
 the pruning or bundling logic.

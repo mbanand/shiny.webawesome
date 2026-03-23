@@ -8,25 +8,29 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
-#' @param value The text value to copy.
-#' @param disabled Disables the copy button.
-#' @param copy_label A custom label to show in the tooltip.
+#' @param value The text value to copy. Defaults to `` when omitted.
+#' @param disabled Disables the copy button. Defaults to `false` when
+#' omitted.
+#' @param copy_label A custom label to show in the tooltip. Defaults to ``
+#' when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param error_label A custom label to show in the tooltip when a copy
-#' error occurs.
+#' error occurs. Defaults to `` when omitted.
 #' @param feedback_duration The length of time to show feedback before
-#' restoring the default trigger.
+#' restoring the default trigger. Defaults to `1000` when omitted.
 #' @param from An id that references an element in the same document from
 #' which data will be copied. If both this and `value` are present, this
 #' value will take precedence. By default, the target element's
 #' `textContent` will be copied. To copy an attribute, append the
 #' attribute name wrapped in square brackets, e.g. `from="elvalue"`. To
 #' copy a property, append a dot and the property name, e.g.
-#' `from="el.value"`.
+#' `from="el.value"`. Defaults to `` when omitted.
 #' @param lang Optional Web Awesome attribute.
 #' @param success_label A custom label to show in the tooltip after
-#' copying.
-#' @param tooltip_placement The preferred placement of the tooltip.
+#' copying. Defaults to `` when omitted.
+#' @param tooltip_placement The preferred placement of the tooltip. Must
+#' be one of `"bottom"`, `"left"`, `"right"`, `"top"`. Defaults to `top`
+#' when omitted.
 #' @param copy_icon The icon to show in the default copy state. Works best
 #' with `<wa-icon>`.
 #' @param error_icon The icon to show when a copy error occurs. Works best
@@ -73,6 +77,18 @@ wa_copy_button <- function(
       .wa_slot(success_icon, "success-icon")
     )
   )
+  if (!is.null(tooltip_placement)) {
+    tooltip_placement <- .wa_match_arg(
+      tooltip_placement,
+      "tooltip_placement",
+      c(
+        "bottom",
+        "left",
+        "right",
+        "top"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

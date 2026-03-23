@@ -22,18 +22,25 @@ wa_badge(
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
 
-\item{appearance}{The badge's visual appearance.}
+\item{appearance}{The badge's visual appearance. Must be one of
+\code{"accent"}, \code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}. Defaults to
+\code{accent} when omitted.}
 
-\item{attention}{Adds an animation to draw attention to the badge.}
+\item{attention}{Adds an animation to draw attention to the badge. Must
+be one of \code{"bounce"}, \code{"none"}, \code{"pulse"}. Defaults to \code{none} when
+omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{pill}{Draws a pill-style badge with rounded edges.}
+\item{pill}{Draws a pill-style badge with rounded edges. Defaults to
+\code{false} when omitted.}
 
 \item{variant}{The badge's theme variant. Defaults to \code{brand} if not
-within another element with a variant.}
+within another element with a variant. Must be one of \code{"brand"},
+\code{"danger"}, \code{"neutral"}, \code{"success"}, \code{"warning"}. Defaults to \code{brand}
+when omitted.}
 
 \item{end}{An element, such as \verb{<wa-icon>}, placed after the label.}
 

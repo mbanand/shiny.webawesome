@@ -8,10 +8,13 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
-#' @param appearance The card's visual appearance.
+#' @param appearance The card's visual appearance. Must be one of
+#' `"accent"`, `"filled"`, `"filled-outlined"`, `"outlined"`, `"plain"`.
+#' Defaults to `outlined` when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
-#' @param orientation Renders the card's orientation *
+#' @param orientation Renders the card's orientation * Must be one of
+#' `"horizontal"`, `"vertical"`. Defaults to `vertical` when omitted.
 #' @param actions An optional actions section to render at the end for the
 #' horizontal card.
 #' @param footer An optional footer for the card.
@@ -77,6 +80,30 @@ wa_card <- function(
       .wa_slot(media, "media")
     )
   )
+  if (!is.null(appearance)) {
+    appearance <- .wa_match_arg(
+      appearance,
+      "appearance",
+      c(
+        "accent",
+        "filled",
+        "filled-outlined",
+        "outlined",
+        "plain"
+      )
+    )
+  }
+
+  if (!is.null(orientation)) {
+    orientation <- .wa_match_arg(
+      orientation,
+      "orientation",
+      c(
+        "horizontal",
+        "vertical"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

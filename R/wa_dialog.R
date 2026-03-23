@@ -11,15 +11,16 @@
 #' @param label The dialog's label as displayed in the header. You should
 #' always include a relevant label, as it is required for proper
 #' accessibility. If you need to display HTML, use the `label` slot
-#' instead.
+#' instead. Defaults to `` when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
 #' @param light_dismiss When enabled, the dialog will be closed when the
-#' user clicks outside of it.
+#' user clicks outside of it. Defaults to `false` when omitted.
 #' @param open Indicates whether or not the dialog is open. Toggle this
-#' attribute to show and hide the dialog.
+#' attribute to show and hide the dialog. Defaults to `false` when
+#' omitted.
 #' @param without_header Disables the header. This will also remove the
-#' default close button.
+#' default close button. Defaults to `false` when omitted.
 #' @param footer The dialog's footer, usually one or more buttons
 #' representing various options.
 #' @param header_actions Optional actions to add to the header. Works best
@@ -62,6 +63,7 @@ wa_dialog <- function(
       .wa_slot(label_slot, "label")
     )
   )
+
 
   attrs <- .wa_normalize_attrs(
     list(

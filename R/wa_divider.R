@@ -10,7 +10,8 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
-#' @param orientation Sets the divider's orientation.
+#' @param orientation Sets the divider's orientation. Must be one of
+#' `"horizontal"`, `"vertical"`. Defaults to `horizontal` when omitted.
 #'
 #' @return An HTML tag for the component.
 #'
@@ -23,6 +24,16 @@ wa_divider <- function(
   orientation = NULL
 ) {
   children <- list(...)
+  if (!is.null(orientation)) {
+    orientation <- .wa_match_arg(
+      orientation,
+      "orientation",
+      c(
+        "horizontal",
+        "vertical"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

@@ -41,7 +41,7 @@ wa_popup(
 
 \item{active}{Activates the positioning logic and shows the popup. When
 this attribute is removed, the positioning logic is torn down and the
-popup will be hidden.}
+popup will be hidden. Defaults to \code{false} when omitted.}
 
 \item{anchor}{The element the popup will be anchored to. If the anchor
 lives outside of the popup, you can provide the anchor element \code{id}, a
@@ -51,23 +51,27 @@ inside the popup, use the \code{anchor} slot instead.}
 \item{arrow}{Attaches an arrow to the popup. The arrow's size and color
 can be customized using the \code{--arrow-size} and \code{--arrow-color} custom
 properties. For additional customizations, you can also target the
-arrow using \verb{::part(arrow)} in your stylesheet.}
+arrow using \verb{::part(arrow)} in your stylesheet. Defaults to \code{false}
+when omitted.}
 
 \item{arrow_padding}{The amount of padding between the arrow and the
 edges of the popup. If the popup has a border-radius, for example, this
-will prevent it from overflowing the corners.}
+will prevent it from overflowing the corners. Defaults to \code{10} when
+omitted.}
 
 \item{arrow_placement}{The placement of the arrow. The default is
 \code{anchor}, which will align the arrow as close to the center of the
 anchor as possible, considering available space and \code{arrow-padding}. A
 value of \code{start}, \code{end}, or \code{center} will align the arrow to the start,
-end, or center of the popover instead.}
+end, or center of the popover instead. Must be one of \code{"anchor"},
+\code{"center"}, \code{"end"}, \code{"start"}. Defaults to \code{anchor} when omitted.}
 
 \item{auto_size}{When set, this will cause the popup to automatically
-resize itself to prevent it from overflowing.}
+resize itself to prevent it from overflowing. Must be one of \code{"both"},
+\code{"horizontal"}, \code{"vertical"}.}
 
 \item{auto_size_padding}{The amount of padding, in pixels, to exceed
-before the auto-size behavior will occur.}
+before the auto-size behavior will occur. Defaults to \code{0} when omitted.}
 
 \item{auto_size_boundary}{The auto-size boundary describes clipping
 element(s) that overflow will be checked relative to when resizing. By
@@ -76,30 +80,33 @@ element to be clipped. If needed, you can change the boundary by
 passing a reference to one or more elements to this property.}
 
 \item{boundary}{The bounding box to use for flipping, shifting, and
-auto-sizing.}
+auto-sizing. Must be one of \code{"scroll"}, \code{"viewport"}. Defaults to
+\code{viewport} when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{distance}{The distance in pixels from which to offset the panel
-away from its anchor.}
+away from its anchor. Defaults to \code{0} when omitted.}
 
 \item{flip}{When set, placement of the popup will flip to the opposite
 site to keep it in view. You can use \code{flipFallbackPlacements} to
-further configure how the fallback placement is determined.}
+further configure how the fallback placement is determined. Defaults to
+\code{false} when omitted.}
 
 \item{flip_fallback_placements}{If the preferred placement doesn't fit,
 popup will be tested in these fallback placements until one fits. Must
 be a string of any number of placements separated by a space, e.g. "top
 bottom left". If no placement fits, the flip fallback strategy will be
-used instead.}
+used instead. Defaults to `` when omitted.}
 
 \item{flip_fallback_strategy}{When neither the preferred placement nor
 the fallback placements fit, this value will be used to determine
 whether the popup should be positioned using the best available fit
-based on available space or as it was initially preferred.}
+based on available space or as it was initially preferred. Must be one
+of \code{"best-fit"}, \code{"initial"}. Defaults to \code{best-fit} when omitted.}
 
 \item{flip_padding}{The amount of padding, in pixels, to exceed before
-the flip behavior will occur.}
+the flip behavior will occur. Defaults to \code{0} when omitted.}
 
 \item{flip_boundary}{The flip boundary describes clipping element(s)
 that overflow will be checked relative to when flipping. By default,
@@ -112,19 +119,22 @@ element, this option will add a "hover bridge" that fills the gap using
 an invisible element. This makes listening for events such as
 \code{mouseenter} and \code{mouseleave} more sane because the pointer never
 technically leaves the element. The hover bridge will only be drawn
-when the popover is active.}
+when the popover is active. Defaults to \code{false} when omitted.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
 \item{placement}{The preferred placement of the popup. Note that the
 actual placement will vary as configured to keep the panel inside of
-the viewport.}
+the viewport. Must be one of \code{"bottom"}, \code{"bottom-end"},
+\code{"bottom-start"}, \code{"left"}, \code{"left-end"}, \code{"left-start"}, \code{"right"},
+\code{"right-end"}, \code{"right-start"}, \code{"top"}, \code{"top-end"}, \code{"top-start"}.
+Defaults to \code{top} when omitted.}
 
 \item{shift}{Moves the popup along the axis to keep it in view when
-clipped.}
+clipped. Defaults to \code{false} when omitted.}
 
 \item{shift_padding}{The amount of padding, in pixels, to exceed before
-the shift behavior will occur.}
+the shift behavior will occur. Defaults to \code{0} when omitted.}
 
 \item{shift_boundary}{The shift boundary describes clipping element(s)
 that overflow will be checked relative to when shifting. By default,
@@ -133,10 +143,10 @@ be clipped. If needed, you can change the boundary by passing a
 reference to one or more elements to this property.}
 
 \item{skidding}{The distance in pixels from which to offset the panel
-along its anchor.}
+along its anchor. Defaults to \code{0} when omitted.}
 
 \item{sync}{Syncs the popup's width or height to that of the anchor
-element.}
+element. Must be one of \code{"both"}, \code{"height"}, \code{"width"}.}
 
 \item{anchor_slot}{The element the popup will be anchored to. If the
 anchor lives outside of the popup, you can use the \code{anchor} attribute

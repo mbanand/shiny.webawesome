@@ -23,6 +23,10 @@
     )
   )
 
+  if (length(message) == 0L) {
+    return(invisible(NULL))
+  }
+
   session$sendInputMessage(input_id, message)
   invisible(NULL)
 }

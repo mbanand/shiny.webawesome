@@ -33,37 +33,42 @@ the rendered DOM \code{id} attribute.}
 \item{value}{The default value of the form control. Primarily used for
 resetting the form control.}
 
-\item{disabled}{Disables the radio group and all child radios.}
+\item{disabled}{Disables the radio group and all child radios. Defaults
+to \code{false} when omitted.}
 
 \item{label}{The radio group's label. Required for proper
 accessibility. If you need to display HTML, use the \code{label} slot
-instead.}
+instead. Defaults to `` when omitted.}
 
 \item{hint}{The radio groups's hint. If you need to display HTML, use
-the \code{hint} slot instead.}
+the \code{hint} slot instead. Defaults to `` when omitted.}
 
 \item{name}{The name of the radio group, submitted as a name/value pair
-with form data.}
+with form data. Defaults to \code{null} when omitted.}
 
-\item{custom_error}{Optional Web Awesome attribute.}
+\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
+when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{orientation}{The orientation in which to show radio items.}
+\item{orientation}{The orientation in which to show radio items. Must
+be one of \code{"horizontal"}, \code{"vertical"}. Defaults to \code{vertical} when
+omitted.}
 
 \item{required}{Ensures a child radio is checked before allowing the
-containing form to submit.}
+containing form to submit. Defaults to \code{false} when omitted.}
 
 \item{size}{The radio group's size. When present, this size will be
-applied to all \verb{<wa-radio>} items inside.}
+applied to all \verb{<wa-radio>} items inside. Must be one of \code{"large"},
+\code{"medium"}, \code{"small"}.}
 
 \item{with_hint}{Used for SSR. if true, will show slotted hint on
-initial render.}
+initial render. Defaults to \code{false} when omitted.}
 
 \item{with_label}{Used for SSR. if true, will show slotted label on
-initial render.}
+initial render. Defaults to \code{false} when omitted.}
 
 \item{hint_slot}{Text that describes how to use the radio group.
 Alternatively, you can use the \code{hint} attribute.}

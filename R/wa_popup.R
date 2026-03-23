@@ -10,7 +10,7 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param active Activates the positioning logic and shows the popup. When
 #' this attribute is removed, the positioning logic is torn down and the
-#' popup will be hidden.
+#' popup will be hidden. Defaults to `false` when omitted.
 #' @param anchor The element the popup will be anchored to. If the anchor
 #' lives outside of the popup, you can provide the anchor element `id`, a
 #' DOM element reference, or a `VirtualElement`. If the anchor lives
@@ -18,43 +18,50 @@
 #' @param arrow Attaches an arrow to the popup. The arrow's size and color
 #' can be customized using the `--arrow-size` and `--arrow-color` custom
 #' properties. For additional customizations, you can also target the
-#' arrow using `::part(arrow)` in your stylesheet.
+#' arrow using `::part(arrow)` in your stylesheet. Defaults to `false`
+#' when omitted.
 #' @param arrow_padding The amount of padding between the arrow and the
 #' edges of the popup. If the popup has a border-radius, for example, this
-#' will prevent it from overflowing the corners.
+#' will prevent it from overflowing the corners. Defaults to `10` when
+#' omitted.
 #' @param arrow_placement The placement of the arrow. The default is
 #' `anchor`, which will align the arrow as close to the center of the
 #' anchor as possible, considering available space and `arrow-padding`. A
 #' value of `start`, `end`, or `center` will align the arrow to the start,
-#' end, or center of the popover instead.
+#' end, or center of the popover instead. Must be one of `"anchor"`,
+#' `"center"`, `"end"`, `"start"`. Defaults to `anchor` when omitted.
 #' @param auto_size When set, this will cause the popup to automatically
-#' resize itself to prevent it from overflowing.
+#' resize itself to prevent it from overflowing. Must be one of `"both"`,
+#' `"horizontal"`, `"vertical"`.
 #' @param auto_size_padding The amount of padding, in pixels, to exceed
-#' before the auto-size behavior will occur.
+#' before the auto-size behavior will occur. Defaults to `0` when omitted.
 #' @param auto_size_boundary The auto-size boundary describes clipping
 #' element(s) that overflow will be checked relative to when resizing. By
 #' default, the boundary includes overflow ancestors that will cause the
 #' element to be clipped. If needed, you can change the boundary by
 #' passing a reference to one or more elements to this property.
 #' @param boundary The bounding box to use for flipping, shifting, and
-#' auto-sizing.
+#' auto-sizing. Must be one of `"scroll"`, `"viewport"`. Defaults to
+#' `viewport` when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param distance The distance in pixels from which to offset the panel
-#' away from its anchor.
+#' away from its anchor. Defaults to `0` when omitted.
 #' @param flip When set, placement of the popup will flip to the opposite
 #' site to keep it in view. You can use `flipFallbackPlacements` to
-#' further configure how the fallback placement is determined.
+#' further configure how the fallback placement is determined. Defaults to
+#' `false` when omitted.
 #' @param flip_fallback_placements If the preferred placement doesn't fit,
 #' popup will be tested in these fallback placements until one fits. Must
 #' be a string of any number of placements separated by a space, e.g. "top
 #' bottom left". If no placement fits, the flip fallback strategy will be
-#' used instead.
+#' used instead. Defaults to `` when omitted.
 #' @param flip_fallback_strategy When neither the preferred placement nor
 #' the fallback placements fit, this value will be used to determine
 #' whether the popup should be positioned using the best available fit
-#' based on available space or as it was initially preferred.
+#' based on available space or as it was initially preferred. Must be one
+#' of `"best-fit"`, `"initial"`. Defaults to `best-fit` when omitted.
 #' @param flip_padding The amount of padding, in pixels, to exceed before
-#' the flip behavior will occur.
+#' the flip behavior will occur. Defaults to `0` when omitted.
 #' @param flip_boundary The flip boundary describes clipping element(s)
 #' that overflow will be checked relative to when flipping. By default,
 #' the boundary includes overflow ancestors that will cause the element to
@@ -65,24 +72,27 @@
 #' an invisible element. This makes listening for events such as
 #' `mouseenter` and `mouseleave` more sane because the pointer never
 #' technically leaves the element. The hover bridge will only be drawn
-#' when the popover is active.
+#' when the popover is active. Defaults to `false` when omitted.
 #' @param lang Optional Web Awesome attribute.
 #' @param placement The preferred placement of the popup. Note that the
 #' actual placement will vary as configured to keep the panel inside of
-#' the viewport.
+#' the viewport. Must be one of `"bottom"`, `"bottom-end"`,
+#' `"bottom-start"`, `"left"`, `"left-end"`, `"left-start"`, `"right"`,
+#' `"right-end"`, `"right-start"`, `"top"`, `"top-end"`, `"top-start"`.
+#' Defaults to `top` when omitted.
 #' @param shift Moves the popup along the axis to keep it in view when
-#' clipped.
+#' clipped. Defaults to `false` when omitted.
 #' @param shift_padding The amount of padding, in pixels, to exceed before
-#' the shift behavior will occur.
+#' the shift behavior will occur. Defaults to `0` when omitted.
 #' @param shift_boundary The shift boundary describes clipping element(s)
 #' that overflow will be checked relative to when shifting. By default,
 #' the boundary includes overflow ancestors that will cause the element to
 #' be clipped. If needed, you can change the boundary by passing a
 #' reference to one or more elements to this property.
 #' @param skidding The distance in pixels from which to offset the panel
-#' along its anchor.
+#' along its anchor. Defaults to `0` when omitted.
 #' @param sync Syncs the popup's width or height to that of the anchor
-#' element.
+#' element. Must be one of `"both"`, `"height"`, `"width"`.
 #' @param anchor_slot The element the popup will be anchored to. If the
 #' anchor lives outside of the popup, you can use the `anchor` attribute
 #' or property instead.
@@ -126,6 +136,85 @@ wa_popup <- function(
       .wa_slot(anchor_slot, "anchor")
     )
   )
+  if (!is.null(arrow_placement)) {
+    arrow_placement <- .wa_match_arg(
+      arrow_placement,
+      "arrow_placement",
+      c(
+        "anchor",
+        "center",
+        "end",
+        "start"
+      )
+    )
+  }
+
+  if (!is.null(auto_size)) {
+    auto_size <- .wa_match_arg(
+      auto_size,
+      "auto_size",
+      c(
+        "both",
+        "horizontal",
+        "vertical"
+      )
+    )
+  }
+
+  if (!is.null(boundary)) {
+    boundary <- .wa_match_arg(
+      boundary,
+      "boundary",
+      c(
+        "scroll",
+        "viewport"
+      )
+    )
+  }
+
+  if (!is.null(flip_fallback_strategy)) {
+    flip_fallback_strategy <- .wa_match_arg(
+      flip_fallback_strategy,
+      "flip_fallback_strategy",
+      c(
+        "best-fit",
+        "initial"
+      )
+    )
+  }
+
+  if (!is.null(placement)) {
+    placement <- .wa_match_arg(
+      placement,
+      "placement",
+      c(
+        "bottom",
+        "bottom-end",
+        "bottom-start",
+        "left",
+        "left-end",
+        "left-start",
+        "right",
+        "right-end",
+        "right-start",
+        "top",
+        "top-end",
+        "top-start"
+      )
+    )
+  }
+
+  if (!is.null(sync)) {
+    sync <- .wa_match_arg(
+      sync,
+      "sync",
+      c(
+        "both",
+        "height",
+        "width"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

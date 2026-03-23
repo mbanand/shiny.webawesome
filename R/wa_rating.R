@@ -9,21 +9,24 @@
 #' @param ... Child content for the component's default slot.
 #' @param input_id Shiny input id for the component. This is also used as
 #' the rendered DOM `id` attribute.
-#' @param value The current rating.
-#' @param disabled Disables the rating.
+#' @param value The current rating. Defaults to `0` when omitted.
+#' @param disabled Disables the rating. Defaults to `false` when omitted.
 #' @param label A label that describes the rating to assistive devices.
+#' Defaults to `` when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param get_symbol A function that customizes the symbol to be rendered.
 #' The first and only argument is the rating's current value. The function
 #' should return a string containing trusted HTML of the symbol to render
 #' at the specified value. Works well with `<wa-icon>` elements.
 #' @param lang Optional Web Awesome attribute.
-#' @param max The highest rating to show.
+#' @param max The highest rating to show. Defaults to `5` when omitted.
 #' @param precision The precision at which the rating will increase and
 #' decrease. For example, to allow half-star ratings, set this attribute
-#' to `0.5`.
-#' @param readonly Makes the rating readonly.
-#' @param size The component's size.
+#' to `0.5`. Defaults to `1` when omitted.
+#' @param readonly Makes the rating readonly. Defaults to `false` when
+#' omitted.
+#' @param size The component's size. Must be one of `"large"`, `"medium"`,
+#' `"small"`. Defaults to `medium` when omitted.
 #'
 #' @return An HTML tag for the component.
 #'
@@ -43,6 +46,17 @@ wa_rating <- function(
   size = NULL
 ) {
   children <- list(...)
+  if (!is.null(size)) {
+    size <- .wa_match_arg(
+      size,
+      "size",
+      c(
+        "large",
+        "medium",
+        "small"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

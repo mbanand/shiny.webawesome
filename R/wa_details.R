@@ -8,17 +8,21 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
-#' @param disabled Disables the details so it can't be toggled.
+#' @param disabled Disables the details so it can't be toggled. Defaults
+#' to `false` when omitted.
 #' @param name Groups related details elements. When one opens, others
 #' with the same name will close.
-#' @param appearance The element's visual appearance.
+#' @param appearance The element's visual appearance. Must be one of
+#' `"filled"`, `"filled-outlined"`, `"outlined"`, `"plain"`. Defaults to
+#' `outlined` when omitted.
 #' @param dir Optional Web Awesome attribute.
-#' @param icon_placement The location of the expand/collapse icon.
+#' @param icon_placement The location of the expand/collapse icon. Must be
+#' one of `"end"`, `"start"`. Defaults to `end` when omitted.
 #' @param lang Optional Web Awesome attribute.
 #' @param open Indicates whether or not the details is open. You can
 #' toggle this attribute to show and hide the details, or you can use the
 #' `show()` and `hide()` methods and this attribute will reflect the
-#' details' open state.
+#' details' open state. Defaults to `false` when omitted.
 #' @param summary The summary to show in the header. If you need to
 #' display HTML, use the `summary` slot instead.
 #' @param collapse_icon Optional collapse icon to use instead of the
@@ -65,6 +69,29 @@ wa_details <- function(
       .wa_slot(summary_slot, "summary")
     )
   )
+  if (!is.null(appearance)) {
+    appearance <- .wa_match_arg(
+      appearance,
+      "appearance",
+      c(
+        "filled",
+        "filled-outlined",
+        "outlined",
+        "plain"
+      )
+    )
+  }
+
+  if (!is.null(icon_placement)) {
+    icon_placement <- .wa_match_arg(
+      icon_placement,
+      "icon_placement",
+      c(
+        "end",
+        "start"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

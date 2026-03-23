@@ -178,13 +178,13 @@ Web Awesome runtime files are bundled with the package.
 They are stored in:
 
 ```text
-inst/www/webawesome/
+inst/www/wa/
 ```
 
 Example structure:
 
 ```text
-inst/www/webawesome/
+inst/www/wa/
   webawesome.loader.js
   wa-bootstrap.js
   webawesome-init.js
@@ -481,7 +481,7 @@ This ensures that the built package only contains runtime code and assets requir
 The repository structure separates responsibilities clearly:
 
 * top-level `R` contains both handwritten and generated package source files
-* `inst/www/webawesome` contains runtime assets
+* `inst/www/wa` contains runtime assets
 * `inst/extdata/webawesome` contains build-time metadata for code generation and is excluded from the built package
 * `inst/bindings` contains Shiny input bindings
 * `tests/testthat` contains automated tests

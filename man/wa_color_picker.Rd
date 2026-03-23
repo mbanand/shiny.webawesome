@@ -38,57 +38,66 @@ the rendered DOM \code{id} attribute.}
 \item{value}{The default value of the form control. Primarily used for
 resetting the form control.}
 
-\item{disabled}{Disables the color picker.}
+\item{disabled}{Disables the color picker. Defaults to \code{false} when
+omitted.}
 
 \item{label}{The color picker's label. This will not be displayed, but
 it will be announced by assistive devices. If you need to display HTML,
-you can use the \code{label} slot` instead.}
+you can use the \code{label} slot` instead. Defaults to `` when omitted.}
 
 \item{hint}{The color picker's hint. If you need to display HTML, use
-the \code{hint} slot instead.}
+the \code{hint} slot instead. Defaults to `` when omitted.}
 
 \item{name}{The name of the form control, submitted as a name/value
-pair with form data.}
+pair with form data. Defaults to \code{null} when omitted.}
 
-\item{custom_error}{Optional Web Awesome attribute.}
+\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
+when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{format}{The format to use. If opacity is enabled, these will
 translate to HEXA, RGBA, HSLA, and HSVA respectively. The color picker
 will accept user input in any format (including CSS color names) and
-convert it to the desired format.}
+convert it to the desired format. Must be one of \code{"hex"}, \code{"hsl"},
+\code{"hsv"}, \code{"rgb"}. Defaults to \code{hex} when omitted.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
 \item{opacity}{Shows the opacity slider. Enabling this will cause the
-formatted value to be HEXA, RGBA, or HSLA.}
+formatted value to be HEXA, RGBA, or HSLA. Defaults to \code{false} when
+omitted.}
 
 \item{open}{Indicates whether or not the popup is open. You can toggle
 this attribute to show and hide the popup, or you can use the \code{show()}
 and \code{hide()} methods and this attribute will reflect the popup's open
-state.}
+state. Defaults to \code{false} when omitted.}
 
-\item{required}{Makes the color picker a required field.}
+\item{required}{Makes the color picker a required field. Defaults to
+\code{false} when omitted.}
 
-\item{size}{Determines the size of the color picker's trigger}
+\item{size}{Determines the size of the color picker's trigger Must be
+one of \code{"large"}, \code{"medium"}, \code{"small"}. Defaults to \code{medium} when
+omitted.}
 
 \item{swatches}{One or more predefined color swatches to display as
 presets in the color picker. Can include any format the color picker
 can parse, including HEX(A), RGB(A), HSL(A), HSV(A), and CSS color
 names. Each color must be separated by a semicolon (\verb{;}).
 Alternatively, you can pass an array of color values to this property
-using JavaScript.}
+using JavaScript. Defaults to `` when omitted.}
 
 \item{uppercase}{By default, values are lowercase. With this attribute,
-values will be uppercase instead.}
+values will be uppercase instead. Defaults to \code{false} when omitted.}
 
-\item{with_hint}{Optional Web Awesome attribute.}
+\item{with_hint}{Optional Web Awesome attribute. Defaults to \code{false}
+when omitted.}
 
-\item{with_label}{Optional Web Awesome attribute.}
+\item{with_label}{Optional Web Awesome attribute. Defaults to \code{false}
+when omitted.}
 
 \item{without_format_toggle}{Removes the button that lets users toggle
-between format.}
+between format. Defaults to \code{false} when omitted.}
 
 \item{hint_slot}{The color picker's form hint. Alternatively, you can
 use the \code{hint} attribute.}

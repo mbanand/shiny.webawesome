@@ -25,23 +25,29 @@ wa_popover(
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{distance}{The distance in pixels from which to offset the popover
-away from its target.}
+away from its target. Defaults to \code{8} when omitted.}
 
 \item{for}{The ID of the popover's anchor element. This must be an
-interactive/focusable element such as a button.}
+interactive/focusable element such as a button. Defaults to \code{null} when
+omitted.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{open}{Shows or hides the popover.}
+\item{open}{Shows or hides the popover. Defaults to \code{false} when
+omitted.}
 
 \item{placement}{The preferred placement of the popover. Note that the
 actual placement may vary as needed to keep the popover inside of the
-viewport.}
+viewport. Must be one of \code{"bottom"}, \code{"bottom-end"}, \code{"bottom-start"},
+\code{"left"}, \code{"left-end"}, \code{"left-start"}, \code{"right"}, \code{"right-end"},
+\code{"right-start"}, \code{"top"}, \code{"top-end"}, \code{"top-start"}. Defaults to \code{top}
+when omitted.}
 
 \item{skidding}{The distance in pixels from which to offset the popover
-along its target.}
+along its target. Defaults to \code{0} when omitted.}
 
-\item{without_arrow}{Removes the arrow from the popover.}
+\item{without_arrow}{Removes the arrow from the popover. Defaults to
+\code{false} when omitted.}
 }
 \value{
 An HTML tag for the component.

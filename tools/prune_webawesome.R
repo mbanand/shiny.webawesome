@@ -239,7 +239,7 @@ rm(.bootstrap_cli_ui)
 
 # Build the pruned runtime output directory path.
 .prune_runtime_dir <- function(root) {
-  file.path(root, "inst", "www", "webawesome")
+  file.path(root, "inst", "www", "wa")
 }
 
 # Build the copied metadata output directory path.
@@ -702,7 +702,7 @@ rm(.bootstrap_cli_ui)
 #' Reads one fetched Web Awesome `dist-cdn/` tree from
 #' `vendor/webawesome/<version>/dist-cdn/`, validates that the expected runtime
 #' inputs are present, copies the pruned browser runtime bundle into
-#' `inst/www/webawesome/`, copies `custom-elements.json` and `VERSION` into
+#' `inst/www/wa/`, copies `custom-elements.json` and `VERSION` into
 #' `inst/extdata/webawesome/`, and writes deterministic prune reports under
 #' `report/prune/<version>/`.
 #'

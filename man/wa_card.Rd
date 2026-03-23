@@ -24,13 +24,16 @@ wa_card(
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
 
-\item{appearance}{The card's visual appearance.}
+\item{appearance}{The card's visual appearance. Must be one of
+\code{"accent"}, \code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}, \code{"plain"}.
+Defaults to \code{outlined} when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{orientation}{Renders the card's orientation *}
+\item{orientation}{Renders the card's orientation * Must be one of
+\code{"horizontal"}, \code{"vertical"}. Defaults to \code{vertical} when omitted.}
 
 \item{actions}{An optional actions section to render at the end for the
 horizontal card.}

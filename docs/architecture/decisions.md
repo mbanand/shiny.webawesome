@@ -165,7 +165,7 @@ Therefore the build pipeline extracts only the runtime assets required by the br
 Runtime assets are stored in:
 
 ```text
-inst/www/webawesome/
+inst/www/wa/
 ```
 
 The pruned runtime bundle includes:

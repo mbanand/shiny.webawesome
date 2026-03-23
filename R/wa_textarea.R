@@ -11,16 +11,20 @@
 #' the rendered DOM `id` attribute.
 #' @param value The default value of the form control. Primarily used for
 #' resetting the form control.
-#' @param disabled Disables the textarea.
+#' @param disabled Disables the textarea. Defaults to `false` when
+#' omitted.
 #' @param label The textarea's label. If you need to display HTML, use the
-#' `label` slot instead.
+#' `label` slot instead. Defaults to `` when omitted.
 #' @param hint The textarea's hint. If you need to display HTML, use the
-#' `hint` slot instead.
+#' `hint` slot instead. Defaults to `` when omitted.
 #' @param name The name of the textarea, submitted as a name/value pair
-#' with form data.
-#' @param appearance The textarea's visual appearance.
+#' with form data. Defaults to `null` when omitted.
+#' @param appearance The textarea's visual appearance. Must be one of
+#' `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to `outlined`
+#' when omitted.
 #' @param autocapitalize Controls whether and how text input is
-#' automatically capitalized as it is entered by the user.
+#' automatically capitalized as it is entered by the user. Must be one of
+#' `"characters"`, `"none"`, `"off"`, `"on"`, `"sentences"`, `"words"`.
 #' @param autocomplete Specifies what permission the browser has to
 #' provide assistance in filling out form field values. Refer to this page
 #' on MDN for available values.
@@ -28,31 +32,43 @@
 #' is on or off.
 #' @param autofocus Indicates that the input should receive focus on page
 #' load.
-#' @param custom_error Optional Web Awesome attribute.
+#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
+#' when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param enterkeyhint Used to customize the label or icon of the Enter
-#' key on virtual keyboards.
+#' key on virtual keyboards. Must be one of `"done"`, `"enter"`, `"go"`,
+#' `"next"`, `"previous"`, `"search"`, `"send"`.
 #' @param inputmode Tells the browser what type of data will be entered by
 #' the user, allowing it to display the appropriate virtual keyboard on
-#' supportive devices.
+#' supportive devices. Must be one of `"decimal"`, `"email"`, `"none"`,
+#' `"numeric"`, `"search"`, `"tel"`, `"text"`, `"url"`.
 #' @param lang Optional Web Awesome attribute.
 #' @param maxlength The maximum length of input that will be considered
 #' valid.
 #' @param minlength The minimum length of input that will be considered
 #' valid.
 #' @param placeholder Placeholder text to show as a hint when the input is
-#' empty.
-#' @param readonly Makes the textarea readonly.
-#' @param required Makes the textarea a required field.
-#' @param resize Controls how the textarea can be resized.
-#' @param rows The number of rows to display by default.
-#' @param size The textarea's size.
-#' @param spellcheck Enables spell checking on the textarea.
-#' @param title Optional Web Awesome attribute.
+#' empty. Defaults to `` when omitted.
+#' @param readonly Makes the textarea readonly. Defaults to `false` when
+#' omitted.
+#' @param required Makes the textarea a required field. Defaults to
+#' `false` when omitted.
+#' @param resize Controls how the textarea can be resized. Must be one of
+#' `"auto"`, `"both"`, `"horizontal"`, `"none"`, `"vertical"`. Defaults to
+#' `vertical` when omitted.
+#' @param rows The number of rows to display by default. Defaults to `4`
+#' when omitted.
+#' @param size The textarea's size. Must be one of `"large"`, `"medium"`,
+#' `"small"`. Defaults to `medium` when omitted.
+#' @param spellcheck Enables spell checking on the textarea. Defaults to
+#' `true` when omitted.
+#' @param title Optional Web Awesome attribute. Defaults to `` when
+#' omitted.
 #' @param with_hint Used for SSR. If you're slotting in a `hint` element,
-#' make sure to set this to `true`.
+#' make sure to set this to `true`. Defaults to `false` when omitted.
 #' @param with_label Used for SSR. If you're slotting in a `label`
-#' element, make sure to set this to `true`.
+#' element, make sure to set this to `true`. Defaults to `false` when
+#' omitted.
 #' @param hint_slot Text that describes how to use the input.
 #' Alternatively, you can use the `hint` attribute.
 #' @param label_slot The textarea's label. Alternatively, you can use the
@@ -107,6 +123,91 @@ wa_textarea <- function(
       .wa_slot(label_slot, "label")
     )
   )
+  if (!is.null(appearance)) {
+    appearance <- .wa_match_arg(
+      appearance,
+      "appearance",
+      c(
+        "filled",
+        "filled-outlined",
+        "outlined"
+      )
+    )
+  }
+
+  if (!is.null(autocapitalize)) {
+    autocapitalize <- .wa_match_arg(
+      autocapitalize,
+      "autocapitalize",
+      c(
+        "characters",
+        "none",
+        "off",
+        "on",
+        "sentences",
+        "words"
+      )
+    )
+  }
+
+  if (!is.null(enterkeyhint)) {
+    enterkeyhint <- .wa_match_arg(
+      enterkeyhint,
+      "enterkeyhint",
+      c(
+        "done",
+        "enter",
+        "go",
+        "next",
+        "previous",
+        "search",
+        "send"
+      )
+    )
+  }
+
+  if (!is.null(inputmode)) {
+    inputmode <- .wa_match_arg(
+      inputmode,
+      "inputmode",
+      c(
+        "decimal",
+        "email",
+        "none",
+        "numeric",
+        "search",
+        "tel",
+        "text",
+        "url"
+      )
+    )
+  }
+
+  if (!is.null(resize)) {
+    resize <- .wa_match_arg(
+      resize,
+      "resize",
+      c(
+        "auto",
+        "both",
+        "horizontal",
+        "none",
+        "vertical"
+      )
+    )
+  }
+
+  if (!is.null(size)) {
+    size <- .wa_match_arg(
+      size,
+      "size",
+      c(
+        "large",
+        "medium",
+        "small"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(
@@ -194,6 +295,10 @@ update_wa_textarea <- function(
       disabled = disabled
     )
   )
+
+  if (length(message) == 0L) {
+    return(invisible(NULL))
+  }
 
   session$sendInputMessage(input_id, message)
   invisible(NULL)

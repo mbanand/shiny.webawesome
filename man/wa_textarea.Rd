@@ -62,12 +62,15 @@ update_wa_textarea(
 \item{hint}{Optional hint text to send to the component.}
 
 \item{name}{The name of the textarea, submitted as a name/value pair
-with form data.}
+with form data. Defaults to \code{null} when omitted.}
 
-\item{appearance}{The textarea's visual appearance.}
+\item{appearance}{The textarea's visual appearance. Must be one of
+\code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}. Defaults to \code{outlined}
+when omitted.}
 
 \item{autocapitalize}{Controls whether and how text input is
-automatically capitalized as it is entered by the user.}
+automatically capitalized as it is entered by the user. Must be one of
+\code{"characters"}, \code{"none"}, \code{"off"}, \code{"on"}, \code{"sentences"}, \code{"words"}.}
 
 \item{autocomplete}{Specifies what permission the browser has to
 provide assistance in filling out form field values. Refer to this page
@@ -79,16 +82,19 @@ is on or off.}
 \item{autofocus}{Indicates that the input should receive focus on page
 load.}
 
-\item{custom_error}{Optional Web Awesome attribute.}
+\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
+when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{enterkeyhint}{Used to customize the label or icon of the Enter
-key on virtual keyboards.}
+key on virtual keyboards. Must be one of \code{"done"}, \code{"enter"}, \code{"go"},
+\code{"next"}, \code{"previous"}, \code{"search"}, \code{"send"}.}
 
 \item{inputmode}{Tells the browser what type of data will be entered by
 the user, allowing it to display the appropriate virtual keyboard on
-supportive devices.}
+supportive devices. Must be one of \code{"decimal"}, \code{"email"}, \code{"none"},
+\code{"numeric"}, \code{"search"}, \code{"tel"}, \code{"text"}, \code{"url"}.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
@@ -99,27 +105,36 @@ valid.}
 valid.}
 
 \item{placeholder}{Placeholder text to show as a hint when the input is
-empty.}
+empty. Defaults to `` when omitted.}
 
-\item{readonly}{Makes the textarea readonly.}
+\item{readonly}{Makes the textarea readonly. Defaults to \code{false} when
+omitted.}
 
-\item{required}{Makes the textarea a required field.}
+\item{required}{Makes the textarea a required field. Defaults to
+\code{false} when omitted.}
 
-\item{resize}{Controls how the textarea can be resized.}
+\item{resize}{Controls how the textarea can be resized. Must be one of
+\code{"auto"}, \code{"both"}, \code{"horizontal"}, \code{"none"}, \code{"vertical"}. Defaults to
+\code{vertical} when omitted.}
 
-\item{rows}{The number of rows to display by default.}
+\item{rows}{The number of rows to display by default. Defaults to \code{4}
+when omitted.}
 
-\item{size}{The textarea's size.}
+\item{size}{The textarea's size. Must be one of \code{"large"}, \code{"medium"},
+\code{"small"}. Defaults to \code{medium} when omitted.}
 
-\item{spellcheck}{Enables spell checking on the textarea.}
+\item{spellcheck}{Enables spell checking on the textarea. Defaults to
+\code{true} when omitted.}
 
-\item{title}{Optional Web Awesome attribute.}
+\item{title}{Optional Web Awesome attribute. Defaults to `` when
+omitted.}
 
 \item{with_hint}{Used for SSR. If you're slotting in a \code{hint} element,
-make sure to set this to \code{true}.}
+make sure to set this to \code{true}. Defaults to \code{false} when omitted.}
 
 \item{with_label}{Used for SSR. If you're slotting in a \code{label}
-element, make sure to set this to \code{true}.}
+element, make sure to set this to \code{true}. Defaults to \code{false} when
+omitted.}
 
 \item{hint_slot}{Text that describes how to use the input.
 Alternatively, you can use the \code{hint} attribute.}

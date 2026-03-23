@@ -11,30 +11,37 @@
 #' the rendered DOM `id` attribute.
 #' @param value The default value of the form control. Primarily used for
 #' resetting the form control.
-#' @param disabled Disables the form control.
+#' @param disabled Disables the form control. Defaults to `false` when
+#' omitted.
 #' @param label The input's label. If you need to display HTML, use the
-#' `label` slot instead.
+#' `label` slot instead. Defaults to `` when omitted.
 #' @param hint The input's hint. If you need to display HTML, use the
-#' `hint` slot instead.
+#' `hint` slot instead. Defaults to `` when omitted.
 #' @param name The name of the input, submitted as a name/value pair with
-#' form data.
-#' @param appearance The input's visual appearance.
+#' form data. Defaults to `null` when omitted.
+#' @param appearance The input's visual appearance. Must be one of
+#' `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to `outlined`
+#' when omitted.
 #' @param autocapitalize Controls whether and how text input is
-#' automatically capitalized as it is entered by the user.
+#' automatically capitalized as it is entered by the user. Must be one of
+#' `"characters"`, `"none"`, `"off"`, `"on"`, `"sentences"`, `"words"`.
 #' @param autocomplete Specifies what permission the browser has to
 #' provide assistance in filling out form field values. Refer to this page
 #' on MDN for available values.
 #' @param autocorrect Indicates whether the browser's autocorrect feature
-#' is on or off.
+#' is on or off. Must be one of `"off"`, `"on"`.
 #' @param autofocus Indicates that the input should receive focus on page
 #' load.
-#' @param custom_error Optional Web Awesome attribute.
+#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
+#' when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param enterkeyhint Used to customize the label or icon of the Enter
-#' key on virtual keyboards.
+#' key on virtual keyboards. Must be one of `"done"`, `"enter"`, `"go"`,
+#' `"next"`, `"previous"`, `"search"`, `"send"`.
 #' @param inputmode Tells the browser what type of data will be entered by
 #' the user, allowing it to display the appropriate virtual keyboard on
-#' supportive devices.
+#' supportive devices. Must be one of `"decimal"`, `"email"`, `"none"`,
+#' `"numeric"`, `"search"`, `"tel"`, `"text"`, `"url"`.
 #' @param lang Optional Web Awesome attribute.
 #' @param max The input's maximum value. Only applies to date and number
 #' input types.
@@ -45,30 +52,45 @@
 #' @param minlength The minimum length of input that will be considered
 #' valid.
 #' @param password_toggle Adds a button to toggle the password's
-#' visibility. Only applies to password types.
+#' visibility. Only applies to password types. Defaults to `false` when
+#' omitted.
 #' @param password_visible Determines whether or not the password is
-#' currently visible. Only applies to password input types.
+#' currently visible. Only applies to password input types. Defaults to
+#' `false` when omitted.
 #' @param pattern A regular expression pattern to validate input against.
-#' @param pill Draws a pill-style input with rounded edges.
+#' @param pill Draws a pill-style input with rounded edges. Defaults to
+#' `false` when omitted.
 #' @param placeholder Placeholder text to show as a hint when the input is
-#' empty.
-#' @param readonly Makes the input readonly.
-#' @param required Makes the input a required field.
-#' @param size The input's size.
-#' @param spellcheck Enables spell checking on the input.
+#' empty. Defaults to `` when omitted.
+#' @param readonly Makes the input readonly. Defaults to `false` when
+#' omitted.
+#' @param required Makes the input a required field. Defaults to `false`
+#' when omitted.
+#' @param size The input's size. Must be one of `"large"`, `"medium"`,
+#' `"small"`. Defaults to `medium` when omitted.
+#' @param spellcheck Enables spell checking on the input. Defaults to
+#' `true` when omitted.
 #' @param step Specifies the granularity that the value must adhere to, or
 #' the special value `any` which means no stepping is implied, allowing
 #' any numeric value. Only applies to date and number input types.
-#' @param title Optional Web Awesome attribute.
+#' @param title Optional Web Awesome attribute. Defaults to `` when
+#' omitted.
 #' @param type The type of input. Works the same as a native `<input>`
 #' element, but only a subset of types are supported. Defaults to `text`.
+#' Must be one of `"date"`, `"datetime-local"`, `"email"`, `"number"`,
+#' `"password"`, `"search"`, `"tel"`, `"text"`, `"time"`, `"url"`.
+#' Defaults to `text` when omitted.
 #' @param with_clear Adds a clear button when the input is not empty.
+#' Defaults to `false` when omitted.
 #' @param with_hint Used for SSR. Will determine if the SSRed component
-#' will have the hint slot rendered on initial paint.
+#' will have the hint slot rendered on initial paint. Defaults to `false`
+#' when omitted.
 #' @param with_label Used for SSR. Will determine if the SSRed component
-#' will have the label slot rendered on initial paint.
+#' will have the label slot rendered on initial paint. Defaults to `false`
+#' when omitted.
 #' @param without_spin_buttons Hides the browser's built-in
-#' increment/decrement spin buttons for number inputs.
+#' increment/decrement spin buttons for number inputs. Defaults to `false`
+#' when omitted.
 #' @param clear_icon An icon to use in lieu of the default clear icon.
 #' @param end An element, such as `<wa-icon>`, placed at the end of the
 #' input control.
@@ -175,6 +197,107 @@ wa_input <- function(
       .wa_slot(start, "start")
     )
   )
+  if (!is.null(appearance)) {
+    appearance <- .wa_match_arg(
+      appearance,
+      "appearance",
+      c(
+        "filled",
+        "filled-outlined",
+        "outlined"
+      )
+    )
+  }
+
+  if (!is.null(autocapitalize)) {
+    autocapitalize <- .wa_match_arg(
+      autocapitalize,
+      "autocapitalize",
+      c(
+        "characters",
+        "none",
+        "off",
+        "on",
+        "sentences",
+        "words"
+      )
+    )
+  }
+
+  if (!is.null(autocorrect)) {
+    autocorrect <- .wa_match_arg(
+      autocorrect,
+      "autocorrect",
+      c(
+        "off",
+        "on"
+      )
+    )
+  }
+
+  if (!is.null(enterkeyhint)) {
+    enterkeyhint <- .wa_match_arg(
+      enterkeyhint,
+      "enterkeyhint",
+      c(
+        "done",
+        "enter",
+        "go",
+        "next",
+        "previous",
+        "search",
+        "send"
+      )
+    )
+  }
+
+  if (!is.null(inputmode)) {
+    inputmode <- .wa_match_arg(
+      inputmode,
+      "inputmode",
+      c(
+        "decimal",
+        "email",
+        "none",
+        "numeric",
+        "search",
+        "tel",
+        "text",
+        "url"
+      )
+    )
+  }
+
+  if (!is.null(size)) {
+    size <- .wa_match_arg(
+      size,
+      "size",
+      c(
+        "large",
+        "medium",
+        "small"
+      )
+    )
+  }
+
+  if (!is.null(type)) {
+    type <- .wa_match_arg(
+      type,
+      "type",
+      c(
+        "date",
+        "datetime-local",
+        "email",
+        "number",
+        "password",
+        "search",
+        "tel",
+        "text",
+        "time",
+        "url"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(
@@ -275,6 +398,10 @@ update_wa_input <- function(
       disabled = disabled
     )
   )
+
+  if (length(message) == 0L) {
+    return(invisible(NULL))
+  }
 
   session$sendInputMessage(input_id, message)
   invisible(NULL)

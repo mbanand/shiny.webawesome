@@ -57,11 +57,14 @@ update_wa_select(
 \item{hint}{Optional hint text to send to the component.}
 
 \item{name}{The name of the select, submitted as a name/value pair with
-form data.}
+form data. Defaults to `` when omitted.}
 
-\item{appearance}{The select's visual appearance.}
+\item{appearance}{The select's visual appearance. Must be one of
+\code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}. Defaults to \code{outlined}
+when omitted.}
 
-\item{custom_error}{Optional Web Awesome attribute.}
+\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
+when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
@@ -70,29 +73,35 @@ form data.}
 \item{max_options_visible}{The maximum number of selected options to
 show when \code{multiple} is true. After the maximum, "+n" will be shown to
 indicate the number of additional items that are selected. Set to 0 to
-remove the limit.}
+remove the limit. Defaults to \code{3} when omitted.}
 
-\item{multiple}{Allows more than one option to be selected.}
+\item{multiple}{Allows more than one option to be selected. Defaults to
+\code{false} when omitted.}
 
 \item{open}{Indicates whether or not the select is open. You can toggle
 this attribute to show and hide the menu, or you can use the \code{show()}
 and \code{hide()} methods and this attribute will reflect the select's open
-state.}
+state. Defaults to \code{false} when omitted.}
 
-\item{pill}{Draws a pill-style select with rounded edges.}
+\item{pill}{Draws a pill-style select with rounded edges. Defaults to
+\code{false} when omitted.}
 
 \item{placeholder}{Placeholder text to show as a hint when the select
-is empty.}
+is empty. Defaults to `` when omitted.}
 
 \item{placement}{The preferred placement of the select's menu. Note
 that the actual placement may vary as needed to keep the listbox inside
-of the viewport.}
+of the viewport. Must be one of \code{"bottom"}, \code{"top"}. Defaults to
+\code{bottom} when omitted.}
 
-\item{required}{The select's required attribute.}
+\item{required}{The select's required attribute. Defaults to \code{false}
+when omitted.}
 
-\item{size}{The select's size.}
+\item{size}{The select's size. Must be one of \code{"large"}, \code{"medium"},
+\code{"small"}. Defaults to \code{medium} when omitted.}
 
-\item{with_clear}{Adds a clear button when the select is not empty.}
+\item{with_clear}{Adds a clear button when the select is not empty.
+Defaults to \code{false} when omitted.}
 
 \item{clear_icon}{An icon to use in lieu of the default clear icon.}
 

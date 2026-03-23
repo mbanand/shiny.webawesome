@@ -123,7 +123,7 @@ Web Awesome runtime assets are bundled with the package after being **pruned fro
 Runtime files live in:
 
 ```
-inst/www/webawesome/
+inst/www/wa/
 ```
 
 The upstream distribution is stored in:

@@ -111,7 +111,7 @@ testthat::test_that("prune tool uses the pinned version and reports success", {
   testthat::expect_match(
     result$stderr,
     paste0(
-      "Prune complete: version=3.3.1, runtime=inst/www/webawesome, report=",
+      "Prune complete: version=3.3.1, runtime=inst/www/wa, report=",
       "report/prune/3.3.1/summary.md"
     )
   )
@@ -127,7 +127,7 @@ testthat::test_that("prune tool supports explicit version override", {
   testthat::expect_equal(result$status, 0)
   testthat::expect_match(
     result$stderr,
-    "Prune complete: version=3.3.1, runtime=inst/www/webawesome"
+    "Prune complete: version=3.3.1, runtime=inst/www/wa"
   )
 })
 
@@ -142,7 +142,7 @@ testthat::test_that("prune tool supports absolute-path CLI invocation", {
   testthat::expect_equal(result$status, 0)
   testthat::expect_match(
     result$stderr,
-    "Prune complete: version=3.3.1, runtime=inst/www/webawesome"
+    "Prune complete: version=3.3.1, runtime=inst/www/wa"
   )
 })
 
@@ -150,7 +150,7 @@ testthat::test_that("prune tool fails cleanly when outputs already exist", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
   .create_fake_dist(root)
-  .write_file(file.path(root, "inst", "www", "webawesome", "stale.js"), "stale")
+  .write_file(file.path(root, "inst", "www", "wa", "stale.js"), "stale")
 
   result <- .run_prune_script(root)
 

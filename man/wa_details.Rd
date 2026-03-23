@@ -25,23 +25,27 @@ wa_details(
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
 
-\item{disabled}{Disables the details so it can't be toggled.}
+\item{disabled}{Disables the details so it can't be toggled. Defaults
+to \code{false} when omitted.}
 
 \item{name}{Groups related details elements. When one opens, others
 with the same name will close.}
 
-\item{appearance}{The element's visual appearance.}
+\item{appearance}{The element's visual appearance. Must be one of
+\code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}, \code{"plain"}. Defaults to
+\code{outlined} when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
-\item{icon_placement}{The location of the expand/collapse icon.}
+\item{icon_placement}{The location of the expand/collapse icon. Must be
+one of \code{"end"}, \code{"start"}. Defaults to \code{end} when omitted.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
 \item{open}{Indicates whether or not the details is open. You can
 toggle this attribute to show and hide the details, or you can use the
 \code{show()} and \code{hide()} methods and this attribute will reflect the
-details' open state.}
+details' open state. Defaults to \code{false} when omitted.}
 
 \item{summary}{The summary to show in the header. If you need to
 display HTML, use the \code{summary} slot instead.}

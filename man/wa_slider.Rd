@@ -60,12 +60,13 @@ update_wa_slider(
 \item{hint}{Optional hint text to send to the component.}
 
 \item{name}{The name of the slider. This will be submitted with the
-form as a name/value pair.}
+form as a name/value pair. Defaults to \code{null} when omitted.}
 
 \item{autofocus}{Tells the browser to focus the slider when the page
 loads or a dialog is shown.}
 
-\item{custom_error}{Optional Web Awesome attribute.}
+\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
+when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
@@ -74,39 +75,46 @@ slider's fill, which is based on its current value.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{max}{The maximum value allowed.}
+\item{max}{The maximum value allowed. Defaults to \code{100} when omitted.}
 
 \item{max_value}{The maximum value of a range selection. Used only when
-range attribute is set.}
+range attribute is set. Defaults to \code{50} when omitted.}
 
-\item{min}{The minimum value allowed.}
+\item{min}{The minimum value allowed. Defaults to \code{0} when omitted.}
 
 \item{min_value}{The minimum value of a range selection. Used only when
-range attribute is set.}
+range attribute is set. Defaults to \code{0} when omitted.}
 
-\item{orientation}{The orientation of the slider.}
+\item{orientation}{The orientation of the slider. Must be one of
+\code{"horizontal"}, \code{"vertical"}. Defaults to \code{horizontal} when omitted.}
 
-\item{range}{Converts the slider to a range slider with two thumbs.}
+\item{range}{Converts the slider to a range slider with two thumbs.
+Defaults to \code{false} when omitted.}
 
-\item{readonly}{Makes the slider a read-only field.}
+\item{readonly}{Makes the slider a read-only field. Defaults to \code{false}
+when omitted.}
 
-\item{required}{Makes the slider a required field.}
+\item{required}{Makes the slider a required field. Defaults to \code{false}
+when omitted.}
 
-\item{size}{The slider's size.}
+\item{size}{The slider's size. Must be one of \code{"large"}, \code{"medium"},
+\code{"small"}. Defaults to \code{medium} when omitted.}
 
 \item{step}{The granularity the value must adhere to when incrementing
-and decrementing.}
+and decrementing. Defaults to \code{1} when omitted.}
 
 \item{tooltip_distance}{The distance of the tooltip from the slider's
-thumb.}
+thumb. Defaults to \code{8} when omitted.}
 
 \item{tooltip_placement}{The placement of the tooltip in reference to
-the slider's thumb.}
+the slider's thumb. Must be one of \code{"bottom"}, \code{"left"}, \code{"right"},
+\code{"top"}. Defaults to \code{top} when omitted.}
 
-\item{with_markers}{Draws markers at each step along the slider.}
+\item{with_markers}{Draws markers at each step along the slider.
+Defaults to \code{false} when omitted.}
 
 \item{with_tooltip}{Draws a tooltip above the thumb when the control
-has focus or is dragged.}
+has focus or is dragged. Defaults to \code{false} when omitted.}
 
 \item{hint_slot}{Text that describes how to use the input.
 Alternatively, you can use the \code{hint} attribute. instead.}

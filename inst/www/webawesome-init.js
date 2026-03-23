@@ -1,7 +1,7 @@
-import { setBasePath } from "./webawesome/utilities/base-path.js";
-import { startLoader } from "./webawesome/utilities/autoloader.js";
+import { setBasePath } from "./wa/utilities/base-path.js";
+import { startLoader } from "./wa/utilities/autoloader.js";
 
-const basePath = new URL("./webawesome/", import.meta.url).toString();
+const basePath = new URL("./wa/", import.meta.url).toString();
 
 setBasePath(basePath);
 

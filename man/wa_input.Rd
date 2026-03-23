@@ -75,33 +75,39 @@ update_wa_input(
 \item{hint}{Optional hint text to send to the component.}
 
 \item{name}{The name of the input, submitted as a name/value pair with
-form data.}
+form data. Defaults to \code{null} when omitted.}
 
-\item{appearance}{The input's visual appearance.}
+\item{appearance}{The input's visual appearance. Must be one of
+\code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}. Defaults to \code{outlined}
+when omitted.}
 
 \item{autocapitalize}{Controls whether and how text input is
-automatically capitalized as it is entered by the user.}
+automatically capitalized as it is entered by the user. Must be one of
+\code{"characters"}, \code{"none"}, \code{"off"}, \code{"on"}, \code{"sentences"}, \code{"words"}.}
 
 \item{autocomplete}{Specifies what permission the browser has to
 provide assistance in filling out form field values. Refer to this page
 on MDN for available values.}
 
 \item{autocorrect}{Indicates whether the browser's autocorrect feature
-is on or off.}
+is on or off. Must be one of \code{"off"}, \code{"on"}.}
 
 \item{autofocus}{Indicates that the input should receive focus on page
 load.}
 
-\item{custom_error}{Optional Web Awesome attribute.}
+\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
+when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{enterkeyhint}{Used to customize the label or icon of the Enter
-key on virtual keyboards.}
+key on virtual keyboards. Must be one of \code{"done"}, \code{"enter"}, \code{"go"},
+\code{"next"}, \code{"previous"}, \code{"search"}, \code{"send"}.}
 
 \item{inputmode}{Tells the browser what type of data will be entered by
 the user, allowing it to display the appropriate virtual keyboard on
-supportive devices.}
+supportive devices. Must be one of \code{"decimal"}, \code{"email"}, \code{"none"},
+\code{"numeric"}, \code{"search"}, \code{"tel"}, \code{"text"}, \code{"url"}.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
@@ -118,45 +124,60 @@ input types.}
 valid.}
 
 \item{password_toggle}{Adds a button to toggle the password's
-visibility. Only applies to password types.}
+visibility. Only applies to password types. Defaults to \code{false} when
+omitted.}
 
 \item{password_visible}{Determines whether or not the password is
-currently visible. Only applies to password input types.}
+currently visible. Only applies to password input types. Defaults to
+\code{false} when omitted.}
 
 \item{pattern}{A regular expression pattern to validate input against.}
 
-\item{pill}{Draws a pill-style input with rounded edges.}
+\item{pill}{Draws a pill-style input with rounded edges. Defaults to
+\code{false} when omitted.}
 
 \item{placeholder}{Placeholder text to show as a hint when the input is
-empty.}
+empty. Defaults to `` when omitted.}
 
-\item{readonly}{Makes the input readonly.}
+\item{readonly}{Makes the input readonly. Defaults to \code{false} when
+omitted.}
 
-\item{required}{Makes the input a required field.}
+\item{required}{Makes the input a required field. Defaults to \code{false}
+when omitted.}
 
-\item{size}{The input's size.}
+\item{size}{The input's size. Must be one of \code{"large"}, \code{"medium"},
+\code{"small"}. Defaults to \code{medium} when omitted.}
 
-\item{spellcheck}{Enables spell checking on the input.}
+\item{spellcheck}{Enables spell checking on the input. Defaults to
+\code{true} when omitted.}
 
 \item{step}{Specifies the granularity that the value must adhere to, or
 the special value \code{any} which means no stepping is implied, allowing
 any numeric value. Only applies to date and number input types.}
 
-\item{title}{Optional Web Awesome attribute.}
+\item{title}{Optional Web Awesome attribute. Defaults to `` when
+omitted.}
 
 \item{type}{The type of input. Works the same as a native \verb{<input>}
-element, but only a subset of types are supported. Defaults to \code{text}.}
+element, but only a subset of types are supported. Defaults to \code{text}.
+Must be one of \code{"date"}, \code{"datetime-local"}, \code{"email"}, \code{"number"},
+\code{"password"}, \code{"search"}, \code{"tel"}, \code{"text"}, \code{"time"}, \code{"url"}.
+Defaults to \code{text} when omitted.}
 
-\item{with_clear}{Adds a clear button when the input is not empty.}
+\item{with_clear}{Adds a clear button when the input is not empty.
+Defaults to \code{false} when omitted.}
 
 \item{with_hint}{Used for SSR. Will determine if the SSRed component
-will have the hint slot rendered on initial paint.}
+will have the hint slot rendered on initial paint. Defaults to \code{false}
+when omitted.}
 
 \item{with_label}{Used for SSR. Will determine if the SSRed component
-will have the label slot rendered on initial paint.}
+will have the label slot rendered on initial paint. Defaults to \code{false}
+when omitted.}
 
 \item{without_spin_buttons}{Hides the browser's built-in
-increment/decrement spin buttons for number inputs.}
+increment/decrement spin buttons for number inputs. Defaults to \code{false}
+when omitted.}
 
 \item{clear_icon}{An icon to use in lieu of the default clear icon.}
 

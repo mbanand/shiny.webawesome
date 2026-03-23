@@ -13,19 +13,24 @@
 #' with form data.
 #' @param checked The default value of the form control. Primarily used
 #' for resetting the form control.
-#' @param disabled Disables the switch.
+#' @param disabled Disables the switch. Defaults to `false` when omitted.
 #' @param hint The switch's hint. If you need to display HTML, use the
-#' `hint` slot instead.
+#' `hint` slot instead. Defaults to `` when omitted.
 #' @param name The name of the switch, submitted as a name/value pair with
-#' form data.
-#' @param custom_error Optional Web Awesome attribute.
+#' form data. Defaults to `null` when omitted.
+#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
+#' when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
-#' @param required Makes the switch a required field.
-#' @param size The switch's size.
-#' @param title Optional Web Awesome attribute.
+#' @param required Makes the switch a required field. Defaults to `false`
+#' when omitted.
+#' @param size The switch's size. Must be one of `"large"`, `"medium"`,
+#' `"small"`. Defaults to `medium` when omitted.
+#' @param title Optional Web Awesome attribute. Defaults to `` when
+#' omitted.
 #' @param with_hint Used for SSR. If you slot in hint, make sure to add
 #' `with-hint` to your component to get it to properly render with SSR.
+#' Defaults to `false` when omitted.
 #' @param hint_slot Text that describes how to use the switch.
 #' Alternatively, you can use the `hint` attribute.
 #'
@@ -56,6 +61,17 @@ wa_switch <- function(
       .wa_slot(hint_slot, "hint")
     )
   )
+  if (!is.null(size)) {
+    size <- .wa_match_arg(
+      size,
+      "size",
+      c(
+        "large",
+        "medium",
+        "small"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

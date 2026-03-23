@@ -30,38 +30,45 @@ wa_carousel(
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
 
 \item{autoplay}{When set, the slides will scroll automatically when the
-user is not interacting with them.}
+user is not interacting with them. Defaults to \code{false} when omitted.}
 
 \item{autoplay_interval}{Specifies the amount of time, in milliseconds,
-between each automatic scroll.}
+between each automatic scroll. Defaults to \code{3000} when omitted.}
 
-\item{current_slide}{Optional Web Awesome attribute.}
+\item{current_slide}{Optional Web Awesome attribute. Defaults to \code{0}
+when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
 \item{loop}{When set, allows the user to navigate the carousel in the
-same direction indefinitely.}
+same direction indefinitely. Defaults to \code{false} when omitted.}
 
 \item{mouse_dragging}{When set, it is possible to scroll through the
-slides by dragging them with the mouse.}
+slides by dragging them with the mouse. Defaults to \code{false} when
+omitted.}
 
-\item{navigation}{When set, show the carousel's navigation.}
+\item{navigation}{When set, show the carousel's navigation. Defaults to
+\code{false} when omitted.}
 
 \item{orientation}{Specifies the orientation in which the carousel will
-lay out.}
+lay out. Must be one of \code{"horizontal"}, \code{"vertical"}. Defaults to
+\code{horizontal} when omitted.}
 
-\item{pagination}{When set, show the carousel's pagination indicators.}
+\item{pagination}{When set, show the carousel's pagination indicators.
+Defaults to \code{false} when omitted.}
 
-\item{slides}{Optional Web Awesome attribute.}
+\item{slides}{Optional Web Awesome attribute. Defaults to \code{0} when
+omitted.}
 
 \item{slides_per_move}{Specifies the number of slides the carousel will
 advance when scrolling, useful when specifying a \code{slides-per-page}
-greater than one. It can't be higher than \code{slides-per-page}.}
+greater than one. It can't be higher than \code{slides-per-page}. Defaults
+to \code{1} when omitted.}
 
 \item{slides_per_page}{Specifies how many slides should be shown at a
-given time.}
+given time. Defaults to \code{1} when omitted.}
 
 \item{next_icon}{Optional next icon to use instead of the default.
 Works best with \verb{<wa-icon>}.}

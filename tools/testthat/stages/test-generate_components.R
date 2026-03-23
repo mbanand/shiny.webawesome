@@ -41,7 +41,8 @@ source(file.path("..", "..", "generate_components.R"))
               list(
                 name = "appearance",
                 fieldName = "appearance",
-                type = list(text = "'filled' | 'outlined'")
+                type = list(text = "'filled' | 'outlined'"),
+                default = "filled"
               ),
               list(
                 name = "with-header",
@@ -209,6 +210,7 @@ testthat::test_that("generate builds deterministic intermediate schema", {
   )
   testthat::expect_true(isTRUE(card$attributes[[2]]$is_boolean))
   testthat::expect_equal(card$attributes[[1]]$enum_values, c("filled", "outlined"))
+  testthat::expect_equal(card$attributes[[1]]$default, "filled")
   testthat::expect_equal(
     vapply(card$slots, `[[`, character(1), "argument_name"),
     c("default", "footer")
@@ -292,6 +294,22 @@ testthat::test_that("generate writes debug artifacts when requested", {
     schema_debug$components[["wa-card"]]$r_function_name,
     "wa_card"
   )
+  testthat::expect_equal(
+    names(schema_debug$components[["wa-card"]]$attributes),
+    c("appearance", "with-header")
+  )
+  testthat::expect_equal(
+    names(schema_debug$components[["wa-card"]]$properties),
+    c("appearance", "withHeader")
+  )
+  testthat::expect_equal(
+    names(schema_debug$components[["wa-card"]]$slots),
+    c("default", "footer")
+  )
+  testthat::expect_equal(
+    names(schema_debug$components[["wa-select"]]$events),
+    c("wa-change", "wa-input")
+  )
 })
 
 testthat::test_that("generate writes wrapper, binding, and update outputs", {
@@ -347,6 +365,30 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_true(any(grepl(
     "^  input_id,$",
     select_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^  if \\(length\\(message\\) == 0L\\) \\{$",
+    select_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^    return\\(invisible\\(NULL\\)\\)$",
+    select_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "Must be one of",
+    card_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "Defaults to `filled` when omitted\\.",
+    card_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^  if \\(!is.null\\(appearance\\)\\) \\{$",
+    card_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^    appearance <- \\.wa_match_arg\\($",
+    card_wrapper
   )))
 
   checkbox_binding <- readLines(

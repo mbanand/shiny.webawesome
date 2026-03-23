@@ -11,13 +11,15 @@
 #' @param activation When set to auto, navigating tabs with the arrow keys
 #' will instantly show the corresponding tab panel. When set to manual,
 #' the tab will receive focus but will not show until the user presses
-#' spacebar or enter.
-#' @param active Sets the active tab.
+#' spacebar or enter. Must be one of `"auto"`, `"manual"`. Defaults to
+#' `auto` when omitted.
+#' @param active Sets the active tab. Defaults to `` when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
-#' @param placement The placement of the tabs.
+#' @param placement The placement of the tabs. Must be one of `"bottom"`,
+#' `"end"`, `"start"`, `"top"`. Defaults to `top` when omitted.
 #' @param without_scroll_controls Disables the scroll arrows that appear
-#' when tabs overflow.
+#' when tabs overflow. Defaults to `false` when omitted.
 #' @param nav Used for grouping tabs in the tab group. Must be `<wa-tab>`
 #' elements. Note that `<wa-tab>` will set this slot on itself
 #' automatically.
@@ -43,6 +45,29 @@ wa_tab_group <- function(
       .wa_slot(nav, "nav")
     )
   )
+  if (!is.null(activation)) {
+    activation <- .wa_match_arg(
+      activation,
+      "activation",
+      c(
+        "auto",
+        "manual"
+      )
+    )
+  }
+
+  if (!is.null(placement)) {
+    placement <- .wa_match_arg(
+      placement,
+      "placement",
+      c(
+        "bottom",
+        "end",
+        "start",
+        "top"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

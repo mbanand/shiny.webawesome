@@ -11,41 +11,55 @@
 #' @param value The value of the button, submitted as a pair with the
 #' button's name as part of the form data, but only when this button is
 #' the submitter. This attribute is ignored when `href` is present.
-#' @param disabled Disables the button.
+#' @param disabled Disables the button. Defaults to `false` when omitted.
 #' @param name The name of the button, submitted as a name/value pair with
 #' form data, but only when this button is the submitter. This attribute
-#' is ignored when `href` is present.
-#' @param appearance The button's visual appearance.
-#' @param custom_error Optional Web Awesome attribute.
+#' is ignored when `href` is present. Defaults to `null` when omitted.
+#' @param appearance The button's visual appearance. Must be one of
+#' `"accent"`, `"filled"`, `"filled-outlined"`, `"outlined"`, `"plain"`.
+#' Defaults to `accent` when omitted.
+#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
+#' when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param download Tells the browser to download the linked file as this
 #' filename. Only used when `href` is present.
 #' @param formaction Used to override the form owner's `action` attribute.
 #' @param formenctype Used to override the form owner's `enctype`
-#' attribute.
+#' attribute. Must be one of `"application/x-www-form-urlencoded"`,
+#' `"multipart/form-data"`, `"text/plain"`.
 #' @param formmethod Used to override the form owner's `method` attribute.
+#' Must be one of `"get"`, `"post"`.
 #' @param formnovalidate Used to override the form owner's `novalidate`
 #' attribute.
 #' @param formtarget Used to override the form owner's `target` attribute.
 #' @param href When set, the underlying button will be rendered as an
 #' `<a>` with this `href` instead of a `<button>`.
 #' @param lang Optional Web Awesome attribute.
-#' @param loading Draws the button in a loading state.
-#' @param pill Draws a pill-style button with rounded edges.
+#' @param loading Draws the button in a loading state. Defaults to `false`
+#' when omitted.
+#' @param pill Draws a pill-style button with rounded edges. Defaults to
+#' `false` when omitted.
 #' @param rel When using `href`, this attribute will map to the underlying
 #' link's `rel` attribute.
-#' @param size The button's size.
+#' @param size The button's size. Must be one of `"large"`, `"medium"`,
+#' `"small"`. Defaults to `medium` when omitted.
 #' @param target Tells the browser where to open the link. Only used when
-#' `href` is present.
-#' @param title Optional Web Awesome attribute.
+#' `href` is present. Must be one of `"_blank"`, `"_parent"`, `"_self"`,
+#' `"_top"`.
+#' @param title Optional Web Awesome attribute. Defaults to `` when
+#' omitted.
 #' @param type The type of button. Note that the default value is `button`
 #' instead of `submit`, which is opposite of how native `<button>`
 #' elements behave. When the type is `submit`, the button will submit the
-#' surrounding form.
+#' surrounding form. Must be one of `"button"`, `"reset"`, `"submit"`.
+#' Defaults to `button` when omitted.
 #' @param variant The button's theme variant. Defaults to `neutral` if not
-#' within another element with a variant.
+#' within another element with a variant. Must be one of `"brand"`,
+#' `"danger"`, `"neutral"`, `"success"`, `"warning"`. Defaults to
+#' `neutral` when omitted.
 #' @param with_caret Draws the button with a caret. Used to indicate that
-#' the button triggers a dropdown menu or similar behavior.
+#' the button triggers a dropdown menu or similar behavior. Defaults to
+#' `false` when omitted.
 #' @param end An element, such as `<wa-icon>`, placed after the label.
 #' @param start An element, such as `<wa-icon>`, placed before the label.
 #'
@@ -94,6 +108,93 @@ wa_button <- function(
       .wa_slot(start, "start")
     )
   )
+  if (!is.null(appearance)) {
+    appearance <- .wa_match_arg(
+      appearance,
+      "appearance",
+      c(
+        "accent",
+        "filled",
+        "filled-outlined",
+        "outlined",
+        "plain"
+      )
+    )
+  }
+
+  if (!is.null(formenctype)) {
+    formenctype <- .wa_match_arg(
+      formenctype,
+      "formenctype",
+      c(
+        "application/x-www-form-urlencoded",
+        "multipart/form-data",
+        "text/plain"
+      )
+    )
+  }
+
+  if (!is.null(formmethod)) {
+    formmethod <- .wa_match_arg(
+      formmethod,
+      "formmethod",
+      c(
+        "get",
+        "post"
+      )
+    )
+  }
+
+  if (!is.null(size)) {
+    size <- .wa_match_arg(
+      size,
+      "size",
+      c(
+        "large",
+        "medium",
+        "small"
+      )
+    )
+  }
+
+  if (!is.null(target)) {
+    target <- .wa_match_arg(
+      target,
+      "target",
+      c(
+        "_blank",
+        "_parent",
+        "_self",
+        "_top"
+      )
+    )
+  }
+
+  if (!is.null(type)) {
+    type <- .wa_match_arg(
+      type,
+      "type",
+      c(
+        "button",
+        "reset",
+        "submit"
+      )
+    )
+  }
+
+  if (!is.null(variant)) {
+    variant <- .wa_match_arg(
+      variant,
+      "variant",
+      c(
+        "brand",
+        "danger",
+        "neutral",
+        "success",
+        "warning"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

@@ -170,7 +170,7 @@ The pruner performs several operations:
 The resulting runtime bundle is stored in:
 
 ```
-inst/www/webawesome/
+inst/www/wa/
 ```
 
 The component metadata file `custom-elements.json` is copied to:

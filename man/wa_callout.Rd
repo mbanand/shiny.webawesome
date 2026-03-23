@@ -20,16 +20,20 @@ wa_callout(
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
 
-\item{appearance}{The callout's visual appearance.}
+\item{appearance}{The callout's visual appearance. Must be one of
+\code{"accent"}, \code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}, \code{"plain"}.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{size}{The callout's size.}
+\item{size}{The callout's size. Must be one of \code{"large"}, \code{"medium"},
+\code{"small"}. Defaults to \code{medium} when omitted.}
 
 \item{variant}{The callout's theme variant. Defaults to \code{brand} if not
-within another element with a variant.}
+within another element with a variant. Must be one of \code{"brand"},
+\code{"danger"}, \code{"neutral"}, \code{"success"}, \code{"warning"}. Defaults to \code{brand}
+when omitted.}
 
 \item{icon}{An icon to show in the callout. Works best with
 \verb{<wa-icon>}.}

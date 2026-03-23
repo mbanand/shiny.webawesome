@@ -11,26 +11,31 @@
 #' the rendered DOM `id` attribute.
 #' @param value The default value of the form control. Primarily used for
 #' resetting the form control.
-#' @param disabled Disables the radio group and all child radios.
+#' @param disabled Disables the radio group and all child radios. Defaults
+#' to `false` when omitted.
 #' @param label The radio group's label. Required for proper
 #' accessibility. If you need to display HTML, use the `label` slot
-#' instead.
+#' instead. Defaults to `` when omitted.
 #' @param hint The radio groups's hint. If you need to display HTML, use
-#' the `hint` slot instead.
+#' the `hint` slot instead. Defaults to `` when omitted.
 #' @param name The name of the radio group, submitted as a name/value pair
-#' with form data.
-#' @param custom_error Optional Web Awesome attribute.
+#' with form data. Defaults to `null` when omitted.
+#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
+#' when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
-#' @param orientation The orientation in which to show radio items.
+#' @param orientation The orientation in which to show radio items. Must
+#' be one of `"horizontal"`, `"vertical"`. Defaults to `vertical` when
+#' omitted.
 #' @param required Ensures a child radio is checked before allowing the
-#' containing form to submit.
+#' containing form to submit. Defaults to `false` when omitted.
 #' @param size The radio group's size. When present, this size will be
-#' applied to all `<wa-radio>` items inside.
+#' applied to all `<wa-radio>` items inside. Must be one of `"large"`,
+#' `"medium"`, `"small"`.
 #' @param with_hint Used for SSR. if true, will show slotted hint on
-#' initial render.
+#' initial render. Defaults to `false` when omitted.
 #' @param with_label Used for SSR. if true, will show slotted label on
-#' initial render.
+#' initial render. Defaults to `false` when omitted.
 #' @param hint_slot Text that describes how to use the radio group.
 #' Alternatively, you can use the `hint` attribute.
 #' @param label_slot The radio group's label. Required for proper
@@ -71,6 +76,28 @@ wa_radio_group <- function(
       .wa_slot(label_slot, "label")
     )
   )
+  if (!is.null(orientation)) {
+    orientation <- .wa_match_arg(
+      orientation,
+      "orientation",
+      c(
+        "horizontal",
+        "vertical"
+      )
+    )
+  }
+
+  if (!is.null(size)) {
+    size <- .wa_match_arg(
+      size,
+      "size",
+      c(
+        "large",
+        "medium",
+        "small"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

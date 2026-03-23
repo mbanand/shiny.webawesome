@@ -21,20 +21,27 @@ wa_tag(
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
 
-\item{appearance}{The tag's visual appearance.}
+\item{appearance}{The tag's visual appearance. Must be one of
+\code{"accent"}, \code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}. Defaults to
+\code{filled-outlined} when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{pill}{Draws a pill-style tag with rounded edges.}
+\item{pill}{Draws a pill-style tag with rounded edges. Defaults to
+\code{false} when omitted.}
 
-\item{size}{The tag's size.}
+\item{size}{The tag's size. Must be one of \code{"large"}, \code{"medium"},
+\code{"small"}. Defaults to \code{medium} when omitted.}
 
 \item{variant}{The tag's theme variant. Defaults to \code{neutral} if not
-within another element with a variant.}
+within another element with a variant. Must be one of \code{"brand"},
+\code{"danger"}, \code{"neutral"}, \code{"success"}, \code{"warning"}. Defaults to
+\code{neutral} when omitted.}
 
-\item{with_remove}{Makes the tag removable and shows a remove button.}
+\item{with_remove}{Makes the tag removable and shows a remove button.
+Defaults to \code{false} when omitted.}
 }
 \value{
 An HTML tag for the component.

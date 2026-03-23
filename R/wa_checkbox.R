@@ -13,21 +13,26 @@
 #' with form data.
 #' @param checked The default value of the form control. Primarily used
 #' for resetting the form control.
-#' @param disabled Disables the checkbox.
+#' @param disabled Disables the checkbox. Defaults to `false` when
+#' omitted.
 #' @param hint The checkbox's hint. If you need to display HTML, use the
-#' `hint` slot instead.
+#' `hint` slot instead. Defaults to `` when omitted.
 #' @param name The name of the checkbox, submitted as a name/value pair
-#' with form data.
-#' @param custom_error Optional Web Awesome attribute.
+#' with form data. Defaults to `null` when omitted.
+#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
+#' when omitted.
 #' @param dir Optional Web Awesome attribute.
 #' @param indeterminate Draws the checkbox in an indeterminate state. This
 #' is usually applied to checkboxes that represents a "select all/none"
 #' behavior when associated checkboxes have a mix of checked and unchecked
-#' states.
+#' states. Defaults to `false` when omitted.
 #' @param lang Optional Web Awesome attribute.
-#' @param required Makes the checkbox a required field.
-#' @param size The checkbox's size.
-#' @param title Optional Web Awesome attribute.
+#' @param required Makes the checkbox a required field. Defaults to
+#' `false` when omitted.
+#' @param size The checkbox's size. Must be one of `"large"`, `"medium"`,
+#' `"small"`. Defaults to `medium` when omitted.
+#' @param title Optional Web Awesome attribute. Defaults to `` when
+#' omitted.
 #' @param hint_slot Text that describes how to use the checkbox.
 #' Alternatively, you can use the `hint` attribute.
 #'
@@ -58,6 +63,17 @@ wa_checkbox <- function(
       .wa_slot(hint_slot, "hint")
     )
   )
+  if (!is.null(size)) {
+    size <- .wa_match_arg(
+      size,
+      "size",
+      c(
+        "large",
+        "medium",
+        "small"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

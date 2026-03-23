@@ -8,12 +8,16 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
-#' @param appearance The callout's visual appearance.
+#' @param appearance The callout's visual appearance. Must be one of
+#' `"accent"`, `"filled"`, `"filled-outlined"`, `"outlined"`, `"plain"`.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
-#' @param size The callout's size.
+#' @param size The callout's size. Must be one of `"large"`, `"medium"`,
+#' `"small"`. Defaults to `medium` when omitted.
 #' @param variant The callout's theme variant. Defaults to `brand` if not
-#' within another element with a variant.
+#' within another element with a variant. Must be one of `"brand"`,
+#' `"danger"`, `"neutral"`, `"success"`, `"warning"`. Defaults to `brand`
+#' when omitted.
 #' @param icon An icon to show in the callout. Works best with
 #' `<wa-icon>`.
 #'
@@ -37,6 +41,45 @@ wa_callout <- function(
       .wa_slot(icon, "icon")
     )
   )
+  if (!is.null(appearance)) {
+    appearance <- .wa_match_arg(
+      appearance,
+      "appearance",
+      c(
+        "accent",
+        "filled",
+        "filled-outlined",
+        "outlined",
+        "plain"
+      )
+    )
+  }
+
+  if (!is.null(size)) {
+    size <- .wa_match_arg(
+      size,
+      "size",
+      c(
+        "large",
+        "medium",
+        "small"
+      )
+    )
+  }
+
+  if (!is.null(variant)) {
+    variant <- .wa_match_arg(
+      variant,
+      "variant",
+      c(
+        "brand",
+        "danger",
+        "neutral",
+        "success",
+        "warning"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

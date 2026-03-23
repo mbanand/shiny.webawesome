@@ -64,9 +64,11 @@ update_wa_number_input(
 \item{hint}{Optional hint text to send to the component.}
 
 \item{name}{The name of the input, submitted as a name/value pair with
-form data.}
+form data. Defaults to \code{null} when omitted.}
 
-\item{appearance}{The input's visual appearance.}
+\item{appearance}{The input's visual appearance. Must be one of
+\code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}. Defaults to \code{outlined}
+when omitted.}
 
 \item{autocomplete}{Specifies what permission the browser has to
 provide assistance in filling out form field values. Refer to this page
@@ -75,16 +77,19 @@ on MDN for available values.}
 \item{autofocus}{Indicates that the input should receive focus on page
 load.}
 
-\item{custom_error}{Optional Web Awesome attribute.}
+\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
+when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{enterkeyhint}{Used to customize the label or icon of the Enter
-key on virtual keyboards.}
+key on virtual keyboards. Must be one of \code{"done"}, \code{"enter"}, \code{"go"},
+\code{"next"}, \code{"previous"}, \code{"search"}, \code{"send"}.}
 
 \item{inputmode}{Tells the browser what type of data will be entered by
 the user, allowing it to display the appropriate virtual keyboard on
-supportive devices.}
+supportive devices. Must be one of \code{"decimal"}, \code{"numeric"}. Defaults
+to \code{numeric} when omitted.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
@@ -92,30 +97,38 @@ supportive devices.}
 
 \item{min}{The input's minimum value.}
 
-\item{pill}{Draws a pill-style input with rounded edges.}
+\item{pill}{Draws a pill-style input with rounded edges. Defaults to
+\code{false} when omitted.}
 
 \item{placeholder}{Placeholder text to show as a hint when the input is
-empty.}
+empty. Defaults to `` when omitted.}
 
-\item{readonly}{Makes the input readonly.}
+\item{readonly}{Makes the input readonly. Defaults to \code{false} when
+omitted.}
 
-\item{required}{Makes the input a required field.}
+\item{required}{Makes the input a required field. Defaults to \code{false}
+when omitted.}
 
-\item{size}{The input's size.}
+\item{size}{The input's size. Must be one of \code{"large"}, \code{"medium"},
+\code{"small"}. Defaults to \code{medium} when omitted.}
 
 \item{step}{Specifies the granularity that the value must adhere to, or
 the special value \code{any} which means no stepping is implied, allowing
-any numeric value.}
+any numeric value. Defaults to \code{1} when omitted.}
 
-\item{title}{Optional Web Awesome attribute.}
+\item{title}{Optional Web Awesome attribute. Defaults to `` when
+omitted.}
 
 \item{with_hint}{Used for SSR. Will determine if the SSRed component
-will have the hint slot rendered on initial paint.}
+will have the hint slot rendered on initial paint. Defaults to \code{false}
+when omitted.}
 
 \item{with_label}{Used for SSR. Will determine if the SSRed component
-will have the label slot rendered on initial paint.}
+will have the label slot rendered on initial paint. Defaults to \code{false}
+when omitted.}
 
-\item{without_steppers}{Hides the increment/decrement stepper buttons.}
+\item{without_steppers}{Hides the increment/decrement stepper buttons.
+Defaults to \code{false} when omitted.}
 
 \item{decrement_icon}{An icon to use in lieu of the default decrement
 icon.}

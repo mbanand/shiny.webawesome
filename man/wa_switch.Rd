@@ -34,28 +34,33 @@ with form data.}
 \item{checked}{The default value of the form control. Primarily used
 for resetting the form control.}
 
-\item{disabled}{Disables the switch.}
+\item{disabled}{Disables the switch. Defaults to \code{false} when omitted.}
 
 \item{hint}{The switch's hint. If you need to display HTML, use the
-\code{hint} slot instead.}
+\code{hint} slot instead. Defaults to `` when omitted.}
 
 \item{name}{The name of the switch, submitted as a name/value pair with
-form data.}
+form data. Defaults to \code{null} when omitted.}
 
-\item{custom_error}{Optional Web Awesome attribute.}
+\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
+when omitted.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{required}{Makes the switch a required field.}
+\item{required}{Makes the switch a required field. Defaults to \code{false}
+when omitted.}
 
-\item{size}{The switch's size.}
+\item{size}{The switch's size. Must be one of \code{"large"}, \code{"medium"},
+\code{"small"}. Defaults to \code{medium} when omitted.}
 
-\item{title}{Optional Web Awesome attribute.}
+\item{title}{Optional Web Awesome attribute. Defaults to `` when
+omitted.}
 
 \item{with_hint}{Used for SSR. If you slot in hint, make sure to add
-\code{with-hint} to your component to get it to properly render with SSR.}
+\code{with-hint} to your component to get it to properly render with SSR.
+Defaults to \code{false} when omitted.}
 
 \item{hint_slot}{Text that describes how to use the switch.
 Alternatively, you can use the \code{hint} attribute.}

@@ -25,7 +25,7 @@ testthat::test_that(
       file.path(root, "inst", "extdata", "webawesome"),
       recursive = TRUE
     )
-    dir.create(file.path(root, "inst", "www", "webawesome"), recursive = TRUE)
+    dir.create(file.path(root, "inst", "www", "wa"), recursive = TRUE)
     dir.create(file.path(root, "manifests"), recursive = TRUE)
     dir.create(file.path(root, "report"), recursive = TRUE)
 
@@ -43,7 +43,7 @@ testthat::test_that(
     .write_file(
       file.path(root, "inst", "extdata", "webawesome", "custom-elements.json")
     )
-    .write_file(file.path(root, "inst", "www", "webawesome", "loader.js"))
+    .write_file(file.path(root, "inst", "www", "wa", "loader.js"))
     .write_file(file.path(root, "manifests", "component-coverage.yaml"))
     .write_file(file.path(root, "report", "summary.md"))
 
@@ -59,7 +59,7 @@ testthat::test_that(
       dir.exists(file.path(root, "inst", "extdata", "webawesome"))
     )
     testthat::expect_false(
-      dir.exists(file.path(root, "inst", "www", "webawesome"))
+      dir.exists(file.path(root, "inst", "www", "wa"))
     )
     testthat::expect_false(dir.exists(file.path(root, "manifests")))
     testthat::expect_false(dir.exists(file.path(root, "report")))
@@ -73,7 +73,7 @@ testthat::test_that(
         "R/generated_updates",
         "inst/bindings",
         "inst/extdata/webawesome",
-        "inst/www/webawesome",
+        "inst/www/wa",
         "manifests",
         "report"
       )
