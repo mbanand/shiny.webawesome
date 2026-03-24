@@ -96,7 +96,8 @@ wa_split_panel <- function(
       "snap" = snap,
       "snap-threshold" = snap_threshold
     ),
-    boolean_names = c("disabled")
+    boolean_names = c("disabled"),
+    boolean_arg_names = c("disabled" = "disabled")
   )
 
   do.call(

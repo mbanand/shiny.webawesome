@@ -63,7 +63,8 @@ wa_format_bytes <- function(
       "lang" = lang,
       "unit" = unit
     ),
-    boolean_names = character()
+    boolean_names = character(),
+    boolean_arg_names = NULL
   )
 
   do.call(

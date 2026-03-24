@@ -96,7 +96,16 @@ wa_tooltip <- function(
       "trigger" = trigger,
       "without-arrow" = without_arrow
     ),
-    boolean_names = c("disabled", "open", "without-arrow")
+    boolean_names = c(
+      "disabled",
+      "open",
+      "without-arrow"
+    ),
+    boolean_arg_names = c(
+      "disabled" = "disabled",
+      "open" = "open",
+      "without-arrow" = "without_arrow"
+    )
   )
 
   do.call(

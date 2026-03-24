@@ -194,6 +194,14 @@ wa_select <- function(
       "pill",
       "required",
       "with-clear"
+    ),
+    boolean_arg_names = c(
+      "disabled" = "disabled",
+      "multiple" = "multiple",
+      "open" = "open",
+      "pill" = "pill",
+      "required" = "required",
+      "with-clear" = "with_clear"
     )
   )
 

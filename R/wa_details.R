@@ -105,7 +105,11 @@ wa_details <- function(
       "open" = open,
       "summary" = summary
     ),
-    boolean_names = c("disabled", "open")
+    boolean_names = c("disabled", "open"),
+    boolean_arg_names = c(
+      "disabled" = "disabled",
+      "open" = "open"
+    )
   )
 
   do.call(

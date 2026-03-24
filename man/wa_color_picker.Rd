@@ -36,7 +36,9 @@ the rendered DOM \code{id} attribute.}
 \item{...}{Child content for the component's default slot.}
 
 \item{value}{The default value of the form control. Primarily used for
-resetting the form control.}
+resetting the form control. This wrapper argument sets the HTML \code{value}
+attribute, which maps to the component's \code{defaultValue} field/property
+rather than its live \code{value} property.}
 
 \item{disabled}{Disables the color picker. Defaults to \code{false} when
 omitted.}

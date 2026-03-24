@@ -36,12 +36,61 @@
   trimws(gsub("[[:space:]]+", " ", text))
 }
 
+# Return whether one attribute has a same-name live property mapping ambiguity.
+.attr_has_live_prop_collision <- function(component, attr) {
+  field_name <- .scalar_string(attr$field_name, fallback = NA_character_)
+  attr_name <- .scalar_string(attr$name, fallback = NA_character_)
+
+  if (is.na(field_name) || !nzchar(field_name) || identical(field_name, attr_name)) {
+    return(FALSE)
+  }
+
+  property_names <- vapply(
+    component$properties %||% list(),
+    `[[`,
+    character(1),
+    "name"
+  )
+
+  attr_name %in% property_names
+}
+
+# Return whether one attribute maps to a different upstream field/property name.
+.attr_has_field_mismatch <- function(attr) {
+  field_name <- .scalar_string(attr$field_name, fallback = NA_character_)
+  attr_name <- .scalar_string(attr$name, fallback = NA_character_)
+
+  !is.na(field_name) &&
+    nzchar(field_name) &&
+    !identical(.as_snake_case(field_name), .as_snake_case(attr_name))
+}
+
 # Return one concise parameter description for a wrapper attribute.
-.wrapper_attr_param_doc <- function(attr) {
+.wrapper_attr_param_doc <- function(component, attr) {
   description <- .doc_text(attr$description)
 
   if (!nzchar(description)) {
     description <- "Optional Web Awesome attribute."
+  }
+
+  if (.attr_has_field_mismatch(attr)) {
+    description <- paste(
+      description,
+      "This wrapper argument sets the HTML",
+      paste0("`", attr$name, "`"),
+      "attribute, which maps to the component's",
+      paste0("`", attr$field_name, "`"),
+      "field/property."
+    )
+
+    if (.attr_has_live_prop_collision(component, attr)) {
+      description <- paste(
+        sub("\\.$", "", description),
+        "rather than its live",
+        paste0("`", attr$name, "`"),
+        "property."
+      )
+    }
   }
 
   enum_values <- attr$enum_values %||% character()
@@ -257,7 +306,35 @@
   }
 
   values <- vapply(booleans, function(attr) .r_string(attr$name), character(1))
-  if (length(values) <= 3L) {
+  if (length(values) <= 2L) {
+    return(paste0("c(", paste(values, collapse = ", "), ")"))
+  }
+
+  paste0(
+    "c(\n      ",
+    paste(values, collapse = ",\n      "),
+    "\n    )"
+  )
+}
+
+# Render the boolean HTML-attribute to wrapper-argument name map.
+.render_wrapper_bool_arg_names <- function(component) {
+  attrs <- .wrapper_attributes(component)
+  booleans <- attrs[vapply(attrs, `[[`, logical(1), "is_boolean")]
+
+  if (length(booleans) == 0L) {
+    return("NULL")
+  }
+
+  values <- vapply(
+    booleans,
+    function(attr) {
+      paste0(.r_string(attr$name), " = ", .r_string(attr$argument_name))
+    },
+    character(1)
+  )
+
+  if (length(values) <= 1L) {
     return(paste0("c(", paste(values, collapse = ", "), ")"))
   }
 
@@ -387,7 +464,7 @@
           paste(
             .roxygen_param_lines(
               attr$argument_name,
-              .wrapper_attr_param_doc(attr)
+              .wrapper_attr_param_doc(component, attr)
             ),
             collapse = "\n"
           )
@@ -428,6 +505,7 @@
     VALIDATIONS = .render_wrapper_validations(component),
     ATTRS = .render_wrapper_attrs(component),
     BOOLEAN_ATTRS = .render_wrapper_booleans(component),
+    BOOLEAN_ARG_NAMES = .render_wrapper_bool_arg_names(component),
     CHILDREN = .render_wrapper_children(component)
   )
 

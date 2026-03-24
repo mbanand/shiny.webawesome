@@ -62,6 +62,13 @@ wa_mutation_observer <- function(
       "char-data",
       "char-data-old-value",
       "child-list"
+    ),
+    boolean_arg_names = c(
+      "disabled" = "disabled",
+      "attr-old-value" = "attr_old_value",
+      "char-data" = "char_data",
+      "char-data-old-value" = "char_data_old_value",
+      "child-list" = "child_list"
     )
   )
 

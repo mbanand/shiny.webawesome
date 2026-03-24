@@ -91,7 +91,16 @@ wa_zoomable_frame <- function(
       "zoom" = zoom,
       "zoom-levels" = zoom_levels
     ),
-    boolean_names = c("allowfullscreen", "without-controls", "without-interaction")
+    boolean_names = c(
+      "allowfullscreen",
+      "without-controls",
+      "without-interaction"
+    ),
+    boolean_arg_names = c(
+      "allowfullscreen" = "allowfullscreen",
+      "without-controls" = "without_controls",
+      "without-interaction" = "without_interaction"
+    )
   )
 
   do.call(

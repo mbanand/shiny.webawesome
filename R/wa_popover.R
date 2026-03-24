@@ -77,7 +77,11 @@ wa_popover <- function(
       "skidding" = skidding,
       "without-arrow" = without_arrow
     ),
-    boolean_names = c("open", "without-arrow")
+    boolean_names = c("open", "without-arrow"),
+    boolean_arg_names = c(
+      "open" = "open",
+      "without-arrow" = "without_arrow"
+    )
   )
 
   do.call(

@@ -42,7 +42,8 @@ wa_divider <- function(
       "lang" = lang,
       "orientation" = orientation
     ),
-    boolean_names = character()
+    boolean_names = character(),
+    boolean_arg_names = NULL
   )
 
   do.call(

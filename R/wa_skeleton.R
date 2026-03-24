@@ -43,7 +43,8 @@ wa_skeleton <- function(
       "effect" = effect,
       "lang" = lang
     ),
-    boolean_names = character()
+    boolean_names = character(),
+    boolean_arg_names = NULL
   )
 
   do.call(

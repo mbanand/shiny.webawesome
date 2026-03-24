@@ -69,7 +69,8 @@ wa_breadcrumb_item <- function(
       "rel" = rel,
       "target" = target
     ),
-    boolean_names = character()
+    boolean_names = character(),
+    boolean_arg_names = NULL
   )
 
   do.call(

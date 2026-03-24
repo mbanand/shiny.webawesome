@@ -959,3 +959,17 @@ test_that("new update helpers send only non-null values", {
     list(value = 7, label = "Range", hint = "Slide")
   )
 })
+
+test_that("generated wrappers reject invalid boolean attribute values", {
+  testthat::expect_error(
+    shiny.webawesome:::wa_checkbox("checkbox", "Label", checked = "yes"),
+    "`checked` must be TRUE, FALSE, or NULL.",
+    fixed = TRUE
+  )
+
+  testthat::expect_error(
+    shiny.webawesome:::wa_input("text_input", with_clear = "yes"),
+    "`with_clear` must be TRUE, FALSE, or NULL.",
+    fixed = TRUE
+  )
+})

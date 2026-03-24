@@ -25,14 +25,24 @@
 #' @param download Tells the browser to download the linked file as this
 #' filename. Only used when `href` is present.
 #' @param formaction Used to override the form owner's `action` attribute.
+#' This wrapper argument sets the HTML `formaction` attribute, which maps
+#' to the component's `formAction` field/property.
 #' @param formenctype Used to override the form owner's `enctype`
-#' attribute. Must be one of `"application/x-www-form-urlencoded"`,
-#' `"multipart/form-data"`, `"text/plain"`.
+#' attribute. This wrapper argument sets the HTML `formenctype` attribute,
+#' which maps to the component's `formEnctype` field/property. Must be one
+#' of `"application/x-www-form-urlencoded"`, `"multipart/form-data"`,
+#' `"text/plain"`.
 #' @param formmethod Used to override the form owner's `method` attribute.
-#' Must be one of `"get"`, `"post"`.
+#' This wrapper argument sets the HTML `formmethod` attribute, which maps
+#' to the component's `formMethod` field/property. Must be one of `"get"`,
+#' `"post"`.
 #' @param formnovalidate Used to override the form owner's `novalidate`
-#' attribute.
+#' attribute. This wrapper argument sets the HTML `formnovalidate`
+#' attribute, which maps to the component's `formNoValidate`
+#' field/property.
 #' @param formtarget Used to override the form owner's `target` attribute.
+#' This wrapper argument sets the HTML `formtarget` attribute, which maps
+#' to the component's `formTarget` field/property.
 #' @param href When set, the underlying button will be rendered as an
 #' `<a>` with this `href` instead of a `<button>`.
 #' @param lang Optional Web Awesome attribute.
@@ -230,6 +240,13 @@ wa_button <- function(
       "loading",
       "pill",
       "with-caret"
+    ),
+    boolean_arg_names = c(
+      "disabled" = "disabled",
+      "formnovalidate" = "formnovalidate",
+      "loading" = "loading",
+      "pill" = "pill",
+      "with-caret" = "with_caret"
     )
   )
 

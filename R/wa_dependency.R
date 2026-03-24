@@ -62,8 +62,34 @@
   htmltools::attachDependencies(tag, .wa_dependency())
 }
 
+# Return the user-facing name to report for one boolean attribute.
+.wa_boolean_arg_label <- function(name, boolean_arg_names) {
+  if (is.null(boolean_arg_names) || !(name %in% names(boolean_arg_names))) {
+    return(name)
+  }
+
+  boolean_arg_names[[name]]
+}
+
+# Validate one boolean wrapper argument before HTML normalization.
+.wa_validate_boolean_attr <- function(value, name, boolean_arg_names = NULL) {
+  if (is.logical(value) && length(value) == 1L && !is.na(value)) {
+    return(value)
+  }
+
+  label <- .wa_boolean_arg_label(name, boolean_arg_names)
+  stop(
+    sprintf("`%s` must be TRUE, FALSE, or NULL.", label),
+    call. = FALSE
+  )
+}
+
 # Normalize component attributes for deterministic HTML emission.
-.wa_normalize_attrs <- function(attrs, boolean_names = character()) {
+.wa_normalize_attrs <- function(
+  attrs,
+  boolean_names = character(),
+  boolean_arg_names = NULL
+) {
   attrs <- Filter(Negate(is.null), attrs)
 
   if (length(attrs) == 0L) {
@@ -75,6 +101,12 @@
       if (!(name %in% boolean_names)) {
         return(value)
       }
+
+      value <- .wa_validate_boolean_attr(
+        value,
+        name,
+        boolean_arg_names = boolean_arg_names
+      )
 
       if (isFALSE(value)) {
         return(NULL)

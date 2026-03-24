@@ -71,7 +71,8 @@ wa_relative_time <- function(
       "numeric" = numeric,
       "sync" = sync
     ),
-    boolean_names = c("sync")
+    boolean_names = c("sync"),
+    boolean_arg_names = c("sync" = "sync")
   )
 
   do.call(

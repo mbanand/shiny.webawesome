@@ -50,7 +50,11 @@ wa_scroller <- function(
       "without-scrollbar" = without_scrollbar,
       "without-shadow" = without_shadow
     ),
-    boolean_names = c("without-scrollbar", "without-shadow")
+    boolean_names = c("without-scrollbar", "without-shadow"),
+    boolean_arg_names = c(
+      "without-scrollbar" = "without_scrollbar",
+      "without-shadow" = "without_shadow"
+    )
   )
 
   do.call(

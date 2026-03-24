@@ -245,7 +245,10 @@ because template-correct code can still drift from tidyverse formatting after
 generator changes or debug passes.
 
 After styling generated files, run a relevant lint pass as a separate
-validation step so formatting fixes and lint findings are not conflated.
+required validation step so formatting fixes and lint findings are not
+conflated. Do not treat the post-generate workflow as complete after
+`{styler}` alone; generated R output should go through both `{styler}` and
+`{lintr}`.
 
 ---
 
@@ -259,7 +262,7 @@ Typical validation flow is:
 
 - generating components
 - styling generated code
-- running a relevant lint pass
+- running a separate relevant lint pass
 - running documentation generation
 - running unit tests
 - running functional tests

@@ -53,7 +53,8 @@ wa_include <- function(
       "mode" = mode,
       "src" = src
     ),
-    boolean_names = c("allow-scripts")
+    boolean_names = c("allow-scripts"),
+    boolean_arg_names = c("allow-scripts" = "allow_scripts")
   )
 
   do.call(

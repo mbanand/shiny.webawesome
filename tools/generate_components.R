@@ -7,8 +7,8 @@
 # intermediate component schema and now emits selected generated files.
 
 # nolint start: object_usage_linter.
-# Source the shared CLI helpers relative to this script when possible.
-.bootstrap_cli_ui <- function() {
+# Return base directories inferred from the current script-loading context.
+.script_base_dirs <- function() {
   args <- commandArgs(trailingOnly = FALSE)
   file_arg <- grep("^--file=", args, value = TRUE)
   command_file <- if (length(file_arg) > 0L) {
@@ -24,17 +24,31 @@
   )
   source_file <- tail(ofiles[nzchar(ofiles)], 1)
   known_files <- c(command_file, source_file)
-  known_files <- known_files[nzchar(known_files)]
-  current_dir <- if (length(known_files) == 0L) {
-    "."
-  } else {
-    dirname(normalizePath(known_files[[1]], winslash = "/", mustWork = FALSE))
-  }
+  known_files <- known_files[nzchar(known_files) & known_files != "-"]
 
+  unique(c(
+    vapply(
+      known_files,
+      function(path) {
+        dirname(normalizePath(path, winslash = "/", mustWork = FALSE))
+      },
+      character(1)
+    ),
+    "."
+  ))
+}
+
+.generate_tool_base_dirs <- .script_base_dirs()
+
+# Source the shared CLI helpers relative to this script when possible.
+.bootstrap_cli_ui <- function() {
+  base_dirs <- .generate_tool_base_dirs
   candidates <- c(
-    file.path(current_dir, "cli_ui.R"),
-    file.path(current_dir, "tools", "cli_ui.R"),
-    file.path(current_dir, "..", "cli_ui.R"),
+    unlist(lapply(base_dirs, function(dir) file.path(dir, "cli_ui.R"))),
+    unlist(
+      lapply(base_dirs, function(dir) file.path(dir, "tools", "cli_ui.R"))
+    ),
+    unlist(lapply(base_dirs, function(dir) file.path(dir, "..", "cli_ui.R"))),
     file.path("tools", "cli_ui.R"),
     "cli_ui.R"
   )
@@ -47,22 +61,7 @@
 
 # Source the shared generate helpers relative to this script when possible.
 .bootstrap_generate_helpers <- function() {
-  args <- commandArgs(trailingOnly = FALSE)
-  file_arg <- grep("^--file=", args, value = TRUE)
-  command_file <- if (length(file_arg) > 0L) {
-    sub("^--file=", "", tail(file_arg, 1))
-  } else {
-    ""
-  }
-
-  ofiles <- vapply(
-    sys.frames(),
-    function(frame) if (is.null(frame$ofile)) "" else frame$ofile,
-    character(1)
-  )
-  source_file <- tail(ofiles[nzchar(ofiles)], 1)
-  known_files <- c(command_file, source_file)
-  known_files <- known_files[nzchar(known_files)]
+  base_dirs <- .generate_tool_base_dirs
   helper_files <- c(
     "utils.R",
     "policy.R",
@@ -75,16 +74,6 @@
     "write_outputs.R"
   )
 
-  base_dirs <- unique(c(
-    vapply(
-      known_files[known_files != "-"],
-      function(path) {
-        dirname(normalizePath(path, winslash = "/", mustWork = FALSE))
-      },
-      character(1)
-    ),
-    "."
-  ))
   helper_dir_candidates <- unique(c(
     unlist(lapply(base_dirs, function(dir) file.path(dir, "generate"))),
     unlist(

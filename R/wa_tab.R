@@ -38,7 +38,8 @@ wa_tab <- function(
       "lang" = lang,
       "panel" = panel
     ),
-    boolean_names = c("disabled")
+    boolean_names = c("disabled"),
+    boolean_arg_names = c("disabled" = "disabled")
   )
 
   do.call(

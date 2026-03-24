@@ -102,7 +102,8 @@ wa_badge <- function(
       "pill" = pill,
       "variant" = variant
     ),
-    boolean_names = c("pill")
+    boolean_names = c("pill"),
+    boolean_arg_names = c("pill" = "pill")
   )
 
   do.call(

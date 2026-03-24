@@ -89,7 +89,11 @@ wa_tag <- function(
       "variant" = variant,
       "with-remove" = with_remove
     ),
-    boolean_names = c("pill", "with-remove")
+    boolean_names = c("pill", "with-remove"),
+    boolean_arg_names = c(
+      "pill" = "pill",
+      "with-remove" = "with_remove"
+    )
   )
 
   do.call(

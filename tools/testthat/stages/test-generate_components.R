@@ -446,6 +446,24 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     card_wrapper
   )))
 
+  checkbox_wrapper <- readLines(
+    file.path(root, "R", "wa_checkbox.R"),
+    warn = FALSE
+  )
+  checkbox_component <- result$schema$components[[
+    which(vapply(result$schema$components, `[[`, character(1), "tag_name") == "wa-checkbox")
+  ]]
+  checkbox_attr <- checkbox_component$attributes[[
+    which(vapply(checkbox_component$attributes, `[[`, character(1), "name") == "checked")
+  ]]
+  checkbox_doc <- .wrapper_attr_param_doc(checkbox_component, checkbox_attr)
+  testthat::expect_match(checkbox_doc, "HTML `checked` attribute", fixed = TRUE)
+  testthat::expect_match(checkbox_doc, "`defaultChecked`", fixed = TRUE)
+  testthat::expect_match(
+    checkbox_doc,
+    "live `checked` property\\."
+  )
+
   button_binding <- readLines(
     file.path(root, "inst", "bindings", "wa_button.js"),
     warn = FALSE

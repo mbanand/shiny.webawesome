@@ -70,7 +70,8 @@ wa_qr_code <- function(
       "radius" = radius,
       "size" = size
     ),
-    boolean_names = character()
+    boolean_names = character(),
+    boolean_arg_names = NULL
   )
 
   do.call(

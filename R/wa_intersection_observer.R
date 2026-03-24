@@ -56,7 +56,11 @@ wa_intersection_observer <- function(
       "root-margin" = root_margin,
       "threshold" = threshold
     ),
-    boolean_names = c("disabled", "once")
+    boolean_names = c("disabled", "once"),
+    boolean_arg_names = c(
+      "disabled" = "disabled",
+      "once" = "once"
+    )
   )
 
   do.call(

@@ -82,7 +82,11 @@ wa_icon <- function(
       "swap-opacity" = swap_opacity,
       "variant" = variant
     ),
-    boolean_names = c("auto-width", "swap-opacity")
+    boolean_names = c("auto-width", "swap-opacity"),
+    boolean_arg_names = c(
+      "auto-width" = "auto_width",
+      "swap-opacity" = "swap_opacity"
+    )
   )
 
   do.call(

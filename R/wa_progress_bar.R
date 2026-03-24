@@ -42,7 +42,8 @@ wa_progress_bar <- function(
       "indeterminate" = indeterminate,
       "lang" = lang
     ),
-    boolean_names = c("indeterminate")
+    boolean_names = c("indeterminate"),
+    boolean_arg_names = c("indeterminate" = "indeterminate")
   )
 
   do.call(

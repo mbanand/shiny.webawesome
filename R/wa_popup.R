@@ -250,6 +250,13 @@ wa_popup <- function(
       "flip",
       "hover-bridge",
       "shift"
+    ),
+    boolean_arg_names = c(
+      "active" = "active",
+      "arrow" = "arrow",
+      "flip" = "flip",
+      "hover-bridge" = "hover_bridge",
+      "shift" = "shift"
     )
   )
 

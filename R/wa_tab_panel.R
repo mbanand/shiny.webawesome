@@ -36,7 +36,8 @@ wa_tab_panel <- function(
       "dir" = dir,
       "lang" = lang
     ),
-    boolean_names = c("active")
+    boolean_names = c("active"),
+    boolean_arg_names = c("active" = "active")
   )
 
   do.call(

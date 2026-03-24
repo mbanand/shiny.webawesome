@@ -64,7 +64,8 @@ wa_tree <- function(
       "lang" = lang,
       "selection" = selection
     ),
-    boolean_names = character()
+    boolean_names = character(),
+    boolean_arg_names = NULL
   )
 
   do.call(

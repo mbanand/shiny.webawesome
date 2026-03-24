@@ -32,7 +32,9 @@ the rendered DOM \code{id} attribute.}
 with form data.}
 
 \item{checked}{The default value of the form control. Primarily used
-for resetting the form control.}
+for resetting the form control. This wrapper argument sets the HTML
+\code{checked} attribute, which maps to the component's \code{defaultChecked}
+field/property rather than its live \code{checked} property.}
 
 \item{disabled}{Disables the switch. Defaults to \code{false} when omitted.}
 

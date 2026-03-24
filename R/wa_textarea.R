@@ -10,7 +10,9 @@
 #' @param input_id Shiny input id for the component. This is also used as
 #' the rendered DOM `id` attribute.
 #' @param value The default value of the form control. Primarily used for
-#' resetting the form control.
+#' resetting the form control. This wrapper argument sets the HTML `value`
+#' attribute, which maps to the component's `defaultValue` field/property
+#' rather than its live `value` property.
 #' @param disabled Disables the textarea. Defaults to `false` when
 #' omitted.
 #' @param label The textarea's label. If you need to display HTML, use the
@@ -248,6 +250,15 @@ wa_textarea <- function(
       "spellcheck",
       "with-hint",
       "with-label"
+    ),
+    boolean_arg_names = c(
+      "disabled" = "disabled",
+      "autofocus" = "autofocus",
+      "readonly" = "readonly",
+      "required" = "required",
+      "spellcheck" = "spellcheck",
+      "with-hint" = "with_hint",
+      "with-label" = "with_label"
     )
   )
 

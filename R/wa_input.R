@@ -10,7 +10,9 @@
 #' @param input_id Shiny input id for the component. This is also used as
 #' the rendered DOM `id` attribute.
 #' @param value The default value of the form control. Primarily used for
-#' resetting the form control.
+#' resetting the form control. This wrapper argument sets the HTML `value`
+#' attribute, which maps to the component's `defaultValue` field/property
+#' rather than its live `value` property.
 #' @param disabled Disables the form control. Defaults to `false` when
 #' omitted.
 #' @param label The input's label. If you need to display HTML, use the
@@ -351,6 +353,20 @@ wa_input <- function(
       "with-hint",
       "with-label",
       "without-spin-buttons"
+    ),
+    boolean_arg_names = c(
+      "disabled" = "disabled",
+      "autofocus" = "autofocus",
+      "password-toggle" = "password_toggle",
+      "password-visible" = "password_visible",
+      "pill" = "pill",
+      "readonly" = "readonly",
+      "required" = "required",
+      "spellcheck" = "spellcheck",
+      "with-clear" = "with_clear",
+      "with-hint" = "with_hint",
+      "with-label" = "with_label",
+      "without-spin-buttons" = "without_spin_buttons"
     )
   )
 

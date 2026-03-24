@@ -12,7 +12,9 @@
 #' @param value The value of the switch, submitted as a name/value pair
 #' with form data.
 #' @param checked The default value of the form control. Primarily used
-#' for resetting the form control.
+#' for resetting the form control. This wrapper argument sets the HTML
+#' `checked` attribute, which maps to the component's `defaultChecked`
+#' field/property rather than its live `checked` property.
 #' @param disabled Disables the switch. Defaults to `false` when omitted.
 #' @param hint The switch's hint. If you need to display HTML, use the
 #' `hint` slot instead. Defaults to `` when omitted.
@@ -94,6 +96,12 @@ wa_switch <- function(
       "disabled",
       "required",
       "with-hint"
+    ),
+    boolean_arg_names = c(
+      "checked" = "checked",
+      "disabled" = "disabled",
+      "required" = "required",
+      "with-hint" = "with_hint"
     )
   )
 

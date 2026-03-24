@@ -32,6 +32,13 @@ wa_dialog()
 
 * HTML attributes become R arguments.
 * Attribute names convert from kebab-case to snake_case.
+* When upstream metadata maps an HTML attribute to a materially different
+  component field/property name after normalization, generated wrapper
+  documentation should remain attribute-first and explicitly document that
+  distinction for users. Routine kebab-case versus camelCase conversions do
+  not need extra explanation. When a same-name live property also exists,
+  the generated documentation should make that stronger ambiguity explicit
+  rather than implying the wrapper argument targets the live property.
 * Wrapper-only components use `id` for the DOM `id` attribute.
 * Components with generated Shiny input bindings use `input_id` as the
   user-facing Shiny identifier, and that value is also written to the
@@ -336,6 +343,12 @@ Any future method surface should be selective and capability-based rather than
 blindly exposing every upstream method automatically. Common UI methods such
 as `focus()` and `blur()` are much better candidates than complex
 component-specific methods with richer argument contracts.
+
+Likewise, if future support is added for writable live component properties
+that are distinct from constructor-time HTML attributes, that support should
+remain separate from the generated wrapper constructor surface. Live-property
+control is better treated as part of a distinct server/client command or
+update layer than as an overloaded constructor argument convention.
 
 This is deferred. It is not part of the current generator or binding model.
 

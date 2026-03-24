@@ -100,7 +100,16 @@ wa_dropdown_item <- function(
       "type" = type,
       "variant" = variant
     ),
-    boolean_names = c("checked", "disabled", "submenuOpen")
+    boolean_names = c(
+      "checked",
+      "disabled",
+      "submenuOpen"
+    ),
+    boolean_arg_names = c(
+      "checked" = "checked",
+      "disabled" = "disabled",
+      "submenuOpen" = "submenu_open"
+    )
   )
 
   do.call(

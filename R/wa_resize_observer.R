@@ -33,7 +33,8 @@ wa_resize_observer <- function(
       "dir" = dir,
       "lang" = lang
     ),
-    boolean_names = c("disabled")
+    boolean_names = c("disabled"),
+    boolean_arg_names = c("disabled" = "disabled")
   )
 
   do.call(

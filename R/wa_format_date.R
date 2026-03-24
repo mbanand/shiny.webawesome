@@ -193,7 +193,8 @@ wa_format_date <- function(
       "weekday" = weekday,
       "year" = year
     ),
-    boolean_names = character()
+    boolean_names = character(),
+    boolean_arg_names = NULL
   )
 
   do.call(

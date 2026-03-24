@@ -72,7 +72,11 @@ wa_rating <- function(
       "readonly" = readonly,
       "size" = size
     ),
-    boolean_names = c("disabled", "readonly")
+    boolean_names = c("disabled", "readonly"),
+    boolean_arg_names = c(
+      "disabled" = "disabled",
+      "readonly" = "readonly"
+    )
   )
 
   do.call(

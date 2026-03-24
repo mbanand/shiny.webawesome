@@ -66,6 +66,12 @@ wa_tree_item <- function(
       "expanded",
       "lazy",
       "selected"
+    ),
+    boolean_arg_names = c(
+      "disabled" = "disabled",
+      "expanded" = "expanded",
+      "lazy" = "lazy",
+      "selected" = "selected"
     )
   )
 

@@ -39,8 +39,9 @@ complex content.}
 
 \item{lang}{Optional Web Awesome attribute.}
 
-\item{selected}{Selects an option initially. Defaults to \code{false} when
-omitted.}
+\item{selected}{Selects an option initially. This wrapper argument sets
+the HTML \code{selected} attribute, which maps to the component's
+\code{defaultSelected} field/property. Defaults to \code{false} when omitted.}
 
 \item{end}{An element, such as \verb{<wa-icon>}, placed after the label.}
 

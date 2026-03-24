@@ -104,7 +104,8 @@ wa_copy_button <- function(
       "success-label" = success_label,
       "tooltip-placement" = tooltip_placement
     ),
-    boolean_names = c("disabled")
+    boolean_names = c("disabled"),
+    boolean_arg_names = c("disabled" = "disabled")
   )
 
   do.call(

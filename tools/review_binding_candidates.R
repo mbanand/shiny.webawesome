@@ -36,9 +36,11 @@
   ))
 }
 
+.review_tool_base_dirs <- .script_base_dirs()
+
 # Source the shared CLI helpers relative to this script when possible.
 .bootstrap_cli_ui <- function() {
-  base_dirs <- .script_base_dirs()
+  base_dirs <- .review_tool_base_dirs
   candidates <- c(
     unlist(lapply(base_dirs, function(dir) file.path(dir, "cli_ui.R"))),
     unlist(
@@ -106,7 +108,6 @@
 }
 
 .bootstrap_cli_ui()
-.review_tool_base_dirs <- .script_base_dirs()
 rm(.bootstrap_cli_ui)
 
 # Return the CLI usage string for the binding-candidate review tool.

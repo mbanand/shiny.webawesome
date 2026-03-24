@@ -110,6 +110,13 @@ wa_carousel <- function(
       "mouse-dragging",
       "navigation",
       "pagination"
+    ),
+    boolean_arg_names = c(
+      "autoplay" = "autoplay",
+      "loop" = "loop",
+      "mouse-dragging" = "mouse_dragging",
+      "navigation" = "navigation",
+      "pagination" = "pagination"
     )
   )
 

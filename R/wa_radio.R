@@ -74,7 +74,8 @@ wa_radio <- function(
       "lang" = lang,
       "size" = size
     ),
-    boolean_names = c("disabled")
+    boolean_names = c("disabled"),
+    boolean_arg_names = c("disabled" = "disabled")
   )
 
   do.call(

@@ -20,8 +20,9 @@
 #' complex content.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
-#' @param selected Selects an option initially. Defaults to `false` when
-#' omitted.
+#' @param selected Selects an option initially. This wrapper argument sets
+#' the HTML `selected` attribute, which maps to the component's
+#' `defaultSelected` field/property. Defaults to `false` when omitted.
 #' @param end An element, such as `<wa-icon>`, placed after the label.
 #' @param start An element, such as `<wa-icon>`, placed before the label.
 #'
@@ -65,7 +66,11 @@ wa_option <- function(
       "lang" = lang,
       "selected" = selected
     ),
-    boolean_names = c("disabled", "selected")
+    boolean_names = c("disabled", "selected"),
+    boolean_arg_names = c(
+      "disabled" = "disabled",
+      "selected" = "selected"
+    )
   )
 
   do.call(

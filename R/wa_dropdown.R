@@ -93,7 +93,8 @@ wa_dropdown <- function(
       "size" = size,
       "skidding" = skidding
     ),
-    boolean_names = c("open")
+    boolean_names = c("open"),
+    boolean_arg_names = c("open" = "open")
   )
 
   do.call(

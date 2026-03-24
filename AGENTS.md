@@ -267,7 +267,7 @@ When modifying this repository, agents must follow these rules.
     - the documented build pipeline
     - unit and functional tests
     - the reporting step that evaluates coverage and API conformance
-    - any applicable lint, style, build, or package validation steps
+    - any applicable style, lint, build, or package validation steps
 
 5. Maintain compatibility with existing Web Awesome APIs.
 
@@ -277,11 +277,15 @@ When modifying this repository, agents must follow these rules.
 
 8. Handwritten R code should follow the Tidyverse style guide, available at https://style.tidyverse.org. 
 
-9. Use `{styler}` for formatting and `{lintr}` for style checks where applicable.
+9. Use `{styler}` for formatting and `{lintr}` for lint checks where
+   applicable. When generated or handwritten R code is modified, do not treat
+   these as interchangeable; run formatting and linting as separate steps.
 
 10. This is a CRAN-quality package. Documentation, tests, coding style must all be at that level. Follow details specified in `docs/workflow/agent-development-playbook.md` in this regard.
 
-11. Generated code should be formatted consistently using `{styler}` after generation.
+11. Generated code should be formatted consistently using `{styler}` after
+    generation, and followed by a separate `{lintr}` pass on the generated
+    surface. Do not stop after styling alone.
 
 12. Agents should preserve deterministic coverage tracking and conformance checks. Do not infer completeness solely from the presence of generated files.
 

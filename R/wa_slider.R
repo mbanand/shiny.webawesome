@@ -10,7 +10,9 @@
 #' @param input_id Shiny input id for the component. This is also used as
 #' the rendered DOM `id` attribute.
 #' @param value The default value of the form control. Primarily used for
-#' resetting the form control.
+#' resetting the form control. This wrapper argument sets the HTML `value`
+#' attribute, which maps to the component's `defaultValue` field/property
+#' rather than its live `value` property.
 #' @param disabled Disables the slider. Defaults to `false` when omitted.
 #' @param label The slider's label. If you need to provide HTML in the
 #' label, use the `label` slot instead. Defaults to `` when omitted.
@@ -185,6 +187,15 @@ wa_slider <- function(
       "required",
       "with-markers",
       "with-tooltip"
+    ),
+    boolean_arg_names = c(
+      "disabled" = "disabled",
+      "autofocus" = "autofocus",
+      "range" = "range",
+      "readonly" = "readonly",
+      "required" = "required",
+      "with-markers" = "with_markers",
+      "with-tooltip" = "with_tooltip"
     )
   )
 

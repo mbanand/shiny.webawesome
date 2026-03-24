@@ -75,7 +75,16 @@ wa_dialog <- function(
       "open" = open,
       "without-header" = without_header
     ),
-    boolean_names = c("light-dismiss", "open", "without-header")
+    boolean_names = c(
+      "light-dismiss",
+      "open",
+      "without-header"
+    ),
+    boolean_arg_names = c(
+      "light-dismiss" = "light_dismiss",
+      "open" = "open",
+      "without-header" = "without_header"
+    )
   )
 
   do.call(

@@ -80,7 +80,8 @@ wa_animation <- function(
       "play" = play,
       "playback-rate" = playback_rate
     ),
-    boolean_names = c("play")
+    boolean_names = c("play"),
+    boolean_arg_names = c("play" = "play")
   )
 
   do.call(

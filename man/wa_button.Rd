@@ -62,19 +62,29 @@ when omitted.}
 \item{download}{Tells the browser to download the linked file as this
 filename. Only used when \code{href} is present.}
 
-\item{formaction}{Used to override the form owner's \code{action} attribute.}
+\item{formaction}{Used to override the form owner's \code{action} attribute.
+This wrapper argument sets the HTML \code{formaction} attribute, which maps
+to the component's \code{formAction} field/property.}
 
 \item{formenctype}{Used to override the form owner's \code{enctype}
-attribute. Must be one of \code{"application/x-www-form-urlencoded"},
-\code{"multipart/form-data"}, \code{"text/plain"}.}
+attribute. This wrapper argument sets the HTML \code{formenctype} attribute,
+which maps to the component's \code{formEnctype} field/property. Must be one
+of \code{"application/x-www-form-urlencoded"}, \code{"multipart/form-data"},
+\code{"text/plain"}.}
 
 \item{formmethod}{Used to override the form owner's \code{method} attribute.
-Must be one of \code{"get"}, \code{"post"}.}
+This wrapper argument sets the HTML \code{formmethod} attribute, which maps
+to the component's \code{formMethod} field/property. Must be one of \code{"get"},
+\code{"post"}.}
 
 \item{formnovalidate}{Used to override the form owner's \code{novalidate}
-attribute.}
+attribute. This wrapper argument sets the HTML \code{formnovalidate}
+attribute, which maps to the component's \code{formNoValidate}
+field/property.}
 
-\item{formtarget}{Used to override the form owner's \code{target} attribute.}
+\item{formtarget}{Used to override the form owner's \code{target} attribute.
+This wrapper argument sets the HTML \code{formtarget} attribute, which maps
+to the component's \code{formTarget} field/property.}
 
 \item{href}{When set, the underlying button will be rendered as an
 \verb{<a>} with this \code{href} instead of a \verb{<button>}.}

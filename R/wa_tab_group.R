@@ -79,7 +79,8 @@ wa_tab_group <- function(
       "placement" = placement,
       "without-scroll-controls" = without_scroll_controls
     ),
-    boolean_names = c("without-scroll-controls")
+    boolean_names = c("without-scroll-controls"),
+    boolean_arg_names = c("without-scroll-controls" = "without_scroll_controls")
   )
 
   do.call(

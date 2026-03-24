@@ -57,7 +57,8 @@ wa_animated_image <- function(
       "play" = play,
       "src" = src
     ),
-    boolean_names = c("play")
+    boolean_names = c("play"),
+    boolean_arg_names = c("play" = "play")
   )
 
   do.call(

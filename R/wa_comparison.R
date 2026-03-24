@@ -58,7 +58,8 @@ wa_comparison <- function(
       "lang" = lang,
       "position" = position
     ),
-    boolean_names = character()
+    boolean_names = character(),
+    boolean_arg_names = NULL
   )
 
   do.call(

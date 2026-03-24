@@ -92,7 +92,8 @@ wa_format_number <- function(
       "type" = type,
       "without-grouping" = without_grouping
     ),
-    boolean_names = c("without-grouping")
+    boolean_names = c("without-grouping"),
+    boolean_arg_names = c("without-grouping" = "without_grouping")
   )
 
   do.call(
