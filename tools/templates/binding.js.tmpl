@@ -18,12 +18,18 @@ $.extend(binding, {
 
   subscribe(el, callback) {
     {{SUBSCRIBE_BODY}}
-    el.addEventListener('{{SUBSCRIBE_EVENT}}', el.__shinyWebawesomeCallback);
+    el.__shinyWebawesomeEvents = {{SUBSCRIBE_EVENTS}};
+    el.__shinyWebawesomeEvents.forEach((eventName) => {
+      el.addEventListener(eventName, el.__shinyWebawesomeCallback);
+    });
   },
 
   unsubscribe(el, callback) {
     if (el.__shinyWebawesomeCallback) {
-      el.removeEventListener('{{SUBSCRIBE_EVENT}}', el.__shinyWebawesomeCallback);
+      (el.__shinyWebawesomeEvents || []).forEach((eventName) => {
+        el.removeEventListener(eventName, el.__shinyWebawesomeCallback);
+      });
+      delete el.__shinyWebawesomeEvents;
       delete el.__shinyWebawesomeCallback;
     }
   },

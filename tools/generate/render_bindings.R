@@ -55,8 +55,14 @@
   name %in% unique(c(.component_attribute_names(component), .component_property_names(component)))
 }
 
-# Return the preferred DOM event to subscribe to for a binding.
-.binding_subscribe_event <- function(component) {
+# Return the preferred ordered DOM events to subscribe to for one binding.
+.binding_subscribe_events <- function(component) {
+  override_events <- .or_default(component$classification$binding_events, character())
+
+  if (length(override_events) > 0L) {
+    return(override_events)
+  }
+
   override_event <- .scalar_string(
     component$classification$binding_event,
     fallback = NA_character_
@@ -78,6 +84,13 @@
   }
 
   matched[[1]]
+}
+
+# Return one JS array literal for the binding subscription events.
+.binding_subscribe_events_js <- function(component) {
+  events <- .binding_subscribe_events(component)
+  encoded <- paste(vapply(events, .as_js_string, character(1)), collapse = ", ")
+  paste0("[", encoded, "]")
 }
 
 # Return the JS binding name for one component.
@@ -219,6 +232,9 @@
 # Return the JS subscription callback body for one component.
 .binding_subscribe_body <- function(component) {
   if (!identical(.component_binding_mode(component), "action")) {
+    # Semantic bindings should expose committed reactive state, not raw browser
+    # event names. When lifecycle transitions are involved, policy should list
+    # the earliest non-cancelable events that commit the semantic value.
     if (
       identical(.component_binding_mode(component), "semantic") &&
         identical(.component_binding_value_kind(component), "custom") &&
@@ -326,7 +342,7 @@
     GET_TYPE_METHOD = .binding_get_type_method(component),
     SUBSCRIBE_BODY = .binding_subscribe_body(component),
     RECEIVE_MESSAGE = .binding_receive_message(component),
-    SUBSCRIBE_EVENT = .binding_subscribe_event(component)
+    SUBSCRIBE_EVENTS = .binding_subscribe_events_js(component)
   )
 }
 

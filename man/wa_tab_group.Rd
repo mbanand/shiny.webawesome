@@ -5,8 +5,8 @@
 \title{Create a \code{wa-tab-group} component}
 \usage{
 wa_tab_group(
+  input_id,
   ...,
-  id = NULL,
   activation = NULL,
   active = NULL,
   dir = NULL,
@@ -17,9 +17,10 @@ wa_tab_group(
 )
 }
 \arguments{
-\item{...}{Child content for the component's default slot.}
+\item{input_id}{Shiny input id for the component. This is also used as
+the rendered DOM \code{id} attribute.}
 
-\item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+\item{...}{Child content for the component's default slot.}
 
 \item{activation}{When set to auto, navigating tabs with the arrow keys
 will instantly show the corresponding tab panel. When set to manual,

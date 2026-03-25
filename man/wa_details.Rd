@@ -5,8 +5,8 @@
 \title{Create a \code{wa-details} component}
 \usage{
 wa_details(
+  input_id,
   ...,
-  id = NULL,
   disabled = NULL,
   name = NULL,
   appearance = NULL,
@@ -21,9 +21,10 @@ wa_details(
 )
 }
 \arguments{
-\item{...}{Child content for the component's default slot.}
+\item{input_id}{Shiny input id for the component. This is also used as
+the rendered DOM \code{id} attribute.}
 
-\item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+\item{...}{Child content for the component's default slot.}
 
 \item{disabled}{Disables the details so it can't be toggled. Defaults
 to \code{false} when omitted.}

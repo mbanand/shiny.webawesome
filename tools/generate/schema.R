@@ -180,6 +180,11 @@
   binding_override <- .binding_override_for(binding_policy, tag_name)
   binding_mode <- if (is.null(binding_override)) "none" else binding_override$mode
   binding_event <- if (is.null(binding_override)) NA_character_ else binding_override$event
+  binding_events <- if (is.null(binding_override)) {
+    character()
+  } else {
+    .or_default(binding_override$events, character())
+  }
   binding_value_kind <- if (is.null(binding_override)) {
     NA_character_
   } else {
@@ -222,6 +227,7 @@
     } else {
       matched_binding_events[[1]]
     }
+    binding_events <- if (is.na(binding_event)) character() else binding_event
   }
 
   mode <- if (identical(binding_mode, "action")) {
@@ -242,6 +248,7 @@
     binding = has_binding,
     binding_mode = binding_mode,
     binding_event = binding_event,
+    binding_events = binding_events,
     binding_value_kind = binding_value_kind,
     binding_value_field = binding_value_field,
     binding_warning_key = binding_warning_key,
@@ -253,6 +260,7 @@
       update_state_fields = matched_update_state_fields,
       update_support_fields = matched_update_support_fields,
       binding_policy_reason = binding_policy_reason,
+      binding_events = binding_events,
       binding_value_kind = binding_value_kind,
       binding_value_field = binding_value_field,
       binding_warning_key = binding_warning_key

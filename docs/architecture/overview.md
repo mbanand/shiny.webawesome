@@ -342,6 +342,13 @@ current value for delivery to the Shiny server.
 The package does **not** treat every upstream Web Awesome custom event as a
 Shiny event automatically.
 
+This also means the Shiny-facing binding contract is not always named after
+the upstream event that triggered synchronization. When the reactive contract
+is inherently action-like, the binding may use action semantics. Otherwise,
+the binding should expose the durable semantic value implied by the event,
+typically by reading a stable upstream property or state field such as
+`activeSlide`, `selectedItemIds`, or `open`.
+
 High-frequency or interaction-only events, such as hover telemetry, should
 generally remain browser-side and be handled with client-side JavaScript
 unless a future design explicitly introduces an opt-in forwarding mechanism.

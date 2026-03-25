@@ -34,6 +34,7 @@ test_that("representative components work end to end in a browser", {
       "&& Boolean(window.customElements.get('wa-copy-button'))",
       "&& Boolean(window.customElements.get('wa-details'))",
       "&& Boolean(window.customElements.get('wa-dialog'))",
+      "&& Boolean(window.customElements.get('wa-drawer'))",
       "&& Boolean(window.customElements.get('wa-divider'))",
       "&& Boolean(window.customElements.get('wa-input'))",
       "&& Boolean(window.customElements.get('wa-number-input'))",
@@ -62,6 +63,7 @@ test_that("representative components work end to end in a browser", {
   testthat::expect_match(app$get_html("#copy_button"), "Copy")
   testthat::expect_match(app$get_html("#details"), "summary=\"More\"")
   testthat::expect_match(app$get_html("#dialog"), "Dialog title")
+  testthat::expect_match(app$get_html("#drawer"), "Drawer title")
   testthat::expect_match(app$get_html("#popover"), "Popover body")
   testthat::expect_match(app$get_html("#tag"), "Tag")
   testthat::expect_match(app$get_html("#tooltip"), "Tooltip body")
@@ -118,6 +120,86 @@ test_that("representative components work end to end in a browser", {
       "document.getElementById('color_picker_value').innerText.trim()",
       "=== '#445566'"
     )
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('details');",
+      "el.open = true;",
+      "el.dispatchEvent(new CustomEvent('wa-show', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('details_value').innerText.trim() === 'TRUE'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('details');",
+      "el.open = false;",
+      "el.dispatchEvent(new CustomEvent('wa-hide', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('details_value').innerText.trim() === 'FALSE'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('dialog');",
+      "el.open = true;",
+      "el.dispatchEvent(new CustomEvent('wa-show', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('dialog_value').innerText.trim() === 'TRUE'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('dialog');",
+      "el.open = false;",
+      "el.dispatchEvent(new CustomEvent('wa-after-hide', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('dialog_value').innerText.trim() === 'FALSE'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('drawer');",
+      "el.open = true;",
+      "el.dispatchEvent(new CustomEvent('wa-show', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('drawer_value').innerText.trim() === 'TRUE'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('drawer');",
+      "el.open = false;",
+      "el.dispatchEvent(new CustomEvent('wa-after-hide', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('drawer_value').innerText.trim() === 'FALSE'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('tab_group');",
+      "el.active = 'second';",
+      "el.dispatchEvent(new CustomEvent('wa-tab-show', {",
+      "  bubbles: true,",
+      "  detail: { name: 'second' }",
+      "}));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('tab_group_value').innerText.trim() === 'second'"
   )
 
   app$run_js(

@@ -7,7 +7,8 @@
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
-#' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param input_id Shiny input id for the component. This is also used as
+#' the rendered DOM `id` attribute.
 #' @param disabled Disables the details so it can't be toggled. Defaults
 #' to `false` when omitted.
 #' @param name Groups related details elements. When one opens, others
@@ -36,8 +37,8 @@
 #'
 #' @export
 wa_details <- function(
+  input_id,
   ...,
-  id = NULL,
   disabled = NULL,
   name = NULL,
   appearance = NULL,
@@ -95,7 +96,7 @@ wa_details <- function(
 
   attrs <- .wa_normalize_attrs(
     list(
-      "id" = id,
+      "id" = input_id,
       "disabled" = disabled,
       "name" = name,
       "appearance" = appearance,

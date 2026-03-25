@@ -43,6 +43,40 @@ source(file.path("..", "..", "generate_components.R"))
       "      value_kind: property",
       "      value_field: activeSlide",
       "      rationale: Carousel slide changes represent committed component state.",
+      "  - tag: wa-details",
+      "    binding:",
+      "      mode: semantic",
+      "      events:",
+      "        - wa-show",
+      "        - wa-hide",
+      "      value_kind: property",
+      "      value_field: open",
+      "      rationale: Details visibility represents committed open state.",
+      "  - tag: wa-dialog",
+      "    binding:",
+      "      mode: semantic",
+      "      events:",
+      "        - wa-show",
+      "        - wa-after-hide",
+      "      value_kind: property",
+      "      value_field: open",
+      "      rationale: Dialog visibility represents committed open state.",
+      "  - tag: wa-drawer",
+      "    binding:",
+      "      mode: semantic",
+      "      events:",
+      "        - wa-show",
+      "        - wa-after-hide",
+      "      value_kind: property",
+      "      value_field: open",
+      "      rationale: Drawer visibility represents committed open state.",
+      "  - tag: wa-tab-group",
+      "    binding:",
+      "      mode: semantic",
+      "      event: wa-tab-show",
+      "      value_kind: property",
+      "      value_field: active",
+      "      rationale: Tab groups expose committed active-tab state.",
       "  - tag: wa-tree",
       "    binding:",
       "      mode: semantic",
@@ -208,6 +242,100 @@ source(file.path("..", "..", "generate_components.R"))
         )
       ),
       list(
+        path = "components/details/details.js",
+        declarations = list(
+          list(
+            kind = "class",
+            name = "WaDetails",
+            tagName = "wa-details",
+            summary = "Details component.",
+            attributes = list(
+              list(name = "open", fieldName = "open", type = list(text = "boolean")),
+              list(name = "summary", fieldName = "summary", type = list(text = "string"))
+            ),
+            members = list(
+              list(name = "open", kind = "field", type = list(text = "boolean")),
+              list(name = "summary", kind = "field", type = list(text = "string"))
+            ),
+            events = list(
+              list(name = "wa-show", type = list(text = "CustomEvent<void>")),
+              list(name = "wa-hide", type = list(text = "CustomEvent<void>"))
+            )
+          )
+        )
+      ),
+      list(
+        path = "components/dialog/dialog.js",
+        declarations = list(
+          list(
+            kind = "class",
+            name = "WaDialog",
+            tagName = "wa-dialog",
+            summary = "Dialog component.",
+            attributes = list(
+              list(name = "open", fieldName = "open", type = list(text = "boolean")),
+              list(name = "label", fieldName = "label", type = list(text = "string"))
+            ),
+            members = list(
+              list(name = "open", kind = "field", type = list(text = "boolean")),
+              list(name = "label", kind = "field", type = list(text = "string"))
+            ),
+            events = list(
+              list(name = "wa-show", type = list(text = "CustomEvent<void>")),
+              list(name = "wa-hide", type = list(text = "{ source: Element }")),
+              list(name = "wa-after-hide", type = list(text = "CustomEvent<void>"))
+            )
+          )
+        )
+      ),
+      list(
+        path = "components/drawer/drawer.js",
+        declarations = list(
+          list(
+            kind = "class",
+            name = "WaDrawer",
+            tagName = "wa-drawer",
+            summary = "Drawer component.",
+            attributes = list(
+              list(name = "open", fieldName = "open", type = list(text = "boolean")),
+              list(name = "label", fieldName = "label", type = list(text = "string"))
+            ),
+            members = list(
+              list(name = "open", kind = "field", type = list(text = "boolean")),
+              list(name = "label", kind = "field", type = list(text = "string"))
+            ),
+            events = list(
+              list(name = "wa-show", type = list(text = "CustomEvent<void>")),
+              list(name = "wa-hide", type = list(text = "{ source: Element }")),
+              list(name = "wa-after-hide", type = list(text = "CustomEvent<void>"))
+            )
+          )
+        )
+      ),
+      list(
+        path = "components/tab-group/tab-group.js",
+        declarations = list(
+          list(
+            kind = "class",
+            name = "WaTabGroup",
+            tagName = "wa-tab-group",
+            summary = "Tab group component.",
+            attributes = list(
+              list(name = "active", fieldName = "active", type = list(text = "string")),
+              list(name = "placement", fieldName = "placement", type = list(text = "'top' | 'bottom'"))
+            ),
+            members = list(
+              list(name = "active", kind = "field", type = list(text = "string")),
+              list(name = "placement", kind = "field", type = list(text = "'top' | 'bottom'"))
+            ),
+            events = list(
+              list(name = "wa-tab-show", type = list(text = "CustomEvent<{ name: String } >")),
+              list(name = "wa-tab-hide", type = list(text = "CustomEvent<{ name: String } >"))
+            )
+          )
+        )
+      ),
+      list(
         path = "components/misc/helper.js",
         declarations = list(
           list(name = "NotACustomElement")
@@ -262,10 +390,14 @@ testthat::test_that("generate builds deterministic intermediate schema", {
 
   result <- generate_components(root = root, emit = FALSE, verbose = FALSE)
 
-  testthat::expect_equal(result$component_count, 6L)
+  testthat::expect_equal(result$component_count, 10L)
   testthat::expect_equal(
     vapply(result$schema$components, `[[`, character(1), "tag_name"),
-    c("wa-button", "wa-card", "wa-carousel", "wa-checkbox", "wa-select", "wa-tree")
+    c(
+      "wa-button", "wa-card", "wa-carousel", "wa-checkbox",
+      "wa-details", "wa-dialog", "wa-drawer", "wa-select",
+      "wa-tab-group", "wa-tree"
+    )
   )
 
   card <- result$schema$components[[2]]
@@ -316,10 +448,38 @@ testthat::test_that("generate builds deterministic intermediate schema", {
   )
   testthat::expect_equal(checkbox$classification$mode, "wrapper-binding")
   testthat::expect_true(isTRUE(checkbox$classification$binding))
-  select <- result$schema$components[[5]]
+  details <- result$schema$components[[5]]
+  testthat::expect_equal(details$classification$mode, "wrapper-binding-semantic")
+  testthat::expect_equal(details$classification$binding_mode, "semantic")
+  testthat::expect_equal(details$classification$binding_event, "wa-show")
+  testthat::expect_equal(
+    details$classification$binding_events,
+    c("wa-show", "wa-hide")
+  )
+  testthat::expect_equal(details$classification$binding_value_field, "open")
+  dialog <- result$schema$components[[6]]
+  testthat::expect_equal(dialog$classification$mode, "wrapper-binding-semantic")
+  testthat::expect_equal(
+    dialog$classification$binding_events,
+    c("wa-show", "wa-after-hide")
+  )
+  testthat::expect_equal(dialog$classification$binding_value_field, "open")
+  drawer <- result$schema$components[[7]]
+  testthat::expect_equal(drawer$classification$mode, "wrapper-binding-semantic")
+  testthat::expect_equal(
+    drawer$classification$binding_events,
+    c("wa-show", "wa-after-hide")
+  )
+  testthat::expect_equal(drawer$classification$binding_value_field, "open")
+  select <- result$schema$components[[8]]
   testthat::expect_equal(select$classification$mode, "wrapper-binding-update")
   testthat::expect_true(isTRUE(select$classification$update))
-  tree <- result$schema$components[[6]]
+  tab_group <- result$schema$components[[9]]
+  testthat::expect_equal(tab_group$classification$mode, "wrapper-binding-semantic")
+  testthat::expect_equal(tab_group$classification$binding_mode, "semantic")
+  testthat::expect_equal(tab_group$classification$binding_event, "wa-tab-show")
+  testthat::expect_equal(tab_group$classification$binding_value_field, "active")
+  tree <- result$schema$components[[10]]
   testthat::expect_equal(tree$classification$mode, "wrapper-binding-semantic")
   testthat::expect_true(isTRUE(tree$classification$binding))
   testthat::expect_equal(tree$classification$binding_mode, "semantic")
@@ -328,7 +488,7 @@ testthat::test_that("generate builds deterministic intermediate schema", {
   testthat::expect_equal(tree$classification$binding_value_field, "selectedItemIds")
   testthat::expect_equal(tree$classification$binding_warning_key, "missing_tree_item_id")
   testthat::expect_equal(result$schema$summary$classification$wrapper_only, 1L)
-  testthat::expect_equal(result$schema$summary$classification$binding, 5L)
+  testthat::expect_equal(result$schema$summary$classification$binding, 9L)
   testthat::expect_equal(result$schema$summary$classification$update, 1L)
 })
 
@@ -388,10 +548,14 @@ testthat::test_that("generate writes debug artifacts when requested", {
   )
 
   schema_debug <- jsonlite::fromJSON(result$debug$schema, simplifyVector = FALSE)
-  testthat::expect_equal(schema_debug$summary$component_count, 6L)
+  testthat::expect_equal(schema_debug$summary$component_count, 10L)
   testthat::expect_equal(
     names(schema_debug$components),
-    c("wa-button", "wa-card", "wa-carousel", "wa-checkbox", "wa-select", "wa-tree")
+    c(
+      "wa-button", "wa-card", "wa-carousel", "wa-checkbox",
+      "wa-details", "wa-dialog", "wa-drawer", "wa-select",
+      "wa-tab-group", "wa-tree"
+    )
   )
   testthat::expect_equal(
     schema_debug$components[["wa-card"]]$r_function_name,
@@ -434,6 +598,26 @@ testthat::test_that("generate writes debug artifacts when requested", {
     "activeSlide"
   )
   testthat::expect_equal(
+    unlist(schema_debug$components[["wa-details"]]$classification$binding_events),
+    c("wa-show", "wa-hide")
+  )
+  testthat::expect_equal(
+    unlist(schema_debug$components[["wa-dialog"]]$classification$binding_events),
+    c("wa-show", "wa-after-hide")
+  )
+  testthat::expect_equal(
+    unlist(schema_debug$components[["wa-drawer"]]$classification$binding_events),
+    c("wa-show", "wa-after-hide")
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-tab-group"]]$classification$binding_mode,
+    "semantic"
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-tab-group"]]$classification$binding_value_field,
+    "active"
+  )
+  testthat::expect_equal(
     schema_debug$components[["wa-tree"]]$classification$binding_mode,
     "semantic"
   )
@@ -460,7 +644,11 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
 
   result <- generate_components(
     root = root,
-    filter = c("wa-button", "wa-card", "wa-carousel", "wa-checkbox", "wa-select", "wa-tree"),
+    filter = c(
+      "wa-button", "wa-card", "wa-carousel", "wa-checkbox",
+      "wa-details", "wa-dialog", "wa-drawer", "wa-select",
+      "wa-tab-group", "wa-tree"
+    ),
     verbose = FALSE
   )
 
@@ -477,7 +665,19 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     file.exists(file.path(root, "R", "wa_checkbox.R"))
   )
   testthat::expect_true(
+    file.exists(file.path(root, "R", "wa_details.R"))
+  )
+  testthat::expect_true(
+    file.exists(file.path(root, "R", "wa_dialog.R"))
+  )
+  testthat::expect_true(
+    file.exists(file.path(root, "R", "wa_drawer.R"))
+  )
+  testthat::expect_true(
     file.exists(file.path(root, "R", "wa_select.R"))
+  )
+  testthat::expect_true(
+    file.exists(file.path(root, "R", "wa_tab_group.R"))
   )
   testthat::expect_true(
     file.exists(file.path(root, "R", "wa_tree.R"))
@@ -492,7 +692,19 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     file.exists(file.path(root, "inst", "bindings", "wa_checkbox.js"))
   )
   testthat::expect_true(
+    file.exists(file.path(root, "inst", "bindings", "wa_details.js"))
+  )
+  testthat::expect_true(
+    file.exists(file.path(root, "inst", "bindings", "wa_dialog.js"))
+  )
+  testthat::expect_true(
+    file.exists(file.path(root, "inst", "bindings", "wa_drawer.js"))
+  )
+  testthat::expect_true(
     file.exists(file.path(root, "inst", "bindings", "wa_select.js"))
+  )
+  testthat::expect_true(
+    file.exists(file.path(root, "inst", "bindings", "wa_tab_group.js"))
   )
   testthat::expect_true(
     file.exists(file.path(root, "inst", "bindings", "wa_tree.js"))
@@ -500,8 +712,8 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_true(
     file.exists(file.path(root, "R", "wa_select.R"))
   )
-  testthat::expect_equal(length(result$written$wrappers), 6L)
-  testthat::expect_equal(length(result$written$bindings), 5L)
+  testthat::expect_equal(length(result$written$wrappers), 10L)
+  testthat::expect_equal(length(result$written$bindings), 9L)
   testthat::expect_equal(length(result$written$updates), 1L)
   testthat::expect_true("R/wa_select.R" %in% result$written$updates)
 
@@ -557,6 +769,42 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_true(any(grepl(
     "^  input_id,$",
     tree_wrapper
+  )))
+
+  tab_group_wrapper <- readLines(
+    file.path(root, "R", "wa_tab_group.R"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "@param input_id Shiny input id for the component\\.",
+    tab_group_wrapper
+  )))
+
+  details_wrapper <- readLines(
+    file.path(root, "R", "wa_details.R"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "@param input_id Shiny input id for the component\\.",
+    details_wrapper
+  )))
+
+  dialog_wrapper <- readLines(
+    file.path(root, "R", "wa_dialog.R"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "@param input_id Shiny input id for the component\\.",
+    dialog_wrapper
+  )))
+
+  drawer_wrapper <- readLines(
+    file.path(root, "R", "wa_drawer.R"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "@param input_id Shiny input id for the component\\.",
+    drawer_wrapper
   )))
 
   select_wrapper <- readLines(file.path(root, "R", "wa_select.R"), warn = FALSE)
@@ -645,7 +893,7 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     checkbox_binding
   )))
   testthat::expect_true(any(grepl(
-    "removeEventListener\\('wa-change', el.__shinyWebawesomeCallback\\);",
+    "removeEventListener\\(eventName, el.__shinyWebawesomeCallback\\);",
     checkbox_binding
   )))
   testthat::expect_true(any(grepl(
@@ -662,11 +910,11 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     carousel_binding
   )))
   testthat::expect_true(any(grepl(
-    "addEventListener\\('wa-slide-change', el.__shinyWebawesomeCallback\\);",
+    "el.__shinyWebawesomeEvents = \\[\"wa-slide-change\"\\];",
     carousel_binding
   )))
   testthat::expect_true(any(grepl(
-    "__shinyWebawesomeCallback = \\(\\) => callback\\(\\);",
+    "addEventListener\\(eventName, el.__shinyWebawesomeCallback\\);",
     carousel_binding
   )))
   testthat::expect_true(any(grepl(
@@ -687,7 +935,7 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     tree_binding
   )))
   testthat::expect_true(any(grepl(
-    "addEventListener\\('wa-selection-change', el.__shinyWebawesomeCallback\\);",
+    "el.__shinyWebawesomeEvents = \\[\"wa-selection-change\"\\];",
     tree_binding
   )))
   testthat::expect_true(any(grepl(
@@ -701,6 +949,58 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_true(any(grepl(
     "missing_tree_item_id",
     tree_binding
+  )))
+
+  details_binding <- readLines(
+    file.path(root, "inst", "bindings", "wa_details.js"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "return el\\.open;",
+    details_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "el.__shinyWebawesomeEvents = \\[\"wa-show\", \"wa-hide\"\\];",
+    details_binding
+  )))
+
+  dialog_binding <- readLines(
+    file.path(root, "inst", "bindings", "wa_dialog.js"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "return el\\.open;",
+    dialog_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "el.__shinyWebawesomeEvents = \\[\"wa-show\", \"wa-after-hide\"\\];",
+    dialog_binding
+  )))
+
+  drawer_binding <- readLines(
+    file.path(root, "inst", "bindings", "wa_drawer.js"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "return el\\.open;",
+    drawer_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "el.__shinyWebawesomeEvents = \\[\"wa-show\", \"wa-after-hide\"\\];",
+    drawer_binding
+  )))
+
+  tab_group_binding <- readLines(
+    file.path(root, "inst", "bindings", "wa_tab_group.js"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "return el\\.active;",
+    tab_group_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "el.__shinyWebawesomeEvents = \\[\"wa-tab-show\"\\];",
+    tab_group_binding
   )))
 })
 

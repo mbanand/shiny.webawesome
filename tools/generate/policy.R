@@ -26,6 +26,20 @@
   .scalar_string(tolower(value), fallback = NA_character_)
 }
 
+# Return one normalized ordered list of binding event strings.
+.normalize_binding_events <- function(value) {
+  value <- .or_default(value, list())
+
+  if (length(value) == 0L) {
+    return(character())
+  }
+
+  normalized <- vapply(value, .normalize_binding_event, character(1))
+  normalized <- normalized[!is.na(normalized) & nzchar(normalized)]
+
+  unique(normalized)
+}
+
 # Return one normalized binding extractor kind.
 .normalize_binding_value_kind <- function(value) {
   kind <- tolower(.scalar_string(value, fallback = NA_character_))
@@ -95,6 +109,7 @@
       binding <- .or_default(component$binding, list())
       mode <- .normalize_binding_mode(binding$mode)
       event <- .normalize_binding_event(binding$event)
+      events <- .normalize_binding_events(binding$events)
       value_kind <- .normalize_binding_value_kind(binding$value_kind)
       value_field <- .normalize_binding_value_field(binding$value_field)
       warning_key <- .normalize_binding_warning_key(binding$warning_key)
@@ -112,11 +127,23 @@
         )
       }
 
-      if (!identical(mode, "none") && is.na(event)) {
+      if (
+        !identical(mode, "none") &&
+          is.na(event) &&
+          length(events) == 0L
+      ) {
         stop(
-          "Binding override entries must include `binding.event` for mode `",
-          mode,
-          "`: ",
+          "Binding override entries must include `binding.event` or ",
+          "`binding.events` for mode `", mode, "`: ",
+          tag,
+          call. = FALSE
+        )
+      }
+
+      if (!identical(mode, "semantic") && length(events) > 0L) {
+        stop(
+          "Binding override entries may use `binding.events` only for ",
+          "`binding.mode: semantic`: ",
           tag,
           call. = FALSE
         )
@@ -137,6 +164,11 @@
         binding = list(
           mode = mode,
           event = event,
+          events = if (length(events) == 0L) {
+            if (is.na(event)) character() else event
+          } else {
+            events
+          },
           value_kind = value_kind,
           value_field = value_field,
           warning_key = warning_key,

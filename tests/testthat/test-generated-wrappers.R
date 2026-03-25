@@ -791,8 +791,8 @@ test_that("broadened heuristic-classified wrappers render expected fragments", {
   expect_exact_html(
     render_html(
       shiny.webawesome:::wa_details(
+        "details",
         "Details body",
-        id = "details",
         summary = "More"
       )
     ),
@@ -802,12 +802,23 @@ test_that("broadened heuristic-classified wrappers render expected fragments", {
   expect_exact_html(
     render_html(
       shiny.webawesome:::wa_dialog(
+        "dialog",
         "Dialog body",
-        id = "dialog",
         label = "Dialog title"
       )
     ),
     c('<wa-dialog id="dialog" label="Dialog title">Dialog body</wa-dialog>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_drawer(
+        "drawer",
+        "Drawer body",
+        label = "Drawer title"
+      )
+    ),
+    c('<wa-drawer id="drawer" label="Drawer title">Drawer body</wa-drawer>')
   )
 
   expect_exact_html(
@@ -863,9 +874,9 @@ test_that("broadened heuristic-classified wrappers render expected fragments", {
   expect_exact_html(
     render_html(
       shiny.webawesome:::wa_tab_group(
+        "tab_group",
         panel_a,
         panel_b,
-        id = "tab_group",
         nav = htmltools::tagList(tab_a, tab_b)
       )
     ),

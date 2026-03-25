@@ -11,6 +11,7 @@
 #       binding:
 #         mode: <none|value|action|semantic>
 #         event: <dom-event-name>
+#         events: [<dom-event-name>, ...]         # optional semantic-mode list
 #         value_kind: <property|attribute|custom>   # semantic mode only
 #         value_field: <field-or-extractor-key>     # semantic mode only
 #         warning_key: <warning-registry-key>       # optional, semantic mode
@@ -20,7 +21,10 @@
 # - `tag` is required and must start with `wa-`.
 # - `binding.mode` defaults are not inferred here; every override entry should
 #   state the intended mode explicitly.
-# - `binding.event` is required for every mode except `none`.
+# - `binding.event` is required for every mode except `none`, unless
+#   `binding.events` is supplied for `binding.mode: semantic`.
+# - `binding.events` may be used only with `binding.mode: semantic` and should
+#   list the lifecycle events that commit the same semantic Shiny value.
 # - `binding.value_kind` and `binding.value_field` are required for
 #   `binding.mode: semantic`.
 # - `binding.warning_key` is optional and should reference a known package
@@ -38,6 +42,7 @@
 #
 # Current semantic extractor keys:
 # - `activeSlide` with `value_kind: property` for `wa-carousel`
+# - `open` with `value_kind: property` for open-state components
 # - `selectedItemIds` with `value_kind: custom` for `wa-tree`
 #
 schema_version: 1
@@ -55,6 +60,40 @@ components:
       value_kind: property
       value_field: activeSlide
       rationale: Carousel slide changes represent committed component state that can drive Shiny outputs.
+  - tag: wa-details
+    binding:
+      mode: semantic
+      events:
+        - wa-show
+        - wa-hide
+      value_kind: property
+      value_field: open
+      rationale: Details visibility is durable open-state, so the binding should expose committed boolean open state rather than raw lifecycle event names.
+  - tag: wa-dialog
+    binding:
+      mode: semantic
+      events:
+        - wa-show
+        - wa-after-hide
+      value_kind: property
+      value_field: open
+      rationale: Dialog visibility is durable open-state, but close requests are cancelable so the binding should use the earliest non-cancelable lifecycle events and expose committed boolean open state.
+  - tag: wa-drawer
+    binding:
+      mode: semantic
+      events:
+        - wa-show
+        - wa-after-hide
+      value_kind: property
+      value_field: open
+      rationale: Drawer visibility is durable open-state, but close requests are cancelable so the binding should use the earliest non-cancelable lifecycle events and expose committed boolean open state.
+  - tag: wa-tab-group
+    binding:
+      mode: semantic
+      event: wa-tab-show
+      value_kind: property
+      value_field: active
+      rationale: Tab groups expose durable active-tab state, so the binding should deliver the committed active panel name rather than raw tab show or hide events.
   - tag: wa-tree
     binding:
       mode: semantic

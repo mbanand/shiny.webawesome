@@ -273,6 +273,22 @@ component as an **action binding** when the metadata alone is insufficient.
   current input value changed".
 * Generated bindings should subscribe to one supported value/commit event and
   then read the component's current value for delivery to Shiny.
+* Binding semantics should be named after the reactive contract being exposed
+  to Shiny, not necessarily after the upstream browser event that triggered
+  synchronization.
+* When the component's Shiny contract is inherently action-like, a binding may
+  use dedicated action semantics.
+* Otherwise, bindings should expose the durable semantic value implied by the
+  triggering event, typically by reading a stable upstream property or state
+  field after the relevant lifecycle transition commits.
+* Semantic state bindings should therefore prefer upstream value/property names
+  such as `activeSlide`, `selectedItemIds`, or `open` over raw browser event
+  names such as `wa-slide-change`, `wa-selection-change`, `wa-show`, or
+  `wa-hide`.
+* When semantic state is driven by component lifecycle events, bindings should
+  subscribe to the earliest non-cancelable events that commit that state.
+  Request-style or cancelable events should not be treated as committed
+  reactive state merely because they happen earlier.
 * Action-style bindings must be opt-in through a narrow handwritten policy
   layer; they must not be inferred casually from arbitrary browser events.
 * Action-style bindings should use dedicated action semantics appropriate for
@@ -294,6 +310,14 @@ component-specific Web Awesome events without routing those events through
 Shiny's server input mechanism.
 
 This is deferred. It is not part of the current generator or binding model.
+
+User-facing documentation should also explain this binding convention
+explicitly once the semantic binding surface is broader: raw event names are
+not always the Shiny contract, because Shiny bindings are intended to expose
+action semantics only for inherently action-like controls and otherwise expose
+the durable semantic value that the relevant browser event commits.
+This documentation follow-up remains deferred until the broader binding
+surface and examples settle further.
 
 ---
 

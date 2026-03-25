@@ -1,5 +1,8 @@
 library(htmltools)
 library(shiny)
+# Representative harness apps load the local package in a way static linting
+# cannot fully resolve outside an installed-package context.
+# nolint next: object_usage_linter
 library(shiny.webawesome)
 
 make_wa_option <- function(value, label) {
@@ -80,14 +83,19 @@ ui <- wa_page(
     value = "Copy me"
   ),
   wa_details(
+    input_id = "details",
     "Details body",
-    id = "details",
     summary = "More"
   ),
   wa_dialog(
+    input_id = "dialog",
     "Dialog body",
-    id = "dialog",
     label = "Dialog title"
+  ),
+  wa_drawer(
+    input_id = "drawer",
+    "Drawer body",
+    label = "Drawer title"
   ),
   wa_divider(id = "divider"),
   wa_input(
@@ -147,9 +155,9 @@ ui <- wa_page(
     value = "enabled"
   ),
   wa_tab_group(
+    input_id = "tab_group",
     make_wa_tab_panel("first", "First panel"),
     make_wa_tab_panel("second", "Second panel"),
-    id = "tab_group",
     nav = htmltools::tagList(
       make_wa_tab("first", "First"),
       make_wa_tab("second", "Second")
@@ -190,12 +198,16 @@ ui <- wa_page(
   verbatimTextOutput("carousel_value"),
   verbatimTextOutput("checkbox_value"),
   verbatimTextOutput("color_picker_value"),
+  verbatimTextOutput("details_value"),
+  verbatimTextOutput("dialog_value"),
+  verbatimTextOutput("drawer_value"),
   verbatimTextOutput("number_input_value"),
   verbatimTextOutput("radio_group_value"),
   verbatimTextOutput("rating_value"),
   verbatimTextOutput("select_value"),
   verbatimTextOutput("slider_value"),
   verbatimTextOutput("switch_value"),
+  verbatimTextOutput("tab_group_value"),
   verbatimTextOutput("text_area_value"),
   verbatimTextOutput("text_input_value"),
   verbatimTextOutput("tree_value")
@@ -228,6 +240,42 @@ server <- function(input, output, session) {
     }
 
     input$color_picker
+  })
+
+  output$details_value <- renderText({
+    if (is.null(input$details)) {
+      return("<null>")
+    }
+
+    if (isTRUE(input$details)) {
+      return("TRUE")
+    }
+
+    "FALSE"
+  })
+
+  output$dialog_value <- renderText({
+    if (is.null(input$dialog)) {
+      return("<null>")
+    }
+
+    if (isTRUE(input$dialog)) {
+      return("TRUE")
+    }
+
+    "FALSE"
+  })
+
+  output$drawer_value <- renderText({
+    if (is.null(input$drawer)) {
+      return("<null>")
+    }
+
+    if (isTRUE(input$drawer)) {
+      return("TRUE")
+    }
+
+    "FALSE"
   })
 
   output$number_input_value <- renderText({
@@ -286,6 +334,14 @@ server <- function(input, output, session) {
     "FALSE"
   })
 
+  output$tab_group_value <- renderText({
+    if (is.null(input$tab_group) || identical(input$tab_group, "")) {
+      return("<null>")
+    }
+
+    input$tab_group
+  })
+
   output$text_area_value <- renderText({
     if (is.null(input$text_area) || identical(input$text_area, "")) {
       return("<null>")
@@ -310,6 +366,9 @@ server <- function(input, output, session) {
     paste(input$tree, collapse = ",")
   })
 
+  # These update helpers are exported by the local package, but
+  # object_usage_linter cannot resolve them reliably in this harness context.
+  # nolint start: object_usage_linter
   observeEvent(input$update_input, {
     update_wa_input(
       session = session,
@@ -359,6 +418,7 @@ server <- function(input, output, session) {
       hint = "Updated textarea hint"
     )
   })
+  # nolint end
 }
 
 shinyApp(ui, server)
