@@ -47,7 +47,9 @@ test_that("representative components work end to end in a browser", {
       "&& Boolean(window.customElements.get('wa-tab-group'))",
       "&& Boolean(window.customElements.get('wa-tag'))",
       "&& Boolean(window.customElements.get('wa-textarea'))",
-      "&& Boolean(window.customElements.get('wa-tooltip'))"
+      "&& Boolean(window.customElements.get('wa-tooltip'))",
+      "&& Boolean(window.customElements.get('wa-tree'))",
+      "&& Boolean(window.customElements.get('wa-tree-item'))"
     )
   )
 
@@ -63,6 +65,35 @@ test_that("representative components work end to end in a browser", {
   testthat::expect_match(app$get_html("#popover"), "Popover body")
   testthat::expect_match(app$get_html("#tag"), "Tag")
   testthat::expect_match(app$get_html("#tooltip"), "Tooltip body")
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('tree');",
+      "const itemA = document.getElementById('tree_item_a');",
+      "const itemB = document.getElementById('tree_item_b');",
+      "el.dispatchEvent(new CustomEvent('wa-selection-change', {",
+      "  bubbles: true,",
+      "  detail: { selection: [itemA, itemB] }",
+      "}));"
+    )
+  )
+  app$wait_for_js(
+    paste(
+      "document.getElementById('tree_value').innerText.trim()",
+      "=== 'tree_item_a,tree_item_b'"
+    )
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('carousel');",
+      "el.activeSlide = 1;",
+      "el.dispatchEvent(new CustomEvent('wa-slide-change', { bubbles: true }));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('carousel_value').innerText.trim() === '1'"
+  )
 
   app$run_js(
     paste(
@@ -83,7 +114,10 @@ test_that("representative components work end to end in a browser", {
     )
   )
   app$wait_for_js(
-    "document.getElementById('color_picker_value').innerText.trim() === '#445566'"
+    paste(
+      "document.getElementById('color_picker_value').innerText.trim()",
+      "=== '#445566'"
+    )
   )
 
   app$run_js(
@@ -181,7 +215,10 @@ test_that("representative components work end to end in a browser", {
       "String(el.value) === '6'",
       "&& el.label === 'Updated number label'",
       "&& el.hint === 'Updated number hint'",
-      "&& document.getElementById('number_input_value').innerText.trim() === '6'"
+      paste(
+        "&& document.getElementById('number_input_value').innerText.trim()",
+        "=== '6'"
+      )
     )
   )
 
@@ -203,7 +240,10 @@ test_that("representative components work end to end in a browser", {
       "el.value === 'beta'",
       "&& el.label === 'Updated input label'",
       "&& el.hint === 'Updated input hint'",
-      "&& document.getElementById('text_input_value').innerText.trim() === 'beta'"
+      paste(
+        "&& document.getElementById('text_input_value').innerText.trim()",
+        "=== 'beta'"
+      )
     )
   )
 
@@ -214,7 +254,10 @@ test_that("representative components work end to end in a browser", {
       "el.value === 'gamma'",
       "&& el.label === 'Updated textarea label'",
       "&& el.hint === 'Updated textarea hint'",
-      "&& document.getElementById('text_area_value').innerText.trim() === 'gamma'"
+      paste(
+        "&& document.getElementById('text_area_value').innerText.trim()",
+        "=== 'gamma'"
+      )
     )
   )
 

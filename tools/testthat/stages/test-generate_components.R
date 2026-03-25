@@ -35,7 +35,22 @@ source(file.path("..", "..", "generate_components.R"))
       "    binding:",
       "      mode: action",
       "      event: click",
-      "      rationale: Native click semantics are expected for button-like controls."
+      "      rationale: Native click semantics are expected for button-like controls.",
+      "  - tag: wa-carousel",
+      "    binding:",
+      "      mode: semantic",
+      "      event: wa-slide-change",
+      "      value_kind: property",
+      "      value_field: activeSlide",
+      "      rationale: Carousel slide changes represent committed component state.",
+      "  - tag: wa-tree",
+      "    binding:",
+      "      mode: semantic",
+      "      event: wa-selection-change",
+      "      value_kind: custom",
+      "      value_field: selectedItemIds",
+      "      warning_key: missing_tree_item_id",
+      "      rationale: Tree selection changes represent committed component state."
     )
   )
 }
@@ -152,6 +167,47 @@ source(file.path("..", "..", "generate_components.R"))
         )
       ),
       list(
+        path = "components/carousel/carousel.js",
+        declarations = list(
+          list(
+            kind = "class",
+            name = "WaCarousel",
+            tagName = "wa-carousel",
+            summary = "Carousel component.",
+            attributes = list(
+              list(name = "current-slide", fieldName = "currentSlide", type = list(text = "number"))
+            ),
+            members = list(
+              list(name = "currentSlide", kind = "field", type = list(text = "number")),
+              list(name = "activeSlide", kind = "field", type = list(text = "number"))
+            ),
+            events = list(
+              list(name = "wa-slide-change", type = list(text = "CustomEvent<{ index: number } >"))
+            )
+          )
+        )
+      ),
+      list(
+        path = "components/tree/tree.js",
+        declarations = list(
+          list(
+            kind = "class",
+            name = "WaTree",
+            tagName = "wa-tree",
+            summary = "Tree component.",
+            attributes = list(
+              list(name = "selection", fieldName = "selection", type = list(text = "'single' | 'multiple' | 'leaf'"))
+            ),
+            members = list(
+              list(name = "selection", kind = "field", type = list(text = "'single' | 'multiple' | 'leaf'"))
+            ),
+            events = list(
+              list(name = "wa-selection-change", type = list(text = "CustomEvent<{ selection: WaTreeItem[] } >"))
+            )
+          )
+        )
+      ),
+      list(
         path = "components/misc/helper.js",
         declarations = list(
           list(name = "NotACustomElement")
@@ -206,10 +262,10 @@ testthat::test_that("generate builds deterministic intermediate schema", {
 
   result <- generate_components(root = root, emit = FALSE, verbose = FALSE)
 
-  testthat::expect_equal(result$component_count, 4L)
+  testthat::expect_equal(result$component_count, 6L)
   testthat::expect_equal(
     vapply(result$schema$components, `[[`, character(1), "tag_name"),
-    c("wa-button", "wa-card", "wa-checkbox", "wa-select")
+    c("wa-button", "wa-card", "wa-carousel", "wa-checkbox", "wa-select", "wa-tree")
   )
 
   card <- result$schema$components[[2]]
@@ -230,7 +286,20 @@ testthat::test_that("generate builds deterministic intermediate schema", {
     c("default", "footer")
   )
 
-  checkbox <- result$schema$components[[3]]
+  carousel <- result$schema$components[[3]]
+  testthat::expect_equal(carousel$classification$mode, "wrapper-binding-semantic")
+  testthat::expect_true(isTRUE(carousel$classification$binding))
+  testthat::expect_equal(carousel$classification$binding_mode, "semantic")
+  testthat::expect_equal(carousel$classification$binding_event, "wa-slide-change")
+  testthat::expect_equal(carousel$classification$binding_value_kind, "property")
+  testthat::expect_equal(carousel$classification$binding_value_field, "activeSlide")
+  testthat::expect_equal(carousel$classification$binding_source, "policy")
+  testthat::expect_match(
+    carousel$classification$reasons$binding_policy_reason,
+    "Carousel slide changes"
+  )
+
+  checkbox <- result$schema$components[[4]]
   checkbox_properties <- vapply(checkbox$properties, `[[`, character(1), "name")
   testthat::expect_equal(checkbox_properties, c("checked", "hint", "input"))
   testthat::expect_true(is.na(checkbox$properties[[1]]$attribute_name))
@@ -247,11 +316,19 @@ testthat::test_that("generate builds deterministic intermediate schema", {
   )
   testthat::expect_equal(checkbox$classification$mode, "wrapper-binding")
   testthat::expect_true(isTRUE(checkbox$classification$binding))
-  select <- result$schema$components[[4]]
+  select <- result$schema$components[[5]]
   testthat::expect_equal(select$classification$mode, "wrapper-binding-update")
   testthat::expect_true(isTRUE(select$classification$update))
+  tree <- result$schema$components[[6]]
+  testthat::expect_equal(tree$classification$mode, "wrapper-binding-semantic")
+  testthat::expect_true(isTRUE(tree$classification$binding))
+  testthat::expect_equal(tree$classification$binding_mode, "semantic")
+  testthat::expect_equal(tree$classification$binding_event, "wa-selection-change")
+  testthat::expect_equal(tree$classification$binding_value_kind, "custom")
+  testthat::expect_equal(tree$classification$binding_value_field, "selectedItemIds")
+  testthat::expect_equal(tree$classification$binding_warning_key, "missing_tree_item_id")
   testthat::expect_equal(result$schema$summary$classification$wrapper_only, 1L)
-  testthat::expect_equal(result$schema$summary$classification$binding, 3L)
+  testthat::expect_equal(result$schema$summary$classification$binding, 5L)
   testthat::expect_equal(result$schema$summary$classification$update, 1L)
 })
 
@@ -311,10 +388,10 @@ testthat::test_that("generate writes debug artifacts when requested", {
   )
 
   schema_debug <- jsonlite::fromJSON(result$debug$schema, simplifyVector = FALSE)
-  testthat::expect_equal(schema_debug$summary$component_count, 4L)
+  testthat::expect_equal(schema_debug$summary$component_count, 6L)
   testthat::expect_equal(
     names(schema_debug$components),
-    c("wa-button", "wa-card", "wa-checkbox", "wa-select")
+    c("wa-button", "wa-card", "wa-carousel", "wa-checkbox", "wa-select", "wa-tree")
   )
   testthat::expect_equal(
     schema_debug$components[["wa-card"]]$r_function_name,
@@ -344,6 +421,34 @@ testthat::test_that("generate writes debug artifacts when requested", {
     schema_debug$components[["wa-button"]]$classification$binding_source,
     "policy"
   )
+  testthat::expect_equal(
+    schema_debug$components[["wa-carousel"]]$classification$binding_mode,
+    "semantic"
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-carousel"]]$classification$binding_value_kind,
+    "property"
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-carousel"]]$classification$binding_value_field,
+    "activeSlide"
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-tree"]]$classification$binding_mode,
+    "semantic"
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-tree"]]$classification$binding_value_kind,
+    "custom"
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-tree"]]$classification$binding_value_field,
+    "selectedItemIds"
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-tree"]]$classification$binding_warning_key,
+    "missing_tree_item_id"
+  )
 })
 
 testthat::test_that("generate writes wrapper, binding, and update outputs", {
@@ -355,7 +460,7 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
 
   result <- generate_components(
     root = root,
-    filter = c("wa-button", "wa-card", "wa-checkbox", "wa-select"),
+    filter = c("wa-button", "wa-card", "wa-carousel", "wa-checkbox", "wa-select", "wa-tree"),
     verbose = FALSE
   )
 
@@ -366,13 +471,22 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     file.exists(file.path(root, "R", "wa_card.R"))
   )
   testthat::expect_true(
+    file.exists(file.path(root, "R", "wa_carousel.R"))
+  )
+  testthat::expect_true(
     file.exists(file.path(root, "R", "wa_checkbox.R"))
   )
   testthat::expect_true(
     file.exists(file.path(root, "R", "wa_select.R"))
   )
   testthat::expect_true(
+    file.exists(file.path(root, "R", "wa_tree.R"))
+  )
+  testthat::expect_true(
     file.exists(file.path(root, "inst", "bindings", "wa_button.js"))
+  )
+  testthat::expect_true(
+    file.exists(file.path(root, "inst", "bindings", "wa_carousel.js"))
   )
   testthat::expect_true(
     file.exists(file.path(root, "inst", "bindings", "wa_checkbox.js"))
@@ -381,10 +495,13 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     file.exists(file.path(root, "inst", "bindings", "wa_select.js"))
   )
   testthat::expect_true(
+    file.exists(file.path(root, "inst", "bindings", "wa_tree.js"))
+  )
+  testthat::expect_true(
     file.exists(file.path(root, "R", "wa_select.R"))
   )
-  testthat::expect_equal(length(result$written$wrappers), 4L)
-  testthat::expect_equal(length(result$written$bindings), 3L)
+  testthat::expect_equal(length(result$written$wrappers), 6L)
+  testthat::expect_equal(length(result$written$bindings), 5L)
   testthat::expect_equal(length(result$written$updates), 1L)
   testthat::expect_true("R/wa_select.R" %in% result$written$updates)
 
@@ -406,6 +523,40 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_true(any(grepl(
     "@param id Optional DOM id attribute for HTML, CSS, and JS targeting\\.",
     card_wrapper
+  )))
+
+  carousel_wrapper <- readLines(
+    file.path(root, "R", "wa_carousel.R"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "@param input_id Shiny input id for the component\\.",
+    carousel_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^wa_carousel <- function\\($",
+    carousel_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^  input_id,$",
+    carousel_wrapper
+  )))
+
+  tree_wrapper <- readLines(
+    file.path(root, "R", "wa_tree.R"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "@param input_id Shiny input id for the component\\.",
+    tree_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^wa_tree <- function\\($",
+    tree_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^  input_id,$",
+    tree_wrapper
   )))
 
   select_wrapper <- readLines(file.path(root, "R", "wa_select.R"), warn = FALSE)
@@ -500,6 +651,56 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_true(any(grepl(
     "dispatchEvent\\(new Event\\('change', \\{ bubbles: true \\}\\)\\);",
     checkbox_binding
+  )))
+
+  carousel_binding <- readLines(
+    file.path(root, "inst", "bindings", "wa_carousel.js"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "return el\\.activeSlide;",
+    carousel_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "addEventListener\\('wa-slide-change', el.__shinyWebawesomeCallback\\);",
+    carousel_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "__shinyWebawesomeCallback = \\(\\) => callback\\(\\);",
+    carousel_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "receiveMessage\\(el, data\\) \\{",
+    carousel_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "^    return;$",
+    carousel_binding
+  )))
+
+  tree_binding <- readLines(
+    file.path(root, "inst", "bindings", "wa_tree.js"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "return el.__shinyWebawesomeValue \\|\\| \\[\\];",
+    tree_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "addEventListener\\('wa-selection-change', el.__shinyWebawesomeCallback\\);",
+    tree_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "event\\?\\.detail\\?\\.selection",
+    tree_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "window\\.ShinyWebawesomeWarn\\.warnOnce\\(",
+    tree_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "missing_tree_item_id",
+    tree_binding
   )))
 })
 

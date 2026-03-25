@@ -23,6 +23,72 @@
   paste0("bindings/", sort(scripts))
 }
 
+# Return the known warning-registry defaults for the package runtime.
+.wa_warning_defaults <- function() {
+  list(
+    missing_tree_item_id = TRUE
+  )
+}
+
+# Return one normalized logical warning flag with fallback to the default.
+.wa_warning_flag <- function(value, default) {
+  if (is.logical(value) && length(value) == 1L && !is.na(value)) {
+    return(value)
+  }
+
+  default
+}
+
+# Return the normalized runtime warning registry options.
+.wa_warning_registry <- function() {
+  defaults <- .wa_warning_defaults()
+  options_value <- getOption("shiny.webawesome.warnings", list())
+
+  if (!is.list(options_value)) {
+    options_value <- list()
+  }
+
+  stats::setNames(
+    lapply(
+      names(defaults),
+      function(name) {
+        .wa_warning_flag(options_value[[name]], defaults[[name]])
+      }
+    ),
+    names(defaults)
+  )
+}
+
+# Return one JavaScript boolean literal for a scalar logical value.
+.wa_js_bool <- function(value) {
+  if (isTRUE(value)) {
+    return("true")
+  }
+
+  "false"
+}
+
+# Return the inline runtime warning-registry bootstrap script.
+.wa_warning_registry_script <- function() {
+  warnings <- .wa_warning_registry()
+  entries <- vapply(
+    names(warnings),
+    function(name) {
+      paste0(name, ": ", .wa_js_bool(warnings[[name]]))
+    },
+    character(1)
+  )
+
+  paste(
+    "window.shinyWebawesomeWarnings = Object.assign(",
+    "  {},",
+    "  window.shinyWebawesomeWarnings || {},",
+    paste0("  { ", paste(entries, collapse = ", "), " }"),
+    ");",
+    sep = "\n"
+  )
+}
+
 # Build the package dependency object for the shipped Web Awesome runtime.
 .wa_dependency <- function() {
   scripts <- c("www/webawesome-init.js", .wa_binding_scripts())
@@ -37,7 +103,10 @@
     package = "shiny.webawesome",
     src = c(file = "."),
     stylesheet = "www/wa/styles/webawesome.css",
-    script = scripts
+    script = scripts,
+    head = htmltools::tags$script(
+      htmltools::HTML(.wa_warning_registry_script())
+    )
   )
 }
 

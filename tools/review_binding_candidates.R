@@ -275,78 +275,125 @@ rm(.bootstrap_cli_ui)
   )
 }
 
-# Return whether a documentation blob contains interaction-review keywords.
-.doc_has_interaction_keywords <- function(doc_blob) {
+# Return one lowercased token blob from tag and declaration names.
+.declaration_name_blob <- function(component, declaration) {
+  parts <- c(
+    .scalar_string(component$tag_name, fallback = ""),
+    .scalar_string(declaration$name, fallback = ""),
+    .scalar_string(declaration$tagName, fallback = "")
+  )
+
+  tolower(paste(parts[nzchar(parts)], collapse = "\n"))
+}
+
+# Return whether docs contain action-style control keywords.
+.doc_has_action_keywords <- function(doc_blob) {
   grepl(
-    "\\b(button|click|trigger|press|submit|activate|toggle)\\b",
+    paste(
+      "\\b(",
+      "click|press|trigger|action|activate|submit",
+      ")\\b",
+      sep = ""
+    ),
     doc_blob,
     perl = TRUE
   )
 }
 
-# Return whether a public method list contains one review-interest method.
-.has_review_method <- function(method_names) {
-  length(intersect(
-    method_names,
-    c("click", "show", "hide", "toggle", "focus", "blur", "submit", "reset")
-  )) > 0L
+# Return whether docs contain generic interaction-only keywords.
+.doc_has_interaction_keywords <- function(doc_blob) {
+  grepl(
+    paste(
+      "\\b(",
+      "show|hide|open|close|hover|focus|blur|tooltip|popover|details",
+      ")\\b",
+      sep = ""
+    ),
+    doc_blob,
+    perl = TRUE
+  )
 }
 
-# Return one candidate score from heuristic signals.
-.binding_candidate_score <- function(
-  wrapper_only,
-  method_names,
-  event_names,
-  doc_blob
-) {
-  if (!isTRUE(wrapper_only)) {
-    return(0L)
-  }
-
-  score <- 0L
-
-  if ("click" %in% method_names && !("click" %in% event_names)) {
-    score <- score + 3L
-  }
-
-  if (.has_review_method(method_names)) {
-    score <- score + 1L
-  }
-
-  if (.doc_has_interaction_keywords(doc_blob)) {
-    score <- score + 1L
-  }
-
-  score
+# Return whether one method list contains a public click() method.
+.has_click_method <- function(method_names) {
+  "click" %in% method_names
 }
 
-# Return one candidate reason vector from heuristic signals.
-.binding_candidate_reasons <- function(method_names, event_names, doc_blob) {
-  reasons <- character()
-
-  if ("click" %in% method_names && !("click" %in% event_names)) {
-    reasons <- c(reasons, "public click() method without declared click event")
-  }
-
-  review_methods <- intersect(
+# Return method names that indicate interactivity but not action binding.
+.interactive_review_methods <- function(method_names) {
+  intersect(
     method_names,
     c("show", "hide", "toggle", "focus", "blur", "submit", "reset")
   )
-  if (length(review_methods) > 0L) {
-    reasons <- c(
-      reasons,
-      paste(
-        "interactive public methods:",
-        paste(review_methods, collapse = ", ")
+}
+
+# Return whether one event list already contains a binding-driving event.
+.has_declared_binding_event <- function(event_names) {
+  length(intersect(event_names, .binding_event_names())) > 0L
+}
+
+# Return whether one component name looks like a directly activated control.
+.has_control_name_signal <- function(name_blob) {
+  archetype_pattern <- paste(
+    "\\b(",
+    "button|tab|radio|switch|checkbox|option",
+    ")\\b",
+    sep = ""
+  )
+
+  grepl(archetype_pattern, name_blob, perl = TRUE)
+}
+
+# Return one review tier and deterministic reason vector.
+.binding_review_classification <- function(
+  wrapper_only,
+  method_names,
+  event_names,
+  name_blob,
+  doc_blob
+) {
+  has_binding_event <- .has_declared_binding_event(event_names)
+  has_click_method <- .has_click_method(method_names)
+  has_control_name_signal <- .has_control_name_signal(name_blob)
+  has_action_doc_signal <- .doc_has_action_keywords(doc_blob)
+  interactive_methods <- .interactive_review_methods(method_names)
+  has_interaction_signal <- .doc_has_interaction_keywords(doc_blob) ||
+    length(interactive_methods) > 0L
+
+  if (!isTRUE(wrapper_only) || has_binding_event) {
+    return(list(tier = "ignore", reasons = character()))
+  }
+
+  if (has_click_method && (has_control_name_signal || has_action_doc_signal)) {
+    return(list(
+      tier = "candidate",
+      reasons = c(
+        "public click() method without declared binding event",
+        "component naming/docs suggest action-style control",
+        "wrapper-only classification leaves likely action semantics uncovered"
       )
-    )
+    ))
   }
 
-  if (.doc_has_interaction_keywords(doc_blob)) {
-    reasons <- c(reasons, "docs contain interaction keywords")
+  if (
+    has_control_name_signal &&
+      (has_action_doc_signal || has_interaction_signal)
+  ) {
+    return(list(
+      tier = "watch",
+      reasons = c(
+        "component naming/docs suggest directly activated control",
+        "no declared binding event in metadata",
+        "interactive surface present, but no click()-level action evidence"
+      )
+    ))
   }
 
-  reasons
+  if (has_interaction_signal) {
+    return(list(tier = "ignore", reasons = character()))
+  }
+
+  list(tier = "ignore", reasons = character())
 }
 
 # Build one component review row from schema and raw declaration data.
@@ -359,10 +406,12 @@ rm(.bootstrap_cli_ui)
     "name"
   )
   doc_blob <- .declaration_doc_blob(declaration)
-  score <- .binding_candidate_score(
+  name_blob <- .declaration_name_blob(component, declaration)
+  review <- .binding_review_classification(
     wrapper_only = !isTRUE(component$classification$binding),
     method_names = method_names,
     event_names = event_names,
+    name_blob = name_blob,
     doc_blob = doc_blob
   )
 
@@ -377,11 +426,15 @@ rm(.bootstrap_cli_ui)
       component$classification$binding_source,
       fallback = "metadata"
     ),
+    binding_policy_reason = .scalar_string(
+      component$classification$reasons$binding_policy_reason,
+      fallback = ""
+    ),
     events = event_names,
     methods = method_names,
     summary = .declaration_summary(declaration),
-    score = score,
-    reasons = .binding_candidate_reasons(method_names, event_names, doc_blob)
+    review_tier = review$tier,
+    reasons = review$reasons
   )
 }
 
@@ -425,9 +478,13 @@ rm(.bootstrap_cli_ui)
   )]
 }
 
-# Return unresolved wrapper-only candidates ordered by review score.
+# Return unresolved wrapper-only high-confidence candidates.
 .unresolved_binding_candidates <- function(rows) {
-  candidates <- rows[vapply(rows, function(row) row$score >= 2L, logical(1))]
+  candidates <- rows[vapply(
+    rows,
+    function(row) identical(row$review_tier, "candidate"),
+    logical(1)
+  )]
   candidates <- candidates[vapply(
     candidates,
     function(row) identical(row$binding_source, "metadata"),
@@ -438,11 +495,29 @@ rm(.bootstrap_cli_ui)
     return(list())
   }
 
-  order_idx <- order(
-    -vapply(candidates, `[[`, integer(1), "score"),
-    vapply(candidates, `[[`, character(1), "tag")
-  )
+  order_idx <- order(vapply(candidates, `[[`, character(1), "tag"))
   candidates[order_idx]
+}
+
+# Return unresolved near-miss wrapper-only components for manual review.
+.binding_watch_list <- function(rows) {
+  watch_list <- rows[vapply(
+    rows,
+    function(row) identical(row$review_tier, "watch"),
+    logical(1)
+  )]
+  watch_list <- watch_list[vapply(
+    watch_list,
+    function(row) identical(row$binding_source, "metadata"),
+    logical(1)
+  )]
+
+  if (length(watch_list) == 0L) {
+    return(list())
+  }
+
+  order_idx <- order(vapply(watch_list, `[[`, character(1), "tag"))
+  watch_list[order_idx]
 }
 
 # Return one markdown bullet list from character values.
@@ -469,7 +544,14 @@ rm(.bootstrap_cli_ui)
     ),
     paste0("- Public methods: ", paste(row$methods, collapse = ", ")),
     paste0("- Summary: ", if (nzchar(row$summary)) row$summary else "None"),
-    paste0("- Why it needed policy: ", paste(row$reasons, collapse = "; ")),
+    paste0(
+      "- Why it needed policy: ",
+      if (nzchar(row$binding_policy_reason)) {
+        row$binding_policy_reason
+      } else {
+        paste(row$reasons, collapse = "; ")
+      }
+    ),
     ""
   )
 }
@@ -479,7 +561,7 @@ rm(.bootstrap_cli_ui)
   c(
     paste0("### `", row$tag, "`"),
     "",
-    paste0("- Review score: `", row$score, "`"),
+    paste0("- Review tier: `", row$review_tier, "`"),
     paste0("- Current classification: `", row$classification_mode, "`"),
     paste0(
       "- Declared events: ",
@@ -498,7 +580,37 @@ rm(.bootstrap_cli_ui)
       }
     ),
     paste0("- Summary: ", if (nzchar(row$summary)) row$summary else "None"),
-    "- Review signals:",
+    "- Why flagged:",
+    .markdown_list(row$reasons),
+    ""
+  )
+}
+
+# Return markdown lines for one near-miss watch-list row.
+.watch_list_section <- function(row) {
+  c(
+    paste0("### `", row$tag, "`"),
+    "",
+    paste0("- Review tier: `", row$review_tier, "`"),
+    paste0("- Current classification: `", row$classification_mode, "`"),
+    paste0(
+      "- Declared events: ",
+      if (length(row$events) > 0L) {
+        paste(row$events, collapse = ", ")
+      } else {
+        "None"
+      }
+    ),
+    paste0(
+      "- Public methods: ",
+      if (length(row$methods) > 0L) {
+        paste(row$methods, collapse = ", ")
+      } else {
+        "None"
+      }
+    ),
+    paste0("- Summary: ", if (nzchar(row$summary)) row$summary else "None"),
+    "- Why watched:",
     .markdown_list(row$reasons),
     ""
   )
@@ -517,7 +629,12 @@ rm(.bootstrap_cli_ui)
       length(result$handled_overrides),
       "`"
     ),
-    paste0("- Additional review candidates: `", length(result$candidates), "`"),
+    paste0(
+      "- High-confidence review candidates: `",
+      length(result$candidates),
+      "`"
+    ),
+    paste0("- Watch-list near misses: `", length(result$watch_list), "`"),
     "",
     "This report is advisory. It highlights wrapper-only components whose",
     "metadata and docs suggest that their Shiny interaction contract may merit",
@@ -535,13 +652,23 @@ rm(.bootstrap_cli_ui)
     }
   }
 
-  lines <- c(lines, "## Additional Candidates To Review", "")
+  lines <- c(lines, "## High-Confidence Candidates To Review", "")
 
   if (length(result$candidates) == 0L) {
     lines <- c(lines, "None.", "")
   } else {
     for (row in result$candidates) {
       lines <- c(lines, .candidate_section(row))
+    }
+  }
+
+  lines <- c(lines, "## Watch List / Near Misses", "")
+
+  if (length(result$watch_list) == 0L) {
+    lines <- c(lines, "None.", "")
+  } else {
+    for (row in result$watch_list) {
+      lines <- c(lines, .watch_list_section(row))
     }
   }
 
@@ -557,6 +684,8 @@ rm(.bootstrap_cli_ui)
     length(result$handled_overrides),
     ", candidates=",
     length(result$candidates),
+    ", watch_list=",
+    length(result$watch_list),
     ", report=",
     result$report_path
   )
@@ -580,7 +709,8 @@ rm(.bootstrap_cli_ui)
 #' @param verbose Logical scalar. If `TRUE`, emits a short summary.
 #'
 #' @return A list describing the review pass, including handled policy
-#'   overrides, unresolved candidates, and the report path.
+#'   overrides, unresolved candidates, near-miss watch-list rows, and the
+#'   report path.
 #'
 #' @examples
 #' \dontrun{
@@ -622,6 +752,7 @@ review_binding_candidates <- function(
   rows <- .binding_review_rows(schema$components, records)
   handled_overrides <- .handled_binding_overrides(rows)
   candidates <- .unresolved_binding_candidates(rows)
+  watch_list <- .binding_watch_list(rows)
   report_path <- .binding_review_report_path(root, report_file)
 
   result <- list(
@@ -630,13 +761,15 @@ review_binding_candidates <- function(
     component_count = length(rows),
     handled_overrides = handled_overrides,
     candidates = candidates,
+    watch_list = watch_list,
     report_path = .strip_root_prefix(
       .write_binding_review_report(report_path, list(
         metadata_path = .strip_root_prefix(metadata_path, root),
         metadata_version = metadata_version,
         component_count = length(rows),
         handled_overrides = handled_overrides,
-        candidates = candidates
+        candidates = candidates,
+        watch_list = watch_list
       )),
       root
     )

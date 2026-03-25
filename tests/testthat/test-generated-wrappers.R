@@ -673,9 +673,9 @@ test_that("broadened heuristic-classified wrappers render expected fragments", {
   expect_exact_html(
     render_html(
       shiny.webawesome:::wa_carousel(
+        input_id = "carousel",
         htmltools::tag("wa-carousel-item", "Slide 1"),
-        htmltools::tag("wa-carousel-item", "Slide 2"),
-        id = "carousel"
+        htmltools::tag("wa-carousel-item", "Slide 2")
       )
     ),
     c(
@@ -689,6 +689,22 @@ test_that("broadened heuristic-classified wrappers render expected fragments", {
   expect_exact_html(
     render_html(shiny.webawesome:::wa_switch("sw", "On")),
     c('<wa-switch id="sw">On</wa-switch>')
+  )
+
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_tree(
+        input_id = "tree",
+        shiny.webawesome:::wa_tree_item("Node A", id = "tree_item_a"),
+        shiny.webawesome:::wa_tree_item("Node B", id = "tree_item_b")
+      )
+    ),
+    c(
+      '<wa-tree id="tree">',
+      '  <wa-tree-item id="tree_item_a">Node A</wa-tree-item>',
+      '  <wa-tree-item id="tree_item_b">Node B</wa-tree-item>',
+      "</wa-tree>"
+    )
   )
 
   expect_exact_html(

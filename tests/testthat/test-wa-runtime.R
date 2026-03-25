@@ -59,4 +59,26 @@ test_that("package dependency points at the shipped bootstrap assets", {
   expect_true("bindings/wa_slider.js" %in% script_src)
   expect_true("bindings/wa_switch.js" %in% script_src)
   expect_true("bindings/wa_textarea.js" %in% script_src)
+  expect_true("bindings/wa_tree.js" %in% script_src)
+  expect_match(
+    as.character(dep$head),
+    "window\\.shinyWebawesomeWarnings",
+    perl = TRUE
+  )
+})
+
+test_that("warning registry defaults to enabled known warnings", {
+  warnings <- shiny.webawesome:::.wa_warning_registry()
+
+  expect_true(isTRUE(warnings$missing_tree_item_id))
+})
+
+test_that("warning registry respects explicit option overrides", {
+  withr::local_options(shiny.webawesome.warnings = list(
+    missing_tree_item_id = FALSE
+  ))
+
+  warnings <- shiny.webawesome:::.wa_warning_registry()
+
+  expect_false(isTRUE(warnings$missing_tree_item_id))
 })

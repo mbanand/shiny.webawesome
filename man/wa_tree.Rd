@@ -5,8 +5,8 @@
 \title{Create a \code{wa-tree} component}
 \usage{
 wa_tree(
+  input_id,
   ...,
-  id = NULL,
   dir = NULL,
   lang = NULL,
   selection = NULL,
@@ -15,9 +15,10 @@ wa_tree(
 )
 }
 \arguments{
-\item{...}{Child content for the component's default slot.}
+\item{input_id}{Shiny input id for the component. This is also used as
+the rendered DOM \code{id} attribute.}
 
-\item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+\item{...}{Child content for the component's default slot.}
 
 \item{dir}{Optional Web Awesome attribute.}
 

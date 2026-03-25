@@ -11,6 +11,30 @@
   .scalar_string(component$classification$binding_mode, fallback = "none")
 }
 
+# Return the configured semantic binding extractor kind for one component.
+.component_binding_value_kind <- function(component) {
+  .scalar_string(
+    component$classification$binding_value_kind,
+    fallback = NA_character_
+  )
+}
+
+# Return the configured semantic binding extractor field for one component.
+.component_binding_value_field <- function(component) {
+  .scalar_string(
+    component$classification$binding_value_field,
+    fallback = NA_character_
+  )
+}
+
+# Return the configured semantic binding warning key for one component.
+.component_binding_warning_key <- function(component) {
+  .scalar_string(
+    component$classification$binding_warning_key,
+    fallback = NA_character_
+  )
+}
+
 # Return one component's attribute names.
 .component_attribute_names <- function(component) {
   vapply(component$attributes %||% list(), `[[`, character(1), "name")
@@ -66,10 +90,41 @@
   paste0(component$tag_name, "[id]")
 }
 
+# Return one JavaScript string literal for a scalar string value.
+.as_js_string <- function(value) {
+  encoded <- encodeString(.scalar_string(value, fallback = ""), quote = "")
+  paste0("\"", encoded, "\"")
+}
+
 # Return JS for extracting the current component value.
 .binding_get_value <- function(component) {
   if (identical(.component_binding_mode(component), "action")) {
     return("return $(el).data(\"val\") || 0;")
+  }
+
+  if (identical(.component_binding_mode(component), "semantic")) {
+    value_kind <- .component_binding_value_kind(component)
+    value_field <- .component_binding_value_field(component)
+
+    if (identical(value_kind, "property")) {
+      return(paste0("return el.", value_field, ";"))
+    }
+
+    if (identical(value_kind, "attribute")) {
+      return(paste0("return el.getAttribute(\"", value_field, "\");"))
+    }
+
+    if (identical(value_kind, "custom")) {
+      return("return el.__shinyWebawesomeValue || [];")
+    }
+
+    stop(
+      "Unsupported semantic binding extractor for ",
+      component$tag_name,
+      ": ",
+      value_kind,
+      call. = FALSE
+    )
   }
 
   if (.component_has_state_field(component, "checked")) {
@@ -87,7 +142,7 @@
 
 # Return one supported list of fields for receiveMessage.
 .binding_receive_fields <- function(component) {
-  if (identical(.component_binding_mode(component), "action")) {
+  if (.component_binding_mode(component) %in% c("action", "semantic")) {
     return(character())
   }
 
@@ -164,6 +219,57 @@
 # Return the JS subscription callback body for one component.
 .binding_subscribe_body <- function(component) {
   if (!identical(.component_binding_mode(component), "action")) {
+    if (
+      identical(.component_binding_mode(component), "semantic") &&
+        identical(.component_binding_value_kind(component), "custom") &&
+        identical(.component_binding_value_field(component), "selectedItemIds")
+    ) {
+      warning_key <- .component_binding_warning_key(component)
+      warning_clause <- if (!is.na(warning_key) && nzchar(warning_key)) {
+        paste(
+          "if (selection.some((item) => !(item && item.id))) {",
+          "  window.ShinyWebawesomeWarn.warnOnce({",
+          paste0("    key: ", .as_js_string(warning_key), ","),
+          "    inputId: el.id,",
+          paste0(
+            "    message: ",
+            .as_js_string(
+              paste(
+                "`wa-tree` input omitted selected items without DOM ids",
+                "from its Shiny value. Assign ids to selectable",
+                "`wa-tree-item` elements to receive stable selection values.",
+                "Suppress with",
+                "`options(shiny.webawesome.warnings =",
+                "list(missing_tree_item_id = FALSE))`."
+              )
+            )
+          ),
+          "  });",
+          "}",
+          sep = "\n    "
+        )
+      } else {
+        ""
+      }
+
+      return(
+        paste(
+          "el.__shinyWebawesomeCallback = (event) => {",
+          paste(
+            "  const selection = Array.isArray(event?.detail?.selection)",
+            "? event.detail.selection : [];"
+          ),
+          "  el.__shinyWebawesomeValue = selection",
+          "    .map((item) => item?.id || null)",
+          "    .filter((id) => Boolean(id));",
+          warning_clause,
+          "  callback();",
+          "};",
+          sep = "\n    "
+        )
+      )
+    }
+
     return("el.__shinyWebawesomeCallback = () => callback();")
   }
 
@@ -179,6 +285,10 @@
 
 # Return the JS receiveMessage() body for one component.
 .binding_receive_message <- function(component) {
+  if (identical(.component_binding_mode(component), "semantic")) {
+    return("return;")
+  }
+
   if (!identical(.component_binding_mode(component), "action")) {
     body <- .binding_set_value(component)
 

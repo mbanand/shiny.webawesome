@@ -46,9 +46,59 @@ source(file.path("..", "..", "review_binding_candidates.R"))
             kind = "class",
             name = "WaTab",
             tagName = "wa-tab",
-            summary = "Tabs act as clickable triggers that activate associated panels.",
+            summary = "Tabs act as triggers that activate associated panels.",
             members = list(
               list(name = "focus", kind = "method", type = list(text = "focus() => void"))
+            )
+          )
+        )
+      ),
+      list(
+        path = "components/trigger/trigger.js",
+        declarations = list(
+          list(
+            kind = "class",
+            name = "WaTrigger",
+            tagName = "wa-trigger",
+            summary = "Triggers activate actions when the user clicks them.",
+            members = list(
+              list(name = "click", kind = "method", type = list(text = "click() => void")),
+              list(name = "focus", kind = "method", type = list(text = "focus() => void"))
+            )
+          )
+        )
+      ),
+      list(
+        path = "components/tooltip/tooltip.js",
+        declarations = list(
+          list(
+            kind = "class",
+            name = "WaTooltip",
+            tagName = "wa-tooltip",
+            summary = "Tooltips show additional information on hover or focus.",
+            members = list(
+              list(name = "show", kind = "method", type = list(text = "show() => void")),
+              list(name = "hide", kind = "method", type = list(text = "hide() => void"))
+            )
+          )
+        )
+      ),
+      list(
+        path = "components/switch/switch.js",
+        declarations = list(
+          list(
+            kind = "class",
+            name = "WaSwitch",
+            tagName = "wa-switch",
+            summary = "Switches allow the user to toggle an option on or off.",
+            members = list(
+              list(name = "click", kind = "method", type = list(text = "click() => void"))
+            ),
+            attributes = list(
+              list(name = "checked", fieldName = "defaultChecked", type = list(text = "boolean"))
+            ),
+            events = list(
+              list(name = "change", type = list(text = "Event"))
             )
           )
         )
@@ -92,7 +142,7 @@ source(file.path("..", "..", "review_binding_candidates.R"))
   )
 }
 
-testthat::test_that("binding review separates handled overrides from candidates", {
+testthat::test_that("binding review separates overrides, candidates, watch list, and exclusions", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
 
@@ -103,16 +153,33 @@ testthat::test_that("binding review separates handled overrides from candidates"
   testthat::expect_equal(result$handled_overrides[[1]]$binding_source, "policy")
 
   testthat::expect_equal(length(result$candidates), 1L)
-  testthat::expect_equal(result$candidates[[1]]$tag, "wa-tab")
-  testthat::expect_true(result$candidates[[1]]$score >= 2L)
+  testthat::expect_equal(result$candidates[[1]]$tag, "wa-trigger")
+  testthat::expect_equal(result$candidates[[1]]$review_tier, "candidate")
   testthat::expect_true(any(grepl(
-    "interactive public methods",
+    "public click\\(\\) method without declared binding event",
     result$candidates[[1]]$reasons
   )))
+
+  testthat::expect_equal(length(result$watch_list), 1L)
+  testthat::expect_equal(result$watch_list[[1]]$tag, "wa-tab")
+  testthat::expect_equal(result$watch_list[[1]]$review_tier, "watch")
+  testthat::expect_true(any(grepl(
+    "directly activated control",
+    result$watch_list[[1]]$reasons
+  )))
+
+  surfaced_tags <- c(
+    vapply(result$candidates, `[[`, character(1), "tag"),
+    vapply(result$watch_list, `[[`, character(1), "tag")
+  )
+  testthat::expect_false("wa-tooltip" %in% surfaced_tags)
+  testthat::expect_false("wa-switch" %in% surfaced_tags)
 
   report_lines <- readLines(file.path(root, result$report_path), warn = FALSE)
   testthat::expect_true(any(grepl("^# Binding Candidate Review$", report_lines)))
   testthat::expect_true(any(grepl("^### `wa-button`$", report_lines)))
   testthat::expect_true(any(grepl("^### `wa-tab`$", report_lines)))
+  testthat::expect_true(any(grepl("^### `wa-trigger`$", report_lines)))
+  testthat::expect_true(any(grepl("^## Watch List / Near Misses$", report_lines)))
 })
 # nolint end

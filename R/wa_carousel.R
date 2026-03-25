@@ -7,7 +7,8 @@
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
-#' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param input_id Shiny input id for the component. This is also used as
+#' the rendered DOM `id` attribute.
 #' @param autoplay When set, the slides will scroll automatically when the
 #' user is not interacting with them. Defaults to `false` when omitted.
 #' @param autoplay_interval Specifies the amount of time, in milliseconds,
@@ -45,8 +46,8 @@
 #'
 #' @export
 wa_carousel <- function(
+  input_id,
   ...,
-  id = NULL,
   autoplay = NULL,
   autoplay_interval = NULL,
   current_slide = NULL,
@@ -89,7 +90,7 @@ wa_carousel <- function(
 
   attrs <- .wa_normalize_attrs(
     list(
-      "id" = id,
+      "id" = input_id,
       "autoplay" = autoplay,
       "autoplay-interval" = autoplay_interval,
       "currentSlide" = current_slide,

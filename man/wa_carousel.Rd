@@ -5,8 +5,8 @@
 \title{Create a \code{wa-carousel} component}
 \usage{
 wa_carousel(
+  input_id,
   ...,
-  id = NULL,
   autoplay = NULL,
   autoplay_interval = NULL,
   current_slide = NULL,
@@ -25,9 +25,10 @@ wa_carousel(
 )
 }
 \arguments{
-\item{...}{Child content for the component's default slot.}
+\item{input_id}{Shiny input id for the component. This is also used as
+the rendered DOM \code{id} attribute.}
 
-\item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+\item{...}{Child content for the component's default slot.}
 
 \item{autoplay}{When set, the slides will scroll automatically when the
 user is not interacting with them. Defaults to \code{false} when omitted.}

@@ -180,6 +180,21 @@
   binding_override <- .binding_override_for(binding_policy, tag_name)
   binding_mode <- if (is.null(binding_override)) "none" else binding_override$mode
   binding_event <- if (is.null(binding_override)) NA_character_ else binding_override$event
+  binding_value_kind <- if (is.null(binding_override)) {
+    NA_character_
+  } else {
+    binding_override$value_kind
+  }
+  binding_value_field <- if (is.null(binding_override)) {
+    NA_character_
+  } else {
+    binding_override$value_field
+  }
+  binding_warning_key <- if (is.null(binding_override)) {
+    NA_character_
+  } else {
+    binding_override$warning_key
+  }
   binding_policy_reason <- if (is.null(binding_override)) {
     NA_character_
   } else {
@@ -187,6 +202,9 @@
   }
 
   if (identical(binding_mode, "action")) {
+    has_binding <- TRUE
+    has_update <- FALSE
+  } else if (identical(binding_mode, "semantic")) {
     has_binding <- TRUE
     has_update <- FALSE
   } else if (identical(binding_mode, "value")) {
@@ -208,6 +226,8 @@
 
   mode <- if (identical(binding_mode, "action")) {
     "wrapper-binding-action"
+  } else if (identical(binding_mode, "semantic")) {
+    "wrapper-binding-semantic"
   } else if (has_update) {
     "wrapper-binding-update"
   } else if (has_binding) {
@@ -222,6 +242,9 @@
     binding = has_binding,
     binding_mode = binding_mode,
     binding_event = binding_event,
+    binding_value_kind = binding_value_kind,
+    binding_value_field = binding_value_field,
+    binding_warning_key = binding_warning_key,
     binding_source = if (is.null(binding_override)) "metadata" else "policy",
     update = has_update,
     reasons = list(
@@ -229,7 +252,10 @@
       ignored_events = intersect(event_names, .ignored_binding_event_names()),
       update_state_fields = matched_update_state_fields,
       update_support_fields = matched_update_support_fields,
-      binding_policy_reason = binding_policy_reason
+      binding_policy_reason = binding_policy_reason,
+      binding_value_kind = binding_value_kind,
+      binding_value_field = binding_value_field,
+      binding_warning_key = binding_warning_key
     )
   )
 }

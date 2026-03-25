@@ -60,9 +60,9 @@ ui <- wa_page(
     id = "card"
   ),
   wa_carousel(
+    input_id = "carousel",
     htmltools::tag("wa-carousel-item", "Slide 1"),
-    htmltools::tag("wa-carousel-item", "Slide 2"),
-    id = "carousel"
+    htmltools::tag("wa-carousel-item", "Slide 2")
   ),
   wa_checkbox(
     "Accept terms",
@@ -160,6 +160,11 @@ ui <- wa_page(
     id = "tag",
     variant = "brand"
   ),
+  wa_tree(
+    input_id = "tree",
+    wa_tree_item("Node A", id = "tree_item_a"),
+    wa_tree_item("Node B", id = "tree_item_b")
+  ),
   wa_textarea(
     input_id = "text_area",
     label = "Textarea label"
@@ -182,6 +187,7 @@ ui <- wa_page(
   actionButton("update_select", "Update select"),
   actionButton("update_slider", "Update slider"),
   actionButton("update_textarea", "Update textarea"),
+  verbatimTextOutput("carousel_value"),
   verbatimTextOutput("checkbox_value"),
   verbatimTextOutput("color_picker_value"),
   verbatimTextOutput("number_input_value"),
@@ -191,10 +197,19 @@ ui <- wa_page(
   verbatimTextOutput("slider_value"),
   verbatimTextOutput("switch_value"),
   verbatimTextOutput("text_area_value"),
-  verbatimTextOutput("text_input_value")
+  verbatimTextOutput("text_input_value"),
+  verbatimTextOutput("tree_value")
 )
 
 server <- function(input, output, session) {
+  output$carousel_value <- renderText({
+    if (is.null(input$carousel) || identical(input$carousel, "")) {
+      return("<null>")
+    }
+
+    as.character(input$carousel)
+  })
+
   output$checkbox_value <- renderText({
     if (is.null(input$checkbox)) {
       return("<null>")
@@ -285,6 +300,14 @@ server <- function(input, output, session) {
     }
 
     input$text_input
+  })
+
+  output$tree_value <- renderText({
+    if (is.null(input$tree) || length(input$tree) == 0L) {
+      return("<null>")
+    }
+
+    paste(input$tree, collapse = ",")
   })
 
   observeEvent(input$update_input, {

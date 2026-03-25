@@ -7,7 +7,8 @@
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
-#' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param input_id Shiny input id for the component. This is also used as
+#' the rendered DOM `id` attribute.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
 #' @param selection The selection behavior of the tree. Single selection
@@ -24,8 +25,8 @@
 #'
 #' @export
 wa_tree <- function(
+  input_id,
   ...,
-  id = NULL,
   dir = NULL,
   lang = NULL,
   selection = NULL,
@@ -59,7 +60,7 @@ wa_tree <- function(
 
   attrs <- .wa_normalize_attrs(
     list(
-      "id" = id,
+      "id" = input_id,
       "dir" = dir,
       "lang" = lang,
       "selection" = selection

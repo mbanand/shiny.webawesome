@@ -1,3 +1,45 @@
+# Handwritten binding override policy for generated Shiny support.
+#
+# This file is a maintainer-facing policy input consumed during the generate
+# stage. It should contain only intentional override decisions, not discovered
+# implementation facts.
+#
+# Schema:
+#   schema_version: 1
+#   components:
+#     - tag: wa-<component>
+#       binding:
+#         mode: <none|value|action|semantic>
+#         event: <dom-event-name>
+#         value_kind: <property|attribute|custom>   # semantic mode only
+#         value_field: <field-or-extractor-key>     # semantic mode only
+#         warning_key: <warning-registry-key>       # optional, semantic mode
+#         rationale: <short maintainer note>
+#
+# Field rules:
+# - `tag` is required and must start with `wa-`.
+# - `binding.mode` defaults are not inferred here; every override entry should
+#   state the intended mode explicitly.
+# - `binding.event` is required for every mode except `none`.
+# - `binding.value_kind` and `binding.value_field` are required for
+#   `binding.mode: semantic`.
+# - `binding.warning_key` is optional and should reference a known package
+#   runtime warning-registry key, not arbitrary warning text.
+# - `binding.rationale` should briefly explain why metadata alone is not the
+#   right source of truth for this binding decision.
+#
+# Current mode semantics:
+# - `none`: explicitly suppress binding support.
+# - `value`: use the standard value/checked-style Shiny input model.
+# - `action`: use an action-button-style incrementing Shiny input model.
+# - `semantic`: subscribe to a semantically meaningful component event and use
+#   a configured extractor contract (`property`, `attribute`, or known `custom`
+#   extractor key) instead of the default value/checked model.
+#
+# Current semantic extractor keys:
+# - `activeSlide` with `value_kind: property` for `wa-carousel`
+# - `selectedItemIds` with `value_kind: custom` for `wa-tree`
+#
 schema_version: 1
 
 components:
@@ -6,3 +48,18 @@ components:
       mode: action
       event: click
       rationale: Native click behavior is expected for button-like controls, but upstream metadata does not declare click as a component event for wa-button.
+  - tag: wa-carousel
+    binding:
+      mode: semantic
+      event: wa-slide-change
+      value_kind: property
+      value_field: activeSlide
+      rationale: Carousel slide changes represent committed component state that can drive Shiny outputs.
+  - tag: wa-tree
+    binding:
+      mode: semantic
+      event: wa-selection-change
+      value_kind: custom
+      value_field: selectedItemIds
+      warning_key: missing_tree_item_id
+      rationale: Tree selection changes represent committed component state and expose selected item ids to Shiny.
