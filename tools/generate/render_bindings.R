@@ -27,10 +27,10 @@
   )
 }
 
-# Return the configured semantic binding warning key for one component.
-.component_binding_warning_key <- function(component) {
+# Return the configured semantic JS binding warning key for one component.
+.component_binding_js_warning <- function(component) {
   .scalar_string(
-    component$classification$binding_warning_key,
+    component$classification$binding_js_warning,
     fallback = NA_character_
   )
 }
@@ -240,7 +240,7 @@
         identical(.component_binding_value_kind(component), "custom") &&
         identical(.component_binding_value_field(component), "selectedItemIds")
     ) {
-      warning_key <- .component_binding_warning_key(component)
+      warning_key <- .component_binding_js_warning(component)
       warning_clause <- if (!is.na(warning_key) && nzchar(warning_key)) {
         paste(
           "if (selection.some((item) => !(item && item.id))) {",

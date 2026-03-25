@@ -195,10 +195,15 @@
   } else {
     binding_override$value_field
   }
-  binding_warning_key <- if (is.null(binding_override)) {
+  binding_js_warning <- if (is.null(binding_override)) {
     NA_character_
   } else {
-    binding_override$warning_key
+    binding_override$js_warning
+  }
+  binding_wrapper_warning <- if (is.null(binding_override)) {
+    NA_character_
+  } else {
+    binding_override$wrapper_warning
   }
   binding_policy_reason <- if (is.null(binding_override)) {
     NA_character_
@@ -251,7 +256,8 @@
     binding_events = binding_events,
     binding_value_kind = binding_value_kind,
     binding_value_field = binding_value_field,
-    binding_warning_key = binding_warning_key,
+    binding_js_warning = binding_js_warning,
+    binding_wrapper_warning = binding_wrapper_warning,
     binding_source = if (is.null(binding_override)) "metadata" else "policy",
     update = has_update,
     reasons = list(
@@ -263,7 +269,8 @@
       binding_events = binding_events,
       binding_value_kind = binding_value_kind,
       binding_value_field = binding_value_field,
-      binding_warning_key = binding_warning_key
+      binding_js_warning = binding_js_warning,
+      binding_wrapper_warning = binding_wrapper_warning
     )
   )
 }

@@ -1,0 +1,181 @@
+.write_file <- function(path, lines = "x") {
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  writeLines(lines, path)
+}
+
+.create_fake_repo <- function(root) {
+  dir.create(file.path(root, "docs"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
+  .write_file(file.path(root, "DESCRIPTION"), "Package: fake")
+
+  file.copy(
+    normalizePath(
+      file.path("..", "..", "clean_webawesome.R"),
+      winslash = "/",
+      mustWork = TRUE
+    ),
+    file.path(root, "tools", "clean_webawesome.R")
+  )
+  file.copy(
+    normalizePath(
+      file.path("..", "..", "cli_ui.R"),
+      winslash = "/",
+      mustWork = TRUE
+    ),
+    file.path(root, "tools", "cli_ui.R")
+  )
+
+  Sys.chmod(file.path(root, "tools", "clean_webawesome.R"), mode = "0755")
+}
+
+.run_clean_script <- function(root, args = character()) {
+  processx::run(
+    command = "./tools/clean_webawesome.R",
+    args = args,
+    wd = root,
+    echo = FALSE,
+    error_on_status = FALSE
+  )
+}
+
+.run_clean_script_absolute <- function(root,
+                                       args = character(),
+                                       wd = tempdir()) {
+  processx::run(
+    command = normalizePath(
+      file.path(root, "tools", "clean_webawesome.R"),
+      mustWork = TRUE
+    ),
+    args = args,
+    wd = wd,
+    echo = FALSE,
+    error_on_status = FALSE
+  )
+}
+
+testthat::test_that("clean tool prints help", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  result <- .run_clean_script(root, "--help")
+
+  testthat::expect_equal(result$status, 0)
+  testthat::expect_match(result$stdout, "Usage: ./tools/clean_webawesome.R")
+  testthat::expect_match(result$stdout, "--level")
+  testthat::expect_match(result$stdout, "--root")
+  testthat::expect_match(result$stdout, "--dry-run")
+})
+
+testthat::test_that(
+  "clean tool defaults to clean and removes generated outputs",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+
+    dir.create(file.path(root, "R", "generated"), recursive = TRUE)
+    .write_file(file.path(root, "R", "generated", "wa_button.R"))
+
+    result <- .run_clean_script(root)
+
+    testthat::expect_equal(result$status, 0)
+    testthat::expect_false(dir.exists(file.path(root, "R", "generated")))
+    testthat::expect_match(result$stderr, "Cleaning repository \\.{2,} Done")
+    testthat::expect_match(result$stderr, "Clean complete: level=clean")
+  }
+)
+
+testthat::test_that("clean tool supports distclean", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  dir.create(file.path(root, "vendor", "webawesome"), recursive = TRUE)
+  .write_file(file.path(root, "vendor", "webawesome", "VERSION"))
+
+  result <- .run_clean_script(root, c("--level", "distclean"))
+
+  testthat::expect_equal(result$status, 0)
+  testthat::expect_false(dir.exists(file.path(root, "vendor", "webawesome")))
+  testthat::expect_match(result$stderr, "level=distclean")
+})
+
+testthat::test_that("clean tool supports dry run", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  dir.create(file.path(root, "manifests"), recursive = TRUE)
+  .write_file(file.path(root, "manifests", "component-coverage.yaml"))
+
+  result <- .run_clean_script(root, "--dry-run")
+
+  testthat::expect_equal(result$status, 0)
+  testthat::expect_true(dir.exists(file.path(root, "manifests")))
+  testthat::expect_match(result$stderr, "Dry run complete: level=clean")
+})
+
+testthat::test_that("clean tool supports quiet mode", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  dir.create(file.path(root, "R", "generated"), recursive = TRUE)
+  .write_file(file.path(root, "R", "generated", "wa_button.R"))
+
+  result <- .run_clean_script(root, "--quiet")
+
+  testthat::expect_equal(result$status, 0)
+  testthat::expect_match(result$stderr, "Clean complete: level=clean")
+})
+
+testthat::test_that("clean tool supports absolute-path CLI invocation", {
+  root <- withr::local_tempdir()
+  run_dir <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  dir.create(file.path(root, "manifests"), recursive = TRUE)
+  .write_file(file.path(root, "manifests", "component-coverage.yaml"))
+
+  result <- .run_clean_script_absolute(root, c("--root", root), wd = run_dir)
+
+  testthat::expect_equal(result$status, 0)
+  testthat::expect_false(dir.exists(file.path(root, "manifests")))
+  testthat::expect_match(result$stderr, "Clean complete: level=clean")
+})
+
+testthat::test_that("clean tool rejects unknown arguments", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  result <- .run_clean_script(root, "--bogus")
+
+  testthat::expect_true(result$status != 0)
+  testthat::expect_match(result$stderr, "Unknown argument: --bogus")
+})
+
+testthat::test_that("clean tool rejects missing level values", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  result <- .run_clean_script(root, "--level")
+
+  testthat::expect_true(result$status != 0)
+  testthat::expect_match(result$stderr, "Missing value for --level.")
+})
+
+testthat::test_that("clean tool rejects missing root values", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  result <- .run_clean_script(root, "--root")
+
+  testthat::expect_true(result$status != 0)
+  testthat::expect_match(result$stderr, "Missing value for --root.")
+})
+
+testthat::test_that("clean tool rejects invalid level values", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  result <- .run_clean_script(root, c("--level", "bogus"))
+
+  testthat::expect_true(result$status != 0)
+  testthat::expect_match(result$stderr, "should be one of")
+})

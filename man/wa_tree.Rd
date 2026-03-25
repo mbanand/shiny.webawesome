@@ -40,6 +40,6 @@ Works best with \verb{<wa-icon>}.}
 An HTML tag for the component.
 }
 \description{
-Generated wrapper for the Web Awesome \code{wa-tree} component.
+Generated wrapper for the Web Awesome \code{wa-tree} component. For stable Shiny selection values, selectable descendant \code{wa-tree-item} elements should have DOM \code{id} attributes.
 Generated from Web Awesome metadata.
 }

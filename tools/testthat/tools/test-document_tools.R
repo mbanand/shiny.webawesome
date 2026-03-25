@@ -8,11 +8,6 @@ source(file.path("..", "..", "document_tools.R"))
 .create_fake_repo <- function(root) {
   dir.create(file.path(root, "docs"), recursive = TRUE, showWarnings = FALSE)
   dir.create(
-    file.path(root, "tools", "runners"),
-    recursive = TRUE,
-    showWarnings = FALSE
-  )
-  dir.create(
     file.path(root, "tools", "generate"),
     recursive = TRUE,
     showWarnings = FALSE
@@ -73,10 +68,6 @@ source(file.path("..", "..", "document_tools.R"))
     )
   }
   file.copy(
-    normalizePath(file.path("..", "..", "runners", "clean.R"), mustWork = TRUE),
-    file.path(root, "tools", "runners", "clean.R")
-  )
-  file.copy(
     normalizePath(file.path("..", "..", "test_tools.R"), mustWork = TRUE),
     file.path(root, "tools", "test_tools.R")
   )
@@ -90,7 +81,7 @@ testthat::test_that("document_tools generates docs into tools/man", {
   .create_fake_repo(root)
 
   result <- document_tools(
-    files = c("tools/clean_webawesome.R", "tools/runners/clean.R"),
+    files = "tools/clean_webawesome.R",
     root = root,
     verbose = FALSE
   )
@@ -101,9 +92,6 @@ testthat::test_that("document_tools generates docs into tools/man", {
   testthat::expect_true(any(grepl("\\.html$", result$generated)))
   testthat::expect_true(
     file.exists(file.path(root, "tools", "man", "clean_webawesome.Rd"))
-  )
-  testthat::expect_true(
-    file.exists(file.path(root, "tools", "man", "run_clean.Rd"))
   )
 })
 

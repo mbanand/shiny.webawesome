@@ -57,7 +57,6 @@ rm(.bootstrap_cli_ui)
     "tools/fetch_webawesome.R",
     "tools/prune_webawesome.R",
     "tools/review_binding_candidates.R",
-    "tools/runners/clean.R",
     "tools/test_tools.R"
   )
 }
@@ -198,7 +197,7 @@ rm(.bootstrap_cli_ui)
   }
 }
 
-#' Generate documentation for build tools and runners
+#' Generate documentation for build tools
 #'
 #' Extracts roxygen documentation from selected handwritten build-tool files and
 #' writes the generated artifacts to `tools/man/`. Documentation is generated

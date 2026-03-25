@@ -4,6 +4,9 @@
 # stage. It should contain only intentional override decisions, not discovered
 # implementation facts.
 #
+# Known warning-registry keys are defined in:
+#   R/wa_warning_registry.R
+#
 # Schema:
 #   schema_version: 1
 #   components:
@@ -14,7 +17,8 @@
 #         events: [<dom-event-name>, ...]         # optional semantic-mode list
 #         value_kind: <property|attribute|custom>   # semantic mode only
 #         value_field: <field-or-extractor-key>     # semantic mode only
-#         warning_key: <warning-registry-key>       # optional, semantic mode
+#         js_warning: <warning-registry-key>        # optional, semantic mode
+#         wrapper_warning: <warning-registry-key>   # optional, semantic mode
 #         rationale: <short maintainer note>
 #
 # Field rules:
@@ -27,8 +31,12 @@
 #   list the lifecycle events that commit the same semantic Shiny value.
 # - `binding.value_kind` and `binding.value_field` are required for
 #   `binding.mode: semantic`.
-# - `binding.warning_key` is optional and should reference a known package
-#   runtime warning-registry key, not arbitrary warning text.
+# - `binding.js_warning` is optional and should reference a known package
+#   runtime warning-registry key for browser-side binding warnings, not
+#   arbitrary warning text.
+# - `binding.wrapper_warning` is optional and should reference a known package
+#   runtime warning-registry key for wrapper-side structural warnings, not
+#   arbitrary warning text.
 # - `binding.rationale` should briefly explain why metadata alone is not the
 #   right source of truth for this binding decision.
 #
@@ -100,5 +108,6 @@ components:
       event: wa-selection-change
       value_kind: custom
       value_field: selectedItemIds
-      warning_key: missing_tree_item_id
+      js_warning: missing_tree_item_id
+      wrapper_warning: missing_tree_item_id
       rationale: Tree selection changes represent committed component state and expose selected item ids to Shiny.

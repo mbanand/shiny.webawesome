@@ -1,6 +1,6 @@
 # Shared CLI status helpers for the shiny.webawesome tool scripts.
 #
-# This file is sourced by CLI entry points under tools/ and tools/runners/. It
+# This file is sourced by CLI entry points under tools/. It
 # is not package runtime code.
 
 # Provide a local null-coalescing operator for tool scripts.

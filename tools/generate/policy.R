@@ -6,6 +6,11 @@
   file.path("dev", "generation", "binding-overrides.yaml")
 }
 
+# Return the runtime warning-registry file relative to the repo root.
+.warning_registry_file <- function() {
+  file.path("R", "wa_warning_registry.R")
+}
+
 # Return one normalized binding mode or `"none"` when missing.
 .normalize_binding_mode <- function(value) {
   mode <- tolower(.scalar_string(value, fallback = "none"))
@@ -69,6 +74,57 @@
   .scalar_string(value, fallback = NA_character_)
 }
 
+# Return the known runtime warning-registry keys from package source.
+.known_warning_registry_keys <- function(root) {
+  registry_path <- file.path(root, .warning_registry_file())
+
+  if (!file.exists(registry_path)) {
+    stop(
+      "Runtime warning registry file does not exist: ",
+      .warning_registry_file(),
+      call. = FALSE
+    )
+  }
+
+  env <- new.env(parent = baseenv())
+  sys.source(registry_path, envir = env)
+
+  if (!exists(".wa_warning_keys", envir = env, inherits = FALSE)) {
+    stop(
+      "Runtime warning registry file does not define `.wa_warning_keys()`: ",
+      .warning_registry_file(),
+      call. = FALSE
+    )
+  }
+
+  keys <- get(".wa_warning_keys", envir = env, inherits = FALSE)()
+  .sorted_unique(as.character(keys))
+}
+
+# Validate one policy warning key against the runtime warning registry.
+.validate_binding_warning_key <- function(
+  key,
+  field_name,
+  tag,
+  known_keys
+) {
+  if (is.na(key) || !nzchar(key)) {
+    return(key)
+  }
+
+  if (key %in% known_keys) {
+    return(key)
+  }
+
+  stop(
+    "Unknown `binding.", field_name, "` key `", key, "` for ",
+    tag,
+    ". Known warning keys: ",
+    paste(known_keys, collapse = ", "),
+    call. = FALSE
+  )
+}
+
 # Read one handwritten binding-override policy file when present.
 .read_binding_override_policy <- function(
   root,
@@ -102,6 +158,8 @@
     ))
   }
 
+  known_warning_keys <- .known_warning_registry_keys(root)
+
   normalized <- lapply(
     policy_components,
     function(component) {
@@ -112,7 +170,8 @@
       events <- .normalize_binding_events(binding$events)
       value_kind <- .normalize_binding_value_kind(binding$value_kind)
       value_field <- .normalize_binding_value_field(binding$value_field)
-      warning_key <- .normalize_binding_warning_key(binding$warning_key)
+      js_warning <- .normalize_binding_warning_key(binding$js_warning)
+      wrapper_warning <- .normalize_binding_warning_key(binding$wrapper_warning)
       rationale <- .scalar_string(binding$rationale, fallback = NA_character_)
 
       if (is.na(tag)) {
@@ -159,6 +218,19 @@
         )
       }
 
+      js_warning <- .validate_binding_warning_key(
+        js_warning,
+        "js_warning",
+        tag,
+        known_warning_keys
+      )
+      wrapper_warning <- .validate_binding_warning_key(
+        wrapper_warning,
+        "wrapper_warning",
+        tag,
+        known_warning_keys
+      )
+
       list(
         tag = tag,
         binding = list(
@@ -171,7 +243,8 @@
           },
           value_kind = value_kind,
           value_field = value_field,
-          warning_key = warning_key,
+          js_warning = js_warning,
+          wrapper_warning = wrapper_warning,
           rationale = rationale
         )
       )

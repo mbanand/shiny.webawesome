@@ -147,7 +147,7 @@ trivial helpers whose purpose is already obvious.
 
 Generated exported functions should have generated roxygen docs if they are part of the package API.
 
-Handwritten build-tool entry points under `tools/` and `tools/runners/` should
+Handwritten build-tool entry points under `tools/` should
 also use roxygen2-style documentation. Tool documentation is generated
 separately from package documentation; use `document_tools()` to regenerate the
 artifacts written to `tools/man/`. Tool roxygen blocks should strongly prefer
@@ -158,9 +158,7 @@ tool docs, this does not affect the generated output.)
 Handwritten tooling code is organized by role:
 
 - `tools/` for top-level tool entry points and reusable tool scripts
-- `tools/runners/` for thin CLI runners around stage functions
 - `tools/testthat/stages/` for reusable stage implementation tests
-- `tools/testthat/runners/` for thin runner tests
 - `tools/testthat/tools/` for top-level tool script tests
 - `tools/man/` for generated tool documentation artifacts; this directory is
   generated and should not be kept as source in git
@@ -200,8 +198,8 @@ Handwritten R code should follow the Tidyverse style guide, available at https:/
 
 Use `{styler}` for formatting and `{lintr}` for style checks where applicable.
 
-For handwritten R files, including build-stage scripts under `tools/` and CLI
-runners under `tools/runners/`, prefer a small external surface per file.
+For handwritten R files, including build-stage scripts under `tools/`,
+prefer a small external surface per file.
 Typically a file should expose one main entry point, or at most a small number
 of intentionally external functions. Internal helpers should typically start
 with a leading period, for example `.parse_metadata()`. These helpers should

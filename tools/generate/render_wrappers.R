@@ -380,6 +380,59 @@
   paste0("  ", gsub("\n", "\n  ", paste(lines, collapse = "\n"), fixed = TRUE))
 }
 
+# Return the configured wrapper warning key for one component.
+.component_wrapper_warning <- function(component) {
+  .scalar_string(
+    component$classification$binding_wrapper_warning,
+    fallback = NA_character_
+  )
+}
+
+# Return any wrapper-side warning hook code for one wrapper.
+.render_wrapper_warnings <- function(component) {
+  warning_key <- .component_wrapper_warning(component)
+
+  if (is.na(warning_key) || !nzchar(warning_key)) {
+    return("")
+  }
+
+  if (identical(warning_key, "missing_tree_item_id")) {
+    return("  .wa_warn_missing_tree_item_ids(children, input_id = input_id)")
+  }
+
+  stop(
+    "Unsupported wrapper warning key for ",
+    component$tag_name,
+    ": ",
+    warning_key,
+    call. = FALSE
+  )
+}
+
+# Return any wrapper-specific documentation note text.
+.render_wrapper_doc_note <- function(component) {
+  warning_key <- .component_wrapper_warning(component)
+
+  if (is.na(warning_key) || !nzchar(warning_key)) {
+    return("")
+  }
+
+  if (identical(warning_key, "missing_tree_item_id")) {
+    return(paste(
+      "For stable Shiny selection values, selectable descendant",
+      "`wa-tree-item` elements should have DOM `id` attributes."
+    ))
+  }
+
+  stop(
+    "Unsupported wrapper documentation note for ",
+    component$tag_name,
+    ": ",
+    warning_key,
+    call. = FALSE
+  )
+}
+
 # Render enum validation lines for one wrapper.
 .render_wrapper_validations <- function(component) {
   attrs <- .wrapper_attributes(component)
@@ -440,6 +493,10 @@
       "component."
     )
   )
+  wrapper_doc_note <- .render_wrapper_doc_note(component)
+  if (nzchar(wrapper_doc_note)) {
+    description <- paste(description, wrapper_doc_note)
+  }
 
   param_docs <- .roxygen_param_lines(
     "...",
@@ -498,7 +555,7 @@
     HEADER = .generated_header(),
     FUNCTION_NAME = component$r_function_name,
     FUNCTION_TITLE = paste("Create a", paste0("`", component$tag_name, "`"), "component"),
-    FUNCTION_DESCRIPTION = description,
+    FUNCTION_DESCRIPTION = paste(.roxygen_lines(description), collapse = "\n"),
     PARAM_DOCS = paste(param_docs, collapse = "\n"),
     TAG_NAME = .r_string(component$tag_name),
     SIGNATURE = .render_wrapper_signature(component),
@@ -506,7 +563,8 @@
     ATTRS = .render_wrapper_attrs(component),
     BOOLEAN_ATTRS = .render_wrapper_booleans(component),
     BOOLEAN_ARG_NAMES = .render_wrapper_bool_arg_names(component),
-    CHILDREN = .render_wrapper_children(component)
+    CHILDREN = .render_wrapper_children(component),
+    WRAPPER_WARNINGS = .render_wrapper_warnings(component)
   )
 
   .render_template(template_path, values)

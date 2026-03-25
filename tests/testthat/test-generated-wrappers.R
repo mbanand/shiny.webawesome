@@ -134,6 +134,35 @@ test_that("wa_card renders exact fragments for defaults and overrides", {
   }
 })
 
+test_that("wa_tree warns once when descendant tree items lack ids", {
+  expect_warning(
+    shiny.webawesome:::wa_tree(
+      input_id = "tree",
+      shiny.webawesome:::wa_tree_item(
+        "Parent",
+        id = "parent",
+        shiny.webawesome:::wa_tree_item("Child missing")
+      ),
+      shiny.webawesome:::wa_tree_item("Sibling missing")
+    ),
+    regexp = "selected items without ids will be omitted from the Shiny value"
+  )
+})
+
+test_that("wa_tree does not warn when descendant tree items all have ids", {
+  expect_no_warning(
+    shiny.webawesome:::wa_tree(
+      input_id = "tree",
+      shiny.webawesome:::wa_tree_item(
+        "Parent",
+        id = "parent",
+        shiny.webawesome:::wa_tree_item("Child", id = "child")
+      ),
+      shiny.webawesome:::wa_tree_item("Sibling", id = "sibling")
+    )
+  )
+})
+
 test_that("generated wrappers validate enum arguments exactly", {
   testthat::expect_error(
     shiny.webawesome:::wa_card("Hello", appearance = "invalid"),

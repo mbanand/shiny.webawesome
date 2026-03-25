@@ -22,6 +22,20 @@ source(file.path("..", "..", "generate_components.R"))
   dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
   .write_file(file.path(root, "DESCRIPTION"), "Package: fake")
   .write_file(file.path(root, "inst", "extdata", "webawesome", "VERSION"), version)
+  .write_file(
+    file.path(root, "R", "wa_warning_registry.R"),
+    c(
+      ".wa_warning_defaults <- function() {",
+      "  list(",
+      "    missing_tree_item_id = TRUE",
+      "  )",
+      "}",
+      "",
+      ".wa_warning_keys <- function() {",
+      "  names(.wa_warning_defaults())",
+      "}"
+    )
+  )
 }
 
 .create_fake_binding_policy <- function(root) {
@@ -83,7 +97,8 @@ source(file.path("..", "..", "generate_components.R"))
       "      event: wa-selection-change",
       "      value_kind: custom",
       "      value_field: selectedItemIds",
-      "      warning_key: missing_tree_item_id",
+      "      js_warning: missing_tree_item_id",
+      "      wrapper_warning: missing_tree_item_id",
       "      rationale: Tree selection changes represent committed component state."
     )
   )
@@ -486,7 +501,8 @@ testthat::test_that("generate builds deterministic intermediate schema", {
   testthat::expect_equal(tree$classification$binding_event, "wa-selection-change")
   testthat::expect_equal(tree$classification$binding_value_kind, "custom")
   testthat::expect_equal(tree$classification$binding_value_field, "selectedItemIds")
-  testthat::expect_equal(tree$classification$binding_warning_key, "missing_tree_item_id")
+  testthat::expect_equal(tree$classification$binding_js_warning, "missing_tree_item_id")
+  testthat::expect_equal(tree$classification$binding_wrapper_warning, "missing_tree_item_id")
   testthat::expect_equal(result$schema$summary$classification$wrapper_only, 1L)
   testthat::expect_equal(result$schema$summary$classification$binding, 9L)
   testthat::expect_equal(result$schema$summary$classification$update, 1L)
@@ -510,6 +526,40 @@ testthat::test_that("generate supports component filters and exclusions", {
   testthat::expect_equal(
     vapply(result$schema$components, `[[`, character(1), "tag_name"),
     c("wa-checkbox", "wa-select")
+  )
+})
+
+testthat::test_that("generate fails fast on unknown policy warning keys", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+  .create_fake_metadata(root)
+  .create_fake_binding_policy(root)
+
+  .write_file(
+    file.path(root, "dev", "generation", "binding-overrides.yaml"),
+    c(
+      "schema_version: 1",
+      "",
+      "components:",
+      "  - tag: wa-tree",
+      "    binding:",
+      "      mode: semantic",
+      "      event: wa-selection-change",
+      "      value_kind: custom",
+      "      value_field: selectedItemIds",
+      "      js_warning: unknown_warning_key",
+      "      rationale: Tree selection changes represent committed component state."
+    )
+  )
+
+  testthat::expect_error(
+    generate_components(
+      root = root,
+      filter = "wa-tree",
+      emit = FALSE,
+      verbose = FALSE
+    ),
+    regexp = "Unknown `binding\\.js_warning` key `unknown_warning_key`"
   )
 })
 
@@ -630,7 +680,11 @@ testthat::test_that("generate writes debug artifacts when requested", {
     "selectedItemIds"
   )
   testthat::expect_equal(
-    schema_debug$components[["wa-tree"]]$classification$binding_warning_key,
+    schema_debug$components[["wa-tree"]]$classification$binding_js_warning,
+    "missing_tree_item_id"
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-tree"]]$classification$binding_wrapper_warning,
     "missing_tree_item_id"
   )
 })
@@ -930,6 +984,10 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     file.path(root, "inst", "bindings", "wa_tree.js"),
     warn = FALSE
   )
+  tree_wrapper <- readLines(
+    file.path(root, "R", "wa_tree.R"),
+    warn = FALSE
+  )
   testthat::expect_true(any(grepl(
     "return el.__shinyWebawesomeValue \\|\\| \\[\\];",
     tree_binding
@@ -949,6 +1007,14 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_true(any(grepl(
     "missing_tree_item_id",
     tree_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "\\.wa_warn_missing_tree_item_ids\\(children, input_id = input_id\\)",
+    tree_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "stable Shiny selection values",
+    tree_wrapper
   )))
 
   details_binding <- readLines(

@@ -3,7 +3,9 @@
 
 #' Create a `wa-tree` component
 #'
-#' Generated wrapper for the Web Awesome `wa-tree` component.
+#' Generated wrapper for the Web Awesome `wa-tree` component. For stable
+#' Shiny selection values, selectable descendant `wa-tree-item` elements
+#' should have DOM `id` attributes.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -46,6 +48,7 @@ wa_tree <- function(
       .wa_slot(expand_icon, "expand-icon")
     )
   )
+  .wa_warn_missing_tree_item_ids(children, input_id = input_id)
   if (!is.null(selection)) {
     selection <- .wa_match_arg(
       selection,

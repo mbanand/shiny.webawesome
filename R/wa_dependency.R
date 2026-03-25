@@ -23,13 +23,6 @@
   paste0("bindings/", sort(scripts))
 }
 
-# Return the known warning-registry defaults for the package runtime.
-.wa_warning_defaults <- function() {
-  list(
-    missing_tree_item_id = TRUE
-  )
-}
-
 # Return one normalized logical warning flag with fallback to the default.
 .wa_warning_flag <- function(value, default) {
   if (is.logical(value) && length(value) == 1L && !is.na(value)) {
@@ -38,6 +31,8 @@
 
   default
 }
+
+# nolint start: object_usage_linter
 
 # Return the normalized runtime warning registry options.
 .wa_warning_registry <- function() {
@@ -58,6 +53,8 @@
     names(defaults)
   )
 }
+
+# nolint end
 
 # Return one JavaScript boolean literal for a scalar logical value.
 .wa_js_bool <- function(value) {
