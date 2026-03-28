@@ -15,7 +15,7 @@
 .normalize_binding_mode <- function(value) {
   mode <- tolower(.scalar_string(value, fallback = "none"))
 
-  if (!mode %in% c("none", "value", "action", "semantic")) {
+  if (!mode %in% c("none", "value", "action", "semantic", "action_with_payload")) {
     stop(
       "Unsupported binding override mode: ",
       mode,
@@ -66,6 +66,30 @@
 
 # Return one normalized binding extractor field name.
 .normalize_binding_value_field <- function(value) {
+  .scalar_string(value, fallback = NA_character_)
+}
+
+# Return one normalized binding payload extractor kind.
+.normalize_binding_payload_kind <- function(value) {
+  kind <- tolower(.scalar_string(value, fallback = NA_character_))
+
+  if (is.na(kind)) {
+    return(NA_character_)
+  }
+
+  if (!kind %in% c("property", "attribute", "custom")) {
+    stop(
+      "Unsupported binding override payload kind: ",
+      kind,
+      call. = FALSE
+    )
+  }
+
+  kind
+}
+
+# Return one normalized binding payload extractor field name.
+.normalize_binding_payload_field <- function(value) {
   .scalar_string(value, fallback = NA_character_)
 }
 
@@ -170,6 +194,8 @@
       events <- .normalize_binding_events(binding$events)
       value_kind <- .normalize_binding_value_kind(binding$value_kind)
       value_field <- .normalize_binding_value_field(binding$value_field)
+      payload_kind <- .normalize_binding_payload_kind(binding$payload_kind)
+      payload_field <- .normalize_binding_payload_field(binding$payload_field)
       js_warning <- .normalize_binding_warning_key(binding$js_warning)
       wrapper_warning <- .normalize_binding_warning_key(binding$wrapper_warning)
       rationale <- .scalar_string(binding$rationale, fallback = NA_character_)
@@ -199,10 +225,14 @@
         )
       }
 
-      if (!identical(mode, "semantic") && length(events) > 0L) {
+      if (
+        !identical(mode, "semantic") &&
+          !identical(mode, "action_with_payload") &&
+          length(events) > 0L
+      ) {
         stop(
           "Binding override entries may use `binding.events` only for ",
-          "`binding.mode: semantic`: ",
+          "`binding.mode: semantic` or `binding.mode: action_with_payload`: ",
           tag,
           call. = FALSE
         )
@@ -213,6 +243,18 @@
         stop(
           "Semantic binding override entries must include `binding.value_kind` ",
           "and `binding.value_field`: ",
+          tag,
+          call. = FALSE
+        )
+      }
+
+      if (
+        identical(mode, "action_with_payload") &&
+          (is.na(payload_kind) || is.na(payload_field))
+      ) {
+        stop(
+          "Action-with-payload binding override entries must include ",
+          "`binding.payload_kind` and `binding.payload_field`: ",
           tag,
           call. = FALSE
         )
@@ -243,6 +285,8 @@
           },
           value_kind = value_kind,
           value_field = value_field,
+          payload_kind = payload_kind,
+          payload_field = payload_field,
           js_warning = js_warning,
           wrapper_warning = wrapper_warning,
           rationale = rationale

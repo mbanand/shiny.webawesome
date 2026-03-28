@@ -50,6 +50,13 @@ source(file.path("..", "..", "generate_components.R"))
       "      mode: action",
       "      event: click",
       "      rationale: Native click semantics are expected for button-like controls.",
+      "  - tag: wa-dropdown",
+      "    binding:",
+      "      mode: action_with_payload",
+      "      event: wa-select",
+      "      payload_kind: custom",
+      "      payload_field: selectedItemValue",
+      "      rationale: Dropdown selection is action-like and exposes the selected item's value as side-channel state.",
       "  - tag: wa-carousel",
       "    binding:",
       "      mode: semantic",
@@ -280,6 +287,32 @@ source(file.path("..", "..", "generate_components.R"))
         )
       ),
       list(
+        path = "components/dropdown/dropdown.js",
+        declarations = list(
+          list(
+            kind = "class",
+            name = "WaDropdown",
+            tagName = "wa-dropdown",
+            summary = "Dropdown component.",
+            attributes = list(
+              list(name = "open", fieldName = "open", type = list(text = "boolean")),
+              list(name = "placement", fieldName = "placement", type = list(text = "'top' | 'bottom'"))
+            ),
+            members = list(
+              list(name = "open", kind = "field", type = list(text = "boolean")),
+              list(name = "placement", kind = "field", type = list(text = "'top' | 'bottom'"))
+            ),
+            events = list(
+              list(name = "wa-select", type = list(text = "CustomEvent<{ item: WaDropdownItem } >")),
+              list(name = "wa-show", type = list(text = "CustomEvent<void>"))
+            ),
+            slots = list(
+              list(name = "trigger", description = "Trigger slot.")
+            )
+          )
+        )
+      ),
+      list(
         path = "components/dialog/dialog.js",
         declarations = list(
           list(
@@ -405,12 +438,12 @@ testthat::test_that("generate builds deterministic intermediate schema", {
 
   result <- generate_components(root = root, emit = FALSE, verbose = FALSE)
 
-  testthat::expect_equal(result$component_count, 10L)
+  testthat::expect_equal(result$component_count, 11L)
   testthat::expect_equal(
     vapply(result$schema$components, `[[`, character(1), "tag_name"),
     c(
       "wa-button", "wa-card", "wa-carousel", "wa-checkbox",
-      "wa-details", "wa-dialog", "wa-drawer", "wa-select",
+      "wa-details", "wa-dialog", "wa-drawer", "wa-dropdown", "wa-select",
       "wa-tab-group", "wa-tree"
     )
   )
@@ -486,15 +519,22 @@ testthat::test_that("generate builds deterministic intermediate schema", {
     c("wa-show", "wa-after-hide")
   )
   testthat::expect_equal(drawer$classification$binding_value_field, "open")
-  select <- result$schema$components[[8]]
+  dropdown <- result$schema$components[[8]]
+  testthat::expect_equal(dropdown$classification$mode, "wrapper-binding-action-payload")
+  testthat::expect_true(isTRUE(dropdown$classification$binding))
+  testthat::expect_equal(dropdown$classification$binding_mode, "action_with_payload")
+  testthat::expect_equal(dropdown$classification$binding_event, "wa-select")
+  testthat::expect_equal(dropdown$classification$binding_payload_kind, "custom")
+  testthat::expect_equal(dropdown$classification$binding_payload_field, "selectedItemValue")
+  select <- result$schema$components[[9]]
   testthat::expect_equal(select$classification$mode, "wrapper-binding-update")
   testthat::expect_true(isTRUE(select$classification$update))
-  tab_group <- result$schema$components[[9]]
+  tab_group <- result$schema$components[[10]]
   testthat::expect_equal(tab_group$classification$mode, "wrapper-binding-semantic")
   testthat::expect_equal(tab_group$classification$binding_mode, "semantic")
   testthat::expect_equal(tab_group$classification$binding_event, "wa-tab-show")
   testthat::expect_equal(tab_group$classification$binding_value_field, "active")
-  tree <- result$schema$components[[10]]
+  tree <- result$schema$components[[11]]
   testthat::expect_equal(tree$classification$mode, "wrapper-binding-semantic")
   testthat::expect_true(isTRUE(tree$classification$binding))
   testthat::expect_equal(tree$classification$binding_mode, "semantic")
@@ -504,7 +544,7 @@ testthat::test_that("generate builds deterministic intermediate schema", {
   testthat::expect_equal(tree$classification$binding_js_warning, "missing_tree_item_id")
   testthat::expect_equal(tree$classification$binding_wrapper_warning, "missing_tree_item_id")
   testthat::expect_equal(result$schema$summary$classification$wrapper_only, 1L)
-  testthat::expect_equal(result$schema$summary$classification$binding, 9L)
+  testthat::expect_equal(result$schema$summary$classification$binding, 10L)
   testthat::expect_equal(result$schema$summary$classification$update, 1L)
 })
 
@@ -563,6 +603,37 @@ testthat::test_that("generate fails fast on unknown policy warning keys", {
   )
 })
 
+testthat::test_that("generate fails fast on incomplete action-with-payload policy", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+  .create_fake_metadata(root)
+  .create_fake_binding_policy(root)
+
+  .write_file(
+    file.path(root, "dev", "generation", "binding-overrides.yaml"),
+    c(
+      "schema_version: 1",
+      "",
+      "components:",
+      "  - tag: wa-dropdown",
+      "    binding:",
+      "      mode: action_with_payload",
+      "      event: wa-select",
+      "      rationale: Dropdown selection should carry payload."
+    )
+  )
+
+  testthat::expect_error(
+    generate_components(
+      root = root,
+      filter = "wa-dropdown",
+      emit = FALSE,
+      verbose = FALSE
+    ),
+    regexp = "Action-with-payload binding override entries must include"
+  )
+})
+
 testthat::test_that("generate writes debug artifacts when requested", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
@@ -598,12 +669,12 @@ testthat::test_that("generate writes debug artifacts when requested", {
   )
 
   schema_debug <- jsonlite::fromJSON(result$debug$schema, simplifyVector = FALSE)
-  testthat::expect_equal(schema_debug$summary$component_count, 10L)
+  testthat::expect_equal(schema_debug$summary$component_count, 11L)
   testthat::expect_equal(
     names(schema_debug$components),
     c(
       "wa-button", "wa-card", "wa-carousel", "wa-checkbox",
-      "wa-details", "wa-dialog", "wa-drawer", "wa-select",
+      "wa-details", "wa-dialog", "wa-drawer", "wa-dropdown", "wa-select",
       "wa-tab-group", "wa-tree"
     )
   )
@@ -660,6 +731,18 @@ testthat::test_that("generate writes debug artifacts when requested", {
     c("wa-show", "wa-after-hide")
   )
   testthat::expect_equal(
+    schema_debug$components[["wa-dropdown"]]$classification$binding_mode,
+    "action_with_payload"
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-dropdown"]]$classification$binding_payload_kind,
+    "custom"
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-dropdown"]]$classification$binding_payload_field,
+    "selectedItemValue"
+  )
+  testthat::expect_equal(
     schema_debug$components[["wa-tab-group"]]$classification$binding_mode,
     "semantic"
   )
@@ -700,7 +783,7 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     root = root,
     filter = c(
       "wa-button", "wa-card", "wa-carousel", "wa-checkbox",
-      "wa-details", "wa-dialog", "wa-drawer", "wa-select",
+      "wa-details", "wa-dialog", "wa-drawer", "wa-dropdown", "wa-select",
       "wa-tab-group", "wa-tree"
     ),
     verbose = FALSE
@@ -726,6 +809,9 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   )
   testthat::expect_true(
     file.exists(file.path(root, "R", "wa_drawer.R"))
+  )
+  testthat::expect_true(
+    file.exists(file.path(root, "R", "wa_dropdown.R"))
   )
   testthat::expect_true(
     file.exists(file.path(root, "R", "wa_select.R"))
@@ -755,6 +841,9 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     file.exists(file.path(root, "inst", "bindings", "wa_drawer.js"))
   )
   testthat::expect_true(
+    file.exists(file.path(root, "inst", "bindings", "wa_dropdown.js"))
+  )
+  testthat::expect_true(
     file.exists(file.path(root, "inst", "bindings", "wa_select.js"))
   )
   testthat::expect_true(
@@ -766,8 +855,8 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_true(
     file.exists(file.path(root, "R", "wa_select.R"))
   )
-  testthat::expect_equal(length(result$written$wrappers), 10L)
-  testthat::expect_equal(length(result$written$bindings), 9L)
+  testthat::expect_equal(length(result$written$wrappers), 11L)
+  testthat::expect_equal(length(result$written$bindings), 10L)
   testthat::expect_equal(length(result$written$updates), 1L)
   testthat::expect_true("R/wa_select.R" %in% result$written$updates)
 
@@ -859,6 +948,29 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_true(any(grepl(
     "@param input_id Shiny input id for the component\\.",
     drawer_wrapper
+  )))
+
+  dropdown_wrapper <- readLines(
+    file.path(root, "R", "wa_dropdown.R"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "@param input_id Shiny input id for the component\\.",
+    dropdown_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "input\\$<input_id>_value",
+    dropdown_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "returns `NULL` when the selected item has no `value`",
+    dropdown_wrapper,
+    fixed = TRUE
+  )))
+  testthat::expect_true(any(grepl(
+    "empty string `\"\"`",
+    dropdown_wrapper,
+    fixed = TRUE
   )))
 
   select_wrapper <- readLines(file.path(root, "R", "wa_select.R"), warn = FALSE)
@@ -1054,6 +1166,32 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_true(any(grepl(
     "el.__shinyWebawesomeEvents = \\[\"wa-show\", \"wa-after-hide\"\\];",
     drawer_binding
+  )))
+
+  dropdown_binding <- readLines(
+    file.path(root, "inst", "bindings", "wa_dropdown.js"),
+    warn = FALSE
+  )
+  testthat::expect_true(any(grepl(
+    "return \"shiny.action\";",
+    dropdown_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "el.__shinyWebawesomeEvents = \\[\"wa-select\"\\];",
+    dropdown_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "event\\?\\.detail\\?\\.item",
+    dropdown_binding
+  )))
+  testthat::expect_true(any(grepl(
+    "typeof item.value === \"string\"",
+    dropdown_binding,
+    fixed = TRUE
+  )))
+  testthat::expect_true(any(grepl(
+    "Shiny.setInputValue\\(el.id \\+ \"_value\", payload, \\{ priority: \"event\" \\}\\);",
+    dropdown_binding
   )))
 
   tab_group_binding <- readLines(

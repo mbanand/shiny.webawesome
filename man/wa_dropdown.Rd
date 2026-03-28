@@ -5,8 +5,8 @@
 \title{Create a \code{wa-dropdown} component}
 \usage{
 wa_dropdown(
+  input_id,
   ...,
-  id = NULL,
   dir = NULL,
   distance = NULL,
   lang = NULL,
@@ -18,9 +18,10 @@ wa_dropdown(
 )
 }
 \arguments{
-\item{...}{Child content for the component's default slot.}
+\item{input_id}{Shiny input id for the component. This is also used as
+the rendered DOM \code{id} attribute.}
 
-\item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+\item{...}{Child content for the component's default slot.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
@@ -52,6 +53,13 @@ Defaults to \code{0} when omitted.}
 An HTML tag for the component.
 }
 \description{
-Generated wrapper for the Web Awesome \code{wa-dropdown} component.
+Generated wrapper for the Web Awesome \code{wa-dropdown} component. When
+used as a Shiny input, action semantics are exposed through
+\verb{input$<input_id>} and the latest selected dropdown item value is
+exposed through \verb{input$<input_id>_value}. The action input increments
+on every selection, including repeated selection of the same item. The
+companion value input reflects the selected item's \code{value}, returns
+\code{NULL} when the selected item has no \code{value}, and preserves an explicit
+empty string \code{""} when that is the selected item's value.
 Generated from Web Awesome metadata.
 }

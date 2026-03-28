@@ -27,6 +27,22 @@
   )
 }
 
+# Return the configured action-with-payload extractor kind for one component.
+.component_payload_kind <- function(component) {
+  .scalar_string(
+    component$classification$binding_payload_kind,
+    fallback = NA_character_
+  )
+}
+
+# Return the configured action-with-payload extractor field for one component.
+.component_payload_field <- function(component) {
+  .scalar_string(
+    component$classification$binding_payload_field,
+    fallback = NA_character_
+  )
+}
+
 # Return the configured semantic JS binding warning key for one component.
 .component_binding_js_warning <- function(component) {
   .scalar_string(
@@ -53,6 +69,11 @@
 # Return whether the component exposes one state field by name.
 .component_has_state_field <- function(component, name) {
   name %in% unique(c(.component_attribute_names(component), .component_property_names(component)))
+}
+
+# Return whether the binding behaves like a Shiny action input.
+.component_is_action_binding <- function(component) {
+  .component_binding_mode(component) %in% c("action", "action_with_payload")
 }
 
 # Return the preferred ordered DOM events to subscribe to for one binding.
@@ -111,7 +132,7 @@
 
 # Return JS for extracting the current component value.
 .binding_get_value <- function(component) {
-  if (identical(.component_binding_mode(component), "action")) {
+  if (.component_is_action_binding(component)) {
     return("return $(el).data(\"val\") || 0;")
   }
 
@@ -155,7 +176,7 @@
 
 # Return one supported list of fields for receiveMessage.
 .binding_receive_fields <- function(component) {
-  if (.component_binding_mode(component) %in% c("action", "semantic")) {
+  if (.component_binding_mode(component) %in% c("action", "action_with_payload", "semantic")) {
     return(character())
   }
 
@@ -217,7 +238,7 @@
 
 # Return the optional JS getType() method block for one component.
 .binding_get_type_method <- function(component) {
-  if (!identical(.component_binding_mode(component), "action")) {
+  if (!.component_is_action_binding(component)) {
     return("")
   }
 
@@ -231,7 +252,7 @@
 
 # Return the JS subscription callback body for one component.
 .binding_subscribe_body <- function(component) {
-  if (!identical(.component_binding_mode(component), "action")) {
+  if (!.component_is_action_binding(component)) {
     # Semantic bindings should expose committed reactive state, not raw browser
     # event names. When lifecycle transitions are involved, policy should list
     # the earliest non-cancelable events that commit the semantic value.
@@ -289,6 +310,45 @@
     return("el.__shinyWebawesomeCallback = () => callback();")
   }
 
+  if (identical(.component_binding_mode(component), "action_with_payload")) {
+    payload_kind <- .component_payload_kind(component)
+    payload_field <- .component_payload_field(component)
+
+    if (
+      identical(component$tag_name, "wa-dropdown") &&
+        identical(payload_kind, "custom") &&
+        identical(payload_field, "selectedItemValue")
+    ) {
+      return(
+        paste(
+          "el.__shinyWebawesomeCallback = (event) => {",
+          "  const item = event?.detail?.item;",
+          paste(
+            "  const payload = item && typeof item.value === \"string\"",
+            "? item.value : null;"
+          ),
+          "  el.__shinyWebawesomeValuePayload = payload;",
+          "  Shiny.setInputValue(el.id + \"_value\", payload, { priority: \"event\" });",
+          "  const val = $(el).data(\"val\") || 0;",
+          "  $(el).data(\"val\", val + 1);",
+          "  callback(false);",
+          "};",
+          sep = "\n    "
+        )
+      )
+    }
+
+    stop(
+      "Unsupported action-with-payload extractor for ",
+      component$tag_name,
+      ": ",
+      payload_kind,
+      "/",
+      payload_field,
+      call. = FALSE
+    )
+  }
+
   paste(
     "el.__shinyWebawesomeCallback = () => {",
     "  const val = $(el).data(\"val\") || 0;",
@@ -305,7 +365,7 @@
     return("return;")
   }
 
-  if (!identical(.component_binding_mode(component), "action")) {
+  if (!.component_is_action_binding(component)) {
     body <- .binding_set_value(component)
 
     if (!nzchar(body)) {

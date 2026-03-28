@@ -3,11 +3,19 @@
 
 #' Create a `wa-dropdown` component
 #'
-#' Generated wrapper for the Web Awesome `wa-dropdown` component.
+#' Generated wrapper for the Web Awesome `wa-dropdown` component. When
+#' used as a Shiny input, action semantics are exposed through
+#' `input$<input_id>` and the latest selected dropdown item value is
+#' exposed through `input$<input_id>_value`. The action input increments
+#' on every selection, including repeated selection of the same item. The
+#' companion value input reflects the selected item's `value`, returns
+#' `NULL` when the selected item has no `value`, and preserves an explicit
+#' empty string `""` when that is the selected item's value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
-#' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param input_id Shiny input id for the component. This is also used as
+#' the rendered DOM `id` attribute.
 #' @param dir Optional Web Awesome attribute.
 #' @param distance The distance of the dropdown menu from its trigger.
 #' Defaults to `0` when omitted.
@@ -31,8 +39,8 @@
 #'
 #' @export
 wa_dropdown <- function(
+  input_id,
   ...,
-  id = NULL,
   dir = NULL,
   distance = NULL,
   lang = NULL,
@@ -49,6 +57,7 @@ wa_dropdown <- function(
       .wa_slot(trigger, "trigger")
     )
   )
+
   if (!is.null(placement)) {
     placement <- .wa_match_arg(
       placement,
@@ -84,7 +93,7 @@ wa_dropdown <- function(
 
   attrs <- .wa_normalize_attrs(
     list(
-      "id" = id,
+      "id" = input_id,
       "dir" = dir,
       "distance" = distance,
       "lang" = lang,

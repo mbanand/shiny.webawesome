@@ -35,6 +35,8 @@ test_that("representative components work end to end in a browser", {
       "&& Boolean(window.customElements.get('wa-details'))",
       "&& Boolean(window.customElements.get('wa-dialog'))",
       "&& Boolean(window.customElements.get('wa-drawer'))",
+      "&& Boolean(window.customElements.get('wa-dropdown'))",
+      "&& Boolean(window.customElements.get('wa-dropdown-item'))",
       "&& Boolean(window.customElements.get('wa-divider'))",
       "&& Boolean(window.customElements.get('wa-input'))",
       "&& Boolean(window.customElements.get('wa-number-input'))",
@@ -142,6 +144,74 @@ test_that("representative components work end to end in a browser", {
   )
   app$wait_for_js(
     "document.getElementById('details_value').innerText.trim() === 'FALSE'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('dropdown');",
+      "const item = document.getElementById('dropdown_item_alpha');",
+      "el.dispatchEvent(new CustomEvent('wa-select', {",
+      "  bubbles: true,",
+      "  detail: { item }",
+      "}));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('dropdown_count').innerText.trim() === '1'"
+  )
+  app$wait_for_js(
+    "document.getElementById('dropdown_value').innerText.trim() === 'alpha'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('dropdown');",
+      "const item = document.getElementById('dropdown_item_alpha');",
+      "el.dispatchEvent(new CustomEvent('wa-select', {",
+      "  bubbles: true,",
+      "  detail: { item }",
+      "}));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('dropdown_count').innerText.trim() === '2'"
+  )
+  app$wait_for_js(
+    "document.getElementById('dropdown_value').innerText.trim() === 'alpha'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('dropdown');",
+      "const item = document.getElementById('dropdown_item_missing');",
+      "el.dispatchEvent(new CustomEvent('wa-select', {",
+      "  bubbles: true,",
+      "  detail: { item }",
+      "}));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('dropdown_count').innerText.trim() === '3'"
+  )
+  app$wait_for_js(
+    "document.getElementById('dropdown_value').innerText.trim() === '<null>'"
+  )
+
+  app$run_js(
+    paste(
+      "const el = document.getElementById('dropdown');",
+      "const item = document.getElementById('dropdown_item_empty');",
+      "el.dispatchEvent(new CustomEvent('wa-select', {",
+      "  bubbles: true,",
+      "  detail: { item }",
+      "}));"
+    )
+  )
+  app$wait_for_js(
+    "document.getElementById('dropdown_count').innerText.trim() === '4'"
+  )
+  app$wait_for_js(
+    "document.getElementById('dropdown_value').innerText.trim() === '<empty>'"
   )
 
   app$run_js(

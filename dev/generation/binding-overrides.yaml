@@ -12,13 +12,15 @@
 #   components:
 #     - tag: wa-<component>
 #       binding:
-#         mode: <none|value|action|semantic>
+#         mode: <none|value|action|semantic|action_with_payload>
 #         event: <dom-event-name>
-#         events: [<dom-event-name>, ...]         # optional semantic-mode list
-#         value_kind: <property|attribute|custom>   # semantic mode only
-#         value_field: <field-or-extractor-key>     # semantic mode only
-#         js_warning: <warning-registry-key>        # optional, semantic mode
-#         wrapper_warning: <warning-registry-key>   # optional, semantic mode
+#         events: [<dom-event-name>, ...]             # optional semantic/action_with_payload list
+#         value_kind: <property|attribute|custom>     # semantic mode only
+#         value_field: <field-or-extractor-key>       # semantic mode only
+#         payload_kind: <property|attribute|custom>   # action_with_payload only
+#         payload_field: <field-or-extractor-key>     # action_with_payload only
+#         js_warning: <warning-registry-key>          # optional, semantic mode
+#         wrapper_warning: <warning-registry-key>     # optional, semantic mode
 #         rationale: <short maintainer note>
 #
 # Field rules:
@@ -27,10 +29,12 @@
 #   state the intended mode explicitly.
 # - `binding.event` is required for every mode except `none`, unless
 #   `binding.events` is supplied for `binding.mode: semantic`.
-# - `binding.events` may be used only with `binding.mode: semantic` and should
-#   list the lifecycle events that commit the same semantic Shiny value.
+# - `binding.events` may be used only with `binding.mode: semantic` or
+#   `binding.mode: action_with_payload`.
 # - `binding.value_kind` and `binding.value_field` are required for
 #   `binding.mode: semantic`.
+# - `binding.payload_kind` and `binding.payload_field` are required for
+#   `binding.mode: action_with_payload`.
 # - `binding.js_warning` is optional and should reference a known package
 #   runtime warning-registry key for browser-side binding warnings, not
 #   arbitrary warning text.
@@ -47,11 +51,15 @@
 # - `semantic`: subscribe to a semantically meaningful component event and use
 #   a configured extractor contract (`property`, `attribute`, or known `custom`
 #   extractor key) instead of the default value/checked model.
+# - `action_with_payload`: use action-button-style incrementing Shiny input
+#   semantics plus a side-channel Shiny payload input derived from the event.
 #
 # Current semantic extractor keys:
 # - `activeSlide` with `value_kind: property` for `wa-carousel`
 # - `open` with `value_kind: property` for open-state components
 # - `selectedItemIds` with `value_kind: custom` for `wa-tree`
+# Current action-with-payload extractor keys:
+# - `selectedItemValue` with `payload_kind: custom` for `wa-dropdown`
 #
 schema_version: 1
 
@@ -61,6 +69,13 @@ components:
       mode: action
       event: click
       rationale: Native click behavior is expected for button-like controls, but upstream metadata does not declare click as a component event for wa-button.
+  - tag: wa-dropdown
+    binding:
+      mode: action_with_payload
+      event: wa-select
+      payload_kind: custom
+      payload_field: selectedItemValue
+      rationale: Dropdown selection is action-like and should preserve repeated same-item selections while exposing the selected item's value as a side-channel payload.
   - tag: wa-carousel
     binding:
       mode: semantic

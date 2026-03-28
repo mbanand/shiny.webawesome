@@ -87,6 +87,13 @@ ui <- wa_page(
     "Details body",
     summary = "More"
   ),
+  wa_dropdown(
+    input_id = "dropdown",
+    wa_dropdown_item("Alpha", id = "dropdown_item_alpha", value = "alpha"),
+    wa_dropdown_item("No value", id = "dropdown_item_missing"),
+    wa_dropdown_item("Empty value", id = "dropdown_item_empty", value = ""),
+    trigger = wa_button("Menu", with_caret = TRUE)
+  ),
   wa_dialog(
     input_id = "dialog",
     "Dialog body",
@@ -199,6 +206,8 @@ ui <- wa_page(
   verbatimTextOutput("checkbox_value"),
   verbatimTextOutput("color_picker_value"),
   verbatimTextOutput("details_value"),
+  verbatimTextOutput("dropdown_count"),
+  verbatimTextOutput("dropdown_value"),
   verbatimTextOutput("dialog_value"),
   verbatimTextOutput("drawer_value"),
   verbatimTextOutput("number_input_value"),
@@ -252,6 +261,26 @@ server <- function(input, output, session) {
     }
 
     "FALSE"
+  })
+
+  output$dropdown_count <- renderText({
+    if (is.null(input$dropdown)) {
+      return("<null>")
+    }
+
+    as.character(input$dropdown)
+  })
+
+  output$dropdown_value <- renderText({
+    if (is.null(input$dropdown_value)) {
+      return("<null>")
+    }
+
+    if (identical(input$dropdown_value, "")) {
+      return("<empty>")
+    }
+
+    input$dropdown_value
   })
 
   output$dialog_value <- renderText({

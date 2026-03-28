@@ -411,6 +411,24 @@
 
 # Return any wrapper-specific documentation note text.
 .render_wrapper_doc_note <- function(component) {
+  if (identical(
+    .scalar_string(component$classification$binding_mode, fallback = "none"),
+    "action_with_payload"
+  )) {
+    return(paste(
+      "When used as a Shiny input,",
+      "action semantics are exposed through",
+      paste0("`input$", "<input_id>", "`"),
+      "and the latest selected dropdown item value is exposed through",
+      paste0("`input$", "<input_id>_value", "`."),
+      "The action input increments on every selection, including repeated",
+      "selection of the same item. The companion value input reflects the",
+      "selected item's `value`, returns `NULL` when the selected item has",
+      "no `value`, and preserves an explicit empty string `\"\"` when that",
+      "is the selected item's value."
+    ))
+  }
+
   warning_key <- .component_wrapper_warning(component)
 
   if (is.na(warning_key) || !nzchar(warning_key)) {

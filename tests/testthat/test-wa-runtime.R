@@ -53,6 +53,7 @@ test_that("package dependency points at the shipped bootstrap assets", {
   expect_true("bindings/wa_color_picker.js" %in% script_src)
   expect_true("bindings/wa_input.js" %in% script_src)
   expect_true("bindings/wa_number_input.js" %in% script_src)
+  expect_true("bindings/wa_dropdown.js" %in% script_src)
   expect_true("bindings/wa_radio_group.js" %in% script_src)
   expect_true("bindings/wa_rating.js" %in% script_src)
   expect_true("bindings/wa_select.js" %in% script_src)

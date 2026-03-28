@@ -195,6 +195,16 @@
   } else {
     binding_override$value_field
   }
+  binding_payload_kind <- if (is.null(binding_override)) {
+    NA_character_
+  } else {
+    binding_override$payload_kind
+  }
+  binding_payload_field <- if (is.null(binding_override)) {
+    NA_character_
+  } else {
+    binding_override$payload_field
+  }
   binding_js_warning <- if (is.null(binding_override)) {
     NA_character_
   } else {
@@ -212,6 +222,9 @@
   }
 
   if (identical(binding_mode, "action")) {
+    has_binding <- TRUE
+    has_update <- FALSE
+  } else if (identical(binding_mode, "action_with_payload")) {
     has_binding <- TRUE
     has_update <- FALSE
   } else if (identical(binding_mode, "semantic")) {
@@ -237,6 +250,8 @@
 
   mode <- if (identical(binding_mode, "action")) {
     "wrapper-binding-action"
+  } else if (identical(binding_mode, "action_with_payload")) {
+    "wrapper-binding-action-payload"
   } else if (identical(binding_mode, "semantic")) {
     "wrapper-binding-semantic"
   } else if (has_update) {
@@ -256,6 +271,8 @@
     binding_events = binding_events,
     binding_value_kind = binding_value_kind,
     binding_value_field = binding_value_field,
+    binding_payload_kind = binding_payload_kind,
+    binding_payload_field = binding_payload_field,
     binding_js_warning = binding_js_warning,
     binding_wrapper_warning = binding_wrapper_warning,
     binding_source = if (is.null(binding_override)) "metadata" else "policy",
