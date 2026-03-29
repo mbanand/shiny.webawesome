@@ -35,6 +35,7 @@ make_wa_tab_panel <- function(name, label) {
   )
 }
 
+# Capture update-message payloads from generated update helpers in unit tests.
 new_message_recorder <- function() {
   seen <- new.env(parent = emptyenv())
   seen$calls <- list()

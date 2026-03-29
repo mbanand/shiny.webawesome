@@ -121,6 +121,8 @@ Functional tests perform tasks such as:
 * launching a small Shiny application
 * interacting with components through a browser
 * verifying reactive values
+* verifying action-style invalidation where applicable
+* verifying split action-plus-payload contracts where applicable
 * verifying events reach the server
 * verifying `update_wa_*()` functions update component state
 
@@ -148,6 +150,14 @@ assertion layers**:
 2. **Shiny reactive-state assertions**
    These verify that the browser interaction is reflected correctly in
    Shiny `input`, `output`, or exported reactive values.
+
+This reactive-state layer should cover more than ordinary value inputs.
+When the generated support model is action-oriented or action-with-payload,
+tests should assert the intended Shiny contract directly. For example, an
+action-with-payload component should verify both that the main input
+invalidates on repeated committed actions and that the companion payload
+input reflects the latest committed payload state with the documented
+nullability rules.
 
 At the current stage of the project, the functional test suite leans more
 heavily on explicit browser/component assertions, with representative checks
@@ -357,4 +367,3 @@ Together these tests ensure that:
 * updates and events propagate correctly
 
 This layered approach provides confidence that the package remains stable as Web Awesome evolves.
-

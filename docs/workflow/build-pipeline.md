@@ -348,6 +348,12 @@ In rare cases, generation may instead emit an **action-oriented binding** when
 an explicit policy input declares that the component should behave like a
 Shiny action input despite incomplete upstream metadata.
 
+A second rare policy-driven exception is an **action-with-payload binding**,
+where the main Shiny input remains action-oriented but a companion input
+publishes the latest committed payload state. This is used for split
+contracts such as `wa-dropdown`, where repeated same-item selections should
+still invalidate Shiny even when the latest payload value does not change.
+
 Generated files are written to:
 
 ```text

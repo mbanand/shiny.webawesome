@@ -344,10 +344,13 @@ Shiny event automatically.
 
 This also means the Shiny-facing binding contract is not always named after
 the upstream event that triggered synchronization. When the reactive contract
-is inherently action-like, the binding may use action semantics. Otherwise,
-the binding should expose the durable semantic value implied by the event,
-typically by reading a stable upstream property or state field such as
-`activeSlide`, `selectedItemIds`, or `open`.
+is inherently action-like, the binding may use action semantics. In rare
+cases, a component may instead use action-with-payload semantics, where the
+main Shiny input remains action-oriented but a separate companion input
+publishes the latest committed payload state. Otherwise, the binding should
+expose the durable semantic value implied by the event, typically by reading
+a stable upstream property or state field such as `activeSlide`,
+`selectedItemIds`, or `open`.
 
 High-frequency or interaction-only events, such as hover telemetry, should
 generally remain browser-side and be handled with client-side JavaScript
@@ -356,10 +359,16 @@ unless a future design explicitly introduces an opt-in forwarding mechanism.
 The default generated binding model is therefore **value-oriented**. However,
 the architecture also allows a narrow, explicit policy seam for exceptional
 cases where a component should behave like a Shiny **action** input rather than
-like a value-bearing input. This is intended for rare situations where the
-component's effective interaction contract is clear, but the upstream metadata
-does not declare the relevant native or inherited event in a way the generator
-can classify automatically.
+like a value-bearing input, or like a split **action-with-payload** contract
+when repeated same-value selections should still invalidate Shiny while a
+companion input exposes the latest committed payload. These exceptional modes
+are intended for rare situations where the component's effective interaction
+contract is clear, but the upstream metadata does not declare the relevant
+native or inherited event in a way the generator can classify automatically.
+
+The current canonical action-with-payload example is `wa-dropdown`, where
+`input$<input_id>` is the action-style trigger and
+`input$<input_id>_value` is the latest selected item value side channel.
 
 Typical behavior:
 

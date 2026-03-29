@@ -233,8 +233,8 @@ The runtime bootstrap process is:
 
 Generated Shiny input bindings subscribe only to **state-commit,
 input-value events** that fit Shiny's reactive input model by default, with a
-small explicit exception path for action-style controls that require a
-different support model.
+small explicit exception path for action-style controls and rare
+action-with-payload controls that require a different support model.
 
 ## Rationale
 
@@ -267,6 +267,15 @@ These cases should not be forced through the value-input model. Instead, they
 justify a narrow generator policy seam that can explicitly classify a
 component as an **action binding** when the metadata alone is insufficient.
 
+A smaller additional category also exists for components whose Shiny contract
+must preserve action invalidation semantics while exposing a separate latest
+payload side channel. These are not ordinary value inputs, because repeating
+the same selection should still invalidate Shiny like an action. They are
+also not plain action inputs, because the latest committed payload needs to
+remain observable as separate state. These cases should use an explicit
+**action-with-payload** binding mode rather than widening the default
+value-event heuristics.
+
 ## Implementation Rules
 
 * Binding classification should prefer events that mean "the component's
@@ -278,6 +287,11 @@ component as an **action binding** when the metadata alone is insufficient.
   synchronization.
 * When the component's Shiny contract is inherently action-like, a binding may
   use dedicated action semantics.
+* When the component's Shiny contract is action-like but also carries a
+  stable side-channel payload, a binding may use dedicated
+  action-with-payload semantics: the main Shiny input remains
+  action-oriented, and a separate companion input exposes the latest
+  committed payload state.
 * Otherwise, bindings should expose the durable semantic value implied by the
   triggering event, typically by reading a stable upstream property or state
   field after the relevant lifecycle transition commits.
@@ -294,13 +308,26 @@ component as an **action binding** when the metadata alone is insufficient.
 * Action-style bindings should use dedicated action semantics appropriate for
   Shiny event inputs, rather than pretending the component exposes a useful
   value payload.
+* Action-with-payload bindings must also be opt-in through that narrow policy
+  layer; they must remain rare and explicit rather than becoming a back door
+  for forwarding arbitrary event-detail payloads into Shiny.
+* Action-with-payload bindings should split invalidation from payload state.
+  The primary input should remain a Shiny action-style invalidator, while the
+  companion payload input should expose only the latest committed semantic
+  payload.
+* `wa-dropdown` is the canonical current example of an action-with-payload
+  contract: `input$<input_id>` invalidates as an action counter, while
+  `input$<input_id>_value` exposes the latest selected item value, returning
+  `NULL` when the selected item has no value and preserving an explicit empty
+  string `""` when that is the selected value.
 * Upstream custom events must not be forwarded to Shiny automatically merely
   because they exist in component metadata.
 * High-frequency or interaction-only events should remain browser-side by
   default.
 * The exact supported event-name heuristics may evolve as component coverage
   broadens, but they should remain constrained to the value-oriented event
-  model above unless an explicit action-binding policy entry says otherwise.
+  model above unless an explicit action-binding or action-with-payload policy
+  entry says otherwise.
 
 ## Deferred Follow-up
 
@@ -314,8 +341,10 @@ This is deferred. It is not part of the current generator or binding model.
 User-facing documentation should also explain this binding convention
 explicitly once the semantic binding surface is broader: raw event names are
 not always the Shiny contract, because Shiny bindings are intended to expose
-action semantics only for inherently action-like controls and otherwise expose
-the durable semantic value that the relevant browser event commits.
+action semantics only for inherently action-like controls,
+action-with-payload semantics for rare split-contract controls, and
+otherwise expose the durable semantic value that the relevant browser event
+commits.
 This documentation follow-up remains deferred until the broader binding
 surface and examples settle further.
 
