@@ -17,9 +17,9 @@ The project maintains four primary manifests:
 
 | Manifest | Purpose |
 |--------|--------|
-| **generated-file-manifest.yaml** | Lists all files produced by generation scripts |
+| **generated-file-manifest.yaml** | Tracks expected generated package files plus missing or unexpected file-level outputs |
 | **component-coverage.yaml** | Tracks package support for upstream components |
-| **component-api-conformance.yaml** | Describes API-level alignment with upstream components |
+| **component-api-conformance.yaml** | Describes the currently verified generated-surface alignment with upstream components |
 | **manual-api-inventory.yaml** | Lists exported APIs not derived from upstream components |
 
 Together these manifests provide a structured view of the package's surface
@@ -29,7 +29,7 @@ area relative to the upstream Web Awesome ecosystem.
 
 ## Manifest Generation
 
-Manifests are generated during the **generate** stage of the build pipeline.
+Manifests are generated during the **report** stage of the build pipeline.
 
 They are derived from:
 
@@ -58,8 +58,10 @@ manifests/
 
 report/
     summary.md
+    generated-files.md
     component-coverage.md
     component-api-conformance.md
+    manual-api-inventory.md
 ```
 
 ### dev/manifests/
@@ -107,7 +109,7 @@ This policy file allows developers to:
 - record explanatory notes
 - explicitly override inferred coverage status
 
-During generation, the build system merges:
+During reporting, the build system merges:
 
 1. upstream metadata
 2. discovered generated artifacts

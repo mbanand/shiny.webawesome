@@ -72,6 +72,29 @@ only as handwritten notes.
 Conformance checks may be partial during development, but they should be
 deterministic and machine-verifiable.
 
+The current implemented conformance layer is intentionally artifact-first:
+
+- wrapper function presence
+- wrapper export presence
+- expected binding file presence for bound components
+- expected update-function presence and export status for update-capable components
+
+It now also verifies several deterministic generated-surface details directly
+against the current generator rules:
+
+- wrapper argument surface and ordering
+- update-helper argument surface and ordering
+- binding selector registration
+- binding registration name
+- subscribed binding event set
+- mode-specific binding requirements such as action typing,
+  semantic `receiveMessage()` behavior, and action-with-payload side-channel
+  publication
+
+This gives the project a deterministic baseline report stage now, while
+leaving room for later passes to deepen per-component argument, property, and
+event-level conformance checks.
+
 ---
 
 # Handwritten Package API Inventory
@@ -94,7 +117,7 @@ Handwritten package APIs should have their own inventory and documentation.
 
 # Recommended Artifacts
 
-The following artifacts are recommended:
+The following artifacts are now part of the report stage:
 
 - a generated file manifest for file-level integrity
 - an upstream component coverage manifest for tracking implemented, skipped,
@@ -110,5 +133,3 @@ The following artifacts are recommended:
 The project should verify not only that files are generated correctly, but
 also that the package remains complete and consistent relative to the
 upstream Web Awesome API and its own handwritten package surface.
-
-

@@ -114,7 +114,8 @@ rm(.bootstrap_cli_ui)
   candidate_steps <- c(
     "tools/fetch_webawesome.R",
     "tools/prune_webawesome.R",
-    "tools/generate_components.R"
+    "tools/generate_components.R",
+    "tools/report_components.R"
   )
 
   candidate_steps[file.exists(candidate_steps)]

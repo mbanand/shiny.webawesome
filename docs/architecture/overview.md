@@ -410,10 +410,12 @@ Examples include:
 - `component-api-conformance.yaml`
 - `manual-api-inventory.yaml`
 
-These manifests are machine-readable artifacts produced by generation scripts.
+These manifests are machine-readable artifacts produced by the report stage
+from upstream metadata, discovered generated outputs, and handwritten policy
+inputs.
 
-The reporting stage of the build pipeline consumes these manifests and
-produces human-readable diagnostic summaries written to:
+The same report stage also produces human-readable diagnostic summaries written
+to:
 
 ```text
 report/

@@ -22,9 +22,9 @@ by the next stage.
 | **clean** | Remove previous build artifacts and generated outputs |
 | **fetch** | Retrieve the upstream Web Awesome distribution |
 | **prune** | Remove upstream assets not needed by the package |
-| **generate** | Generate wrappers, bindings, and structured manifests |
+| **generate** | Generate wrappers and bindings from upstream metadata |
 | **test** | Verify runtime behavior of generated components |
-| **report** | Verify upstream coverage and API conformance |
+| **report** | Generate manifests and verify coverage and API conformance |
 
 This separation ensures that **generation** and **verification** remain
 independent concerns.
@@ -457,8 +457,13 @@ The report stage answers four key questions:
 
 3. **Component API Conformance**
 
-    - For implemented components, how closely does the R API match the upstream component API?
-    - Are any upstream properties, attributes, events, or slots missing?
+    - For implemented components, do the wrapper, binding, update, and export
+      artifacts required by the selected support model exist?
+    - Do the generated wrapper arguments, update-helper parameters, binding
+      selector/name registration, subscribed events, and mode-specific binding
+      behaviors match the current generator rules?
+    - Which components currently need deeper per-component API review beyond
+      that generated-surface conformance layer?
 
 4. **Manual API Inventory**
 
@@ -501,7 +506,7 @@ Typical output may include:
 Additional checks may report:
 
 - missing wrapper functions
-- mismatches between upstream properties and R arguments
+- missing expected bindings or update functions
 - undocumented manual APIs
 
 These outputs make the current state of upstream coverage transparent and

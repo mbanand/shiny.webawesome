@@ -28,10 +28,15 @@
     "#!/usr/bin/env Rscript",
     "cat('prune invoked\\n')"
   ))
+  .write_file(file.path(root, "tools", "report_components.R"), c(
+    "#!/usr/bin/env Rscript",
+    "cat('report invoked\\n')"
+  ))
   Sys.chmod(file.path(root, "tools", "build_package.R"), mode = "0755")
   Sys.chmod(file.path(root, "tools", "build_tools.R"), mode = "0755")
   Sys.chmod(file.path(root, "tools", "fetch_webawesome.R"), mode = "0755")
   Sys.chmod(file.path(root, "tools", "prune_webawesome.R"), mode = "0755")
+  Sys.chmod(file.path(root, "tools", "report_components.R"), mode = "0755")
 }
 
 .run_build_package_script <- function(root, args = character()) {
@@ -71,6 +76,10 @@ testthat::test_that("build_package runs build_tools first when present", {
     result$stderr,
     "Running prune_webawesome\\.R \\.{2,} Done"
   )
+  testthat::expect_match(
+    result$stderr,
+    "Running report_components\\.R \\.{2,} Done"
+  )
 })
 
 testthat::test_that("build_package supports skipping the tool workflow", {
@@ -88,5 +97,9 @@ testthat::test_that("build_package supports skipping the tool workflow", {
   testthat::expect_match(
     result$stderr,
     "Running prune_webawesome\\.R \\.{2,} Done"
+  )
+  testthat::expect_match(
+    result$stderr,
+    "Running report_components\\.R \\.{2,} Done"
   )
 })
