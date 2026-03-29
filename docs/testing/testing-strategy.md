@@ -37,6 +37,49 @@ The test system also ensures that:
 
 ---
 
+# Relationship to Coverage and Conformance Reporting
+
+The project's testing layers should be understood as complementary to the
+report-stage coverage and conformance checks, not as substitutes for them.
+
+Tests answer **behavioral** questions such as:
+
+- does a wrapper render the expected tag and attributes
+- does a component behave correctly in a browser
+- does a Shiny binding or update helper produce the intended reactive result
+
+Coverage and conformance reporting answer more **structural** questions such
+as:
+
+- which generated files should exist
+- which upstream components are covered, deferred, or excluded
+- whether generated wrappers, updates, and bindings still match the current
+  generator-derived contract across the full component set
+
+This distinction is important because tests are necessarily selective even
+when broad. They exercise representative wrappers, representative browser
+flows, and representative Shiny contracts.
+
+The report stage serves a different purpose:
+
+- it is deterministic and machine-verifiable
+- it runs across the generated surface repo-wide
+- it is designed to detect silent generator drift that may not be exposed by
+  representative behavioral tests alone
+
+Examples of that drift include:
+
+- wrapper signatures or argument ordering changing unexpectedly
+- binding registration details diverging from the selected support model
+- generated update surfaces drifting from the current generator logic
+
+For that reason, the project should keep both:
+
+- tests for runtime and user-visible behavior
+- report-stage coverage and conformance checks for generated-surface integrity
+
+---
+
 # Layer 1: Unit Tests
 
 Unit tests validate the **static behavior of R wrapper functions**.

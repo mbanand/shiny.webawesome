@@ -72,6 +72,52 @@ only as handwritten notes.
 Conformance checks may be partial during development, but they should be
 deterministic and machine-verifiable.
 
+## Relationship to Testing
+
+Component API conformance is **not** the same as the package's unit tests or
+functional tests.
+
+Tests answer questions such as:
+
+- does a representative wrapper render the expected HTML structure
+- does a representative component behave correctly in the browser
+- does a representative Shiny input or update helper produce the intended
+  reactive behavior
+
+Conformance reporting answers a different question:
+
+- does the generated package surface remain structurally aligned with the
+  current generator contract across the full component set
+
+This distinction matters because the two systems operate at different levels.
+
+Tests are primarily **behavioral**:
+
+- they verify user-visible behavior
+- they exercise representative examples and harness applications
+- they confirm that selected wrappers, bindings, and updates work in practice
+
+Conformance reporting is primarily **structural**:
+
+- it checks deterministic emitted package artifacts
+- it runs across all generated components rather than only sampled cases
+- it verifies that generated wrappers, updates, and bindings still match the
+  generator-derived expectations for the current support model
+
+As a result, conformance checks are intended to catch forms of silent drift
+that behavioral tests may not cover exhaustively. Examples include:
+
+- a generated wrapper whose argument ordering no longer matches generator rules
+- a generated binding file whose selector, registration name, or subscribed
+  event set drifts from the current binding classification
+- a generated update helper whose surface no longer matches the message fields
+  implied by the generator
+
+Conformance reporting therefore **complements** tests rather than replacing
+them. It should stay focused on deterministic generated-surface integrity and
+should not try to become a second behavioral test suite inside the report
+stage.
+
 The current implemented conformance layer is intentionally artifact-first:
 
 - wrapper function presence
@@ -83,10 +129,19 @@ It now also verifies several deterministic generated-surface details directly
 against the current generator rules:
 
 - wrapper argument surface and ordering
+- wrapper normalized attribute payloads
+- wrapper boolean attribute metadata (`boolean_names` and
+  `boolean_arg_names`)
+- wrapper slot-emission helper calls
+- wrapper warning-hook emission where generator policy requires it
 - update-helper argument surface and ordering
 - binding selector registration
 - binding registration name
 - subscribed binding event set
+- binding `getValue()` emission
+- binding `getType()` emission
+- binding subscribe-callback emission
+- binding `receiveMessage()` emission
 - mode-specific binding requirements such as action typing,
   semantic `receiveMessage()` behavior, and action-with-payload side-channel
   publication

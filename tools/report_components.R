@@ -704,6 +704,242 @@ rm(.bootstrap_cli_ui)
   names
 }
 
+# Normalize one structural snippet for whitespace-insensitive comparison.
+.normalize_snippet <- function(text) {
+  text <- .scalar_string(text, fallback = "")
+  trimws(gsub("[[:space:]]+", " ", text))
+}
+
+# Extract one balanced parenthesized call block anchored by a line pattern.
+.call_block_from_file <- function(path, line_pattern) {
+  if (!file.exists(path)) {
+    return("")
+  }
+
+  lines <- readLines(path, warn = FALSE, encoding = "UTF-8")
+  start_idx <- grep(line_pattern, lines, perl = TRUE)
+
+  if (length(start_idx) == 0L) {
+    return("")
+  }
+
+  collected <- character()
+  depth <- 0L
+  opened <- FALSE
+
+  for (line in lines[start_idx[[1]]:length(lines)]) {
+    collected <- c(collected, line)
+    chars <- strsplit(line, "", fixed = TRUE)[[1]]
+
+    for (char in chars) {
+      if (identical(char, "(")) {
+        depth <- depth + 1L
+        opened <- TRUE
+      } else if (identical(char, ")")) {
+        depth <- depth - 1L
+        if (opened && depth == 0L) {
+          break
+        }
+      }
+    }
+
+    if (opened && depth == 0L) {
+      break
+    }
+  }
+
+  paste(collected, collapse = "\n")
+}
+
+# Extract one balanced braced method body from a JS source file.
+.js_method_body_from_file <- function(path, name) {
+  if (!file.exists(path)) {
+    return("")
+  }
+
+  lines <- readLines(path, warn = FALSE, encoding = "UTF-8")
+  start_idx <- grep(
+    paste0("^\\s*", name, "\\s*\\([^)]*\\)\\s*\\{\\s*$"),
+    lines,
+    perl = TRUE
+  )
+
+  if (length(start_idx) == 0L) {
+    return("")
+  }
+
+  body <- character()
+  depth <- 1L
+
+  for (line in lines[(start_idx[[1]] + 1L):length(lines)]) {
+    chars <- strsplit(line, "", fixed = TRUE)[[1]]
+    for (char in chars) {
+      if (identical(char, "{")) {
+        depth <- depth + 1L
+      } else if (identical(char, "}")) {
+        depth <- depth - 1L
+      }
+    }
+
+    if (depth <= 0L) {
+      break
+    }
+
+    body <- c(body, line)
+  }
+
+  paste(body, collapse = "\n")
+}
+
+# Extract one method body from a generated JS method block string.
+.js_method_body_from_text <- function(text) {
+  text <- .scalar_string(text, fallback = "")
+  if (!nzchar(text)) {
+    return("")
+  }
+
+  lines <- strsplit(text, "\n", fixed = TRUE)[[1]]
+  if (length(lines) <= 2L) {
+    return("")
+  }
+
+  paste(lines[2:(length(lines) - 1L)], collapse = "\n")
+}
+
+# Extract the generated wrapper attrs payload from source.
+.wrapper_attrs_from_file <- function(path) {
+  block <- .call_block_from_file(path, "^\\s*attrs\\s*<-\\s*\\.wa_normalize_attrs\\(")
+  if (!nzchar(block)) {
+    return("")
+  }
+
+  text <- sub("(?s)^.*?\\.wa_normalize_attrs\\(", "", block, perl = TRUE)
+  text <- sub("(?s),\\s*boolean_names\\s*=.*$", "", text, perl = TRUE)
+  .normalize_snippet(text)
+}
+
+# Extract the generated wrapper boolean_names payload from source.
+.wrapper_bools_from_file <- function(path) {
+  block <- .call_block_from_file(path, "^\\s*attrs\\s*<-\\s*\\.wa_normalize_attrs\\(")
+  if (!nzchar(block)) {
+    return("")
+  }
+
+  text <- sub("(?s)^.*?boolean_names\\s*=\\s*", "", block, perl = TRUE)
+  text <- sub("(?s),\\s*boolean_arg_names\\s*=.*$", "", text, perl = TRUE)
+  .normalize_snippet(text)
+}
+
+# Extract the generated wrapper boolean_arg_names payload from source.
+.wrapper_bool_map_file <- function(path) {
+  block <- .call_block_from_file(path, "^\\s*attrs\\s*<-\\s*\\.wa_normalize_attrs\\(")
+  if (!nzchar(block)) {
+    return("")
+  }
+
+  text <- sub("(?s)^.*?boolean_arg_names\\s*=\\s*", "", block, perl = TRUE)
+  text <- sub("(?s)\\)\\s*$", "", text, perl = TRUE)
+  .normalize_snippet(text)
+}
+
+# Return expected emitted wrapper slot helper calls for one component.
+.expected_wrapper_slot_calls <- function(component) {
+  slots <- .wrapper_slots(component)
+
+  if (length(slots) == 0L) {
+    return(character())
+  }
+
+  vapply(
+    slots,
+    function(slot) {
+      .normalize_snippet(
+        paste0(
+          ".wa_slot(",
+          .as_r_symbol(slot$wrapper_argument_name),
+          ", ",
+          .r_string(slot$name),
+          ")"
+        )
+      )
+    },
+    character(1)
+  )
+}
+
+# Extract emitted wrapper slot helper calls from source.
+.wrapper_slot_calls_from_file <- function(path) {
+  if (!file.exists(path)) {
+    return(character())
+  }
+
+  lines <- readLines(path, warn = FALSE, encoding = "UTF-8")
+  slot_lines <- grep("\\.wa_slot\\(", lines, value = TRUE)
+
+  if (length(slot_lines) == 0L) {
+    return(character())
+  }
+
+  vapply(
+    slot_lines,
+    function(line) {
+      .normalize_snippet(
+        sub("^.*?(\\.wa_slot\\([^)]*\\)).*$", "\\1", line, perl = TRUE)
+      )
+    },
+    character(1)
+  ) |> unname()
+}
+
+# Extract wrapper warning hook lines from source.
+.wrapper_warn_hooks_from_file <- function(path) {
+  if (!file.exists(path)) {
+    return(character())
+  }
+
+  lines <- readLines(path, warn = FALSE, encoding = "UTF-8")
+  hooks <- grep("^\\s*\\.wa_warn_[A-Za-z0-9_]+\\(", lines, value = TRUE, perl = TRUE)
+
+  if (length(hooks) == 0L) {
+    return(character())
+  }
+
+  vapply(hooks, .normalize_snippet, character(1))
+}
+
+# Return expected emitted wrapper warning hooks for one component.
+.expected_wrapper_warn_hooks <- function(component) {
+  warnings <- .render_wrapper_warnings(component)
+
+  if (!nzchar(warnings)) {
+    return(character())
+  }
+
+  vapply(
+    strsplit(warnings, "\n", fixed = TRUE)[[1]],
+    .normalize_snippet,
+    character(1)
+  )
+}
+
+# Extract the subscribe callback portion from a generated binding source file.
+.binding_sub_cb_file <- function(path) {
+  body <- .js_method_body_from_file(path, "subscribe")
+
+  if (!nzchar(body)) {
+    return("")
+  }
+
+  lines <- strsplit(body, "\n", fixed = TRUE)[[1]]
+  event_idx <- grep("el\\.__shinyWebawesomeEvents\\s*=", lines, perl = TRUE)
+
+  if (length(event_idx) == 0L) {
+    return(.normalize_snippet(body))
+  }
+
+  .normalize_snippet(paste(lines[seq_len(event_idx[[1]] - 1L)], collapse = "\n"))
+}
+
 # Return one parsed vector of binding subscription events from JS source.
 .binding_events_from_file <- function(path) {
   if (!file.exists(path)) {
@@ -781,6 +1017,16 @@ rm(.bootstrap_cli_ui)
   path <- file.path(root, .expected_wrapper_path(component))
   expected_args <- .expected_wrapper_args(component)
   actual_args <- .function_args_from_file(path, component$r_function_name)
+  expected_attrs <- .normalize_snippet(.render_wrapper_attrs(component))
+  actual_attrs <- .wrapper_attrs_from_file(path)
+  expected_boolean_names <- .normalize_snippet(.render_wrapper_booleans(component))
+  actual_boolean_names <- .wrapper_bools_from_file(path)
+  expected_boolean_arg_names <- .normalize_snippet(.render_wrapper_bool_arg_names(component))
+  actual_boolean_arg_names <- .wrapper_bool_map_file(path)
+  expected_slot_calls <- .expected_wrapper_slot_calls(component)
+  actual_slot_calls <- .wrapper_slot_calls_from_file(path)
+  expected_warning_hooks <- .expected_wrapper_warn_hooks(component)
+  actual_warning_hooks <- .wrapper_warn_hooks_from_file(path)
 
   list(
     name = component$r_function_name,
@@ -790,7 +1036,18 @@ rm(.bootstrap_cli_ui)
     actual_args = if (length(actual_args) == 0L) NULL else actual_args,
     missing_args = .missing_expected_items(expected_args, actual_args),
     unexpected_args = .unexpected_items(expected_args, actual_args),
-    args_match = identical(expected_args, actual_args)
+    args_match = identical(expected_args, actual_args),
+    attrs_match = identical(expected_attrs, actual_attrs),
+    boolean_names_match = identical(expected_boolean_names, actual_boolean_names),
+    boolean_arg_names_match = identical(expected_boolean_arg_names, actual_boolean_arg_names),
+    expected_slot_calls = if (length(expected_slot_calls) == 0L) NULL else expected_slot_calls,
+    actual_slot_calls = if (length(actual_slot_calls) == 0L) NULL else actual_slot_calls,
+    missing_slot_calls = .missing_expected_items(expected_slot_calls, actual_slot_calls),
+    unexpected_slot_calls = .unexpected_items(expected_slot_calls, actual_slot_calls),
+    slots_match = identical(expected_slot_calls, actual_slot_calls),
+    expected_warning_hooks = if (length(expected_warning_hooks) == 0L) NULL else expected_warning_hooks,
+    actual_warning_hooks = if (length(actual_warning_hooks) == 0L) NULL else actual_warning_hooks,
+    warning_hooks_match = identical(expected_warning_hooks, actual_warning_hooks)
   )
 }
 
@@ -825,6 +1082,16 @@ rm(.bootstrap_cli_ui)
   mode <- .scalar_string(component$classification$binding_mode, fallback = "none")
   selector_expected <- .binding_selector(component)
   name_expected <- .binding_name(component)
+  expected_get_value <- .normalize_snippet(.binding_get_value(component))
+  actual_get_value <- .normalize_snippet(.js_method_body_from_file(path, "getValue"))
+  expected_get_type <- .normalize_snippet(
+    .js_method_body_from_text(.binding_get_type_method(component))
+  )
+  actual_get_type <- .normalize_snippet(.js_method_body_from_file(path, "getType"))
+  expected_subscribe_body <- .normalize_snippet(.binding_subscribe_body(component))
+  actual_subscribe_body <- .binding_sub_cb_file(path)
+  expected_receive_message <- .normalize_snippet(.binding_receive_message(component))
+  actual_receive_message <- .normalize_snippet(.js_method_body_from_file(path, "receiveMessage"))
 
   mode_checks <- list(
     action_type = if (mode %in% c("action", "action_with_payload")) {
@@ -859,6 +1126,10 @@ rm(.bootstrap_cli_ui)
     missing_events = if (!expected) character() else .missing_expected_items(expected_events, actual_events),
     unexpected_events = if (!expected) actual_events else .unexpected_items(expected_events, actual_events),
     events_match = if (!expected) !file.exists(path) else identical(expected_events, actual_events),
+    get_value_match = if (!expected) !file.exists(path) else identical(expected_get_value, actual_get_value),
+    get_type_match = if (!expected) !file.exists(path) else identical(expected_get_type, actual_get_type),
+    subscribe_body_match = if (!expected) !file.exists(path) else identical(expected_subscribe_body, actual_subscribe_body),
+    receive_message_match = if (!expected) !file.exists(path) else identical(expected_receive_message, actual_receive_message),
     mode_checks = mode_checks
   )
 }
@@ -877,9 +1148,18 @@ rm(.bootstrap_cli_ui)
         isTRUE(wrapper$exists) &&
           isTRUE(wrapper$exported) &&
           isTRUE(wrapper$args_match) &&
+          isTRUE(wrapper$attrs_match) &&
+          isTRUE(wrapper$boolean_names_match) &&
+          isTRUE(wrapper$boolean_arg_names_match) &&
+          isTRUE(wrapper$slots_match) &&
+          isTRUE(wrapper$warning_hooks_match) &&
           isTRUE(binding$selector_match) &&
           isTRUE(binding$name_match) &&
           isTRUE(binding$events_match) &&
+          isTRUE(binding$get_value_match) &&
+          isTRUE(binding$get_type_match) &&
+          isTRUE(binding$subscribe_body_match) &&
+          isTRUE(binding$receive_message_match) &&
           all(vapply(binding$mode_checks, isTRUE, logical(1))) &&
           (
             !isTRUE(update_function$expected) ||
@@ -941,10 +1221,71 @@ rm(.bootstrap_cli_ui)
     )
   }
 
+  comment_lines <- .yaml_comment_preamble(object)
+  yaml_text <- yaml::as.yaml(object, indent.mapping.sequence = TRUE, line.sep = "\n")
+  text <- if (length(comment_lines) == 0L) {
+    yaml_text
+  } else {
+    paste(c(comment_lines, yaml_text), collapse = "\n")
+  }
+
   .write_text_file(
     path,
-    yaml::as.yaml(object, indent.mapping.sequence = TRUE, line.sep = "\n")
+    text
   )
+}
+
+# Return optional YAML comment lines for generated manifests.
+.yaml_comment_preamble <- function(object) {
+  manifest_type <- .scalar_string(object$manifest_type, fallback = NA_character_)
+
+  base <- c(
+    "# Generated by tools/report_components.R. Do not edit by hand."
+  )
+
+  switch(manifest_type,
+    generated_file_manifest = c(
+      base,
+      "#",
+      "# Non-obvious fields in this manifest:",
+      "# - `files` lists expected generated artifacts and whether each exists.",
+      "# - `unexpected_files` lists generated artifacts found on disk that are",
+      "#   not part of the current expected generated surface."
+    ),
+    component_coverage = c(
+      base,
+      "#",
+      "# Non-obvious fields in this manifest:",
+      "# - `status` is the merged component coverage decision after combining",
+      "#   discovered artifacts with the handwritten coverage policy.",
+      "# - `inferred_status` is the artifact-derived status before policy",
+      "#   overrides are applied."
+    ),
+    component_api_conformance = c(
+      base,
+      "#",
+      "# Non-obvious fields in this manifest:",
+      "# - `status` is the overall per-component conformance result.",
+      "# - `*_match` fields compare generated output to current",
+      "#   generator-derived expectations, not to behavioral tests.",
+      "# - `missing_*` and `unexpected_*` fields describe set or surface drift",
+      "#   when the corresponding match field is false."
+    ),
+    manual_api_inventory = c(
+      base,
+      "#",
+      "# Non-obvious fields in this manifest:",
+      "# - `exports` lists exported functions not attributed to generated",
+      "#   component wrappers or generated update helpers.",
+      "# - `source_files` records where each manual export was discovered."
+    ),
+    base
+  )
+}
+
+# Return the standard generated-file banner line for text reports.
+.generated_report_banner <- function() {
+  "Generated by tools/report_components.R. Do not edit by hand."
 }
 
 # Return summary lines for the generated-file report.
@@ -954,6 +1295,8 @@ rm(.bootstrap_cli_ui)
 
   c(
     "# Generated File Integrity",
+    "",
+    .generated_report_banner(),
     "",
     paste0("- Expected files: ", manifest$summary$expected),
     paste0("- Present expected files: ", manifest$summary$present),
@@ -987,6 +1330,8 @@ rm(.bootstrap_cli_ui)
   c(
     "# Component Coverage",
     "",
+    .generated_report_banner(),
+    "",
     paste0("- Total components: ", manifest$summary$total_components),
     paste0("- Covered: ", manifest$summary$covered),
     paste0("- Partial: ", manifest$summary$partial),
@@ -1017,6 +1362,8 @@ rm(.bootstrap_cli_ui)
 
   c(
     "# Manual API Inventory",
+    "",
+    .generated_report_banner(),
     "",
     paste0("- Total exports: ", manifest$summary$total_exports),
     paste0("- Generated exports: ", manifest$summary$generated_exports),
@@ -1053,6 +1400,8 @@ rm(.bootstrap_cli_ui)
   c(
     "# Component API Conformance",
     "",
+    .generated_report_banner(),
+    "",
     paste0("- Total components: ", manifest$summary$total_components),
     paste0("- Conformant: ", manifest$summary$conformant),
     paste0("- Nonconformant: ", manifest$summary$nonconformant),
@@ -1062,59 +1411,151 @@ rm(.bootstrap_cli_ui)
     if (length(problematic) == 0L) {
       "- None."
     } else {
-      vapply(
-        problematic,
-        function(entry) {
-          wrapper_missing <- .or_default(entry$wrapper$missing_args, character())
-          wrapper_extra <- .or_default(entry$wrapper$unexpected_args, character())
-          binding_missing <- .or_default(entry$binding$missing_events, character())
-          binding_extra <- .or_default(entry$binding$unexpected_events, character())
-          update_missing <- .or_default(entry$update_function$missing_args, character())
-          update_extra <- .or_default(entry$update_function$unexpected_args, character())
-          mode_failures <- names(entry$binding$mode_checks)[
-            !vapply(entry$binding$mode_checks, isTRUE, logical(1))
-          ]
+      unlist(
+        lapply(
+          problematic,
+          function(entry) {
+            wrapper_missing <- .or_default(entry$wrapper$missing_args, character())
+            wrapper_extra <- .or_default(entry$wrapper$unexpected_args, character())
+            binding_missing <- .or_default(entry$binding$missing_events, character())
+            binding_extra <- .or_default(entry$binding$unexpected_events, character())
+            update_missing <- .or_default(entry$update_function$missing_args, character())
+            update_extra <- .or_default(entry$update_function$unexpected_args, character())
+            slot_missing <- .or_default(entry$wrapper$missing_slot_calls, character())
+            slot_extra <- .or_default(entry$wrapper$unexpected_slot_calls, character())
+            mode_failures <- sort(names(entry$binding$mode_checks)[
+              !vapply(entry$binding$mode_checks, isTRUE, logical(1))
+            ])
 
-          paste0(
-            "- `", entry$tag, "`",
-            ": wrapper_exists=", tolower(as.character(entry$wrapper$exists)),
-            ", wrapper_exported=", tolower(as.character(entry$wrapper$exported)),
-            ", wrapper_args_match=", tolower(as.character(entry$wrapper$args_match)),
-            ", wrapper_missing_args=",
-            if (length(wrapper_missing) == 0L) "none" else paste(wrapper_missing, collapse = "|"),
-            ", wrapper_unexpected_args=",
-            if (length(wrapper_extra) == 0L) "none" else paste(wrapper_extra, collapse = "|"),
-            ", binding_expected=", tolower(as.character(entry$binding$expected)),
-            ", binding_exists=", tolower(as.character(entry$binding$exists)),
-            ", binding_selector_match=", tolower(as.character(entry$binding$selector_match)),
-            ", binding_name_match=", tolower(as.character(entry$binding$name_match)),
-            ", binding_events_match=", tolower(as.character(entry$binding$events_match)),
-            ", binding_missing_events=",
-            if (length(binding_missing) == 0L) "none" else paste(binding_missing, collapse = "|"),
-            ", binding_unexpected_events=",
-            if (length(binding_extra) == 0L) "none" else paste(binding_extra, collapse = "|"),
-            ", binding_mode_failures=",
-            if (length(mode_failures) == 0L) "none" else paste(mode_failures, collapse = "|"),
-            ", update_expected=", tolower(as.character(entry$update_function$expected)),
-            ", update_exists=", tolower(as.character(entry$update_function$exists)),
-            ", update_exported=", tolower(as.character(entry$update_function$exported)),
-            ", update_args_match=", tolower(as.character(entry$update_function$args_match)),
-            ", update_missing_args=",
-            if (length(update_missing) == 0L) "none" else paste(update_missing, collapse = "|"),
-            ", update_unexpected_args=",
-            if (length(update_extra) == 0L) "none" else paste(update_extra, collapse = "|")
-          )
-        },
-        character(1)
+            wrapper_failures <- c(
+              if (!isTRUE(entry$wrapper$exists)) "exists" else character(),
+              if (!isTRUE(entry$wrapper$exported)) "exported" else character(),
+              if (!isTRUE(entry$wrapper$args_match)) "args_match" else character(),
+              if (!isTRUE(entry$wrapper$attrs_match)) "attrs_match" else character(),
+              if (!isTRUE(entry$wrapper$boolean_names_match)) {
+                "boolean_names_match"
+              } else {
+                character()
+              },
+              if (!isTRUE(entry$wrapper$boolean_arg_names_match)) {
+                "boolean_arg_names_match"
+              } else {
+                character()
+              },
+              if (!isTRUE(entry$wrapper$slots_match)) "slots_match" else character(),
+              if (!isTRUE(entry$wrapper$warning_hooks_match)) {
+                "warning_hooks_match"
+              } else {
+                character()
+              }
+            )
+
+            binding_failures <- c(
+              if (!isTRUE(entry$binding$selector_match)) "selector_match" else character(),
+              if (!isTRUE(entry$binding$name_match)) "name_match" else character(),
+              if (!isTRUE(entry$binding$events_match)) "events_match" else character(),
+              if (!isTRUE(entry$binding$get_value_match)) "get_value_match" else character(),
+              if (!isTRUE(entry$binding$get_type_match)) "get_type_match" else character(),
+              if (!isTRUE(entry$binding$subscribe_body_match)) {
+                "subscribe_body_match"
+              } else {
+                character()
+              },
+              if (!isTRUE(entry$binding$receive_message_match)) {
+                "receive_message_match"
+              } else {
+                character()
+              }
+            )
+
+            update_failures <- c(
+              if (isTRUE(entry$update_function$expected) && !isTRUE(entry$update_function$exists)) {
+                "exists"
+              } else {
+                character()
+              },
+              if (isTRUE(entry$update_function$expected) && !isTRUE(entry$update_function$exported)) {
+                "exported"
+              } else {
+                character()
+              },
+              if (!isTRUE(entry$update_function$args_match)) "args_match" else character()
+            )
+
+            c(
+              paste0("### `", entry$tag, "`"),
+              "",
+              if (length(wrapper_failures) > 0L) {
+                c(
+                  paste0("- Wrapper checks failed: `", paste(wrapper_failures, collapse = "`, `"), "`"),
+                  paste0("- Wrapper missing args: ", .report_vector_text(wrapper_missing)),
+                  paste0("- Wrapper unexpected args: ", .report_vector_text(wrapper_extra)),
+                  paste0("- Wrapper missing slot calls: ", .report_vector_text(slot_missing)),
+                  paste0("- Wrapper unexpected slot calls: ", .report_vector_text(slot_extra))
+                )
+              } else {
+                character()
+              },
+              if (length(binding_failures) > 0L || length(mode_failures) > 0L) {
+                c(
+                  if (length(binding_failures) > 0L) {
+                    paste0("- Binding checks failed: `", paste(binding_failures, collapse = "`, `"), "`")
+                  } else {
+                    character()
+                  },
+                  if (length(binding_missing) > 0L || length(binding_extra) > 0L) {
+                    c(
+                      paste0("- Binding missing events: ", .report_vector_text(binding_missing)),
+                      paste0("- Binding unexpected events: ", .report_vector_text(binding_extra))
+                    )
+                  } else {
+                    character()
+                  },
+                  if (length(mode_failures) > 0L) {
+                    paste0("- Binding mode-specific failures: `", paste(mode_failures, collapse = "`, `"), "`")
+                  } else {
+                    character()
+                  }
+                )
+              } else {
+                character()
+              },
+              if (length(update_failures) > 0L) {
+                c(
+                  paste0("- Update checks failed: `", paste(update_failures, collapse = "`, `"), "`"),
+                  paste0("- Update missing args: ", .report_vector_text(update_missing)),
+                  paste0("- Update unexpected args: ", .report_vector_text(update_extra))
+                )
+              } else {
+                character()
+              },
+              ""
+            )
+          }
+        ),
+        use.names = FALSE
       )
     }
   )
+}
+
+# Return compact text for one report vector field.
+.report_vector_text <- function(values) {
+  values <- .or_default(values, character())
+
+  if (length(values) == 0L) {
+    return("none")
+  }
+
+  paste(paste0("`", values, "`"), collapse = ", ")
 }
 
 # Return summary lines for the top-level report summary.
 .report_summary_lines <- function(result) {
   c(
     "# Report Summary",
+    "",
+    .generated_report_banner(),
     "",
     paste0("- Upstream metadata: `", result$schema$metadata$path, "`"),
     paste0("- Upstream version: `", result$schema$metadata$source_version, "`"),
