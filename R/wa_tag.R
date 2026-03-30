@@ -39,6 +39,7 @@ wa_tag <- function(
   with_remove = NULL
 ) {
   children <- list(...)
+
   if (!is.null(appearance)) {
     appearance <- .wa_match_arg(
       appearance,

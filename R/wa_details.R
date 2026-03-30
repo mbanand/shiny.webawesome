@@ -70,6 +70,7 @@ wa_details <- function(
       .wa_slot(summary_slot, "summary")
     )
   )
+
   if (!is.null(appearance)) {
     appearance <- .wa_match_arg(
       appearance,

@@ -125,6 +125,7 @@ wa_textarea <- function(
       .wa_slot(label_slot, "label")
     )
   )
+
   if (!is.null(appearance)) {
     appearance <- .wa_match_arg(
       appearance,

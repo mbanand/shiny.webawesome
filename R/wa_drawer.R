@@ -68,6 +68,7 @@ wa_drawer <- function(
       .wa_slot(label_slot, "label")
     )
   )
+
   if (!is.null(placement)) {
     placement <- .wa_match_arg(
       placement,

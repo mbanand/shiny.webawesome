@@ -38,6 +38,7 @@ wa_relative_time <- function(
   sync = NULL
 ) {
   children <- list(...)
+
   if (!is.null(format)) {
     format <- .wa_match_arg(
       format,

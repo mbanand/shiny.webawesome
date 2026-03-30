@@ -64,6 +64,7 @@ wa_zoomable_frame <- function(
       .wa_slot(zoom_out_icon, "zoom-out-icon")
     )
   )
+
   if (!is.null(loading)) {
     loading <- .wa_match_arg(
       loading,

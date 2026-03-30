@@ -62,6 +62,19 @@ Policy annotations may specify:
 - components planned for future implementation
 - explanatory notes
 
+The policy file is a handwritten report-stage input, not a generated artifact.
+Its role is to express explicit project intent in places where discovered
+implementation facts alone are not the full story. In practice, each entry is
+kept intentionally small and should contain only:
+
+- `tag`
+- `status`
+- optional `notes`
+
+Developers should not record discovered implementation facts such as wrapper
+or binding existence in this file. Those facts are derived separately during
+reporting and written to the generated coverage manifest.
+
 During the build process the generator merges:
 
 - upstream component metadata
@@ -69,6 +82,12 @@ During the build process the generator merges:
 - policy annotations
 
 to produce the final coverage manifest.
+
+This gives the report stage a clear split of responsibilities:
+
+- `dev/manifests/component-coverage.policy.yaml` records human policy
+- `manifests/component-coverage.yaml` records the merged generated result
+- `report/component-coverage.md` presents the human-readable summary
 
 ---
 
@@ -165,6 +184,10 @@ Allowed fields per entry:
 Only **policy decisions** belong in this file.  
 Generated facts must not be recorded here.
 
+The repository includes a comment preamble in the policy file itself so that
+developers editing it directly can see the expected fields and merge behavior
+without needing to cross-reference the docs first.
+
 ---
 
 ## Merge Rules
@@ -235,4 +258,3 @@ Typical values include:
 
 These statuses allow the report stage to clearly describe the current level of
 package support for upstream components.
-

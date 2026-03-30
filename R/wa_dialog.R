@@ -66,6 +66,7 @@ wa_dialog <- function(
   )
 
 
+
   attrs <- .wa_normalize_attrs(
     list(
       "id" = input_id,

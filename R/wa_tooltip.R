@@ -59,6 +59,7 @@ wa_tooltip <- function(
   without_arrow = NULL
 ) {
   children <- list(...)
+
   if (!is.null(placement)) {
     placement <- .wa_match_arg(
       placement,

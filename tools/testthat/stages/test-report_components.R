@@ -275,6 +275,12 @@ testthat::test_that(
 
     result <- report_components(root = root, verbose = FALSE)
 
+    testthat::expect_equal(result$integrity$generate_check$status, "warn")
+    testthat::expect_match(
+      result$integrity$generate_check$summary,
+      "no generate output integrity record found"
+    )
+
     testthat::expect_true(file.exists(file.path(
       root, "manifests", "generated-file-manifest.yaml"
     )))

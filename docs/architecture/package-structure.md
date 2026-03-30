@@ -462,8 +462,9 @@ version override is provided on the command line.
 Files generated during build that report on the build live in `manifests/` and
 `report/`. Current examples include API coverage and conformance tracking (see
 details in `docs/development/component-coverage.md` and
-`docs/development/manifests.md`) and versioned prune diagnostics written under
-`report/prune/<version>/`. Future additions may store other files in these
+`docs/development/manifests.md`), versioned prune diagnostics written under
+`report/prune/<version>/`, and generated integrity records written under
+`manifests/integrity/`. Future additions may store other files in these
 directories.
 
 ---

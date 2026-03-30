@@ -72,6 +72,7 @@ wa_split_panel <- function(
       .wa_slot(start, "start")
     )
   )
+
   if (!is.null(orientation)) {
     orientation <- .wa_match_arg(
       orientation,

@@ -259,6 +259,7 @@ This repository follows the standard validation workflow for R packages.
 Typical validation flow is:
 
 - generating components
+- checking any stage-local integrity warnings emitted during generate/report
 - styling generated code
 - running a separate relevant lint pass
 - running documentation generation
@@ -275,6 +276,11 @@ devtools::document()
 devtools::test()
 devtools::check()
 ```
+
+For the build pipeline itself, a dedicated final integrity-check tool should
+also pass before the overall package build is treated as clean. Earlier stage
+integrity warnings are intentionally advisory so developers can inspect an
+intermediate state, but the final integrity gate should not be ignored.
 
 `devtools::check()` runs a full package validation similar to CRAN checks.
 

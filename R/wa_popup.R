@@ -136,6 +136,7 @@ wa_popup <- function(
       .wa_slot(anchor_slot, "anchor")
     )
   )
+
   if (!is.null(arrow_placement)) {
     arrow_placement <- .wa_match_arg(
       arrow_placement,

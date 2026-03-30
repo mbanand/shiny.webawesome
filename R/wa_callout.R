@@ -41,6 +41,7 @@ wa_callout <- function(
       .wa_slot(icon, "icon")
     )
   )
+
   if (!is.null(appearance)) {
     appearance <- .wa_match_arg(
       appearance,

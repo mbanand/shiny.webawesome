@@ -37,6 +37,7 @@ wa_breadcrumb <- function(
   )
 
 
+
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,

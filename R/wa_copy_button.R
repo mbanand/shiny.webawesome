@@ -77,6 +77,7 @@ wa_copy_button <- function(
       .wa_slot(success_icon, "success-icon")
     )
   )
+
   if (!is.null(tooltip_placement)) {
     tooltip_placement <- .wa_match_arg(
       tooltip_placement,

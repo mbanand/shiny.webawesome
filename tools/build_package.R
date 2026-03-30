@@ -115,7 +115,8 @@ rm(.bootstrap_cli_ui)
     "tools/fetch_webawesome.R",
     "tools/prune_webawesome.R",
     "tools/generate_components.R",
-    "tools/report_components.R"
+    "tools/report_components.R",
+    "tools/check_integrity.R"
   )
 
   candidate_steps[file.exists(candidate_steps)]

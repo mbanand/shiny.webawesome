@@ -80,6 +80,7 @@ wa_card <- function(
       .wa_slot(media, "media")
     )
   )
+
   if (!is.null(appearance)) {
     appearance <- .wa_match_arg(
       appearance,

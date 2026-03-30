@@ -1,3 +1,26 @@
+# Handwritten policy input for the report stage coverage merge.
+#
+# This file records only human decisions about upstream component coverage.
+# Do not record discovered generated facts here; those belong in the
+# generated manifest under `manifests/component-coverage.yaml`.
+#
+# Top-level fields:
+# - `schema_version`: policy file schema version.
+# - `components`: list of per-component policy entries.
+#
+# Per-component fields:
+# - `tag`: upstream Web Awesome custom-element tag, e.g. `wa-button`.
+# - `status`: explicit coverage status override applied during reporting.
+#   Typical values are `covered`, `partial`, `planned`, `excluded`,
+#   and `unsupported`.
+# - `notes`: optional human explanation shown in generated manifest/report
+#   output.
+#
+# Report-stage merge behavior:
+# - Upstream metadata enumerates all components.
+# - Discovered generated outputs provide implementation facts.
+# - Entries in this file override inferred `status` and `notes` when present.
+# - Missing components here fall back to inferred coverage status.
 schema_version: 1
 
 components: []

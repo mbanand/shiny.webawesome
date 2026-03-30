@@ -32,6 +32,7 @@ wa_include <- function(
   src = NULL
 ) {
   children <- list(...)
+
   if (!is.null(mode)) {
     mode <- .wa_match_arg(
       mode,

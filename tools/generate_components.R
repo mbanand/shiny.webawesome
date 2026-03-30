@@ -117,7 +117,30 @@
 
 .bootstrap_cli_ui()
 .bootstrap_generate_helpers()
-rm(.bootstrap_cli_ui, .bootstrap_generate_helpers)
+
+# Source the shared integrity helpers relative to this script when possible.
+.bootstrap_integrity_helpers <- function() {
+  base_dirs <- .generate_tool_base_dirs
+  candidates <- c(
+    unlist(lapply(base_dirs, function(dir) file.path(dir, "integrity.R"))),
+    unlist(
+      lapply(base_dirs, function(dir) file.path(dir, "tools", "integrity.R"))
+    ),
+    unlist(
+      lapply(base_dirs, function(dir) file.path(dir, "..", "integrity.R"))
+    ),
+    file.path("tools", "integrity.R"),
+    "integrity.R"
+  )
+  existing <- unique(candidates[file.exists(candidates)])
+
+  if (length(existing) > 0L) {
+    source(existing[[1]])
+  }
+}
+
+.bootstrap_integrity_helpers()
+rm(.bootstrap_cli_ui, .bootstrap_generate_helpers, .bootstrap_integrity_helpers)
 
 # Return the CLI usage string for the generate stage.
 .generate_usage <- function() {
@@ -423,12 +446,17 @@ generate_components <- function(
     component_count = schema$summary$component_count
   )
 
+  result$integrity <- list(
+    prune_check = .check_prune_integrity(root)
+  )
+
   if (isTRUE(emit)) {
     result$written <- .write_generated_outputs(
       root = root,
       components = schema$components,
       template_root = file.path(root, "tools", "templates")
     )
+    result$integrity$generated_record <- .write_generate_integrity(root)
   }
 
   if (isTRUE(debug)) {
@@ -524,6 +552,13 @@ run_generate_components <- function(args = commandArgs(trailingOnly = TRUE)) {
       .cli_step_fail(ui, details = conditionMessage(condition))
       .cli_abort_handled(conditionMessage(condition))
     }
+  )
+
+  .cli_substep_pass(
+    ui,
+    "Integrity check",
+    status = .integrity_cli_status(result$integrity$prune_check$status),
+    comment = paste0("[", result$integrity$prune_check$summary, "]")
   )
 
   .cli_step_finish(ui, status = "Done")

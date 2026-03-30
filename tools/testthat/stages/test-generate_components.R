@@ -859,6 +859,18 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_equal(length(result$written$bindings), 10L)
   testthat::expect_equal(length(result$written$updates), 1L)
   testthat::expect_true("R/wa_select.R" %in% result$written$updates)
+  testthat::expect_equal(result$integrity$prune_check$status, "warn")
+  testthat::expect_match(
+    result$integrity$prune_check$summary,
+    "no prune output integrity record found"
+  )
+  testthat::expect_equal(
+    result$integrity$generated_record$path,
+    file.path("manifests", "integrity", "generate-output.yaml")
+  )
+  testthat::expect_true(
+    file.exists(file.path(root, result$integrity$generated_record$path))
+  )
 
   button_wrapper <- readLines(file.path(root, "R", "wa_button.R"), warn = FALSE)
   testthat::expect_true(any(grepl(

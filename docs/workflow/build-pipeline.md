@@ -33,6 +33,21 @@ Generation scripts produce deterministic artifacts from upstream metadata,
 while the reporting stage analyzes those artifacts to evaluate coverage and
 conformance.
 
+In addition to the main stage outputs, the pipeline also maintains a small
+stage-to-stage integrity-record chain used as a developer aid:
+
+- `prune` records checksums for its owned output surface
+- `generate` compares its current input surface against prune's record and
+  warns on drift, then records checksums for its own generated surface
+- `report` compares its current generated-surface input against generate's
+  record and warns on drift
+- a dedicated final integrity-check tool reruns those comparisons and fails if
+  required records are missing or mismatched
+
+This allows developers to continue through intermediate local debug states
+while still enforcing a hard integrity gate at the end of the package build
+workflow.
+
 ---
 
 # Step 1: Clean
@@ -189,6 +204,20 @@ inst/www/wa/
   utilities/
   translations/
 ```
+
+As part of prune, the stage also writes an integrity record to:
+
+```text
+manifests/integrity/prune-output.yaml
+```
+
+That record covers the prune-owned output surface:
+
+- `inst/extdata/webawesome/`
+- `inst/www/wa/`
+
+The handwritten package bootstrap file `inst/www/webawesome-init.js` is not
+part of this surface because it is not produced by prune.
 
 ---
 
@@ -367,6 +396,20 @@ wa_select.js
 wa_input.js
 ```
 
+Before generation writes outputs, the stage compares the current prune-owned
+input surface against `manifests/integrity/prune-output.yaml` and emits an
+advisory warning if the record is missing or the surface has drifted. After
+generation completes, it writes its own integrity record to:
+
+```text
+manifests/integrity/generate-output.yaml
+```
+
+The generate-owned integrity surface currently includes:
+
+- generator-owned top-level `R/*.R` files
+- `inst/bindings/*.js`
+
 ---
 
 # Step 5: Test
@@ -511,6 +554,24 @@ Additional checks may report:
 
 These outputs make the current state of upstream coverage transparent and
 allow continuous integration to detect upstream changes quickly.
+
+Before writing manifests and reports, the report stage compares the current
+generate-owned surface against `manifests/integrity/generate-output.yaml`.
+This comparison is advisory at the stage level and warns when the record is
+missing or the surface has drifted.
+
+## Final Integrity Gate
+
+The package build workflow also includes a dedicated integrity-check tool that
+reruns the prune-to-generate and generate-to-report comparisons and fails on:
+
+- missing required integrity records
+- file-set mismatches
+- per-file digest mismatches
+- tree-digest mismatches
+
+This final gate is intended to catch incomplete local rebuilds or accidental
+manual edits before the overall package build is treated as successful.
 
 ---
 

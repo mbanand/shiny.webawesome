@@ -66,6 +66,7 @@ wa_dropdown_item <- function(
       .wa_slot(submenu, "submenu")
     )
   )
+
   if (!is.null(type)) {
     type <- .wa_match_arg(
       type,

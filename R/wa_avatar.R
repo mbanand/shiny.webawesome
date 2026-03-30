@@ -46,6 +46,7 @@ wa_avatar <- function(
       .wa_slot(icon, "icon")
     )
   )
+
   if (!is.null(loading)) {
     loading <- .wa_match_arg(
       loading,

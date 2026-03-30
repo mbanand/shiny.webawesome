@@ -44,6 +44,7 @@ wa_qr_code <- function(
   size = NULL
 ) {
   children <- list(...)
+
   if (!is.null(error_correction)) {
     error_correction <- .wa_match_arg(
       error_correction,

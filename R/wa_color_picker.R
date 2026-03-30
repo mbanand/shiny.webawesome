@@ -102,6 +102,7 @@ wa_color_picker <- function(
       .wa_slot(label_slot, "label")
     )
   )
+
   if (!is.null(format)) {
     format <- .wa_match_arg(
       format,

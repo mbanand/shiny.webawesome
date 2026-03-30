@@ -51,6 +51,7 @@ wa_format_number <- function(
   without_grouping = NULL
 ) {
   children <- list(...)
+
   if (!is.null(currency_display)) {
     currency_display <- .wa_match_arg(
       currency_display,

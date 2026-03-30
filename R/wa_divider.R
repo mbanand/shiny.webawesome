@@ -24,6 +24,7 @@ wa_divider <- function(
   orientation = NULL
 ) {
   children <- list(...)
+
   if (!is.null(orientation)) {
     orientation <- .wa_match_arg(
       orientation,

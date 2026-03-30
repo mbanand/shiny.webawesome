@@ -47,6 +47,47 @@
 .bootstrap_cli_ui()
 rm(.bootstrap_cli_ui)
 
+# Source the shared integrity helpers relative to this script when possible.
+.bootstrap_integrity_helpers <- function() {
+  args <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", args, value = TRUE)
+  command_file <- if (length(file_arg) > 0L) {
+    sub("^--file=", "", tail(file_arg, 1))
+  } else {
+    ""
+  }
+
+  ofiles <- vapply(
+    sys.frames(),
+    function(frame) if (is.null(frame$ofile)) "" else frame$ofile,
+    character(1)
+  )
+  source_file <- tail(ofiles[nzchar(ofiles)], 1)
+  known_files <- c(command_file, source_file)
+  known_files <- known_files[nzchar(known_files)]
+  current_dir <- if (length(known_files) == 0L) {
+    "."
+  } else {
+    dirname(normalizePath(known_files[[1]], winslash = "/", mustWork = FALSE))
+  }
+
+  candidates <- c(
+    file.path(current_dir, "integrity.R"),
+    file.path(current_dir, "tools", "integrity.R"),
+    file.path(current_dir, "..", "integrity.R"),
+    file.path("tools", "integrity.R"),
+    "integrity.R"
+  )
+  existing <- unique(candidates[file.exists(candidates)])
+
+  if (length(existing) > 0L) {
+    source(existing[[1]])
+  }
+}
+
+.bootstrap_integrity_helpers()
+rm(.bootstrap_integrity_helpers)
+
 # Return the CLI usage string for the prune stage.
 .prune_usage <- function() {
   paste(
@@ -842,6 +883,7 @@ prune_webawesome <- function(version = NULL,
 
   .write_prune_summary_report(result, summary_path)
   .write_reachability_report(result, reachability_path)
+  result$integrity <- .write_prune_integrity(root)
 
   if (isTRUE(verbose)) {
     .emit_prune_summary(result)

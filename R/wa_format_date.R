@@ -59,6 +59,7 @@ wa_format_date <- function(
   year = NULL
 ) {
   children <- list(...)
+
   if (!is.null(day)) {
     day <- .wa_match_arg(
       day,

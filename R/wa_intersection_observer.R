@@ -3,7 +3,8 @@
 
 #' Create a `wa-intersection-observer` component
 #'
-#' Generated wrapper for the Web Awesome `wa-intersection-observer` component.
+#' Generated wrapper for the Web Awesome `wa-intersection-observer`
+#' component.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -42,6 +43,7 @@ wa_intersection_observer <- function(
   threshold = NULL
 ) {
   children <- list(...)
+
 
 
   attrs <- .wa_normalize_attrs(

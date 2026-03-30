@@ -78,6 +78,7 @@ wa_radio_group <- function(
       .wa_slot(label_slot, "label")
     )
   )
+
   if (!is.null(orientation)) {
     orientation <- .wa_match_arg(
       orientation,

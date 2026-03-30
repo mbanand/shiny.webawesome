@@ -77,6 +77,7 @@ wa_carousel <- function(
       .wa_slot(previous_icon, "previous-icon")
     )
   )
+
   if (!is.null(orientation)) {
     orientation <- .wa_match_arg(
       orientation,

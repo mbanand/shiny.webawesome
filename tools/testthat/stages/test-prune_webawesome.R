@@ -126,6 +126,11 @@ testthat::test_that("prune uses the pinned version by default", {
   testthat::expect_true(
     file.exists(file.path(root, "report", "prune", "3.3.1", "reachability.md"))
   )
+  testthat::expect_equal(
+    result$integrity$path,
+    file.path("manifests", "integrity", "prune-output.yaml")
+  )
+  testthat::expect_true(file.exists(file.path(root, result$integrity$path)))
 })
 
 testthat::test_that("prune copies reached runtime files and metadata only", {

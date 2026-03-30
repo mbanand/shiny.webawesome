@@ -16,10 +16,12 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests:
     chromote,
+    digest,
     document,
     jsonlite,
     processx,
     shinytest2,
     testthat (>= 3.0.0),
-    withr
+    withr,
+    yaml
 Config/testthat/edition: 3

@@ -122,6 +122,20 @@ source(file.path("..", "..", "review_binding_candidates.R"))
   dir.create(file.path(root, "docs"), recursive = TRUE, showWarnings = FALSE)
   dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
   .write_file(file.path(root, "DESCRIPTION"), "Package: fake")
+  .write_file(
+    file.path(root, "R", "wa_warning_registry.R"),
+    c(
+      ".wa_warning_defaults <- function() {",
+      "  list(",
+      "    missing_tree_item_id = TRUE",
+      "  )",
+      "}",
+      "",
+      ".wa_warning_keys <- function() {",
+      "  names(.wa_warning_defaults())",
+      "}"
+    )
+  )
   .write_file(file.path(root, "inst", "extdata", "webawesome", "VERSION"), "3.3.1")
   .write_json(
     file.path(root, "inst", "extdata", "webawesome", "custom-elements.json"),

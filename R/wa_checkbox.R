@@ -65,6 +65,7 @@ wa_checkbox <- function(
       .wa_slot(hint_slot, "hint")
     )
   )
+
   if (!is.null(size)) {
     size <- .wa_match_arg(
       size,

@@ -130,6 +130,7 @@ wa_select <- function(
       .wa_slot(start, "start")
     )
   )
+
   if (!is.null(appearance)) {
     appearance <- .wa_match_arg(
       appearance,

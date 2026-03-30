@@ -30,6 +30,7 @@ wa_scroller <- function(
   without_shadow = NULL
 ) {
   children <- list(...)
+
   if (!is.null(orientation)) {
     orientation <- .wa_match_arg(
       orientation,

@@ -109,6 +109,26 @@
 .bootstrap_cli_ui()
 rm(.bootstrap_cli_ui)
 
+# Source the shared integrity helpers relative to this script when possible.
+.bootstrap_integrity_helpers <- function() {
+  base_dirs <- .report_tool_base_dirs
+  candidates <- c(
+    unlist(lapply(base_dirs, function(dir) file.path(dir, "integrity.R"))),
+    unlist(lapply(base_dirs, function(dir) file.path(dir, "tools", "integrity.R"))),
+    unlist(lapply(base_dirs, function(dir) file.path(dir, "..", "integrity.R"))),
+    file.path("tools", "integrity.R"),
+    "integrity.R"
+  )
+  existing <- unique(candidates[file.exists(candidates)])
+
+  if (length(existing) > 0L) {
+    source(existing[[1]])
+  }
+}
+
+.bootstrap_integrity_helpers()
+rm(.bootstrap_integrity_helpers)
+
 # Ensure the shared generate helpers are loaded before report execution.
 .ensure_report_helpers <- function() {
   if (isTRUE(.report_helpers_loaded)) {
@@ -1696,6 +1716,10 @@ report_components <- function(
     manual_api_inventory = manual_api_inventory
   )
 
+  result$integrity <- list(
+    generate_check = .check_generate_integrity(root)
+  )
+
   .write_text_file(report_paths$summary, .report_summary_lines(result))
   .write_text_file(
     report_paths$generated_files,
@@ -1786,6 +1810,13 @@ run_report_components <- function(args = commandArgs(trailingOnly = TRUE)) {
       .cli_step_fail(ui, details = conditionMessage(condition))
       stop(condition)
     }
+  )
+
+  .cli_substep_pass(
+    ui,
+    "Integrity check",
+    status = .integrity_cli_status(result$integrity$generate_check$status),
+    comment = paste0("[", result$integrity$generate_check$summary, "]")
   )
 
   .cli_step_finish(ui, status = "Done")

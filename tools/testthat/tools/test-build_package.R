@@ -28,15 +28,25 @@
     "#!/usr/bin/env Rscript",
     "cat('prune invoked\\n')"
   ))
+  .write_file(file.path(root, "tools", "generate_components.R"), c(
+    "#!/usr/bin/env Rscript",
+    "cat('generate invoked\\n')"
+  ))
   .write_file(file.path(root, "tools", "report_components.R"), c(
     "#!/usr/bin/env Rscript",
     "cat('report invoked\\n')"
+  ))
+  .write_file(file.path(root, "tools", "check_integrity.R"), c(
+    "#!/usr/bin/env Rscript",
+    "cat('integrity invoked\\n')"
   ))
   Sys.chmod(file.path(root, "tools", "build_package.R"), mode = "0755")
   Sys.chmod(file.path(root, "tools", "build_tools.R"), mode = "0755")
   Sys.chmod(file.path(root, "tools", "fetch_webawesome.R"), mode = "0755")
   Sys.chmod(file.path(root, "tools", "prune_webawesome.R"), mode = "0755")
+  Sys.chmod(file.path(root, "tools", "generate_components.R"), mode = "0755")
   Sys.chmod(file.path(root, "tools", "report_components.R"), mode = "0755")
+  Sys.chmod(file.path(root, "tools", "check_integrity.R"), mode = "0755")
 }
 
 .run_build_package_script <- function(root, args = character()) {
@@ -78,7 +88,15 @@ testthat::test_that("build_package runs build_tools first when present", {
   )
   testthat::expect_match(
     result$stderr,
+    "Running generate_components\\.R \\.{2,} Done"
+  )
+  testthat::expect_match(
+    result$stderr,
     "Running report_components\\.R \\.{2,} Done"
+  )
+  testthat::expect_match(
+    result$stderr,
+    "Running check_integrity\\.R \\.{2,} Done"
   )
 })
 
@@ -100,6 +118,14 @@ testthat::test_that("build_package supports skipping the tool workflow", {
   )
   testthat::expect_match(
     result$stderr,
+    "Running generate_components\\.R \\.{2,} Done"
+  )
+  testthat::expect_match(
+    result$stderr,
     "Running report_components\\.R \\.{2,} Done"
+  )
+  testthat::expect_match(
+    result$stderr,
+    "Running check_integrity\\.R \\.{2,} Done"
   )
 })

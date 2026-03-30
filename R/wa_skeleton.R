@@ -24,6 +24,7 @@ wa_skeleton <- function(
   lang = NULL
 ) {
   children <- list(...)
+
   if (!is.null(effect)) {
     effect <- .wa_match_arg(
       effect,

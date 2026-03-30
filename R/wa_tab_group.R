@@ -46,6 +46,7 @@ wa_tab_group <- function(
       .wa_slot(nav, "nav")
     )
   )
+
   if (!is.null(activation)) {
     activation <- .wa_match_arg(
       activation,

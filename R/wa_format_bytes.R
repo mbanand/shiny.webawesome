@@ -31,6 +31,7 @@ wa_format_bytes <- function(
   unit = NULL
 ) {
   children <- list(...)
+
   if (!is.null(display)) {
     display <- .wa_match_arg(
       display,

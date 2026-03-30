@@ -115,6 +115,7 @@ wa_slider <- function(
       .wa_slot(reference, "reference")
     )
   )
+
   if (!is.null(orientation)) {
     orientation <- .wa_match_arg(
       orientation,

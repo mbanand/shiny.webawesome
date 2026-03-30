@@ -46,6 +46,7 @@ wa_rating <- function(
   size = NULL
 ) {
   children <- list(...)
+
   if (!is.null(size)) {
     size <- .wa_match_arg(
       size,

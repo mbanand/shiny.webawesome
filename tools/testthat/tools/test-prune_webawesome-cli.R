@@ -19,6 +19,10 @@
     normalizePath(file.path("..", "..", "cli_ui.R"), mustWork = TRUE),
     file.path(root, "tools", "cli_ui.R")
   )
+  file.copy(
+    normalizePath(file.path("..", "..", "integrity.R"), mustWork = TRUE),
+    file.path(root, "tools", "integrity.R")
+  )
 
   Sys.chmod(file.path(root, "tools", "prune_webawesome.R"), mode = "0755")
 }
