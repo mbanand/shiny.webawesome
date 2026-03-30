@@ -54,3 +54,24 @@ new_message_recorder <- function() {
     seen = seen
   )
 }
+
+# Capture custom-message payloads from handwritten command helpers
+# in unit tests.
+new_custom_message_recorder <- function() {
+  seen <- new.env(parent = emptyenv())
+  seen$calls <- list()
+
+  session <- list(
+    sendCustomMessage = function(type, message) {
+      seen$calls[[length(seen$calls) + 1L]] <- list(
+        type = type,
+        message = message
+      )
+    }
+  )
+
+  list(
+    session = session,
+    seen = seen
+  )
+}

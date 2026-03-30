@@ -33,7 +33,7 @@ shiny.webawesome/
   vendor/
   dev/
   manifests/
-  report/
+  reports/
   scratch/
   scripts/
 ```
@@ -141,11 +141,21 @@ The package may include handwritten helpers such as layout functions, page
 constructors, or convenience utilities. These should be treated as part of the
 package's manual API surface and tracked separately from upstream coverage.
 
+These helpers may include small convenience wrappers around ordinary HTML
+structures when that improves package ergonomics or better reflects how the
+upstream Web Awesome documentation is organized. Such helpers are package-level
+design choices, not generated mirrors of upstream component metadata.
+
 Examples may include:
 
 - `wa_page()`
+- `wa_set_property()`
 - `wa_grid()`
-- future layout or utility helpers
+- future layout or utility helpers such as a lightweight container helper
+
+These helpers may also include narrow server-to-browser command helpers for
+advanced Shiny usage, provided they remain generic and do not expand into a
+generated per-component command surface.
 
 ---
 

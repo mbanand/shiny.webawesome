@@ -161,10 +161,16 @@ Examples may include:
 
 - layout helpers
 - page helpers
+- generic command helpers such as `wa_set_property()`
 - utilities such as `wa_grid()`
 
 These should be tracked separately from upstream coverage because they are
 package-level design choices rather than mirrors of upstream components.
+
+This includes small convenience helpers that may wrap plain HTML containers or
+other non-component structures in order to keep common Web Awesome usage inside
+the package API. Their presence does not imply a gap in upstream component
+coverage.
 
 Handwritten package APIs should have their own inventory and documentation.
 

@@ -86,7 +86,7 @@ inst/bindings/
 inst/extdata/webawesome/
 inst/www/wa/
 manifests/
-report/
+reports/
 ```
 ---
 

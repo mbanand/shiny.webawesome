@@ -78,11 +78,11 @@ testthat::test_that("check_integrity fails for drifted generated surfaces", {
   summary_path <- file.path(root, "reports", "integrity", "summary.md")
   testthat::expect_error(
     check_integrity(root = root, verbose = FALSE),
-    "checksum mismatch against generate output"
+    "current generate surface checksums differ from recorded generate output"
   )
   testthat::expect_true(file.exists(summary_path))
   testthat::expect_true(any(grepl(
-    "checksum mismatch against generate output",
+    "current generate surface checksums differ from recorded generate output",
     readLines(summary_path, warn = FALSE),
     fixed = TRUE
   )))

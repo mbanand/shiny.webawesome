@@ -72,16 +72,22 @@ test_that("warning registry defaults to enabled known warnings", {
   warnings <- shiny.webawesome:::.wa_warning_registry()
 
   expect_true(isTRUE(warnings$missing_tree_item_id))
+  expect_true(isTRUE(warnings$command_layer))
+  expect_false(isTRUE(warnings$command_layer_debug))
 })
 
 test_that("warning registry respects explicit option overrides", {
   withr::local_options(shiny.webawesome.warnings = list(
-    missing_tree_item_id = FALSE
+    missing_tree_item_id = FALSE,
+    command_layer = FALSE,
+    command_layer_debug = TRUE
   ))
 
   warnings <- shiny.webawesome:::.wa_warning_registry()
 
   expect_false(isTRUE(warnings$missing_tree_item_id))
+  expect_false(isTRUE(warnings$command_layer))
+  expect_true(isTRUE(warnings$command_layer_debug))
 })
 
 test_that("tree-item warning helper counts nested missing ids", {

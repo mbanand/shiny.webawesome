@@ -51,6 +51,7 @@ visibility percentages that trigger the observer callback. Defaults to
 An HTML tag for the component.
 }
 \description{
-Generated wrapper for the Web Awesome \code{wa-intersection-observer} component.
+Generated wrapper for the Web Awesome \code{wa-intersection-observer}
+component.
 Generated from Web Awesome metadata.
 }

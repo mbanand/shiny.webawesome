@@ -320,6 +320,11 @@ wa_page()
 
 This function constructs a full page using Web Awesome components.
 
+The package may also include a small number of other handwritten convenience
+helpers for common Shiny usage patterns. These helpers are package-level
+ergonomic affordances, not generated mirrors of upstream Web Awesome component
+metadata.
+
 When `wa_page()` is used, dependency attachment is handled once at the page level.
 
 Component wrappers temporarily disable their own dependency attachment during page construction to avoid redundant work.
@@ -427,7 +432,7 @@ This separation ensures that:
 - **manifests** capture structured information about the generated system
 - **reporting** evaluates and summarizes coverage and conformance
 
-Both the `manifests/` and `report/` directories are fully regenerable and are not
+Both the `manifests/` and `reports/` directories are fully regenerable and are not
 bundled with the package itself.
 
 ---

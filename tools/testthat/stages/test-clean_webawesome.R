@@ -57,7 +57,6 @@ testthat::test_that(
     )
     testthat::expect_false(dir.exists(file.path(root, "manifests")))
     testthat::expect_false(dir.exists(file.path(root, "reports")))
-    testthat::expect_false(dir.exists(file.path(root, "report")))
 
     testthat::expect_equal(result$level, "clean")
     testthat::expect_setequal(

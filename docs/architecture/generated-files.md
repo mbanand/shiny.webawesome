@@ -25,7 +25,7 @@ The following package source areas contain generated files:
 - generated component files under `R/` such as `R/wa_select.R`
 - `inst/bindings/`
 - `manifests/`
-- `report/`
+- `reports/`
 
 These files should not be edited directly.
 

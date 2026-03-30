@@ -307,7 +307,7 @@
     return(list(
       ok = FALSE,
       status = "warn",
-      summary = paste0("no ", expected_label, " integrity record found"),
+      summary = paste0("no recorded ", expected_label, " found"),
       details = paste0(
         "Missing integrity record for ",
         expected_label,
@@ -339,7 +339,11 @@
     return(list(
       ok = FALSE,
       status = "warn",
-      summary = paste0("file set mismatch against ", expected_label),
+      summary = paste0(
+        current_label,
+        " file set differs from recorded ",
+        expected_label
+      ),
       details = details
     ))
   }
@@ -354,7 +358,11 @@
     return(list(
       ok = FALSE,
       status = "warn",
-      summary = paste0("checksum mismatch against ", expected_label),
+      summary = paste0(
+        current_label,
+        " checksums differ from recorded ",
+        expected_label
+      ),
       details = paste0(
         "Changed files: ",
         paste(sort(digest_mismatches), collapse = ", ")
@@ -369,7 +377,11 @@
     return(list(
       ok = FALSE,
       status = "warn",
-      summary = paste0("tree digest mismatch against ", expected_label),
+      summary = paste0(
+        current_label,
+        " tree digest differs from recorded ",
+        expected_label
+      ),
       details = paste0(
         "The overall tree digest for ",
         current_label,
@@ -383,7 +395,7 @@
   list(
     ok = TRUE,
     status = "pass",
-    summary = paste0("matches ", expected_label),
+    summary = paste0(current_label, " matches recorded ", expected_label),
     details = character()
   )
 }
