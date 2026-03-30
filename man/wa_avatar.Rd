@@ -7,6 +7,8 @@
 wa_avatar(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   label = NULL,
   dir = NULL,
   image = NULL,
@@ -21,6 +23,10 @@ wa_avatar(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{label}{A label to use to describe the avatar to assistive
 devices. Defaults to `` when omitted.}

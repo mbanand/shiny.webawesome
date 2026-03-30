@@ -7,6 +7,8 @@
 wa_card(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   appearance = NULL,
   dir = NULL,
   lang = NULL,
@@ -23,6 +25,10 @@ wa_card(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{appearance}{The card's visual appearance. Must be one of
 \code{"accent"}, \code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}, \code{"plain"}.

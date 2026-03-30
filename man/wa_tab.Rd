@@ -4,12 +4,25 @@
 \alias{wa_tab}
 \title{Create a \code{wa-tab} component}
 \usage{
-wa_tab(..., id = NULL, disabled = NULL, dir = NULL, lang = NULL, panel = NULL)
+wa_tab(
+  ...,
+  id = NULL,
+  class = NULL,
+  style = NULL,
+  disabled = NULL,
+  dir = NULL,
+  lang = NULL,
+  panel = NULL
+)
 }
 \arguments{
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{disabled}{Disables the tab and prevents selection. Defaults to
 \code{false} when omitted.}

@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param value The number to format. Defaults to `0` when omitted.
 #' @param currency The ISO 4217 currency code to use when formatting.
 #' Defaults to `USD` when omitted.
@@ -37,6 +39,8 @@
 wa_format_number <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   currency = NULL,
   currency_display = NULL,
@@ -80,6 +84,8 @@ wa_format_number <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "value" = value,
       "currency" = currency,
       "currency-display" = currency_display,

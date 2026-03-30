@@ -9,6 +9,8 @@
 #' @param ... Child content for the component's default slot.
 #' @param input_id Shiny input id for the component. This is also used as
 #' the rendered DOM `id` attribute.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param activation When set to auto, navigating tabs with the arrow keys
 #' will instantly show the corresponding tab panel. When set to manual,
 #' the tab will receive focus but will not show until the user presses
@@ -31,6 +33,8 @@
 wa_tab_group <- function(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   activation = NULL,
   active = NULL,
   dir = NULL,
@@ -74,6 +78,8 @@ wa_tab_group <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = input_id,
+      "class" = class,
+      "style" = style,
       "activation" = activation,
       "active" = active,
       "dir" = dir,

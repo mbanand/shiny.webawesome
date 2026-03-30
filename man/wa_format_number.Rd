@@ -7,6 +7,8 @@
 wa_format_number(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   currency = NULL,
   currency_display = NULL,
@@ -25,6 +27,10 @@ wa_format_number(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{value}{The number to format. Defaults to \code{0} when omitted.}
 

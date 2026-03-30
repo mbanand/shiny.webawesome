@@ -7,6 +7,8 @@
 wa_dropdown(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   dir = NULL,
   distance = NULL,
   lang = NULL,
@@ -22,6 +24,10 @@ wa_dropdown(
 the rendered DOM \code{id} attribute.}
 
 \item{...}{Child content for the component's default slot.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{dir}{Optional Web Awesome attribute.}
 

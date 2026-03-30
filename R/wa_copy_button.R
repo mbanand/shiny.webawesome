@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param value The text value to copy. Defaults to `` when omitted.
 #' @param disabled Disables the copy button. Defaults to `false` when
 #' omitted.
@@ -44,6 +46,8 @@
 wa_copy_button <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   disabled = NULL,
   copy_label = NULL,
@@ -94,6 +98,8 @@ wa_copy_button <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "value" = value,
       "disabled" = disabled,
       "copy-label" = copy_label,

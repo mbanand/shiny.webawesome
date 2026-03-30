@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param label The label to use for the breadcrumb control. This will not
 #' be shown on the screen, but it will be announced by screen readers and
 #' other assistive devices to provide more context for users. Defaults to
@@ -23,6 +25,8 @@
 wa_breadcrumb <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   label = NULL,
   dir = NULL,
   lang = NULL,
@@ -37,10 +41,11 @@ wa_breadcrumb <- function(
   )
 
 
-
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "label" = label,
       "dir" = dir,
       "lang" = lang

@@ -7,6 +7,8 @@
 wa_dialog(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   label = NULL,
   dir = NULL,
   lang = NULL,
@@ -23,6 +25,10 @@ wa_dialog(
 the rendered DOM \code{id} attribute.}
 
 \item{...}{Child content for the component's default slot.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{label}{The dialog's label as displayed in the header. You should
 always include a relevant label, as it is required for proper

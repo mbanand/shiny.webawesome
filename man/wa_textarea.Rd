@@ -8,6 +8,8 @@
 wa_textarea(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   value = NULL,
   disabled = NULL,
   label = NULL,
@@ -52,6 +54,10 @@ update_wa_textarea(
 \item{input_id}{Input id of the component to update.}
 
 \item{...}{Child content for the component's default slot.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{value}{Optional value to send to the component.}
 

@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param disabled Disables the tab and prevents selection. Defaults to
 #' `false` when omitted.
 #' @param dir Optional Web Awesome attribute.
@@ -22,6 +24,8 @@
 wa_tab <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   disabled = NULL,
   dir = NULL,
   lang = NULL,
@@ -30,10 +34,11 @@ wa_tab <- function(
   children <- list(...)
 
 
-
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "disabled" = disabled,
       "dir" = dir,
       "lang" = lang,

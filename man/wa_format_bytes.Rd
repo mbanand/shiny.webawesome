@@ -7,6 +7,8 @@
 wa_format_bytes(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   dir = NULL,
   display = NULL,
@@ -18,6 +20,10 @@ wa_format_bytes(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{value}{The number to format in bytes. Defaults to \code{0} when
 omitted.}

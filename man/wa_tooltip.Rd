@@ -7,6 +7,8 @@
 wa_tooltip(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   disabled = NULL,
   dir = NULL,
   distance = NULL,
@@ -25,6 +27,10 @@ wa_tooltip(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{disabled}{Disables the tooltip so it won't show when triggered.
 Defaults to \code{false} when omitted.}

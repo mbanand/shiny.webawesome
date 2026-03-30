@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param label A label to use to describe the avatar to assistive
 #' devices. Defaults to `` when omitted.
 #' @param dir Optional Web Awesome attribute.
@@ -30,6 +32,8 @@
 wa_avatar <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   label = NULL,
   dir = NULL,
   image = NULL,
@@ -73,6 +77,8 @@ wa_avatar <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "label" = label,
       "dir" = dir,
       "image" = image,

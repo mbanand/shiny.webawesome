@@ -7,6 +7,8 @@
 wa_progress_bar(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   label = NULL,
   dir = NULL,
@@ -18,6 +20,10 @@ wa_progress_bar(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{value}{The current progress as a percentage, 0 to 100. Defaults
 to \code{0} when omitted.}

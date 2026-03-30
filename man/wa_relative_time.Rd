@@ -7,6 +7,8 @@
 wa_relative_time(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   date = NULL,
   dir = NULL,
   format = NULL,
@@ -19,6 +21,10 @@ wa_relative_time(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{date}{The date from which to calculate time from. If not set, the
 current date and time will be used. When passing a string, it's

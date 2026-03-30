@@ -7,6 +7,8 @@
 wa_comparison(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   dir = NULL,
   lang = NULL,
   position = NULL,
@@ -20,6 +22,10 @@ wa_comparison(
 the rendered DOM \code{id} attribute.}
 
 \item{...}{Child content for the component's default slot.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{dir}{Optional Web Awesome attribute.}
 

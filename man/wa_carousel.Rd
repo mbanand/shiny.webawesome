@@ -7,6 +7,8 @@
 wa_carousel(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   autoplay = NULL,
   autoplay_interval = NULL,
   current_slide = NULL,
@@ -29,6 +31,10 @@ wa_carousel(
 the rendered DOM \code{id} attribute.}
 
 \item{...}{Child content for the component's default slot.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{autoplay}{When set, the slides will scroll automatically when the
 user is not interacting with them. Defaults to \code{false} when omitted.}

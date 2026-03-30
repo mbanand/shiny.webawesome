@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param disabled Disables the observer. Defaults to `false` when
 #' omitted.
 #' @param attr Watches for changes to attributes. To watch only specific
@@ -32,6 +34,8 @@
 wa_mutation_observer <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   disabled = NULL,
   attr = NULL,
   attr_old_value = NULL,
@@ -44,10 +48,11 @@ wa_mutation_observer <- function(
   children <- list(...)
 
 
-
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "disabled" = disabled,
       "attr" = attr,
       "attr-old-value" = attr_old_value,

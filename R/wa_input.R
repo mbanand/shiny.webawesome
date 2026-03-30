@@ -9,6 +9,8 @@
 #' @param ... Child content for the component's default slot.
 #' @param input_id Shiny input id for the component. This is also used as
 #' the rendered DOM `id` attribute.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param value The default value of the form control. Primarily used for
 #' resetting the form control. This wrapper argument sets the HTML `value`
 #' attribute, which maps to the component's `defaultValue` field/property
@@ -113,6 +115,8 @@
 wa_input <- function(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   value = NULL,
   disabled = NULL,
   label = NULL,
@@ -305,6 +309,8 @@ wa_input <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = input_id,
+      "class" = class,
+      "style" = style,
       "value" = value,
       "disabled" = disabled,
       "label" = label,

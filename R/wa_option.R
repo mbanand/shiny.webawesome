@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param value The option's value. When selected, the containing form
 #' control will receive this value. The value must be unique from other
 #' options in the same group. Values may not contain spaces, as spaces are
@@ -32,6 +34,8 @@
 wa_option <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   disabled = NULL,
   label = NULL,
@@ -56,10 +60,11 @@ wa_option <- function(
   )
 
 
-
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "value" = value,
       "disabled" = disabled,
       "label" = label,

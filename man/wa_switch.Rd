@@ -7,6 +7,8 @@
 wa_switch(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   value = NULL,
   checked = NULL,
   disabled = NULL,
@@ -27,6 +29,10 @@ wa_switch(
 the rendered DOM \code{id} attribute.}
 
 \item{...}{Child content for the component's default slot.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{value}{The value of the switch, submitted as a name/value pair
 with form data.}

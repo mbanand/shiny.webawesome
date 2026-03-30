@@ -32,6 +32,11 @@ wa_dialog()
 
 * HTML attributes become R arguments.
 * Attribute names convert from kebab-case to snake_case.
+* Generated wrappers also expose narrow package-level `class` and `style`
+  convenience arguments for CSS styling and layout, unless upstream metadata
+  already provides one of those attributes for the component. These arguments
+  map to the rendered tag's standard HTML global attributes and are treated as
+  a deliberate package-level exception rather than inferred upstream API.
 * When upstream metadata maps an HTML attribute to a materially different
   component field/property name after normalization, generated wrapper
   documentation should remain attribute-first and explicitly document that
@@ -45,6 +50,9 @@ wa_dialog()
   rendered DOM `id` attribute.
 * For components with generated Shiny input bindings, `input_id` is the
   first positional argument in the generated R wrapper signature.
+* The package-level `class` and `style` convenience arguments are inserted
+  after the identity argument (`id` or `input_id`) and before metadata-derived
+  wrapper attributes when they are injected by generator policy.
 * Generated roxygen for identity arguments must document this distinction
   explicitly so users can tell whether a wrapper argument is a generic DOM id
   or a Shiny input id that also becomes the DOM id.

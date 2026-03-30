@@ -7,6 +7,8 @@
 wa_radio(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   disabled = NULL,
   name = NULL,
@@ -21,6 +23,10 @@ wa_radio(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{value}{The radio's value. When selected, the radio group will
 receive this value.}

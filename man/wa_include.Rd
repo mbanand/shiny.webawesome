@@ -7,6 +7,8 @@
 wa_include(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   allow_scripts = NULL,
   dir = NULL,
   lang = NULL,
@@ -18,6 +20,10 @@ wa_include(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{allow_scripts}{Allows included scripts to be executed. Be sure
 you trust the content you are including as it will be executed as code

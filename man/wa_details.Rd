@@ -7,6 +7,8 @@
 wa_details(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   disabled = NULL,
   name = NULL,
   appearance = NULL,
@@ -25,6 +27,10 @@ wa_details(
 the rendered DOM \code{id} attribute.}
 
 \item{...}{Child content for the component's default slot.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{disabled}{Disables the details so it can't be toggled. Defaults
 to \code{false} when omitted.}

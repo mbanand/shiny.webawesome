@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param dir Optional Web Awesome attribute.
 #' @param effect Determines which effect the skeleton will use. Must be
 #' one of `"none"`, `"pulse"`, `"sheen"`. Defaults to `none` when omitted.
@@ -19,6 +21,8 @@
 wa_skeleton <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   dir = NULL,
   effect = NULL,
   lang = NULL
@@ -40,6 +44,8 @@ wa_skeleton <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "dir" = dir,
       "effect" = effect,
       "lang" = lang

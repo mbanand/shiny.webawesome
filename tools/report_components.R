@@ -652,6 +652,12 @@ rm(.bootstrap_integrity_helpers)
     "..."
   }
 
+  global_attr_args <- vapply(
+    .wrapper_global_attrs(component),
+    `[[`,
+    character(1),
+    "argument_name"
+  )
   attr_args <- vapply(.wrapper_attributes(component), `[[`, character(1), "argument_name")
   slot_args <- vapply(
     .wrapper_slots(component),
@@ -660,7 +666,7 @@ rm(.bootstrap_integrity_helpers)
     "wrapper_argument_name"
   )
 
-  c(args, attr_args, slot_args)
+  c(args, global_attr_args, attr_args, slot_args)
 }
 
 # Return expected update helper argument names for one component.

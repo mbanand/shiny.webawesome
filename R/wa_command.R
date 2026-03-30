@@ -19,9 +19,9 @@
   }
 
   if (!is.character(command) ||
-    length(command) != 1L ||
-    is.na(command) ||
-    !nzchar(command)) {
+        length(command) != 1L ||
+        is.na(command) ||
+        !nzchar(command)) {
     stop("`command` must be one non-missing string.", call. = FALSE)
   }
 
@@ -92,9 +92,9 @@ wa_set_property <- function(id,
                             value,
                             session = shiny::getDefaultReactiveDomain()) {
   if (!is.character(property) ||
-    length(property) != 1L ||
-    is.na(property) ||
-    !nzchar(property)) {
+        length(property) != 1L ||
+        is.na(property) ||
+        !nzchar(property)) {
     stop("`property` must be one non-missing string.", call. = FALSE)
   }
 
@@ -146,9 +146,9 @@ wa_call_method <- function(id,
                            args = list(),
                            session = shiny::getDefaultReactiveDomain()) {
   if (!is.character(method) ||
-    length(method) != 1L ||
-    is.na(method) ||
-    !nzchar(method)) {
+        length(method) != 1L ||
+        is.na(method) ||
+        !nzchar(method)) {
     stop("`method` must be one non-missing string.", call. = FALSE)
   }
 

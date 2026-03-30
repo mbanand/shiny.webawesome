@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param value The QR code's value. Defaults to `` when omitted.
 #' @param label The label for assistive devices to announce. If
 #' unspecified, the value will be used instead. Defaults to `` when
@@ -33,6 +35,8 @@
 wa_qr_code <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   label = NULL,
   background = NULL,
@@ -61,6 +65,8 @@ wa_qr_code <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "value" = value,
       "label" = label,
       "background" = background,

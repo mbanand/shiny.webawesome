@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param dir Optional Web Awesome attribute.
 #' @param distance The distance in pixels from which to offset the popover
 #' away from its target. Defaults to `8` when omitted.
@@ -34,6 +36,8 @@
 wa_popover <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   dir = NULL,
   distance = NULL,
   `for` = NULL,
@@ -69,6 +73,8 @@ wa_popover <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "dir" = dir,
       "distance" = distance,
       "for" = `for`,

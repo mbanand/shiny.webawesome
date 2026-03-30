@@ -9,6 +9,8 @@
 #' @param ... Child content for the component's default slot.
 #' @param input_id Shiny input id for the component. This is also used as
 #' the rendered DOM `id` attribute.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param disabled Disables the details so it can't be toggled. Defaults
 #' to `false` when omitted.
 #' @param name Groups related details elements. When one opens, others
@@ -39,6 +41,8 @@
 wa_details <- function(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   disabled = NULL,
   name = NULL,
   appearance = NULL,
@@ -98,6 +102,8 @@ wa_details <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = input_id,
+      "class" = class,
+      "style" = style,
       "disabled" = disabled,
       "name" = name,
       "appearance" = appearance,

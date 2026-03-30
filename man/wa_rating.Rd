@@ -7,6 +7,8 @@
 wa_rating(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   value = NULL,
   disabled = NULL,
   label = NULL,
@@ -24,6 +26,10 @@ wa_rating(
 the rendered DOM \code{id} attribute.}
 
 \item{...}{Child content for the component's default slot.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{value}{The current rating. Defaults to \code{0} when omitted.}
 

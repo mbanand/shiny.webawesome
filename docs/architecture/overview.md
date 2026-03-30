@@ -54,6 +54,13 @@ max-options-visible → max_options_visible
 
 This allows developers to use Web Awesome documentation directly when writing Shiny apps as well.
 
+The package also applies a small wrapper-level convenience layer for standard
+HTML styling hooks. Generated wrappers expose `class` and `style` arguments on
+all components unless upstream metadata already declares one of them. These
+arguments map to the rendered tag's standard global HTML attributes and are
+treated as a narrow package-level exception to the otherwise metadata-first
+wrapper surface.
+
 ---
 
 ## Generator-driven wrappers

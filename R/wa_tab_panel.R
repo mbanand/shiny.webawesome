@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param name The tab panel's name. Defaults to `` when omitted.
 #' @param active When true, the tab panel will be shown. Defaults to
 #' `false` when omitted.
@@ -20,6 +22,8 @@
 wa_tab_panel <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   name = NULL,
   active = NULL,
   dir = NULL,
@@ -28,10 +32,11 @@ wa_tab_panel <- function(
   children <- list(...)
 
 
-
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "name" = name,
       "active" = active,
       "dir" = dir,

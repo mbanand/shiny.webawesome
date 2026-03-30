@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
 #' @param orientation The scroller's orientation. Must be one of
@@ -23,6 +25,8 @@
 wa_scroller <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   dir = NULL,
   lang = NULL,
   orientation = NULL,
@@ -45,6 +49,8 @@ wa_scroller <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "dir" = dir,
       "lang" = lang,
       "orientation" = orientation,

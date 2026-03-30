@@ -7,6 +7,8 @@
 wa_qr_code(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   label = NULL,
   background = NULL,
@@ -22,6 +24,10 @@ wa_qr_code(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{value}{The QR code's value. Defaults to `` when omitted.}
 

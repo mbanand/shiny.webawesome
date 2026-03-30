@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param appearance The badge's visual appearance. Must be one of
 #' `"accent"`, `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to
 #' `accent` when omitted.
@@ -31,6 +33,8 @@
 wa_badge <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   appearance = NULL,
   attention = NULL,
   dir = NULL,
@@ -96,6 +100,8 @@ wa_badge <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "appearance" = appearance,
       "attention" = attention,
       "dir" = dir,

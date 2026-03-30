@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param date The date from which to calculate time from. If not set, the
 #' current date and time will be used. When passing a string, it's
 #' strongly recommended to use the ISO 8601 format to ensure timezones are
@@ -30,6 +32,8 @@
 wa_relative_time <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   date = NULL,
   dir = NULL,
   format = NULL,
@@ -65,6 +69,8 @@ wa_relative_time <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "date" = date,
       "dir" = dir,
       "format" = format,

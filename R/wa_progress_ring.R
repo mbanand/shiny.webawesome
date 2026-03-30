@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param value The current progress as a percentage, 0 to 100. Defaults
 #' to `0` when omitted.
 #' @param label A custom label for assistive devices. Defaults to `` when
@@ -21,6 +23,8 @@
 wa_progress_ring <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   label = NULL,
   dir = NULL,
@@ -29,10 +33,11 @@ wa_progress_ring <- function(
   children <- list(...)
 
 
-
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "value" = value,
       "label" = label,
       "dir" = dir,

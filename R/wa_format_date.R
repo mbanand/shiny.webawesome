@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param date The date/time to format. If not set, the current date and
 #' time will be used. When passing a string, it's strongly recommended to
 #' use the ISO 8601 format to ensure timezones are handled correctly. To
@@ -43,6 +45,8 @@
 wa_format_date <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   date = NULL,
   day = NULL,
   dir = NULL,
@@ -179,6 +183,8 @@ wa_format_date <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "date" = date,
       "day" = day,
       "dir" = dir,

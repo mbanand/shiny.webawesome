@@ -7,6 +7,8 @@
 wa_icon(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   label = NULL,
   name = NULL,
   animation = NULL,
@@ -26,6 +28,10 @@ wa_icon(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{label}{An alternate description to use for assistive devices. If
 omitted, the icon will be considered presentational and ignored by

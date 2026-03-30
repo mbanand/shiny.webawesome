@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param dir Optional Web Awesome attribute.
 #' @param lang Optional Web Awesome attribute.
 #'
@@ -17,16 +19,19 @@
 wa_spinner <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   dir = NULL,
   lang = NULL
 ) {
   children <- list(...)
 
 
-
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "dir" = dir,
       "lang" = lang
     ),

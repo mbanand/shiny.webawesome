@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param disabled Disables resizing. Note that the position may still
 #' change as a result of resizing the host element. Defaults to `false`
 #' when omitted.
@@ -40,6 +42,8 @@
 wa_split_panel <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   disabled = NULL,
   dir = NULL,
   lang = NULL,
@@ -87,6 +91,8 @@ wa_split_panel <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "disabled" = disabled,
       "dir" = dir,
       "lang" = lang,

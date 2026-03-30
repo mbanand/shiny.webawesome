@@ -7,6 +7,8 @@
 wa_animated_image(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   alt = NULL,
   dir = NULL,
   lang = NULL,
@@ -20,6 +22,10 @@ wa_animated_image(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{alt}{A description of the image used by assistive devices.}
 

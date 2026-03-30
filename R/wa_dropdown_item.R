@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param value An optional value for the menu item. This is useful for
 #' determining which item was selected when listening to the dropdown's
 #' `wa-select` event.
@@ -35,6 +37,8 @@
 wa_dropdown_item <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   checked = NULL,
   disabled = NULL,
@@ -92,6 +96,8 @@ wa_dropdown_item <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "value" = value,
       "checked" = checked,
       "disabled" = disabled,

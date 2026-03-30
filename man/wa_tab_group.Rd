@@ -7,6 +7,8 @@
 wa_tab_group(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   activation = NULL,
   active = NULL,
   dir = NULL,
@@ -21,6 +23,10 @@ wa_tab_group(
 the rendered DOM \code{id} attribute.}
 
 \item{...}{Child content for the component's default slot.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{activation}{When set to auto, navigating tabs with the arrow keys
 will instantly show the corresponding tab panel. When set to manual,

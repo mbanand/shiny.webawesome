@@ -7,6 +7,8 @@
 wa_color_picker(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   value = NULL,
   disabled = NULL,
   label = NULL,
@@ -34,6 +36,10 @@ wa_color_picker(
 the rendered DOM \code{id} attribute.}
 
 \item{...}{Child content for the component's default slot.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{value}{The default value of the form control. Primarily used for
 resetting the form control. This wrapper argument sets the HTML \code{value}

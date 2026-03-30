@@ -9,6 +9,8 @@
 #' @param ... Child content for the component's default slot.
 #' @param input_id Shiny input id for the component. This is also used as
 #' the rendered DOM `id` attribute.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param value The value of the button, submitted as a pair with the
 #' button's name as part of the form data, but only when this button is
 #' the submitter. This attribute is ignored when `href` is present.
@@ -80,6 +82,8 @@
 wa_button <- function(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   value = NULL,
   disabled = NULL,
   name = NULL,
@@ -211,6 +215,8 @@ wa_button <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = input_id,
+      "class" = class,
+      "style" = style,
       "value" = value,
       "disabled" = disabled,
       "name" = name,

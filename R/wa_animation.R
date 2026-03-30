@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param name The name of the built-in animation to use. For custom
 #' animations, use the `keyframes` prop. Defaults to `none` when omitted.
 #' @param delay The number of milliseconds to delay the start of the
@@ -46,6 +48,8 @@
 wa_animation <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   name = NULL,
   delay = NULL,
   dir = NULL,
@@ -63,10 +67,11 @@ wa_animation <- function(
   children <- list(...)
 
 
-
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "name" = name,
       "delay" = delay,
       "dir" = dir,

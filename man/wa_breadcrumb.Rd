@@ -7,6 +7,8 @@
 wa_breadcrumb(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   label = NULL,
   dir = NULL,
   lang = NULL,
@@ -17,6 +19,10 @@ wa_breadcrumb(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{label}{The label to use for the breadcrumb control. This will not
 be shown on the screen, but it will be announced by screen readers and

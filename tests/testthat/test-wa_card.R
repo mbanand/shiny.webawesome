@@ -43,6 +43,25 @@ test_that("wa_card uses id and does not expose input_id", {
   )
 })
 
+test_that("wa_card includes package-level class and style attrs", {
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_card(
+        "Hello",
+        id = "card",
+        class = "wa-stack card-shell",
+        style = "padding: 1rem;"
+      )
+    ),
+    c(
+      paste0(
+        '<wa-card id="card" class="wa-stack card-shell" ',
+        'style="padding: 1rem;">Hello</wa-card>'
+      )
+    )
+  )
+})
+
 test_that("wa_card enum arguments validate exactly", {
   expect_exact_html(
     render_html(

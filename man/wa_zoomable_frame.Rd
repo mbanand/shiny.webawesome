@@ -7,6 +7,8 @@
 wa_zoomable_frame(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   allowfullscreen = NULL,
   dir = NULL,
   lang = NULL,
@@ -27,6 +29,10 @@ wa_zoomable_frame(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{allowfullscreen}{Allows fullscreen mode. Defaults to \code{false} when
 omitted.}

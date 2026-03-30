@@ -47,6 +47,25 @@ test_that("wa_button override render includes attrs and slots", {
   )
 })
 
+test_that("wa_button includes package-level class and style attrs", {
+  expect_exact_html(
+    render_html(
+      shiny.webawesome:::wa_button(
+        "button",
+        "Run",
+        class = "wa-gap-s button-shell",
+        style = "margin-inline: 1rem;"
+      )
+    ),
+    c(
+      paste0(
+        '<wa-button id="button" class="wa-gap-s button-shell" ',
+        'style="margin-inline: 1rem;">Run</wa-button>'
+      )
+    )
+  )
+})
+
 test_that("wa_button boolean args validate and render correctly", {
   boolean_args <- c(
     disabled = "disabled",

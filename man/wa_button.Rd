@@ -7,6 +7,8 @@
 wa_button(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   value = NULL,
   disabled = NULL,
   name = NULL,
@@ -39,6 +41,10 @@ wa_button(
 the rendered DOM \code{id} attribute.}
 
 \item{...}{Child content for the component's default slot.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{value}{The value of the button, submitted as a pair with the
 button's name as part of the form data, but only when this button is

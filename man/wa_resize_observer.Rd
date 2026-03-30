@@ -4,12 +4,24 @@
 \alias{wa_resize_observer}
 \title{Create a \code{wa-resize-observer} component}
 \usage{
-wa_resize_observer(..., id = NULL, disabled = NULL, dir = NULL, lang = NULL)
+wa_resize_observer(
+  ...,
+  id = NULL,
+  class = NULL,
+  style = NULL,
+  disabled = NULL,
+  dir = NULL,
+  lang = NULL
+)
 }
 \arguments{
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{disabled}{Disables the observer. Defaults to \code{false} when
 omitted.}

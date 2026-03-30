@@ -7,6 +7,8 @@
 wa_option(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   disabled = NULL,
   label = NULL,
@@ -21,6 +23,10 @@ wa_option(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{value}{The option's value. When selected, the containing form
 control will receive this value. The value must be unique from other

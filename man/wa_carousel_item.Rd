@@ -4,12 +4,23 @@
 \alias{wa_carousel_item}
 \title{Create a \code{wa-carousel-item} component}
 \usage{
-wa_carousel_item(..., id = NULL, dir = NULL, lang = NULL)
+wa_carousel_item(
+  ...,
+  id = NULL,
+  class = NULL,
+  style = NULL,
+  dir = NULL,
+  lang = NULL
+)
 }
 \arguments{
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{dir}{Optional Web Awesome attribute.}
 

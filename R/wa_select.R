@@ -9,6 +9,8 @@
 #' @param ... Child content for the component's default slot.
 #' @param input_id Shiny input id for the component. This is also used as
 #' the rendered DOM `id` attribute.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param value The select's value. This will be a string for single
 #' select or an array for multi-select.
 #' @param disabled Disables the select control. Defaults to `false` when
@@ -68,6 +70,8 @@
 wa_select <- function(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   value = NULL,
   disabled = NULL,
   label = NULL,
@@ -169,6 +173,8 @@ wa_select <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = input_id,
+      "class" = class,
+      "style" = style,
       "value" = value,
       "disabled" = disabled,
       "label" = label,

@@ -9,6 +9,8 @@
 #' @param ... Child content for the component's default slot.
 #' @param input_id Shiny input id for the component. This is also used as
 #' the rendered DOM `id` attribute.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param label The drawer's label as displayed in the header. You should
 #' always include a relevant label, as it is required for proper
 #' accessibility. If you need to display HTML, use the `label` slot
@@ -38,6 +40,8 @@
 wa_drawer <- function(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   label = NULL,
   dir = NULL,
   lang = NULL,
@@ -85,6 +89,8 @@ wa_drawer <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = input_id,
+      "class" = class,
+      "style" = style,
       "label" = label,
       "dir" = dir,
       "lang" = lang,

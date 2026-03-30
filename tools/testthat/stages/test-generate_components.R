@@ -862,7 +862,7 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   testthat::expect_equal(result$integrity$prune_check$status, "warn")
   testthat::expect_match(
     result$integrity$prune_check$summary,
-    "no prune output integrity record found"
+    "no recorded prune output found"
   )
   testthat::expect_equal(
     result$integrity$generated_record$path,
@@ -885,10 +885,34 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     "^  input_id,$",
     button_wrapper
   )))
+  testthat::expect_true(any(grepl(
+    "@param class Optional CSS class string\\.",
+    button_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "@param style Optional inline CSS style string\\.",
+    button_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^  class = NULL,$",
+    button_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "^  style = NULL,$",
+    button_wrapper
+  )))
 
   card_wrapper <- readLines(file.path(root, "R", "wa_card.R"), warn = FALSE)
   testthat::expect_true(any(grepl(
     "@param id Optional DOM id attribute for HTML, CSS, and JS targeting\\.",
+    card_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "@param class Optional CSS class string\\.",
+    card_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "@param style Optional inline CSS style string\\.",
     card_wrapper
   )))
 
@@ -1263,6 +1287,28 @@ testthat::test_that("generate backticks reserved R argument names in wrappers", 
   )
   testthat::expect_true(any(grepl("^  `for` = NULL,$", tooltip_wrapper)))
   testthat::expect_true(any(grepl('"for" = `for`', tooltip_wrapper, fixed = TRUE)))
+})
+
+testthat::test_that("wrapper global attrs avoid metadata duplicates", {
+  component <- list(
+    attributes = list(
+      list(
+        name = "style",
+        argument_name = "style",
+        type = "string",
+        default = NULL,
+        description = "Style attribute."
+      )
+    ),
+    slots = list(),
+    classification = list(binding = FALSE)
+  )
+
+  globals <- .wrapper_global_attrs(component)
+
+  testthat::expect_equal(length(globals), 1L)
+  testthat::expect_equal(globals[[1]]$name, "class")
+  testthat::expect_equal(globals[[1]]$argument_name, "class")
 })
 
 testthat::test_that("generate asks for prune when vendor metadata exists", {

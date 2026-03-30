@@ -7,6 +7,8 @@
 wa_dropdown_item(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   checked = NULL,
   disabled = NULL,
@@ -24,6 +26,10 @@ wa_dropdown_item(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{value}{An optional value for the menu item. This is useful for
 determining which item was selected when listening to the dropdown's

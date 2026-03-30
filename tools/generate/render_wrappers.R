@@ -169,7 +169,13 @@
     character(1),
     "argument_name"
   )
-  reserved <- c(attr_args, "id", "input_id")
+  global_attr_args <- vapply(
+    .wrapper_global_attrs(component),
+    `[[`,
+    character(1),
+    "argument_name"
+  )
+  reserved <- c(attr_args, global_attr_args, "id", "input_id")
 
   lapply(
     slots,
@@ -193,6 +199,40 @@
 # Return whether a component should expose input_id instead of id.
 .wrapper_uses_input_id <- function(component) {
   .component_has_binding(component)
+}
+
+# Return package-defined global HTML attrs to inject into wrapper surfaces.
+.wrapper_global_attrs <- function(component) {
+  defined_attrs <- .wrapper_attributes(component)
+  defined_names <- vapply(defined_attrs, `[[`, character(1), "name")
+  defined_arg_names <- vapply(
+    defined_attrs,
+    `[[`,
+    character(1),
+    "argument_name"
+  )
+
+  globals <- list(
+    list(
+      name = "class",
+      argument_name = "class",
+      description = "Optional CSS class string."
+    ),
+    list(
+      name = "style",
+      argument_name = "style",
+      description = "Optional inline CSS style string."
+    )
+  )
+
+  globals[!vapply(
+    globals,
+    function(attr) {
+      attr$name %in% defined_names ||
+        attr$argument_name %in% defined_arg_names
+    },
+    logical(1)
+  )]
 }
 
 # Return the preferred wrapper argument order for component attributes.
@@ -233,6 +273,18 @@
     args <- c(args, "id = NULL")
   }
 
+  global_attrs <- .wrapper_global_attrs(component)
+  if (length(global_attrs) > 0L) {
+    args <- c(
+      args,
+      vapply(
+        global_attrs,
+        function(attr) paste0(.as_r_symbol(attr$argument_name), " = NULL"),
+        character(1)
+      )
+    )
+  }
+
   attrs <- .wrapper_attributes(component)
   if (length(attrs) > 0L) {
     args <- c(
@@ -269,6 +321,20 @@
     lines <- c(lines, "\"id\" = input_id")
   } else if (.wrapper_uses_id(component)) {
     lines <- c(lines, "\"id\" = id")
+  }
+
+  global_attrs <- .wrapper_global_attrs(component)
+  if (length(global_attrs) > 0L) {
+    lines <- c(
+      lines,
+      vapply(
+        global_attrs,
+        function(attr) {
+          paste0(.r_string(attr$name), " = ", .as_r_symbol(attr$argument_name))
+        },
+        character(1)
+      )
+    )
   }
 
   if (length(attrs) > 0L) {
@@ -526,6 +592,23 @@
     param_docs <- c(
       param_docs,
       .roxygen_param_lines(param_name, .wrapper_id_param_doc(component))
+    )
+  }
+
+  global_attrs <- .wrapper_global_attrs(component)
+  if (length(global_attrs) > 0L) {
+    param_docs <- c(
+      param_docs,
+      vapply(
+        global_attrs,
+        function(attr) {
+          paste(
+            .roxygen_param_lines(attr$argument_name, attr$description),
+            collapse = "\n"
+          )
+        },
+        character(1)
+      )
     )
   }
 

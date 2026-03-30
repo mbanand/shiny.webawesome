@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param label An alternate description to use for assistive devices. If
 #' omitted, the icon will be considered presentational and ignored by
 #' assistive devices. Defaults to `` when omitted.
@@ -48,6 +50,8 @@
 wa_icon <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   label = NULL,
   name = NULL,
   animation = NULL,
@@ -65,10 +69,11 @@ wa_icon <- function(
   children <- list(...)
 
 
-
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "label" = label,
       "name" = name,
       "animation" = animation,

@@ -7,6 +7,8 @@
 wa_format_date(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   date = NULL,
   day = NULL,
   dir = NULL,
@@ -27,6 +29,10 @@ wa_format_date(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{date}{The date/time to format. If not set, the current date and
 time will be used. When passing a string, it's strongly recommended to

@@ -9,6 +9,8 @@
 #' @param ... Child content for the component's default slot.
 #' @param input_id Shiny input id for the component. This is also used as
 #' the rendered DOM `id` attribute.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param value The value of the checkbox, submitted as a name/value pair
 #' with form data.
 #' @param checked The default value of the form control. Primarily used
@@ -44,6 +46,8 @@
 wa_checkbox <- function(
   input_id,
   ...,
+  class = NULL,
+  style = NULL,
   value = NULL,
   checked = NULL,
   disabled = NULL,
@@ -81,6 +85,8 @@ wa_checkbox <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = input_id,
+      "class" = class,
+      "style" = style,
       "value" = value,
       "checked" = checked,
       "disabled" = disabled,

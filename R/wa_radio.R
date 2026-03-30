@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param value The radio's value. When selected, the radio group will
 #' receive this value.
 #' @param disabled Disables the radio. Defaults to `false` when omitted.
@@ -29,6 +31,8 @@
 wa_radio <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   value = NULL,
   disabled = NULL,
   name = NULL,
@@ -66,6 +70,8 @@ wa_radio <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "value" = value,
       "disabled" = disabled,
       "name" = name,

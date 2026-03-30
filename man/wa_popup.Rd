@@ -7,6 +7,8 @@
 wa_popup(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   active = NULL,
   anchor = NULL,
   arrow = NULL,
@@ -38,6 +40,10 @@ wa_popup(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{active}{Activates the positioning logic and shows the popup. When
 this attribute is removed, the positioning logic is torn down and the

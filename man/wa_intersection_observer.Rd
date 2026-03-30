@@ -7,6 +7,8 @@
 wa_intersection_observer(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   disabled = NULL,
   dir = NULL,
   intersect_class = NULL,
@@ -21,6 +23,10 @@ wa_intersection_observer(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{disabled}{Deactivates the intersection observer functionality.
 Defaults to \code{false} when omitted.}

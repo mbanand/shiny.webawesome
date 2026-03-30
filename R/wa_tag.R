@@ -8,6 +8,8 @@
 #'
 #' @param ... Child content for the component's default slot.
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
+#' @param class Optional CSS class string.
+#' @param style Optional inline CSS style string.
 #' @param appearance The tag's visual appearance. Must be one of
 #' `"accent"`, `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to
 #' `filled-outlined` when omitted.
@@ -30,6 +32,8 @@
 wa_tag <- function(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   appearance = NULL,
   dir = NULL,
   lang = NULL,
@@ -82,6 +86,8 @@ wa_tag <- function(
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,
+      "class" = class,
+      "style" = style,
       "appearance" = appearance,
       "dir" = dir,
       "lang" = lang,

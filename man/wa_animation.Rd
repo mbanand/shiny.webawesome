@@ -7,6 +7,8 @@
 wa_animation(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   name = NULL,
   delay = NULL,
   dir = NULL,
@@ -26,6 +28,10 @@ wa_animation(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{name}{The name of the built-in animation to use. For custom
 animations, use the \code{keyframes} prop. Defaults to \code{none} when omitted.}

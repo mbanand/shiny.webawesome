@@ -278,7 +278,7 @@ testthat::test_that(
     testthat::expect_equal(result$integrity$generate_check$status, "warn")
     testthat::expect_match(
       result$integrity$generate_check$summary,
-      "no generate output integrity record found"
+      "no recorded generate output found"
     )
 
     testthat::expect_true(file.exists(file.path(

@@ -7,6 +7,8 @@
 wa_breadcrumb_item(
   ...,
   id = NULL,
+  class = NULL,
+  style = NULL,
   dir = NULL,
   href = NULL,
   lang = NULL,
@@ -21,6 +23,10 @@ wa_breadcrumb_item(
 \item{...}{Child content for the component's default slot.}
 
 \item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
+
+\item{class}{Optional CSS class string.}
+
+\item{style}{Optional inline CSS style string.}
 
 \item{dir}{Optional Web Awesome attribute.}
 
