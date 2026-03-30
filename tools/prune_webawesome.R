@@ -290,7 +290,7 @@ rm(.bootstrap_integrity_helpers)
 
 # Build the version-specific prune report directory path.
 .prune_report_dir <- function(root, version) {
-  file.path(root, "report", "prune", version)
+  file.path(root, "reports", "prune", version)
 }
 
 # Return the metadata files copied into inst/extdata/webawesome.
@@ -745,7 +745,7 @@ rm(.bootstrap_integrity_helpers)
 #' inputs are present, copies the pruned browser runtime bundle into
 #' `inst/www/wa/`, copies `custom-elements.json` and `VERSION` into
 #' `inst/extdata/webawesome/`, and writes deterministic prune reports under
-#' `report/prune/<version>/`.
+#' `reports/prune/<version>/`.
 #'
 #' If `version` is `NULL`, the version pinned in `dev/webawesome-version.txt`
 #' is used.

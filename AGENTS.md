@@ -195,7 +195,7 @@ They are consumed by the reporting stage of the build pipeline, which produces
 human-readable diagnostic reports written to:
 
 ```text
-report/
+reports/
 ```
 
 These reports summarize:

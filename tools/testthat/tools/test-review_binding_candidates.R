@@ -17,6 +17,43 @@ source(file.path("..", "..", "review_binding_candidates.R"))
   )
 }
 
+.copy_review_tool <- function(root) {
+  dir.create(
+    file.path(root, "tools", "generate"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
+  file.copy(
+    normalizePath(
+      file.path("..", "..", "review_binding_candidates.R"),
+      mustWork = TRUE
+    ),
+    file.path(root, "tools", "review_binding_candidates.R")
+  )
+  file.copy(
+    normalizePath(file.path("..", "..", "cli_ui.R"), mustWork = TRUE),
+    file.path(root, "tools", "cli_ui.R")
+  )
+
+  helper_files <- c(
+    "utils.R",
+    "policy.R",
+    "metadata.R",
+    "schema.R"
+  )
+  for (file in helper_files) {
+    file.copy(
+      normalizePath(file.path("..", "..", "generate", file), mustWork = TRUE),
+      file.path(root, "tools", "generate", file)
+    )
+  }
+
+  Sys.chmod(
+    file.path(root, "tools", "review_binding_candidates.R"),
+    mode = "0755"
+  )
+}
+
 .fake_binding_review_metadata <- function() {
   list(
     schemaVersion = "1.0.0",
@@ -154,6 +191,18 @@ source(file.path("..", "..", "review_binding_candidates.R"))
       "      rationale: Native click semantics are expected for button-like controls."
     )
   )
+
+  .copy_review_tool(root)
+}
+
+.run_review_script <- function(root, args = character()) {
+  processx::run(
+    command = "./tools/review_binding_candidates.R",
+    args = args,
+    wd = root,
+    echo = FALSE,
+    error_on_status = FALSE
+  )
 }
 
 testthat::test_that("binding review separates overrides, candidates, watch list, and exclusions", {
@@ -195,5 +244,28 @@ testthat::test_that("binding review separates overrides, candidates, watch list,
   testthat::expect_true(any(grepl("^### `wa-tab`$", report_lines)))
   testthat::expect_true(any(grepl("^### `wa-trigger`$", report_lines)))
   testthat::expect_true(any(grepl("^## Watch List / Near Misses$", report_lines)))
+})
+
+testthat::test_that("binding review CLI reports success with aligned report comment", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  result <- .run_review_script(root)
+
+  testthat::expect_equal(result$status, 0)
+  testthat::expect_match(
+    result$stderr,
+    paste0(
+      "Reviewing binding candidates \\.{2,} Done    ",
+      "\\[report: reports/review/binding-candidates.md\\]"
+    )
+  )
+  testthat::expect_match(
+    result$stderr,
+    paste0(
+      "Binding review complete: overrides=1, candidates=1, watch_list=1, ",
+      "report=reports/review/binding-candidates.md"
+    )
+  )
 })
 # nolint end

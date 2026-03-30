@@ -32,6 +32,10 @@
     "#!/usr/bin/env Rscript",
     "cat('generate invoked\\n')"
   ))
+  .write_file(file.path(root, "tools", "review_binding_candidates.R"), c(
+    "#!/usr/bin/env Rscript",
+    "cat('review invoked\\n')"
+  ))
   .write_file(file.path(root, "tools", "report_components.R"), c(
     "#!/usr/bin/env Rscript",
     "cat('report invoked\\n')"
@@ -45,6 +49,10 @@
   Sys.chmod(file.path(root, "tools", "fetch_webawesome.R"), mode = "0755")
   Sys.chmod(file.path(root, "tools", "prune_webawesome.R"), mode = "0755")
   Sys.chmod(file.path(root, "tools", "generate_components.R"), mode = "0755")
+  Sys.chmod(
+    file.path(root, "tools", "review_binding_candidates.R"),
+    mode = "0755"
+  )
   Sys.chmod(file.path(root, "tools", "report_components.R"), mode = "0755")
   Sys.chmod(file.path(root, "tools", "check_integrity.R"), mode = "0755")
 }
@@ -92,6 +100,10 @@ testthat::test_that("build_package runs build_tools first when present", {
   )
   testthat::expect_match(
     result$stderr,
+    "Running review_binding_candidates\\.R \\.{2,} Done"
+  )
+  testthat::expect_match(
+    result$stderr,
     "Running report_components\\.R \\.{2,} Done"
   )
   testthat::expect_match(
@@ -119,6 +131,10 @@ testthat::test_that("build_package supports skipping the tool workflow", {
   testthat::expect_match(
     result$stderr,
     "Running generate_components\\.R \\.{2,} Done"
+  )
+  testthat::expect_match(
+    result$stderr,
+    "Running review_binding_candidates\\.R \\.{2,} Done"
   )
   testthat::expect_match(
     result$stderr,

@@ -6,12 +6,12 @@ testthat::test_that("plain CLI lines can include trailing comments", {
       label = "Pruning Web Awesome",
       status = "Done",
       status_col = 40L,
-      comment = "[report: report/prune/3.3.1/summary.md]"
+      comment = "[report: reports/prune/3.3.1/summary.md]"
     ),
     paste0(
       "Pruning Web Awesome ",
       strrep(".", 16L),
-      " Done    [report: report/prune/3.3.1/summary.md]"
+      " Done    [report: reports/prune/3.3.1/summary.md]"
     )
   )
 })

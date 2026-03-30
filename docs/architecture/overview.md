@@ -400,7 +400,7 @@ These manifests serve as the foundation for coverage and conformance analysis.
 They are generated during the build process and written to:
 
 ```text
-manifests/
+manifests/report/
 ```
 
 Examples include:
@@ -418,7 +418,7 @@ The same report stage also produces human-readable diagnostic summaries written
 to:
 
 ```text
-report/
+reports/report/
 ```
 
 This separation ensures that:

@@ -243,12 +243,12 @@ rm(.bootstrap_integrity_helpers)
 
 # Return the manifest directory relative to the repo root.
 .manifest_dir <- function(root) {
-  file.path(root, "manifests")
+  file.path(root, "manifests", "report")
 }
 
 # Return the report directory relative to the repo root.
 .report_dir <- function(root) {
-  file.path(root, "report")
+  file.path(root, "reports", "report")
 }
 
 # Return the generated file marker used by the component generator.

@@ -109,14 +109,14 @@ testthat::test_that("prune tool uses the pinned version and reports success", {
     result$stderr,
     paste0(
       "Pruning Web Awesome \\.{2,} Done    ",
-      "\\[report: report/prune/3.3.1/summary.md\\]"
+      "\\[report: reports/prune/3.3.1/summary.md\\]"
     )
   )
   testthat::expect_match(
     result$stderr,
     paste0(
       "Prune complete: version=3.3.1, runtime=inst/www/wa, report=",
-      "report/prune/3.3.1/summary.md"
+      "reports/prune/3.3.1/summary.md"
     )
   )
 })

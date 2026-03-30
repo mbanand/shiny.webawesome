@@ -178,6 +178,8 @@ Top-level orchestration should remain explicit:
 - `build_tools.R` orchestrates the top-level tool workflow
 - `build_package.R` runs `build_tools.R` first, then executes the currently
   available package-build step scripts
+- the current package-build orchestration includes an advisory
+  `review_binding_candidates.R` step between generate and report
 
 Do not wire package-level `devtools::document()`, `devtools::test()`, or
 `devtools::check()` into `build_package.R` before the generate stage exists and

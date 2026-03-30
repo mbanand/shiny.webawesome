@@ -244,13 +244,13 @@ fail; those files are recorded in the prune report for inspection.
 The analysis produces versioned **diagnostic reports** under:
 
 ```text
-report/prune/<version>/
+reports/prune/<version>/
 ```
 
 Typical outputs include:
 
 ```text
-report/prune/<version>/
+reports/prune/<version>/
   summary.md
   reachability.md
 ```
@@ -523,7 +523,7 @@ The report stage produces both **machine-readable manifests** and
 Structured manifests are written to:
 
 ```text
-manifests/
+manifests/report/
 ```
 
 Manifests are generated from:
@@ -535,7 +535,7 @@ Manifests are generated from:
 Human-readable reports are written to:
 
 ```text
-report/
+reports/report/
 ```
 
 Typical output may include:
@@ -573,6 +573,17 @@ reruns the prune-to-generate and generate-to-report comparisons and fails on:
 This final gate is intended to catch incomplete local rebuilds or accidental
 manual edits before the overall package build is treated as successful.
 
+In addition to its CLI output, the final integrity gate writes a short
+human-readable summary to:
+
+```text
+reports/integrity/summary.md
+```
+
+The summary is written on both pass and fail so developers can inspect the
+current prune-output and generate-output comparisons even when the gate stops
+the build.
+
 ---
 
 ## CI Behavior
@@ -598,12 +609,26 @@ clean_webawesome()
 fetch_webawesome()
 prune_webawesome()
 generate_components()
+review_binding_candidates()
 devtools::test()
 devtools::check()
 devtools::document()
 ```
 
 This sequence rebuilds the entire package from upstream metadata and verifies the resulting implementation.
+
+The top-level `build_package.R` orchestrator currently inserts an advisory
+binding-candidate review step between generate and report:
+
+```text
+fetch → prune → generate → review_binding_candidates → report → check_integrity
+```
+
+This review step writes a human-readable diagnostic report under
+`reports/review/` and is intended to surface components whose interaction
+semantics may deserve manual follow-up. It remains advisory in meaning: a
+non-empty candidate list does not by itself fail the build, but a real tool
+execution failure still stops the orchestrator.
 
 Before `generate_components()` exists and produces a real package surface,
 `build_package.R` should remain limited to the currently implemented package

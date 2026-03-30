@@ -282,29 +282,31 @@ testthat::test_that(
     )
 
     testthat::expect_true(file.exists(file.path(
-      root, "manifests", "generated-file-manifest.yaml"
+      root, "manifests", "report", "generated-file-manifest.yaml"
     )))
     testthat::expect_true(file.exists(file.path(
-      root, "manifests", "component-coverage.yaml"
+      root, "manifests", "report", "component-coverage.yaml"
     )))
     testthat::expect_true(file.exists(file.path(
-      root, "manifests", "component-api-conformance.yaml"
+      root, "manifests", "report", "component-api-conformance.yaml"
     )))
     testthat::expect_true(file.exists(file.path(
-      root, "manifests", "manual-api-inventory.yaml"
-    )))
-    testthat::expect_true(file.exists(file.path(root, "report", "summary.md")))
-    testthat::expect_true(file.exists(file.path(
-      root, "report", "generated-files.md"
+      root, "manifests", "report", "manual-api-inventory.yaml"
     )))
     testthat::expect_true(file.exists(file.path(
-      root, "report", "component-coverage.md"
+      root, "reports", "report", "summary.md"
     )))
     testthat::expect_true(file.exists(file.path(
-      root, "report", "component-api-conformance.md"
+      root, "reports", "report", "generated-files.md"
     )))
     testthat::expect_true(file.exists(file.path(
-      root, "report", "manual-api-inventory.md"
+      root, "reports", "report", "component-coverage.md"
+    )))
+    testthat::expect_true(file.exists(file.path(
+      root, "reports", "report", "component-api-conformance.md"
+    )))
+    testthat::expect_true(file.exists(file.path(
+      root, "reports", "report", "manual-api-inventory.md"
     )))
 
     testthat::expect_equal(result$generated_file_manifest$summary$expected, 4)
@@ -342,13 +344,13 @@ testthat::test_that(
     testthat::expect_true(select_entry$update_function$args_match)
 
     manual_inventory <- yaml::read_yaml(
-      file.path(root, "manifests", "manual-api-inventory.yaml")
+      file.path(root, "manifests", "report", "manual-api-inventory.yaml")
     )
     testthat::expect_equal(manual_inventory$summary$manual_exports, 1)
     testthat::expect_equal(manual_inventory$exports[[1]]$name, "wa_page")
 
     generated_files_report <- readLines(
-      file.path(root, "report", "generated-files.md"),
+      file.path(root, "reports", "report", "generated-files.md"),
       warn = FALSE
     )
     testthat::expect_true(any(grepl(

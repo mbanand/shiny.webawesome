@@ -17,8 +17,8 @@
 ^inst/extdata/
 ^journals$
 ^journals/
-^report$
-^report/
+^reports$
+^reports/
 ^scratch$
 ^scratch/
 ^scripts$

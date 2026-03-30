@@ -29,7 +29,7 @@ each implemented component.
 Coverage data is stored in:
 
 ```text
-manifests/component-coverage.yaml
+manifests/report/component-coverage.yaml
 ```
 
 Each entry corresponds to a single upstream component defined in
@@ -86,8 +86,8 @@ to produce the final coverage manifest.
 This gives the report stage a clear split of responsibilities:
 
 - `dev/manifests/component-coverage.policy.yaml` records human policy
-- `manifests/component-coverage.yaml` records the merged generated result
-- `report/component-coverage.md` presents the human-readable summary
+- `manifests/report/component-coverage.yaml` records the merged generated result
+- `reports/report/component-coverage.md` presents the human-readable summary
 
 ---
 

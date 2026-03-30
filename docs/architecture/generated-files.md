@@ -98,7 +98,7 @@ generated package.
 These manifests are written to:
 
 ```text
-manifests/
+manifests/report/
 ```
 
 They are used by the reporting stage of the build pipeline to evaluate upstream

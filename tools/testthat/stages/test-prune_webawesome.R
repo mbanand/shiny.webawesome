@@ -121,10 +121,10 @@ testthat::test_that("prune uses the pinned version by default", {
     )
   )
   testthat::expect_true(
-    file.exists(file.path(root, "report", "prune", "3.3.1", "summary.md"))
+    file.exists(file.path(root, "reports", "prune", "3.3.1", "summary.md"))
   )
   testthat::expect_true(
-    file.exists(file.path(root, "report", "prune", "3.3.1", "reachability.md"))
+    file.exists(file.path(root, "reports", "prune", "3.3.1", "reachability.md"))
   )
   testthat::expect_equal(
     result$integrity$path,

@@ -172,23 +172,21 @@ rm(.bootstrap_cli_ui)
   list(
     clean = list(
       remove = c(
-        "R/generated",
-        "R/generated_updates",
         "inst/bindings",
         "inst/extdata/webawesome",
         "inst/www/wa",
         "manifests",
+        "reports",
         "report"
       )
     ),
     distclean = list(
       remove = c(
-        "R/generated",
-        "R/generated_updates",
         "inst/bindings",
         "inst/extdata/webawesome",
         "inst/www/wa",
         "manifests",
+        "reports",
         "report",
         "vendor/webawesome"
       )

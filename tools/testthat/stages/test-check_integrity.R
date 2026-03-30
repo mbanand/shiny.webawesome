@@ -43,6 +43,8 @@ testthat::test_that("check_integrity passes for matching recorded surfaces", {
 
   testthat::expect_true(result$checks$prune_output$ok)
   testthat::expect_true(result$checks$generate_output$ok)
+  testthat::expect_equal(result$written$summary, "reports/integrity/summary.md")
+  testthat::expect_true(file.exists(file.path(root, result$written$summary)))
 })
 
 testthat::test_that("check_integrity fails for drifted generated surfaces", {
@@ -73,9 +75,16 @@ testthat::test_that("check_integrity fails for drifted generated surfaces", {
     c(.generated_file_marker(), "wa_button <- function(...) 1")
   )
 
+  summary_path <- file.path(root, "reports", "integrity", "summary.md")
   testthat::expect_error(
     check_integrity(root = root, verbose = FALSE),
     "checksum mismatch against generate output"
   )
+  testthat::expect_true(file.exists(summary_path))
+  testthat::expect_true(any(grepl(
+    "checksum mismatch against generate output",
+    readLines(summary_path, warn = FALSE),
+    fixed = TRUE
+  )))
 })
 # nolint end

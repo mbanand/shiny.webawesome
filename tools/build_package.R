@@ -115,6 +115,7 @@ rm(.bootstrap_cli_ui)
     "tools/fetch_webawesome.R",
     "tools/prune_webawesome.R",
     "tools/generate_components.R",
+    "tools/review_binding_candidates.R",
     "tools/report_components.R",
     "tools/check_integrity.R"
   )
@@ -197,7 +198,7 @@ run_build_package <- function(args = commandArgs(trailingOnly = TRUE)) {
   }
 
   ui <- .cli_ui_new()
-  ui$plain_step_status_col <- 62L
+  ui$plain_step_status_col <- 52L
 
   if (isTRUE(options$run_tools)) {
     .cli_step_start(ui, "Building tools")

@@ -17,8 +17,6 @@ testthat::test_that(
     root <- withr::local_tempdir()
     .create_fake_repo(root)
 
-    dir.create(file.path(root, "R", "generated"), recursive = TRUE)
-    dir.create(file.path(root, "R", "generated_updates"), recursive = TRUE)
     dir.create(file.path(root, "R"), recursive = TRUE, showWarnings = FALSE)
     dir.create(file.path(root, "inst", "bindings"), recursive = TRUE)
     dir.create(
@@ -27,10 +25,8 @@ testthat::test_that(
     )
     dir.create(file.path(root, "inst", "www", "wa"), recursive = TRUE)
     dir.create(file.path(root, "manifests"), recursive = TRUE)
-    dir.create(file.path(root, "report"), recursive = TRUE)
+    dir.create(file.path(root, "reports"), recursive = TRUE)
 
-    .write_file(file.path(root, "R", "generated", "wa_button.R"))
-    .write_file(file.path(root, "R", "generated_updates", "update_wa_button.R"))
     .write_file(
       file.path(root, "R", "wa_select.R"),
       c(
@@ -44,15 +40,13 @@ testthat::test_that(
       file.path(root, "inst", "extdata", "webawesome", "custom-elements.json")
     )
     .write_file(file.path(root, "inst", "www", "wa", "loader.js"))
-    .write_file(file.path(root, "manifests", "component-coverage.yaml"))
-    .write_file(file.path(root, "report", "summary.md"))
+    .write_file(file.path(
+      root, "manifests", "report", "component-coverage.yaml"
+    ))
+    .write_file(file.path(root, "reports", "report", "summary.md"))
 
     result <- clean_webawesome(root = root, verbose = FALSE)
 
-    testthat::expect_false(dir.exists(file.path(root, "R", "generated")))
-    testthat::expect_false(
-      dir.exists(file.path(root, "R", "generated_updates"))
-    )
     testthat::expect_false(file.exists(file.path(root, "R", "wa_select.R")))
     testthat::expect_false(dir.exists(file.path(root, "inst", "bindings")))
     testthat::expect_false(
@@ -62,6 +56,7 @@ testthat::test_that(
       dir.exists(file.path(root, "inst", "www", "wa"))
     )
     testthat::expect_false(dir.exists(file.path(root, "manifests")))
+    testthat::expect_false(dir.exists(file.path(root, "reports")))
     testthat::expect_false(dir.exists(file.path(root, "report")))
 
     testthat::expect_equal(result$level, "clean")
@@ -69,13 +64,11 @@ testthat::test_that(
       result$removed,
       c(
         "R/wa_select.R",
-        "R/generated",
-        "R/generated_updates",
         "inst/bindings",
         "inst/extdata/webawesome",
         "inst/www/wa",
         "manifests",
-        "report"
+        "reports"
       )
     )
   }
@@ -86,7 +79,7 @@ testthat::test_that("distclean also removes vendor inputs", {
   .create_fake_repo(root)
 
   dir.create(file.path(root, "manifests"), recursive = TRUE)
-  dir.create(file.path(root, "report"), recursive = TRUE)
+  dir.create(file.path(root, "reports"), recursive = TRUE)
   dir.create(file.path(root, "vendor", "webawesome"), recursive = TRUE)
   dir.create(file.path(root, "inst", "extdata", "webawesome"), recursive = TRUE)
 
@@ -106,10 +99,8 @@ testthat::test_that("dry run reports actions without deleting anything", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
 
-  dir.create(file.path(root, "R", "generated"), recursive = TRUE)
   dir.create(file.path(root, "R"), recursive = TRUE, showWarnings = FALSE)
   dir.create(file.path(root, "manifests"), recursive = TRUE)
-  .write_file(file.path(root, "R", "generated", "wa_button.R"))
   .write_file(
     file.path(root, "R", "wa_button.R"),
     c(
@@ -118,18 +109,21 @@ testthat::test_that("dry run reports actions without deleting anything", {
       "wa_button <- function(...) NULL"
     )
   )
-  .write_file(file.path(root, "manifests", "component-coverage.yaml"))
+  .write_file(file.path(
+    root, "manifests", "report", "component-coverage.yaml"
+  ))
 
   result <- clean_webawesome(root = root, dry_run = TRUE, verbose = FALSE)
 
-  testthat::expect_true(dir.exists(file.path(root, "R", "generated")))
   testthat::expect_true(
-    file.exists(file.path(root, "manifests", "component-coverage.yaml"))
+    file.exists(file.path(
+      root, "manifests", "report", "component-coverage.yaml"
+    ))
   )
   testthat::expect_true(result$dry_run)
   testthat::expect_true("R/wa_button.R" %in% result$removed)
-  testthat::expect_true("R/generated" %in% result$removed)
   testthat::expect_true("manifests" %in% result$removed)
+  testthat::expect_true("reports" %in% result$missing)
 })
 
 testthat::test_that("missing targets are tolerated and reported", {
@@ -139,7 +133,7 @@ testthat::test_that("missing targets are tolerated and reported", {
   result <- clean_webawesome(root = root, verbose = FALSE)
 
   testthat::expect_length(result$removed, 0L)
-  testthat::expect_true("R/generated" %in% result$missing)
+  testthat::expect_true("inst/bindings" %in% result$missing)
   testthat::expect_true("manifests" %in% result$missing)
 })
 

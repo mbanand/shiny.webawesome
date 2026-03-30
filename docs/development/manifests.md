@@ -56,20 +56,24 @@ dev/manifests/
     component-coverage.policy.yaml
 
 manifests/
-    generated-file-manifest.yaml
-    component-coverage.yaml
-    component-api-conformance.yaml
-    manual-api-inventory.yaml
     integrity/
         prune-output.yaml
         generate-output.yaml
+    report/
+        generated-file-manifest.yaml
+        component-coverage.yaml
+        component-api-conformance.yaml
+        manual-api-inventory.yaml
 
-report/
-    summary.md
-    generated-files.md
-    component-coverage.md
-    component-api-conformance.md
-    manual-api-inventory.md
+reports/
+    integrity/
+        summary.md
+    report/
+        summary.md
+        generated-files.md
+        component-coverage.md
+        component-api-conformance.md
+        manual-api-inventory.md
 ```
 
 ### dev/manifests/
@@ -92,17 +96,25 @@ Later stages compare their current input surfaces against these records and
 warn on drift. A dedicated final integrity-check tool reruns those comparisons
 and fails if a required record is missing or if a surface no longer matches.
 
-### report/
+The `manifests/report/` subdirectory stores machine-readable artifacts written
+by the report stage, including generated-file integrity, component coverage,
+component API conformance, and manual API inventory manifests.
+
+### reports/
 
 Human-readable diagnostic reports generated from the manifests.
 
 Reports summarize coverage and conformance results for developers and CI.
+Current examples include:
+
+- `reports/report/` for report-stage coverage and conformance summaries
+- `reports/integrity/summary.md` for the final integrity-gate summary
 
 ---
 
 ## Reproducibility
 
-The `manifests/` and `report/` directories are fully regenerable.
+The `manifests/` and `reports/` directories are fully regenerable.
 
 Running the build pipeline will recreate all manifest and report artifacts from
 upstream metadata and repository policy inputs.
@@ -151,7 +163,7 @@ manifests/
 ```
 
 This means `dev/manifests/component-coverage.policy.yaml` is the handwritten
-input, while `manifests/component-coverage.yaml` is the generated merged
+input, while `manifests/report/component-coverage.yaml` is the generated merged
 output used by the human-readable coverage report.
 
 Policy files contain **only human decisions**, while generated manifests contain
@@ -183,3 +195,13 @@ The current integrity surfaces are:
 These records are developer aids rather than security controls. Their role is
 to detect local drift caused by hand edits, partial rebuilds, or incomplete
 trees while preserving a reproducible final package build gate.
+
+The final integrity gate also writes a short human-readable summary to:
+
+```text
+reports/integrity/summary.md
+```
+
+That report summarizes the current prune-output and generate-output
+comparisons, including the recorded manifest path, the current surface roots,
+and any mismatch details when the gate fails.

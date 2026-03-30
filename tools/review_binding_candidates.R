@@ -214,7 +214,7 @@ rm(.bootstrap_cli_ui)
 
 # Return the default report path relative to the repository root.
 .default_binding_review_report <- function() {
-  file.path("report", "review", "binding-candidates.md")
+  file.path("reports", "review", "binding-candidates.md")
 }
 
 # Return the markdown report output path.
@@ -696,7 +696,7 @@ rm(.bootstrap_cli_ui)
 #' Reads the copied Web Awesome metadata and the generated component schema,
 #' then flags wrapper-only components whose public methods and documentation
 #' suggest that their interaction semantics may be underrepresented by metadata.
-#' The tool writes a deterministic markdown report under `report/review/`.
+#' The tool writes a deterministic markdown report under `reports/review/`.
 #'
 #' @param root Repository root directory.
 #' @param metadata_file Path to the copied `custom-elements.json` file,
@@ -823,11 +823,8 @@ run_review_binding_candidates <- function(
 
   .cli_step_finish(
     ui,
-    status = paste0(
-      "Done    [report: ",
-      result$report_path,
-      "]"
-    )
+    status = "Done",
+    comment = paste0("[report: ", result$report_path, "]")
   )
   .emit_binding_review_summary(result)
   invisible(result)

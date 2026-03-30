@@ -198,7 +198,9 @@ testthat::test_that("report_components CLI writes manifests and reports", {
   testthat::expect_equal(result$status, 0)
   testthat::expect_match(result$stderr, "Generating reports \\.{2,} Done")
   testthat::expect_true(file.exists(file.path(
-    root, "manifests", "component-coverage.yaml"
+    root, "manifests", "report", "component-coverage.yaml"
   )))
-  testthat::expect_true(file.exists(file.path(root, "report", "summary.md")))
+  testthat::expect_true(file.exists(file.path(
+    root, "reports", "report", "summary.md"
+  )))
 })
