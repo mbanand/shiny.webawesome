@@ -21,7 +21,8 @@
 #' @examples
 #' wa_container(
 #'   class = "wa-stack",
-#'   wa_card("Hello")
+#'   wa_card("First card"),
+#'   wa_card("Second card")
 #' )
 # nolint start: object_usage_linter.
 wa_container <- function(...,

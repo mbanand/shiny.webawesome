@@ -156,7 +156,7 @@ source(file.path("..", "..", "review_binding_candidates.R"))
 }
 
 .create_fake_repo <- function(root) {
-  dir.create(file.path(root, "docs"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(file.path(root, "projectdocs"), recursive = TRUE, showWarnings = FALSE)
   dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
   .write_file(file.path(root, "DESCRIPTION"), "Package: fake")
   .write_file(

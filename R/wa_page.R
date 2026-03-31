@@ -23,7 +23,7 @@
 #' if (interactive()) {
 #'   wa_page(
 #'     title = "shiny.webawesome",
-#'     htmltools::tags$`wa-card`("Hello")
+#'     wa_card("Hello from Web Awesome")
 #'   )
 #' }
 # nolint start: object_usage_linter.

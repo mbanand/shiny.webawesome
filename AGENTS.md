@@ -30,21 +30,21 @@ infrastructure of the project.
 Agents should read them before making modifications.
 
 ```text
-docs/README.md
+projectdocs/README.md
 
-docs/architecture/overview.md
-docs/architecture/decisions.md
-docs/architecture/package-structure.md
-docs/architecture/generated-files.md
-docs/architecture/api-coverage-and-conformance.md
+projectdocs/architecture/overview.md
+projectdocs/architecture/decisions.md
+projectdocs/architecture/package-structure.md
+projectdocs/architecture/generated-files.md
+projectdocs/architecture/api-coverage-and-conformance.md
 
-docs/development/manifests.md
-docs/development/component-coverage.md
+projectdocs/development/manifests.md
+projectdocs/development/component-coverage.md
 
-docs/workflow/build-pipeline.md
-docs/workflow/agent-development-playbook.md
+projectdocs/workflow/build-pipeline.md
+projectdocs/workflow/agent-development-playbook.md
 
-docs/testing/testing-strategy.md
+projectdocs/testing/testing-strategy.md
 ```
 
 These files are the **source of truth** for:
@@ -62,16 +62,16 @@ should be updated first.
 For task execution practices, scoping, regeneration discipline, validation flow,
 and uncertainty handling, see:
 
-`docs/workflow/agent-development-playbook.md`
+`projectdocs/workflow/agent-development-playbook.md`
 
 Generated files must not be edited directly. See:
 
-`docs/architecture/generated-files.md`
+`projectdocs/architecture/generated-files.md`
 
 For rules governing generated file integrity, upstream component coverage,
 API conformance, and handwritten package API inventory, see:
 
-`docs/architecture/api-coverage-and-conformance.md`
+`projectdocs/architecture/api-coverage-and-conformance.md`
 
 ---
 
@@ -111,7 +111,7 @@ However:
 Details are documented in:
 
 ```
-docs/architecture/package-structure.md
+projectdocs/architecture/package-structure.md
 ```
 
 ---
@@ -243,7 +243,7 @@ Functional tests are skipped on CRAN but run during development and CI.
 Details are documented in:
 
 ```
-docs/testing/testing-strategy.md
+projectdocs/testing/testing-strategy.md
 ```
 
 ---
@@ -281,7 +281,7 @@ When modifying this repository, agents must follow these rules.
    applicable. When generated or handwritten R code is modified, do not treat
    these as interchangeable; run formatting and linting as separate steps.
 
-10. This is a CRAN-quality package. Documentation, tests, coding style must all be at that level. Follow details specified in `docs/workflow/agent-development-playbook.md` in this regard.
+10. This is a CRAN-quality package. Documentation, tests, coding style must all be at that level. Follow details specified in `projectdocs/workflow/agent-development-playbook.md` in this regard.
 
 11. Generated code should be formatted consistently using `{styler}` after
     generation, and followed by a separate `{lintr}` pass on the generated
@@ -339,7 +339,7 @@ Common tasks in this repository include:
 * implementing or improving tests
 * checking and improving test coverage
 * improving documentation
-* maintaining a journal - refer to `docs/workflow/agent-development-playbook.md` for details
+* maintaining a journal - refer to `projectdocs/workflow/agent-development-playbook.md` for details
 
 Agents should prefer **systematic solutions** rather than one-off fixes.
 
@@ -354,7 +354,7 @@ If a change requires modifying:
 * runtime loading strategy
 * testing architecture
 
-then the relevant documentation in `docs/` should be updated before implementing the change.
+then the relevant documentation in `projectdocs/` should be updated before implementing the change.
 
 ---
 

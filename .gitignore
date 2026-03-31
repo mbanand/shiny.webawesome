@@ -27,6 +27,7 @@ tools/man/
 journals/
 scratch/
 scripts/
+website/
 
 # Downloaded upstream files
 vendor/webawesome/

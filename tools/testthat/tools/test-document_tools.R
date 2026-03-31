@@ -6,7 +6,7 @@ source(file.path("..", "..", "document_tools.R"))
 }
 
 .create_fake_repo <- function(root) {
-  dir.create(file.path(root, "docs"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(file.path(root, "projectdocs"), recursive = TRUE, showWarnings = FALSE)
   dir.create(
     file.path(root, "tools", "generate"),
     recursive = TRUE,

@@ -3,7 +3,9 @@
 
 #' Create a `wa-comparison` component
 #'
-#' Generated wrapper for the Web Awesome `wa-comparison` component.
+#' Generated wrapper for the Web Awesome `wa-comparison` component. When
+#' used as a Shiny input, `input$<input_id>` reflects the component's
+#' current value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -53,6 +55,7 @@ wa_comparison <- function(
       .wa_slot(handle, "handle")
     )
   )
+
 
 
   attrs <- .wa_normalize_attrs(

@@ -3,7 +3,9 @@
 
 #' Create a `wa-tab-group` component
 #'
-#' Generated wrapper for the Web Awesome `wa-tab-group` component.
+#' Generated wrapper for the Web Awesome `wa-tab-group` component. When
+#' used as a Shiny input, `input$<input_id>` reflects the component's
+#' current semantic `active` state.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.

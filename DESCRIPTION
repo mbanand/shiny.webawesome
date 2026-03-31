@@ -7,6 +7,9 @@ Description: Provides an R and Shiny interface to the Web Awesome component
     library. The package is generator-driven, exposing Web Awesome web
     components as R functions that produce HTML tags and integrate with
     Shiny's reactive model.
+URL: https://github.com/mbanand/shiny.webawesome,
+    https://www.shiny-webawesome.org
+BugReports: https://github.com/mbanand/shiny.webawesome/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports:

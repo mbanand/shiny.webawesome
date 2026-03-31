@@ -1,0 +1,295 @@
+---
+title: "Shiny Bindings"
+output: html_document
+---
+
+# Overview
+
+`shiny.webawesome` does not try to forward every browser event emitted by every
+Web Awesome component into Shiny.
+
+Instead, the package generates a curated binding surface that fits Shiny's
+reactive input model. In practice, that means the package favors bindings that
+represent committed, meaningful Shiny input state rather than transient browser
+telemetry.
+
+This article describes the current binding categories, the design philosophy
+behind them, and representative examples.
+
+# Binding Categories
+
+The current generated binding surface uses three categories:
+
+## Durable semantic values
+
+This is the default binding model.
+
+The binding subscribes to a supported commit/value event and then reads the
+component's current durable state. Examples include:
+
+- `wa_select()` reading its current selected value
+- `wa_dialog()` exposing its current `open` state
+- `wa_tree()` exposing its current selected item ids
+
+The important idea is that Shiny receives the semantic state the user would
+care about, not the raw browser event name.
+
+## Action-style bindings
+
+Some components are inherently action-like in Shiny. For those, the binding
+uses action semantics rather than pretending the component exposes a durable
+value payload.
+
+The canonical example is `wa_button()`, whose Shiny input behaves like an
+action input that invalidates on each click.
+
+## Action-with-payload bindings
+
+Some rare components need both:
+
+- action invalidation semantics
+- a separate companion payload input exposing the latest committed payload
+
+The canonical current example is `wa_dropdown()`.
+
+For `wa_dropdown(input_id = "menu", ...)`:
+
+- `input$menu` behaves like an action counter and invalidates on every
+  selection, including repeated selection of the same item
+- `input$menu_value` exposes the latest selected item value
+
+This split is useful because repeated same-item selections should still
+invalidate Shiny even when the latest payload value does not change.
+
+# Design Philosophy
+
+The package's binding model follows a few rules:
+
+- bindings should expose the Shiny contract, not simply mirror raw browser
+  event names
+- default bindings should prefer committed semantic state
+- action-like controls should use action semantics only through explicit policy
+- action-with-payload contracts should remain narrow and explicit
+
+This keeps the reactive surface smaller and easier to reason about.
+
+It also preserves a clear boundary between:
+
+- browser-local interaction handling
+- Shiny-reactive input publication
+
+If a browser-side interaction does not belong in the package's curated binding
+surface, it is usually a better fit for browser-side code or the package's
+command/helper layer.
+
+# Examples
+
+## Example: durable semantic value
+
+`wa_select()` is a representative durable-value binding.
+
+```{r binding-semantic, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Semantic binding",
+  wa_select(
+    "favorite_letter",
+    wa_option("A", value = "a"),
+    wa_option("B", value = "b"),
+    wa_option("C", value = "c")
+  ),
+  verbatimTextOutput("selected_value")
+)
+
+server <- function(input, output, session) {
+  output$selected_value <- renderPrint({
+    input$favorite_letter
+  })
+}
+
+shinyApp(ui, server)
+```
+
+Here, the Shiny input reflects the current selected value, not a raw event
+stream.
+
+## Example: event-driven semantic state
+
+`wa_dialog()` is also a semantic binding, but its Shiny value is derived from
+committed dialog lifecycle state rather than a conventional text or scalar
+form value.
+
+```{r binding-semantic-dialog, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Semantic dialog state",
+  actionButton("open_dialog", "Open dialog"),
+  wa_dialog(
+    "dialog",
+    label = "Example dialog",
+    "Dialog body"
+  ),
+  verbatimTextOutput("dialog_state")
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$open_dialog, {
+    wa_call_method("dialog", "show", session = session)
+  })
+
+  output$dialog_state <- renderPrint({
+    input$dialog
+  })
+}
+
+shinyApp(ui, server)
+```
+
+Here, the binding publishes the committed semantic state of the component:
+whether the dialog is currently open.
+
+## Example: structured semantic selection
+
+`wa_tree()` is another semantic binding, but its Shiny value is a structured
+selection derived from selected descendant tree items.
+
+```{r binding-semantic-tree, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Semantic tree selection",
+  wa_tree(
+    "navigation_tree",
+    selection = "multiple",
+    wa_tree_item("Section A", id = "section_a"),
+    wa_tree_item("Section B", id = "section_b"),
+    wa_tree_item("Section C", id = "section_c")
+  ),
+  verbatimTextOutput("tree_value")
+)
+
+server <- function(input, output, session) {
+  output$tree_value <- renderPrint({
+    input$navigation_tree
+  })
+}
+
+shinyApp(ui, server)
+```
+
+The Shiny value is a vector of selected descendant `wa-tree-item` ids. For
+stable selection values, selectable tree items should have DOM `id`
+attributes.
+
+## Example: action-style binding
+
+`wa_button()` is action-like in Shiny.
+
+```{r binding-action, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Action binding",
+  wa_button("run_action", "Run"),
+  verbatimTextOutput("click_count")
+)
+
+server <- function(input, output, session) {
+  output$click_count <- renderPrint({
+    input$run_action
+  })
+}
+
+shinyApp(ui, server)
+```
+
+The input invalidates on each click in the same way a Shiny action input does.
+
+## Example: action-with-payload binding
+
+`wa_dropdown()` is the current canonical action-with-payload example.
+
+```{r binding-action-payload, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Action with payload",
+  wa_dropdown(
+    "menu",
+    wa_dropdown_item("Alpha", value = "alpha"),
+    wa_dropdown_item("Beta", value = "beta"),
+    trigger = wa_button("menu_trigger", "Open menu")
+  ),
+  verbatimTextOutput("action_value"),
+  verbatimTextOutput("payload_value")
+)
+
+server <- function(input, output, session) {
+  output$action_value <- renderPrint({
+    input$menu
+  })
+
+  output$payload_value <- renderPrint({
+    input$menu_value
+  })
+}
+
+shinyApp(ui, server)
+```
+
+In this case:
+
+- `input$menu` is the action-style invalidator
+- `input$menu_value` is the latest committed payload state
+
+This article's examples are strong candidates for `shinylive` on the
+documentation website because the reactive behavior is easier to understand
+when readers can interact with the controls directly.
+
+# Current Bound Components
+
+The package currently generates Shiny bindings for the following components.
+
+| Component | Binding category | Notes |
+|---|---|---|
+| `wa_button()` | action | Shiny action-style invalidation on click |
+| `wa_carousel()` | semantic | durable semantic value |
+| `wa_checkbox()` | semantic | durable semantic value |
+| `wa_color_picker()` | semantic | durable semantic value |
+| `wa_comparison()` | semantic | durable semantic value |
+| `wa_details()` | semantic | durable semantic value |
+| `wa_dialog()` | semantic | event-driven semantic open state |
+| `wa_drawer()` | semantic | event-driven semantic open state |
+| `wa_dropdown()` | action-with-payload | action invalidator plus `input$<id>_value` payload |
+| `wa_input()` | semantic | durable semantic value |
+| `wa_number_input()` | semantic | durable semantic value |
+| `wa_radio_group()` | semantic | durable semantic value |
+| `wa_rating()` | semantic | durable semantic value |
+| `wa_select()` | semantic | durable semantic value |
+| `wa_slider()` | semantic | durable semantic value |
+| `wa_switch()` | semantic | durable semantic value |
+| `wa_tab_group()` | semantic | durable semantic value |
+| `wa_textarea()` | semantic | durable semantic value |
+| `wa_tree()` | semantic | selected descendant item ids |
+
+In the website build, these entries should link to the corresponding reference
+pages.
+
+# Relationship to the Command API
+
+Bindings and the command/helper layer solve different problems.
+
+Use generated bindings when the package already exposes the Shiny-reactive
+contract you need.
+
+Use the command/helper layer when you need browser-side property or method
+interaction that falls outside the generated binding/update surface.
+
+For more on that boundary, see the `Command API` article.

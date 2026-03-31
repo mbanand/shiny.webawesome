@@ -1,0 +1,236 @@
+---
+title: "Command API"
+output: html_document
+---
+
+# Overview
+
+`shiny.webawesome` is generator-first, but it also provides a narrow
+command/helper layer for advanced cases that are outside the generated
+wrapper, binding, and update-helper surface.
+
+This layer exists for cases where you need to:
+
+- set a live browser-side property from the Shiny server
+- call a browser-side method from the Shiny server
+- write a small amount of app-local browser glue in JavaScript
+
+These helpers are intentionally narrow. They are not meant to grow into a
+second per-component API alongside the generated wrapper surface.
+
+# Design Philosophy
+
+The package's command layer is an escape hatch, not the default way to work
+with components.
+
+Prefer:
+
+- generated wrappers for normal UI construction
+- generated bindings for curated Shiny-reactive inputs
+- generated update helpers when a component already exposes a supported update
+  path
+
+Use the command layer when you need browser-side interaction that is outside
+those supported generated paths.
+
+Use `wa_js()` when the missing piece is app-local browser glue rather than a
+server-to-browser command.
+
+# Server-to-Browser Commands
+
+The package currently exposes two user-facing server-side command helpers:
+
+- `wa_set_property()`
+- `wa_call_method()`
+
+Internally, these use a custom Shiny message channel named
+`"shiny.webawesome.command"`.
+
+## `wa_set_property()`
+
+`wa_set_property()` sends a one-way command from the Shiny server that assigns
+a live browser-side property on the target element.
+
+This is useful when a component property needs to change from server logic but
+the package does not already provide a generated update helper for that field.
+
+```{r command-set-property, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Set property",
+  actionButton("open_dialog", "Open dialog"),
+  wa_dialog(
+    "dialog",
+    label = "Example dialog",
+    "Dialog body"
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$open_dialog, {
+    wa_set_property("dialog", "open", TRUE, session = session)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+## `wa_call_method()`
+
+`wa_call_method()` sends a one-way command from the Shiny server that invokes a
+browser-side method on the target element.
+
+This is useful when the component already exposes a meaningful browser-side
+method and you want to trigger it directly from server logic.
+
+```{r command-call-method, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Call method",
+  actionButton("show_details", "Show details"),
+  actionButton("hide_details", "Hide details"),
+  wa_details(
+    "details",
+    summary = "More information",
+    "Details body"
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$show_details, {
+    wa_call_method("details", "show", session = session)
+  })
+
+  observeEvent(input$hide_details, {
+    wa_call_method("details", "hide", session = session)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+Both helpers target elements by DOM `id`, so the component must have a stable
+browser id available.
+
+# Browser Glue
+
+`wa_js()` serves a different purpose from the server-side command helpers.
+
+Use it when the missing piece is a small amount of browser-local logic that is
+easier to express directly in JavaScript than through a server-to-browser
+command.
+
+Typical uses include:
+
+- listening for browser-side events
+- reading live component properties in the browser
+- publishing derived values back to Shiny with `Shiny.setInputValue()`
+
+```{r command-browser-glue, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Browser glue",
+  wa_js("
+    function publishDialogState() {
+      const dialog = document.getElementById('dialog');
+
+      if (!dialog ||
+          !window.Shiny ||
+          typeof window.Shiny.setInputValue !== 'function') {
+        return;
+      }
+
+      window.Shiny.setInputValue(
+        'dialog_open_state',
+        dialog.open,
+        { priority: 'event' }
+      );
+    }
+
+    document.addEventListener('wa-show', function(event) {
+      if (event.target.id === 'dialog') {
+        publishDialogState();
+      }
+    });
+
+    document.addEventListener('wa-after-hide', function(event) {
+      if (event.target.id === 'dialog') {
+        publishDialogState();
+      }
+    });
+  "),
+  wa_dialog(
+    "dialog",
+    label = "Example dialog",
+    "Dialog body"
+  ),
+  verbatimTextOutput("dialog_state")
+)
+
+server <- function(input, output, session) {
+  output$dialog_state <- renderPrint({
+    input$dialog_open_state
+  })
+}
+
+shinyApp(ui, server)
+```
+
+`wa_js()` should stay small and app-local. For larger or shared scripts,
+prefer standard Shiny asset patterns.
+
+# Diagnostics and Limits
+
+The command layer is intentionally conservative.
+
+It does not validate that:
+
+- a requested property really exists on the target component
+- a requested method is semantically appropriate
+- arbitrary payloads will serialize into useful browser values
+
+The package's warning/diagnostic options include:
+
+- `command_layer`
+- `command_layer_debug`
+
+These control warning and debug output for the runtime command bridge.
+
+For example:
+
+```{r command-options, eval = FALSE}
+options(
+  shiny.webawesome.warnings = list(
+    command_layer_debug = TRUE
+  )
+)
+```
+
+# Examples
+
+These examples are good candidates for `shinylive` on the documentation website
+because readers benefit from seeing the browser-side effects directly.
+
+# Choosing the Right Tool
+
+Use:
+
+- generated wrappers for ordinary UI
+- generated bindings for curated reactive inputs
+- generated update helpers when available
+- `wa_set_property()` for one-off live property assignment from the server
+- `wa_call_method()` for one-off browser-side method calls from the server
+- `wa_js()` for small browser-local logic and custom `Shiny.setInputValue()`
+  publication patterns
+
+If you find yourself building a large handwritten command or browser-glue
+layer, that is usually a sign to step back and choose a different approach:
+extend the supported package surface where appropriate, or move the logic into
+standard Shiny/JavaScript asset patterns rather than stretching these helpers
+beyond their intended scope.

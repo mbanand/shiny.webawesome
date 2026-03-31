@@ -1,0 +1,144 @@
+---
+title: "Build Tools"
+output: html_document
+---
+
+# Overview
+
+This article is maintainer-facing.
+
+`shiny.webawesome` uses a small set of top-level build tools under `tools/` to
+implement the documented package workflow.
+
+These tools are the operational entry points for the repository's generator,
+runtime-pruning, reporting, and integrity-check steps.
+
+This article is a practical companion to the authoritative workflow
+documentation in `projectdocs/`. It describes the tool entry points and how
+they fit together, but it does not replace the project workflow docs.
+
+All top-level tool entry points support `--help` (and `-h`) to print a summary
+of their command-line options.
+
+# Core Pipeline Tools
+
+The core stage tools map closely to the documented build pipeline:
+
+- `clean_webawesome()`
+- `fetch_webawesome()`
+- `prune_webawesome()`
+- `generate_components()`
+- `report_components()`
+- `check_integrity()`
+
+## `clean_webawesome()`
+
+Removes generated artifacts and build outputs.
+
+Use `clean_webawesome()` for the ordinary clean stage and `distclean` when you
+also want to remove fetched upstream inputs.
+
+## `fetch_webawesome()`
+
+Fetches the pinned upstream Web Awesome npm package, extracts the browser-ready
+`dist-cdn/` tree, and stores it under `vendor/webawesome/<version>/`.
+
+By default, the version comes from `dev/webawesome-version.txt`.
+
+## `prune_webawesome()`
+
+Builds the pruned runtime bundle under `inst/www/wa/` and copies the metadata
+inputs needed for generation into `inst/extdata/webawesome/`.
+
+This stage is also responsible for prune-stage diagnostics and its integrity
+record.
+
+## `generate_components()`
+
+Builds the component schema from `custom-elements.json` and emits:
+
+- generated wrappers under `R/`
+- generated bindings under `inst/bindings/`
+- generated update helpers where supported
+
+This stage now also records generate-stage integrity output.
+
+## `report_components()`
+
+Builds deterministic manifests and human-readable reports describing:
+
+- generated-file integrity
+- component coverage
+- API conformance
+- handwritten package API inventory
+
+## `check_integrity()`
+
+Runs the final integrity gate over the recorded build surfaces.
+
+This is the hard end-of-pipeline integrity check that compares current stage
+outputs against the recorded integrity manifests.
+
+# Tool Documentation
+
+Generated tool documentation lives under `tools/man/`.
+
+Useful entry points include:
+
+- `build_package`
+- `build_tools`
+- `clean_webawesome`
+- `fetch_webawesome`
+- `prune_webawesome`
+- `report_components`
+- `check_integrity`
+- `review_binding_candidates`
+- `document_tools`
+- `test_tools`
+
+These generated docs are useful when you need the CLI and function-level
+details for a specific tool.
+
+# Orchestration Tools
+
+Two top-level orchestrators currently exist:
+
+## `build_tools.R`
+
+Runs the source-level tool workflow by orchestrating:
+
+- tool tests
+- tool documentation generation
+
+This is the prerequisite workflow for the tooling surface itself.
+
+## `build_package.R`
+
+Runs `build_tools.R` first by default, then executes the currently available
+package build-stage scripts in sequence.
+
+At the current stage of the repository, that sequence includes the currently
+implemented package-build stage scripts such as fetch, prune, generate,
+binding-candidate review, report, and integrity checking.
+
+Because the repo is still moving toward later-stage documentation and release
+orchestration, this script should be understood as the current package-build
+orchestrator, not the final future release orchestrator.
+
+# Notes for Maintainers
+
+This article complements the authoritative project docs under `projectdocs/`,
+especially:
+
+- `projectdocs/workflow/build-pipeline.md`
+- `projectdocs/workflow/agent-development-playbook.md`
+
+If the implemented tool entry points, stage boundaries, or orchestrators
+change, update both:
+
+- the relevant tool documentation
+- the authoritative workflow docs in `projectdocs/`
+
+As the repository adds the planned `finalize` and `publish` stages, this
+article should also be updated so the maintainer-facing tooling overview
+remains consistent with the actual orchestrators and entry points.

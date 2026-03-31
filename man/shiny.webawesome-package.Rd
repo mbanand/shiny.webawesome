@@ -8,6 +8,66 @@
 \description{
 Provides an R and Shiny interface to the Web Awesome component library.
 }
+\details{
+\code{shiny.webawesome} is a generator-driven package that exposes Web Awesome
+components as R functions for use in Shiny applications. Most component
+wrappers are generated from the upstream Web Awesome metadata file
+\code{custom-elements.json}, which the package treats as its primary component
+source of truth.
+
+The package aims to stay close to upstream Web Awesome names, conventions,
+and component APIs while adopting normal R conventions such as snake_case
+argument names. Because Web Awesome lives in the browser and Shiny spans
+both server and client, the package also includes a curated Shiny binding
+layer plus a small set of package-level helpers for layout, browser
+commands, and app-local JavaScript.
+\subsection{Main package surfaces}{
+
+The package exposes several complementary surfaces:
+\itemize{
+\item generated component wrappers such as \code{wa_button()} and \code{wa_select()}
+\item layout helpers such as \code{wa_page()} and \code{wa_container()}
+\item generated Shiny bindings and update helpers for selected interactive
+components
+\item command-layer helpers such as \code{wa_set_property()} and \code{wa_call_method()}
+\item the narrow browser-glue helper \code{wa_js()}
+}
+}
+
+\subsection{Package options}{
+
+The package currently uses the option \code{shiny.webawesome.warnings} to control
+selected runtime warnings and diagnostics.
+
+This option should be a named list. Known keys currently include:
+\itemize{
+\item \code{missing_tree_item_id}
+\item \code{command_layer}
+\item \code{command_layer_debug}
+}
+
+Example:
+
+\code{options(shiny.webawesome.warnings = list(command_layer_debug = TRUE))}
+}
+
+\subsection{Learn more}{
+
+For introductory usage, see the package vignette
+\code{vignette("get-started", package = "shiny.webawesome")}. For
+function-specific details, use the package help pages such as \code{?wa_page},
+\code{?wa_set_property}, \code{?wa_call_method}, and \code{?wa_js}.
+}
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/mbanand/shiny.webawesome}
+  \item \url{https://www.shiny-webawesome.org}
+  \item Report bugs at \url{https://github.com/mbanand/shiny.webawesome/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: M. B. Anand \email{anand@owlcyberlabs.com}
 

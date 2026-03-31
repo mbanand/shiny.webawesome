@@ -3,7 +3,8 @@
 
 #' Create a `wa-slider` component
 #'
-#' <wa-slider>
+#' <wa-slider> When used as a Shiny input, `input$<input_id>` reflects the
+#' component's current value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.

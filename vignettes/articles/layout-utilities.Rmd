@@ -1,0 +1,167 @@
+---
+title: "Layout Utilities"
+output: html_document
+---
+
+# Overview
+
+`shiny.webawesome` is primarily a generated wrapper package, but it also
+includes a small set of package-level helpers for common layout and page
+scaffolding tasks.
+
+The two main layout helpers are:
+
+- `wa_page()`, which creates a minimal page scaffold for Shiny apps using the
+  package
+- `wa_container()`, which creates a plain container element that is convenient
+  for layouts and utility-class usage
+
+Neither helper is a generated wrapper for an upstream Web Awesome component.
+They are package-level conveniences that make it easier to build Shiny apps
+that use Web Awesome components and utilities.
+
+# `wa_page()`
+
+`wa_page()` creates a minimal full-page HTML scaffold and attaches the
+`shiny.webawesome` dependency once at page level.
+
+This is useful because it keeps the page-level setup explicit and avoids
+relying on dependency attachment from an individual component deeper in the UI
+tree.
+
+```{r wa-page-basic, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Layout utilities",
+  wa_card("Hello from Web Awesome")
+)
+
+server <- function(input, output, session) {
+}
+
+shinyApp(ui, server)
+```
+
+`wa_page()` is especially useful when you want a small, explicit page helper
+rather than composing your own `<html>`, `<head>`, and `<body>` scaffolding
+manually.
+
+## A slightly richer page
+
+The page helper works naturally with generated components and package-level
+layout helpers together:
+
+```{r wa-page-richer, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Page example",
+  wa_container(
+    class = "wa-stack",
+    wa_card("Top card"),
+    wa_button("primary_action", "Continue", appearance = "filled"),
+    wa_card("Bottom card")
+  )
+)
+
+server <- function(input, output, session) {
+}
+
+shinyApp(ui, server)
+```
+
+# `wa_container()`
+
+`wa_container()` creates a plain `<div>` container and attaches the package
+dependency. It is useful when you want layout structure or Web Awesome
+utility-class usage without introducing a generated component wrapper solely to
+carry the dependency.
+
+Because it is a normal container helper, it pairs naturally with Web Awesome
+layout and utility classes such as `wa-grid`, `wa-stack`, `wa-align-*`, and
+`wa-justify-*`, along with small layout groupings and inline style adjustments.
+
+```{r wa-container-basic, eval = FALSE}
+library(shiny.webawesome)
+
+wa_container(
+  class = "wa-stack",
+  wa_card("First card"),
+  wa_card("Second card")
+)
+```
+
+## When to use `wa_container()`
+
+Typical uses include:
+
+- grouping related components in a plain container
+- applying Web Awesome layout or alignment utility classes to a shared wrapper
+- attaching the package dependency when the UI subtree does not yet contain a
+  generated component wrapper of its own
+
+# Examples
+
+## A simple stacked layout
+
+```{r layout-example-stack, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Stacked layout",
+  wa_container(
+    class = "wa-stack",
+    wa_card("Profile"),
+    wa_card("Recent activity"),
+    wa_button("refresh", "Refresh", appearance = "outlined")
+  )
+)
+
+server <- function(input, output, session) {
+}
+
+shinyApp(ui, server)
+```
+
+## A mixed page with layout helper boundaries
+
+```{r layout-example-mixed, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Mixed layout",
+  wa_container(
+    class = "wa-cluster",
+    wa_badge("Beta"),
+    wa_tag("Preview")
+  ),
+  wa_container(
+    class = "wa-stack",
+    wa_card("Main content"),
+    wa_card("Secondary content")
+  )
+)
+
+server <- function(input, output, session) {
+}
+
+shinyApp(ui, server)
+```
+
+These examples are good candidates for `shinylive` on the documentation
+website because the value is primarily visual and structural.
+
+# Notes
+
+Use `wa_page()` when you want the package to own the full page scaffold.
+
+Use `wa_container()` when you need a plain layout wrapper inside a page or UI
+subtree.
+
+For introductory context, start with the `Getting Started with
+shiny.webawesome` vignette.

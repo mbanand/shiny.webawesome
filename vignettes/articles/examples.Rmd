@@ -1,0 +1,151 @@
+---
+title: "Examples"
+output: html_document
+---
+
+# Overview
+
+This article collects a few small but more cohesive example apps that bring
+together the package surfaces described elsewhere in the documentation.
+
+The goal is not to present production-ready applications. Instead, these
+examples show how the generated wrappers, curated Shiny bindings, layout
+helpers, and command/browser-glue tools fit together in practice.
+
+# Example 1
+
+## A simple dashboard-style page
+
+This example uses `wa_page()`, `wa_container()`, and a handful of generated
+components to assemble a compact page with a little structure and visual
+hierarchy.
+
+```{r example-layout, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Project overview",
+  wa_container(
+    class = "wa-stack",
+    wa_badge("Preview"),
+    wa_card("Status: active"),
+    wa_button("refresh", "Refresh", appearance = "outlined"),
+    wa_card("Recent activity")
+  )
+)
+
+server <- function(input, output, session) {
+}
+
+shinyApp(ui, server)
+```
+
+This is a good pattern when you want a page built primarily from generated
+wrappers, with a small amount of package-level layout structure.
+
+# Example 2
+
+## A binding-focused interaction panel
+
+This example combines a few bound components and displays the resulting Shiny
+state directly.
+
+```{r example-bindings, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Binding example",
+  wa_container(
+    class = "wa-stack",
+    wa_select(
+      "favorite_letter",
+      wa_option("A", value = "a"),
+      wa_option("B", value = "b"),
+      wa_option("C", value = "c")
+    ),
+    wa_switch("notifications_enabled", "Notifications"),
+    wa_tree(
+      "navigation_tree",
+      selection = "multiple",
+      wa_tree_item("Section A", id = "section_a"),
+      wa_tree_item("Section B", id = "section_b"),
+      wa_tree_item("Section C", id = "section_c")
+    ),
+    verbatimTextOutput("state")
+  )
+)
+
+server <- function(input, output, session) {
+  output$state <- renderPrint({
+    list(
+      favorite_letter = input$favorite_letter,
+      notifications_enabled = input$notifications_enabled,
+      navigation_tree = input$navigation_tree
+    )
+  })
+}
+
+shinyApp(ui, server)
+```
+
+This example is useful for understanding the package's semantic binding model:
+the Shiny inputs reflect durable state rather than a raw browser event stream.
+
+# Example 3
+
+## A command-layer interaction example
+
+This example uses generated components for the UI and the package's command
+layer to drive browser-side behavior from the server.
+
+```{r example-command, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Command example",
+  wa_container(
+    class = "wa-stack",
+    actionButton("open_dialog", "Open dialog"),
+    actionButton("show_details", "Show details"),
+    wa_dialog(
+      "dialog",
+      label = "Example dialog",
+      "Dialog body"
+    ),
+    wa_details(
+      "details",
+      summary = "More information",
+      "Details body"
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$open_dialog, {
+    wa_call_method("dialog", "show", session = session)
+  })
+
+  observeEvent(input$show_details, {
+    wa_call_method("details", "show", session = session)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+This is a good pattern when the generated wrapper surface is sufficient for UI
+construction, but the server still needs to trigger a specific browser-side
+method directly.
+
+# Notes
+
+These examples are strong candidates for `shinylive` on the documentation
+website because readers benefit from being able to interact with the components
+and see the resulting Shiny state directly.
+
+If this page later becomes too large, it can be split into separate examples or
+showcase articles. Starting with one article keeps the first documentation pass
+easier to scan and maintain.

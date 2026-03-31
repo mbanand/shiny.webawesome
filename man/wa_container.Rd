@@ -32,6 +32,7 @@ same UI subtree.
 \examples{
 wa_container(
   class = "wa-stack",
-  wa_card("Hello")
+  wa_card("First card"),
+  wa_card("Second card")
 )
 }

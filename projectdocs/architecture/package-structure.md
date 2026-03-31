@@ -26,7 +26,7 @@ shiny.webawesome/
   inst/
   tests/
   tools/
-  docs/
+  projectdocs/
   journals/
   man/
   vignettes/
@@ -328,13 +328,13 @@ These scripts are used during development but are **not part of the runtime pack
 Project and developer documentation is stored in:
 
 ```text
-docs/
+projectdocs/
 ```
 
 Example structure:
 
 ```text
-docs/
+projectdocs/
   architecture/
   workflow/
   testing/
@@ -442,8 +442,8 @@ The vendor directory is excluded from the built R package using:
 Files that guide the package development and build are stored in `dev/`. These are not documentation files; rather they are machine-readable files that direct the package build or enforce policy. 
 
 A current example is a policy file that drives manifest and report generation
-(see details in `docs/development/component-coverage.md` and
-`docs/development/manifests.md`). The repository may also store narrowly scoped
+(see details in `projectdocs/development/component-coverage.md` and
+`projectdocs/development/manifests.md`). The repository may also store narrowly scoped
 generation-policy inputs under `dev/` when upstream metadata is insufficient to
 classify a component correctly.
 
@@ -471,8 +471,8 @@ version override is provided on the command line.
 
 Files generated during build that report on the build live in `manifests/` and
 `reports/`. Current examples include API coverage and conformance tracking (see
-details in `docs/development/component-coverage.md` and
-`docs/development/manifests.md`), report-stage manifests written under
+details in `projectdocs/development/component-coverage.md` and
+`projectdocs/development/manifests.md`), report-stage manifests written under
 `manifests/report/`, human-readable report-stage summaries written under
 `reports/report/`, versioned prune diagnostics written under
 `reports/prune/<version>/`, generated integrity records written under
@@ -493,7 +493,7 @@ Examples:
 ```text
 vendor/
 tools/
-docs/
+projectdocs/
 dev/
 manifests/
 reports/

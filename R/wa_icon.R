@@ -69,6 +69,7 @@ wa_icon <- function(
   children <- list(...)
 
 
+
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,

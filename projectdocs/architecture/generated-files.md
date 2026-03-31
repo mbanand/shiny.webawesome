@@ -46,7 +46,7 @@ such as:
 
 - handwritten helper files under `R/`
 - `tools/`
-- documentation under `docs/`
+- documentation under `projectdocs/`
 - tests under `tests/testthat/`
 - policy files under `dev/`
 

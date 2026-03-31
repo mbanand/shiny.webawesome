@@ -52,6 +52,7 @@ wa_animated_image <- function(
   )
 
 
+
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,

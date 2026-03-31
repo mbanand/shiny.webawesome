@@ -477,11 +477,19 @@
 
 # Return any wrapper-specific documentation note text.
 .render_wrapper_doc_note <- function(component) {
-  if (identical(
-    .scalar_string(component$classification$binding_mode, fallback = "none"),
-    "action_with_payload"
-  )) {
-    return(paste(
+  binding_mode <- .scalar_string(
+    component$classification$binding_mode,
+    fallback = "none"
+  )
+  binding_value_field <- .scalar_string(
+    component$classification$binding_value_field,
+    fallback = NA_character_
+  )
+  warning_key <- .component_wrapper_warning(component)
+  notes <- character()
+
+  if (identical(binding_mode, "action_with_payload")) {
+    notes <- c(notes, paste(
       "When used as a Shiny input,",
       "action semantics are exposed through",
       paste0("`input$", "<input_id>", "`"),
@@ -493,28 +501,66 @@
       "no `value`, and preserves an explicit empty string `\"\"` when that",
       "is the selected item's value."
     ))
+  } else if (identical(binding_mode, "action")) {
+    notes <- c(notes, paste(
+      "When used as a Shiny input,",
+      "the component exposes action semantics through",
+      paste0("`input$", "<input_id>", "`."),
+      "The Shiny input invalidates on each committed action rather than",
+      "publishing a durable value payload."
+    ))
+  } else if (identical(binding_mode, "semantic")) {
+    if (!is.na(binding_value_field) && nzchar(binding_value_field)) {
+      notes <- c(notes, paste(
+        "When used as a Shiny input,",
+        paste0("`input$", "<input_id>", "`"),
+        "reflects the component's current semantic",
+        paste0("`", binding_value_field, "`"),
+        "state."
+      ))
+    } else {
+      notes <- c(notes, paste(
+        "When used as a Shiny input,",
+        paste0("`input$", "<input_id>", "`"),
+        "reflects the component's current committed semantic state."
+      ))
+    }
+  } else if (identical(binding_mode, "value")) {
+    if (!is.na(binding_value_field) && nzchar(binding_value_field)) {
+      notes <- c(notes, paste(
+        "When used as a Shiny input,",
+        paste0("`input$", "<input_id>", "`"),
+        "reflects the component's current",
+        paste0("`", binding_value_field, "`"),
+        "value."
+      ))
+    } else {
+      notes <- c(notes, paste(
+        "When used as a Shiny input,",
+        paste0("`input$", "<input_id>", "`"),
+        "reflects the component's current value."
+      ))
+    }
   }
 
-  warning_key <- .component_wrapper_warning(component)
-
-  if (is.na(warning_key) || !nzchar(warning_key)) {
-    return("")
-  }
-
-  if (identical(warning_key, "missing_tree_item_id")) {
-    return(paste(
+  if (!is.na(warning_key) && nzchar(warning_key)) {
+    if (identical(warning_key, "missing_tree_item_id")) {
+      notes <- c(notes, paste(
       "For stable Shiny selection values, selectable descendant",
       "`wa-tree-item` elements should have DOM `id` attributes."
-    ))
+      ))
+    } else {
+      stop(
+        "Unsupported wrapper documentation note for ",
+        component$tag_name,
+        ": ",
+        warning_key,
+        call. = FALSE
+      )
+    }
   }
 
-  stop(
-    "Unsupported wrapper documentation note for ",
-    component$tag_name,
-    ": ",
-    warning_key,
-    call. = FALSE
-  )
+  paste(notes[nzchar(notes)], collapse = " ")
 }
 
 # Render enum validation lines for one wrapper.

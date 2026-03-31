@@ -3,7 +3,9 @@
 
 #' Create a `wa-textarea` component
 #'
-#' Generated wrapper for the Web Awesome `wa-textarea` component.
+#' Generated wrapper for the Web Awesome `wa-textarea` component. When
+#' used as a Shiny input, `input$<input_id>` reflects the component's
+#' current value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.

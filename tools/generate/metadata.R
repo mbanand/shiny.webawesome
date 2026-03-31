@@ -3,7 +3,7 @@
 
 # Check whether a path looks like the repository root.
 .is_repo_root <- function(root) {
-  required_paths <- c("DESCRIPTION", "docs", "tools")
+  required_paths <- c("DESCRIPTION", "projectdocs", "tools")
   all(file.exists(file.path(root, required_paths)))
 }
 

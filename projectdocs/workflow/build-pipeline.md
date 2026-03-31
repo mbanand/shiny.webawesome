@@ -323,7 +323,7 @@ native control but the relevant event is not declared in upstream metadata.
 The override mechanism and its locations are defined in:
 
 ```text
-docs/architecture/package-structure.md
+projectdocs/architecture/package-structure.md
 ```
 
 ---

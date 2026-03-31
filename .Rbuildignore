@@ -7,8 +7,8 @@
 ^vendor/
 ^tools$
 ^tools/
-^docs$
-^docs/
+^projectdocs$
+^projectdocs/
 ^dev$
 ^dev/
 ^manifests$
@@ -21,6 +21,8 @@
 ^reports/
 ^scratch$
 ^scratch/
+^website$
+^website/
 ^scripts$
 ^scripts/
 ^\.codex$

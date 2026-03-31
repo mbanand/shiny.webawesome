@@ -3,7 +3,9 @@
 
 #' Create a `wa-details` component
 #'
-#' Generated wrapper for the Web Awesome `wa-details` component.
+#' Generated wrapper for the Web Awesome `wa-details` component. When used
+#' as a Shiny input, `input$<input_id>` reflects the component's current
+#' semantic `open` state.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.

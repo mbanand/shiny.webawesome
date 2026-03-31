@@ -3,7 +3,9 @@
 
 #' Create a `wa-dialog` component
 #'
-#' Generated wrapper for the Web Awesome `wa-dialog` component.
+#' Generated wrapper for the Web Awesome `wa-dialog` component. When used
+#' as a Shiny input, `input$<input_id>` reflects the component's current
+#' semantic `open` state.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -68,6 +70,7 @@ wa_dialog <- function(
       .wa_slot(label_slot, "label")
     )
   )
+
 
 
   attrs <- .wa_normalize_attrs(

@@ -60,6 +60,7 @@ wa_option <- function(
   )
 
 
+
   attrs <- .wa_normalize_attrs(
     list(
       "id" = id,

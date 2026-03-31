@@ -3,7 +3,10 @@
 
 #' Create a `wa-button` component
 #'
-#' Generated wrapper for the Web Awesome `wa-button` component.
+#' Generated wrapper for the Web Awesome `wa-button` component. When used
+#' as a Shiny input, the component exposes action semantics through
+#' `input$<input_id>`. The Shiny input invalidates on each committed
+#' action rather than publishing a durable value payload.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.

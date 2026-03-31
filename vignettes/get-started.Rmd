@@ -1,0 +1,183 @@
+---
+title: "Getting Started with shiny.webawesome"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with shiny.webawesome}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Overview
+
+`shiny.webawesome` provides an R and Shiny interface to the Web Awesome
+component library.
+
+Most component wrappers are generated from the upstream Web Awesome metadata
+file `custom-elements.json`. The package aims to stay close to upstream Web
+Awesome names and component APIs while adopting normal R conventions such as
+snake_case argument names.
+
+Because Web Awesome lives in the browser and Shiny spans both server and
+client, the package includes more than generated wrappers alone. In practice,
+there are four core areas to know:
+
+- basic wrapper usage
+- Shiny bindings
+- the command API
+- package options
+
+This vignette introduces each one briefly and points to the longer-form
+documentation for deeper coverage.
+
+# Basic Wrapper Usage
+
+At the simplest level, you use generated wrappers as ordinary Shiny UI
+functions. Wrapper names follow the Web Awesome component names with the
+`wa_` prefix, and kebab-case attributes become snake_case arguments.
+
+```{r basic-wrapper, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Basic wrappers",
+  wa_container(
+    class = "wa-stack",
+    wa_button(
+      "save_button",
+      "Save",
+      appearance = "filled"
+    ),
+    wa_card("A simple card body")
+  )
+)
+
+server <- function(input, output, session) {
+}
+
+shinyApp(ui, server)
+```
+
+Two package-level helpers appear here:
+
+- `wa_page()` creates a minimal full-page scaffold and attaches the package
+  dependency once at page level
+- `wa_container()` creates a plain container element that is convenient for
+  layout patterns and utility-class usage
+
+For fuller layout examples, see the `Layout Utilities` article.
+
+# Shiny Bindings
+
+Some components expose generated Shiny bindings. These bindings are curated to
+fit Shiny's reactive model rather than mirroring every browser event emitted by
+the underlying Web Component.
+
+For example, `wa_select()` can participate directly in ordinary Shiny input
+flows:
+
+```{r bindings, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Bindings",
+  wa_select(
+    "favorite_letter",
+    wa_option("A", value = "a"),
+    wa_option("B", value = "b"),
+    wa_option("C", value = "c")
+  ),
+  verbatimTextOutput("selected_value")
+)
+
+server <- function(input, output, session) {
+  output$selected_value <- renderPrint({
+    input$favorite_letter
+  })
+}
+
+shinyApp(ui, server)
+```
+
+The details of binding categories and reactive semantics are covered in the
+`Shiny Bindings` article.
+
+# Command API
+
+Generated bindings and update helpers cover the most common component-side
+interactions, but sometimes a browser-side property or method still needs to
+be driven explicitly from the server.
+
+For those cases, the package provides a narrow command/helper layer.
+
+```{r command-api, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Command API",
+  actionButton("open_dialog", "Open dialog"),
+  wa_dialog(
+    "dialog",
+    "Dialog body"
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$open_dialog, {
+    wa_call_method("dialog", "show", session = session)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+When you need app-local browser glue that is easier to express in JavaScript,
+`wa_js()` lets you inject a small inline snippet and pair it with ordinary
+Shiny inputs via `Shiny.setInputValue()`.
+
+The deeper guidance for choosing between generated bindings, update helpers,
+command helpers, and `wa_js()` lives in the `Command API` article.
+
+# Package Options
+
+The package currently documents its warning and diagnostic controls through the
+package option `shiny.webawesome.warnings`, which should be a named list.
+
+Known keys currently include:
+
+- `missing_tree_item_id`
+- `command_layer`
+- `command_layer_debug`
+
+For example, you can enable additional command-layer diagnostics during
+development with:
+
+```{r package-options, eval = FALSE}
+options(
+  shiny.webawesome.warnings = list(
+    command_layer_debug = TRUE
+  )
+)
+```
+
+These options are described in more detail in the `Package Options` article and
+summarized in the package help page `?shiny.webawesome`.
+
+# Next Steps
+
+After this vignette, the most relevant longer-form docs are:
+
+- `Layout Utilities`
+- `Shiny Bindings`
+- `Command API`
+- `Package Options`
+- `Examples`

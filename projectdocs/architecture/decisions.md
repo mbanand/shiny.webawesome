@@ -568,7 +568,7 @@ Where:
 Detailed workflow documentation is located in:
 
 ```text
-docs/workflow/build-pipeline.md
+projectdocs/workflow/build-pipeline.md
 ```
 
 ---

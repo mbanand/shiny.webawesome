@@ -3,7 +3,9 @@
 
 #' Create a `wa-carousel` component
 #'
-#' Generated wrapper for the Web Awesome `wa-carousel` component.
+#' Generated wrapper for the Web Awesome `wa-carousel` component. When
+#' used as a Shiny input, `input$<input_id>` reflects the component's
+#' current semantic `activeSlide` state.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.

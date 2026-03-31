@@ -36,7 +36,7 @@ source(file.path("..", "..", "fetch_webawesome.R"))
 
 .create_fake_repo <- function(root, version = .repo_pinned_version()) {
   dir.create(file.path(root, "dev"), recursive = TRUE, showWarnings = FALSE)
-  dir.create(file.path(root, "docs"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(file.path(root, "projectdocs"), recursive = TRUE, showWarnings = FALSE)
   dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
   .write_file(file.path(root, "DESCRIPTION"), "Package: fake")
   .write_file(file.path(root, "dev", "webawesome-version.txt"), version)

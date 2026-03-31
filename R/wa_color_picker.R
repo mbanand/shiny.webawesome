@@ -3,7 +3,9 @@
 
 #' Create a `wa-color-picker` component
 #'
-#' Generated wrapper for the Web Awesome `wa-color-picker` component.
+#' Generated wrapper for the Web Awesome `wa-color-picker` component. When
+#' used as a Shiny input, `input$<input_id>` reflects the component's
+#' current value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.

@@ -1,0 +1,116 @@
+---
+title: "Package Options"
+output: html_document
+---
+
+# Overview
+
+`shiny.webawesome` currently uses one documented package option for runtime
+warnings and diagnostics:
+
+- `shiny.webawesome.warnings`
+
+This option should be a named list. It allows you to suppress selected
+warnings or enable additional command-layer debug output when developing or
+debugging an application.
+
+Each known key is a boolean toggle and should be set to `TRUE` or `FALSE`.
+
+The package does not currently expose a broad option surface beyond this
+warning registry.
+
+# Warning Registry
+
+The `shiny.webawesome.warnings` option is merged with the package's defaults at
+runtime.
+
+Known keys currently include:
+
+- `missing_tree_item_id`
+- `command_layer`
+- `command_layer_debug`
+
+## `missing_tree_item_id`
+
+Controls the warning path used by `wa_tree()` when selected descendant
+`wa-tree-item` elements do not have stable DOM `id` attributes.
+
+This matters because the tree binding publishes selected item ids back to
+Shiny. Selected items without ids cannot participate in that Shiny value.
+
+## `command_layer`
+
+Controls warnings emitted by the runtime command bridge used by
+`wa_set_property()` and `wa_call_method()`.
+
+These warnings help surface problems such as:
+
+- missing browser targets
+- missing property names
+- missing or unsupported browser methods
+- unsupported command names
+
+## `command_layer_debug`
+
+Controls additional debug logging for the runtime command bridge.
+
+When enabled, the browser console receives debug messages for successful
+command-layer operations.
+
+# Usage Patterns
+
+The most common pattern is to set specific keys in a named list.
+
+For example, to enable command-layer debug logging:
+
+```{r options-debug, eval = FALSE}
+options(
+  shiny.webawesome.warnings = list(
+    command_layer_debug = TRUE
+  )
+)
+```
+
+To suppress the tree-item id warning:
+
+```{r options-tree-warning, eval = FALSE}
+options(
+  shiny.webawesome.warnings = list(
+    missing_tree_item_id = FALSE
+  )
+)
+```
+
+To suppress command-layer warnings:
+
+```{r options-command-warning, eval = FALSE}
+options(
+  shiny.webawesome.warnings = list(
+    command_layer = FALSE
+  )
+)
+```
+
+You can also set more than one key at a time:
+
+```{r options-multiple, eval = FALSE}
+options(
+  shiny.webawesome.warnings = list(
+    command_layer = TRUE,
+    command_layer_debug = TRUE
+  )
+)
+```
+
+# Notes
+
+These options are mostly relevant for:
+
+- application developers debugging command-layer behavior
+- developers working with `wa_tree()` selection ids
+- maintainers or advanced users investigating runtime issues
+
+Ordinary package usage should not require setting options in most cases.
+
+If you are relying heavily on `command_layer` or `command_layer_debug`, the
+`Command API` article is the most relevant companion document.
