@@ -71,7 +71,22 @@ shinyApp(ui, server)
 
 ## Contributing
 
+Feedback is welcome, especially from users who notice rough edges in the
+documentation or places where the package could be easier to learn.
+
+Contributions are also welcome, especially from front-end developers and Web
+Awesome users who can help improve package ergonomics, examples, and API
+coverage.
+
 Please see contributing guidance in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Repository project and workflow documentation is in the repo's
 `projectdocs/` directory.
+
+## Coding Agents
+
+For package users, the published `llms.txt` file provides a machine-readable
+overview of the package API for coding agents and other LLM-based tools.
+
+For repository development guidance, including coding-agent workflow and repo
+rules, see [CONTRIBUTING.md](CONTRIBUTING.md).

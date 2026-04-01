@@ -82,12 +82,12 @@ articles:
   - title: User Articles
     navbar: Articles
     contents:
-      - articles/layout-utilities
-      - articles/shiny-bindings
-      - articles/htmltools-attributes
-      - articles/command-api
-      - articles/package-options
-      - articles/examples
+      - layout-utilities
+      - shiny-bindings
+      - htmltools-attributes
+      - command-api
+      - package-options
+      - examples
   - title: Maintainer Articles
     navbar: Development
     contents:

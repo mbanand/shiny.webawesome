@@ -1,6 +1,10 @@
 ---
 title: "Extra Attributes via htmltools"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Extra Attributes via htmltools}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 # Overview

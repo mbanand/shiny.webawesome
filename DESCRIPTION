@@ -22,9 +22,12 @@ Suggests:
     digest,
     document,
     jsonlite,
+    knitr,
     processx,
+    rmarkdown,
     shinytest2,
     testthat (>= 3.0.0),
     withr,
     yaml
+VignetteBuilder: knitr
 Config/testthat/edition: 3

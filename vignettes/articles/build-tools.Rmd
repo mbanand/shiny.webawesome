@@ -139,7 +139,7 @@ configuration and writes output to the configured destination, currently
 
 When generated tool docs are present, this step also copies them into
 `website/tool-docs/`. When source apps are present under
-`tools/shinylive-examples/`, it can also publish matching standalone live-demo
+`vignettes/shinylive-examples/`, it can also publish matching standalone live-demo
 targets under `website/live-examples/` when invoked with
 `--with-live-examples`. If `shinylive` export emits warnings, the site build
 writes a placeholder page instead of publishing a likely-broken demo shell.

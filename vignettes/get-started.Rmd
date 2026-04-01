@@ -33,7 +33,7 @@ there are four core areas to know:
 - the command API
 - package options
 
-This vignette introduces each one briefly and points to the longer-form
+This guide introduces each one briefly and points to the longer-form
 documentation for deeper coverage.
 
 # Basic Wrapper Usage
@@ -174,10 +174,10 @@ summarized in the package help page `?shiny.webawesome`.
 
 # Next Steps
 
-After this vignette, the most relevant longer-form docs are:
+After this guide, the most relevant longer-form docs are:
 
-- `Layout Utilities`
-- `Shiny Bindings`
-- `Command API`
-- `Package Options`
-- `Examples`
+- Layout Utilities
+- Shiny Bindings
+- Command API
+- Package Options
+- Examples

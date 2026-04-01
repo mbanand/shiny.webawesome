@@ -31,7 +31,10 @@
   }
 
   .navbar .navbar-nav:not(.me-auto) > .nav-item:nth-child(2) {
+    margin-left: 0.2rem;
     margin-right: 0.1rem;
+    padding-left: 0.7rem;
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
   }
 
   .navbar .navbar-nav:not(.me-auto) .form-control {

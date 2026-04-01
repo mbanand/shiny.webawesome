@@ -1,6 +1,10 @@
 ---
 title: "Layout Utilities"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Layout Utilities}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 # Overview
@@ -156,5 +160,5 @@ Use `wa_page()` when you want the package to own the full page scaffold.
 Use `wa_container()` when you need a plain layout wrapper inside a page or UI
 subtree.
 
-For introductory context, start with the `Getting Started with
-shiny.webawesome` vignette.
+For introductory context, start with the Getting Started with
+shiny.webawesome guide.

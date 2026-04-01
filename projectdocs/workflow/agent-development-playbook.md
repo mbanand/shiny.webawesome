@@ -177,7 +177,7 @@ Top-level orchestration should remain explicit:
 - `document_tools.R` regenerates tool documentation
 - `build_site.R` builds the pkgdown documentation site into the configured
   destination, copies generated tool docs into the built site, and may also
-  publish standalone live demos from `tools/shinylive-examples/` when
+  publish standalone live demos from `vignettes/shinylive-examples/` when
   explicitly requested
 - `build_tools.R` orchestrates the top-level tool workflow
 - `build_package.R` runs `build_tools.R` first, then executes the currently
@@ -195,11 +195,17 @@ separate top-level `build_package.R` steps, not collapsed into one combined
 `devtools::check()` should be treated as the heaviest optional local gate.
 
 For the documentation site, treat ordinary pkgdown/vignette rendering as the
-baseline. Package reference pages and help examples should remain static and
-copy-pasteable rather than becoming a live execution surface. If live article
-examples are explored later, they should be treated as an optional,
-article-scoped enhancement, not as a requirement for the default vignette or
-pkgdown build.
+baseline. User-facing long-form documentation should be maintained as
+vignette-first shared sources under `vignettes/` that are safe for ordinary
+package builds and `R CMD check`, with the website treated as a second
+rendering target for those same sources. Package reference pages and help
+examples should remain static and copy-pasteable rather than becoming a live
+execution surface. If live article examples are explored later, they should be
+treated as an optional, article-scoped enhancement derived from the same
+vignette-first source, not as a reason to fork the documentation into
+separate vignette and website-only sources. Maintainer-facing docs may remain
+article-only when they are not appropriate installed package vignettes; the
+current `Build Tools` article is one explicit example.
 
 ---
 

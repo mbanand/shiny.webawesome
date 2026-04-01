@@ -1,6 +1,10 @@
 ---
 title: "Package Options"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Package Options}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 # Overview
@@ -113,4 +117,4 @@ These options are mostly relevant for:
 Ordinary package usage should not require setting options in most cases.
 
 If you are relying heavily on `command_layer` or `command_layer_debug`, the
-`Command API` article is the most relevant companion document.
+Command API guide is the most relevant companion document.

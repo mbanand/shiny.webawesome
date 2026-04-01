@@ -43,7 +43,7 @@
 #'
 #' ## Learn more
 #'
-#' For introductory usage, see the package vignette
+#' For an introductory guide, see
 #' `vignette("get-started", package = "shiny.webawesome")`. For
 #' function-specific details, use the package help pages such as `?wa_page`,
 #' `?wa_set_property`, `?wa_call_method`, and `?wa_js`.

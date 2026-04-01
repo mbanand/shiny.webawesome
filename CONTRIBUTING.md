@@ -7,7 +7,6 @@ Repository paths mentioned below refer to paths in the source repository.
 ## Before you change code
 
 - Read the authoritative project documentation under `projectdocs/`.
-- Follow the generator-first architecture described in [AGENTS.md](AGENTS.md).
 - Do not edit generated files directly.
 
 Generated and derived surfaces include, in particular:
@@ -55,6 +54,25 @@ Update `projectdocs/` when changes affect:
 
 User-facing package documentation should also be kept in sync with public API
 changes.
+
+## Coding agents
+
+If you use a coding agent in this repository, start by having it read
+[AGENTS.md](AGENTS.md) for behavioral control and then the project
+documentation under `projectdocs/`, beginning with
+`projectdocs/README.md`.
+
+Those documents are written for both human contributors and coding agents.
+They provide the repository context that an agent needs, including
+architecture, generator-first workflow rules, generated-file boundaries,
+testing strategy, and coverage/conformance expectations.
+
+A good initial prompt is:
+
+`Follow AGENTS.md. Read project documentation under projectdocs/ starting with projectdocs/README.md.`
+
+Review all agent-generated code, documentation, issues, and pull requests
+before submitting them.
 
 ## Pull requests and issues
 

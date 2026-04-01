@@ -207,7 +207,7 @@ rm(.bootstrap_cli_ui)
 
 # Return the default source directory for exported shinylive examples.
 .default_shinylive_source_dir <- function() {
-  file.path("tools", "shinylive-examples")
+  file.path("vignettes", "shinylive-examples")
 }
 
 # Return the website directory used for exported shinylive examples.
@@ -484,7 +484,7 @@ rm(.bootstrap_cli_ui)
 #'
 #' When generated tool docs are present under `tools/man/`, this tool also
 #' copies them into the built site under `tool-docs/`. When app sources are
-#' present under `tools/shinylive-examples/`, this tool can also publish
+#' present under `vignettes/shinylive-examples/`, this tool can also publish
 #' matching standalone live-example targets under `live-examples/` when
 #' `live_examples = TRUE`.
 #'
@@ -492,7 +492,8 @@ rm(.bootstrap_cli_ui)
 #' @param install Logical scalar. If `TRUE`, installs the package into a
 #'   temporary library before building the site.
 #' @param live_examples Logical scalar. If `TRUE`, exports standalone
-#'   `shinylive` examples from `tools/shinylive-examples/` into the built site.
+#'   `shinylive` examples from `vignettes/shinylive-examples/` into the built
+#'   site.
 #' @param preview Logical scalar. If `TRUE`, asks `pkgdown` to preview the site
 #'   after the build completes.
 #' @param verbose Logical scalar. If `TRUE`, emits tool-level progress output.

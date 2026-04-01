@@ -1,6 +1,10 @@
 ---
 title: "Shiny Bindings"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Shiny Bindings}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 # Overview
@@ -288,4 +292,4 @@ contract you need.
 Use the command/helper layer when you need browser-side property or method
 interaction that falls outside the generated binding/update surface.
 
-For more on that boundary, see the `Command API` article.
+For more on that boundary, see the Command API guide.

@@ -53,7 +53,7 @@ Example:
 
 \subsection{Learn more}{
 
-For introductory usage, see the package vignette
+For an introductory guide, see
 \code{vignette("get-started", package = "shiny.webawesome")}. For
 function-specific details, use the package help pages such as \code{?wa_page},
 \code{?wa_set_property}, \code{?wa_call_method}, and \code{?wa_js}.

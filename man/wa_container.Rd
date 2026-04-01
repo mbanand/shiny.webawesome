@@ -30,7 +30,7 @@ classes can be used even when no generated component wrappers appear in the
 same UI subtree.
 }
 \examples{
-wa_container(
+container <- wa_container(
   class = "wa-stack",
   wa_card("First card"),
   wa_card("Second card")

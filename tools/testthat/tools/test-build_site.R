@@ -72,7 +72,7 @@ source(file.path("..", "..", "build_site.R"))
 
 .create_fake_shinylive_example <- function(root, name = "demo") {
   .write_file(
-    file.path(root, "tools", "shinylive-examples", name, "app.R"),
+    file.path(root, "vignettes", "shinylive-examples", name, "app.R"),
     c(
       "library(shiny)",
       "ui <- fluidPage('demo')",

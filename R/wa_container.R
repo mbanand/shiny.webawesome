@@ -19,7 +19,7 @@
 #' @export
 #'
 #' @examples
-#' wa_container(
+#' container <- wa_container(
 #'   class = "wa-stack",
 #'   wa_card("First card"),
 #'   wa_card("Second card")
