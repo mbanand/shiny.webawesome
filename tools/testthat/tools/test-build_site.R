@@ -1,0 +1,242 @@
+source(file.path("..", "..", "build_site.R"))
+
+.write_file <- function(path, lines = "x") {
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  writeLines(lines, path)
+}
+
+.create_fake_repo <- function(root) {
+  dir.create(
+    file.path(root, "projectdocs"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
+  dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(file.path(root, "R"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(file.path(root, "man"), recursive = TRUE, showWarnings = FALSE)
+  .write_file(file.path(root, "DESCRIPTION"), c(
+    "Package: fakepkgdown",
+    "Title: Fake pkgdown package",
+    "Version: 0.0.0.9000",
+    "Description: Fake package for build_site tests.",
+    "License: MIT + file LICENSE",
+    "Encoding: UTF-8"
+  ))
+  .write_file(file.path(root, "LICENSE"), "MIT")
+  .write_file(file.path(root, "NAMESPACE"), "exportPattern(\"^[^\\\\.]\")")
+  .write_file(file.path(root, "README.md"), c(
+    "# fakepkgdown",
+    "",
+    "Test package."
+  ))
+  .write_file(file.path(root, "NEWS.md"), c(
+    "# fakepkgdown 0.0.0.9000",
+    "",
+    "- Initial release."
+  ))
+  .write_file(file.path(root, "_pkgdown.yml"), c(
+    "url: https://example.com",
+    "destination: website"
+  ))
+  .write_file(file.path(root, "R", "hello.R"), c(
+    "hello <- function() {",
+    "  'hello'",
+    "}"
+  ))
+  .write_file(file.path(root, "man", "hello.Rd"), c(
+    "\\name{hello}",
+    "\\alias{hello}",
+    "\\title{Say hello}",
+    "\\usage{",
+    "hello()",
+    "}",
+    "\\value{",
+    "A greeting string.",
+    "}",
+    "\\description{",
+    "Return a small greeting string.",
+    "}"
+  ))
+
+  file.copy(
+    normalizePath(file.path("..", "..", "build_site.R"), mustWork = TRUE),
+    file.path(root, "tools", "build_site.R")
+  )
+  file.copy(
+    normalizePath(file.path("..", "..", "cli_ui.R"), mustWork = TRUE),
+    file.path(root, "tools", "cli_ui.R")
+  )
+
+  Sys.chmod(file.path(root, "tools", "build_site.R"), mode = "0755")
+}
+
+.create_fake_shinylive_example <- function(root, name = "demo") {
+  .write_file(
+    file.path(root, "tools", "shinylive-examples", name, "app.R"),
+    c(
+      "library(shiny)",
+      "ui <- fluidPage('demo')",
+      "server <- function(input, output, session) {}",
+      "shinyApp(ui, server)"
+    )
+  )
+}
+
+.run_build_site_script <- function(root, args = character()) {
+  processx::run(
+    command = "./tools/build_site.R",
+    args = args,
+    wd = root,
+    echo = FALSE,
+    error_on_status = FALSE
+  )
+}
+
+testthat::test_that("build_site prints help", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  result <- .run_build_site_script(root, "--help")
+
+  testthat::expect_equal(result$status, 0)
+  testthat::expect_match(result$stdout, "Usage: ./tools/build_site.R")
+  testthat::expect_match(result$stdout, "--no-install")
+  testthat::expect_match(result$stdout, "--with-live-examples")
+  testthat::expect_match(result$stdout, "--preview")
+})
+
+testthat::test_that("build_site validates the repository root", {
+  root <- withr::local_tempdir()
+  dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
+
+  testthat::expect_error(
+    build_site(root = root, install = FALSE, verbose = FALSE),
+    "checked-in _pkgdown.yml"
+  )
+})
+
+testthat::test_that("build_site builds the configured pkgdown destination", {
+  testthat::skip_if_not_installed("pkgdown")
+  withr::local_envvar(c(SHINY_WEBAWESOME_CLI_MODE = "quiet"))
+
+  root <- normalizePath(file.path("..", "..", ".."), mustWork = TRUE)
+  dir.create(
+    file.path(root, "website", "live-examples", "stale"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
+
+  result <- build_site(root = root, install = TRUE, verbose = FALSE)
+
+  testthat::expect_equal(result$destination, "website")
+  testthat::expect_true(file.exists(file.path(root, "website", "index.html")))
+  testthat::expect_true(file.exists(file.path(root, "website", "pkgdown.yml")))
+  testthat::expect_true(
+    file.exists(file.path(root, "website", "tool-docs", "build_site.html"))
+  )
+  testthat::expect_false(
+    dir.exists(file.path(root, "website", "live-examples"))
+  )
+})
+
+testthat::test_that("shinylive helper exports example directories", {
+  root <- withr::local_tempdir()
+  destination_dir <- file.path(root, "website")
+
+  .create_fake_repo(root)
+  .create_fake_shinylive_example(root, "demo")
+
+  export_calls <- list()
+  fake_export <- function(appdir, destdir, quiet = TRUE) {
+    export_calls[[length(export_calls) + 1L]] <<- list(
+      appdir = appdir,
+      destdir = destdir,
+      quiet = quiet
+    )
+    dir.create(destdir, recursive = TRUE, showWarnings = FALSE)
+    writeLines("demo", file.path(destdir, "index.html"))
+  }
+
+  .publish_live_examples(
+    root = root,
+    destination_dir = destination_dir,
+    export_fun = fake_export,
+    fallback_to_installed = FALSE
+  )
+
+  testthat::expect_length(export_calls, 1L)
+  testthat::expect_match(export_calls[[1]]$appdir, "shinylive-examples/demo$")
+  testthat::expect_true(
+    file.exists(
+      file.path(destination_dir, "live-examples", "demo", "index.html")
+    )
+  )
+})
+
+testthat::test_that(
+  "shinylive helper writes placeholders when export is unavailable",
+  {
+    root <- withr::local_tempdir()
+    destination_dir <- file.path(root, "website")
+
+    .create_fake_repo(root)
+    .create_fake_shinylive_example(root, "demo")
+
+    .publish_live_examples(
+      root = root,
+      destination_dir = destination_dir,
+      export_fun = NULL,
+      fallback_to_installed = FALSE
+    )
+
+    target_file <- file.path(
+      destination_dir,
+      "live-examples",
+      "demo",
+      "index.html"
+    )
+
+    testthat::expect_true(file.exists(target_file))
+    testthat::expect_match(
+      paste(readLines(target_file), collapse = "\n"),
+      "This live demo was not exported for the current site build"
+    )
+  }
+)
+
+testthat::test_that(
+  "shinylive helper downgrades warning exports to placeholders",
+  {
+    root <- withr::local_tempdir()
+    destination_dir <- file.path(root, "website")
+
+    .create_fake_repo(root)
+    .create_fake_shinylive_example(root, "demo")
+
+    warning_export <- function(appdir, destdir, quiet = TRUE) {
+      dir.create(destdir, recursive = TRUE, showWarnings = FALSE)
+      writeLines("demo", file.path(destdir, "index.html"))
+      warning("demo export warning", call. = FALSE)
+    }
+
+    .publish_live_examples(
+      root = root,
+      destination_dir = destination_dir,
+      export_fun = warning_export,
+      fallback_to_installed = FALSE
+    )
+
+    target_file <- file.path(
+      destination_dir,
+      "live-examples",
+      "demo",
+      "index.html"
+    )
+
+    testthat::expect_true(file.exists(target_file))
+    testthat::expect_match(
+      paste(readLines(target_file), collapse = "\n"),
+      "The export step completed with warnings"
+    )
+  }
+)

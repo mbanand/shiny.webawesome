@@ -297,6 +297,7 @@ Example structure:
 
 ```text
 tools/
+  build_site.R
   clean_webawesome.R
   fetch_webawesome.R
   prune_webawesome.R
@@ -305,6 +306,10 @@ tools/
 
 Responsibilities of examples:
 
+* `build_site.R` builds the pkgdown website into the configured destination,
+  currently `website/`, copies generated tool docs into `website/tool-docs/`,
+  and may also publish standalone live demos into `website/live-examples/`
+  when explicitly requested.
 * `clean_webawesome.R` removes generated artifacts, copied metadata, and
   pruned runtime assets.
 * `fetch_webawesome.R` downloads a pinned Web Awesome release.
@@ -525,7 +530,7 @@ The repository structure separates responsibilities clearly:
 * `inst/bindings` contains Shiny input bindings
 * `tests/testthat` contains automated tests
 * `tools` contains build scripts
-* `docs` contains developer and architecture documentation
+* `projectdocs` contains developer and architecture documentation
 * `journals` contains workflow continuity journals
 * `vendor` stores upstream source distributions
 * `man` and `vignettes` contain user-facing package documentation

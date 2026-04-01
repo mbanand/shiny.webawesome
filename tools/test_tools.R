@@ -44,7 +44,7 @@ rm(.bootstrap_cli_ui)
 
 # Return the CLI usage string for the tool test runner.
 .test_tools_usage <- function() {
-  "Usage: Rscript tools/test_tools.R [--filter <pattern>] [--help]"
+  "Usage: ./tools/test_tools.R [--filter <pattern>] [--help]"
 }
 
 # Return the short CLI description for the tool test runner.
@@ -182,6 +182,9 @@ rm(.bootstrap_cli_ui)
 #' Discovers `testthat` files under `tools/testthat/` and executes them in a
 #' deterministic order. An optional file-path filter can be supplied to narrow
 #' the run to a subset of tool tests.
+#'
+#' CLI entry point:
+#' `./tools/test_tools.R --help`
 #'
 #' Supported options are:
 #' - `--filter` / `-f` to match tool test file paths

@@ -2,6 +2,8 @@
 
 Thank you for contributing to `shiny.webawesome`.
 
+Repository paths mentioned below refer to paths in the source repository.
+
 ## Before you change code
 
 - Read the authoritative project documentation under `projectdocs/`.

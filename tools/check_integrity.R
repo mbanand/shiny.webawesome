@@ -310,6 +310,9 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
 #' Verifies that the current prune-owned and generate-owned file surfaces still
 #' match the integrity records produced by earlier stages.
 #'
+#' CLI entry point:
+#' `./tools/check_integrity.R --help`
+#'
 #' @param root Repository root directory.
 #' @param verbose Logical scalar. If `TRUE`, emits a short integrity summary.
 #'
@@ -351,21 +354,7 @@ check_integrity <- function(root = ".", verbose = interactive()) {
   result
 }
 
-#' Run the integrity checker from the command line
-#'
-#' Parses CLI arguments, executes `check_integrity()`, and prints the result.
-#'
-#' @param args Character vector of CLI arguments. Defaults to
-#'   `commandArgs(trailingOnly = TRUE)`.
-#'
-#' @return Invisibly returns the result from `check_integrity()`. If `--help`
-#'   or `-h` is supplied, returns invisibly with `NULL`.
-#'
-#' @examples
-#' \dontrun{
-#' run_check_integrity()
-#' run_check_integrity("--help")
-#' }
+# Run the integrity checker from the command line.
 run_check_integrity <- function(args = commandArgs(trailingOnly = TRUE)) {
   options <- .parse_check_integrity_args(args)
 

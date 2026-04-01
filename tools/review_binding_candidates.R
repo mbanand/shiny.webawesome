@@ -698,6 +698,9 @@ rm(.bootstrap_cli_ui)
 #' suggest that their interaction semantics may be underrepresented by metadata.
 #' The tool writes a deterministic markdown report under `reports/review/`.
 #'
+#' CLI entry point:
+#' `./tools/review_binding_candidates.R --help`
+#'
 #' @param root Repository root directory.
 #' @param metadata_file Path to the copied `custom-elements.json` file,
 #'   relative to the repository root.
@@ -782,20 +785,7 @@ review_binding_candidates <- function(
   result
 }
 
-#' Run the binding-candidate review tool from the command line
-#'
-#' Parses CLI arguments, executes `review_binding_candidates()`, and prints a
-#' short summary describing the resulting report and candidate counts.
-#'
-#' @param args Character vector of CLI arguments. Defaults to
-#'   `commandArgs(trailingOnly = TRUE)`.
-#'
-#' @return Invisibly returns the result from `review_binding_candidates()`. If
-#'   `--help` or `-h` is supplied, returns invisibly with `NULL`.
-#'
-#' @rdname review_binding_candidates
-#' @describeIn review_binding_candidates Run the binding-candidate review tool
-#'   from the command line.
+# Run the binding-candidate review tool from the command line.
 run_review_binding_candidates <- function(
   args = commandArgs(trailingOnly = TRUE)
 ) {

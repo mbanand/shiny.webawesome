@@ -63,6 +63,8 @@ omitted.}
 An HTML tag for the component.
 }
 \description{
-Generated wrapper for the Web Awesome \code{wa-rating} component.
+Generated wrapper for the Web Awesome \code{wa-rating} component. When used
+as a Shiny input, \verb{input$<input_id>} reflects the component's current
+value.
 Generated from Web Awesome metadata.
 }

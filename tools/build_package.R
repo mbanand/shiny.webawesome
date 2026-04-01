@@ -169,6 +169,9 @@ rm(.bootstrap_cli_ui)
 #' Runs the prerequisite tool build workflow and then executes whichever
 #' package-build step scripts are currently present in `tools/`.
 #'
+#' CLI entry point:
+#' `./tools/build_package.R --help`
+#'
 #' @param args Character vector of CLI arguments. Defaults to
 #'   `commandArgs(trailingOnly = TRUE)`.
 #'

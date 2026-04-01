@@ -62,6 +62,8 @@ with \verb{<wa-button>}.}
 An HTML tag for the component.
 }
 \description{
-Generated wrapper for the Web Awesome \code{wa-dialog} component.
+Generated wrapper for the Web Awesome \code{wa-dialog} component. When used
+as a Shiny input, \verb{input$<input_id>} reflects the component's current
+semantic \code{open} state.
 Generated from Web Awesome metadata.
 }

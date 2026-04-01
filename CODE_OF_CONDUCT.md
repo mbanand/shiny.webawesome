@@ -36,9 +36,7 @@ that violate these expectations.
 ## Reporting
 
 If you experience or witness unacceptable behavior, please report it by
-opening an issue or contacting the project maintainer directly:
-
-- M. B. Anand <anand@owlcyberlabs.com>
+opening an issue in the project repository.
 
 Reports will be reviewed as promptly and fairly as possible.
 

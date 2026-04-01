@@ -1614,6 +1614,9 @@ rm(.bootstrap_integrity_helpers)
 #' current generated-file integrity, upstream component coverage, initial
 #' component API conformance, and handwritten exported package APIs.
 #'
+#' CLI entry point:
+#' `./tools/report_components.R --help`
+#'
 #' @param root Repository root directory.
 #' @param metadata_file Path to the copied `custom-elements.json` file,
 #'   relative to the repository root.
@@ -1776,25 +1779,7 @@ report_components <- function(
   )
 }
 
-#' Run the report stage from the command line
-#'
-#' Parses CLI arguments, executes `report_components()`, and prints a short
-#' status summary for the emitted manifests and reports.
-#'
-#' @rdname report_components
-#' @describeIn report_components Run the report stage from the command line.
-#'
-#' @param args Character vector of CLI arguments. Defaults to
-#'   `commandArgs(trailingOnly = TRUE)`.
-#'
-#' @return Invisibly returns the result from `report_components()`. If `--help`
-#'   or `-h` is supplied, returns invisibly with `NULL`.
-#'
-#' @examples
-#' \dontrun{
-#' run_report_components()
-#' run_report_components("--help")
-#' }
+# Run the report stage from the command line.
 run_report_components <- function(args = commandArgs(trailingOnly = TRUE)) {
   options <- .parse_report_args(args)
 

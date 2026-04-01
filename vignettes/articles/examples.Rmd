@@ -35,8 +35,7 @@ ui <- wa_page(
   )
 )
 
-server <- function(input, output, session) {
-}
+server <- function(input, output, session) {}
 
 shinyApp(ui, server)
 ```
@@ -139,13 +138,3 @@ shinyApp(ui, server)
 This is a good pattern when the generated wrapper surface is sufficient for UI
 construction, but the server still needs to trigger a specific browser-side
 method directly.
-
-# Notes
-
-These examples are strong candidates for `shinylive` on the documentation
-website because readers benefit from being able to interact with the components
-and see the resulting Shiny state directly.
-
-If this page later becomes too large, it can be split into separate examples or
-showcase articles. Starting with one article keeps the first documentation pass
-easier to scan and maintain.

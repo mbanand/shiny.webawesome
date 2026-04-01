@@ -6,7 +6,11 @@ source(file.path("..", "..", "document_tools.R"))
 }
 
 .create_fake_repo <- function(root) {
-  dir.create(file.path(root, "projectdocs"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(
+    file.path(root, "projectdocs"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
   dir.create(
     file.path(root, "tools", "generate"),
     recursive = TRUE,
@@ -29,6 +33,10 @@ source(file.path("..", "..", "document_tools.R"))
   file.copy(
     normalizePath(file.path("..", "..", "build_package.R"), mustWork = TRUE),
     file.path(root, "tools", "build_package.R")
+  )
+  file.copy(
+    normalizePath(file.path("..", "..", "build_site.R"), mustWork = TRUE),
+    file.path(root, "tools", "build_site.R")
   )
   file.copy(
     normalizePath(file.path("..", "..", "build_tools.R"), mustWork = TRUE),
@@ -111,7 +119,7 @@ testthat::test_that("document_tools generates docs into tools/man", {
 })
 
 testthat::test_that(
-  "document_tools default file set includes fetch and prune stages",
+  "document_tools default file set includes site and build-stage tools",
   {
     testthat::skip_if_not_installed("document")
     withr::local_envvar(c(SHINY_WEBAWESOME_CLI_MODE = "quiet"))
@@ -121,11 +129,15 @@ testthat::test_that(
 
     result <- document_tools(root = root, verbose = FALSE)
 
+    testthat::expect_true("build_site.Rd" %in% result$generated)
     testthat::expect_true("fetch_webawesome.Rd" %in% result$generated)
     testthat::expect_true("check_integrity.Rd" %in% result$generated)
     testthat::expect_true("prune_webawesome.Rd" %in% result$generated)
     testthat::expect_true("report_components.Rd" %in% result$generated)
     testthat::expect_true("review_binding_candidates.Rd" %in% result$generated)
+    testthat::expect_true(
+      file.exists(file.path(root, "tools", "man", "build_site.Rd"))
+    )
     testthat::expect_true(
       file.exists(file.path(root, "tools", "man", "fetch_webawesome.Rd"))
     )

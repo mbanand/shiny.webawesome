@@ -2,6 +2,7 @@
 ^\.git$
 ^\.git/
 ^\.gitignore$
+^_pkgdown\.yml$
 ^\.Renviron$
 ^vendor$
 ^vendor/
@@ -9,6 +10,8 @@
 ^tools/
 ^projectdocs$
 ^projectdocs/
+^pkgdown$
+^pkgdown/
 ^dev$
 ^dev/
 ^manifests$
@@ -27,4 +30,7 @@
 ^scripts/
 ^\.codex$
 ^\.codex/
+^CODE_OF_CONDUCT\.md$
+^CONTRIBUTING\.md$
 ^LICENSE\.md$
+^SECURITY\.md$

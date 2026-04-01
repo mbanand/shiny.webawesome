@@ -212,11 +212,6 @@ options(
 )
 ```
 
-# Examples
-
-These examples are good candidates for `shinylive` on the documentation website
-because readers benefit from seeing the browser-side effects directly.
-
 # Choosing the Right Tool
 
 Use:

@@ -249,10 +249,6 @@ In this case:
 - `input$menu` is the action-style invalidator
 - `input$menu_value` is the latest committed payload state
 
-This article's examples are strong candidates for `shinylive` on the
-documentation website because the reactive behavior is easier to understand
-when readers can interact with the controls directly.
-
 # Current Bound Components
 
 The package currently generates Shiny bindings for the following components.

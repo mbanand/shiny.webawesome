@@ -4,7 +4,11 @@
 }
 
 .create_fake_repo <- function(root) {
-  dir.create(file.path(root, "projectdocs"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(
+    file.path(root, "projectdocs"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
   dir.create(
     file.path(root, "tools", "testthat", "tools"),
     recursive = TRUE,
@@ -44,7 +48,7 @@ testthat::test_that("tool test runner prints help", {
   result <- .run_test_tools_runner(root, "--help")
 
   testthat::expect_equal(result$status, 0)
-  testthat::expect_match(result$stdout, "Usage: Rscript tools/test_tools.R")
+  testthat::expect_match(result$stdout, "Usage: ./tools/test_tools.R")
   testthat::expect_match(result$stdout, "Options:")
   testthat::expect_match(result$stdout, "--filter")
 })

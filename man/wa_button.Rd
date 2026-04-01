@@ -139,6 +139,9 @@ the button triggers a dropdown menu or similar behavior. Defaults to
 An HTML tag for the component.
 }
 \description{
-Generated wrapper for the Web Awesome \code{wa-button} component.
+Generated wrapper for the Web Awesome \code{wa-button} component. When used
+as a Shiny input, the component exposes action semantics through
+\verb{input$<input_id>}. The Shiny input invalidates on each committed
+action rather than publishing a durable value payload.
 Generated from Web Awesome metadata.
 }

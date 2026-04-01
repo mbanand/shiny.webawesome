@@ -54,6 +54,8 @@ automatically.}
 An HTML tag for the component.
 }
 \description{
-Generated wrapper for the Web Awesome \code{wa-tab-group} component.
+Generated wrapper for the Web Awesome \code{wa-tab-group} component. When
+used as a Shiny input, \verb{input$<input_id>} reflects the component's
+current semantic \code{active} state.
 Generated from Web Awesome metadata.
 }

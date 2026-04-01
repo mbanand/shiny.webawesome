@@ -38,8 +38,7 @@ ui <- wa_page(
   wa_card("Hello from Web Awesome")
 )
 
-server <- function(input, output, session) {
-}
+server <- function(input, output, session) {}
 
 shinyApp(ui, server)
 ```
@@ -67,8 +66,7 @@ ui <- wa_page(
   )
 )
 
-server <- function(input, output, session) {
-}
+server <- function(input, output, session) {}
 
 shinyApp(ui, server)
 ```
@@ -121,8 +119,7 @@ ui <- wa_page(
   )
 )
 
-server <- function(input, output, session) {
-}
+server <- function(input, output, session) {}
 
 shinyApp(ui, server)
 ```
@@ -147,14 +144,10 @@ ui <- wa_page(
   )
 )
 
-server <- function(input, output, session) {
-}
+server <- function(input, output, session) {}
 
 shinyApp(ui, server)
 ```
-
-These examples are good candidates for `shinylive` on the documentation
-website because the value is primarily visual and structural.
 
 # Notes
 

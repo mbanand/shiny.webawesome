@@ -11,7 +11,7 @@ This article is maintainer-facing.
 implement the documented package workflow.
 
 These tools are the operational entry points for the repository's generator,
-runtime-pruning, reporting, and integrity-check steps.
+runtime-pruning, reporting, integrity-check, and website-build steps.
 
 This article is a practical companion to the authoritative workflow
 documentation in `projectdocs/`. It describes the tool entry points and how
@@ -83,18 +83,22 @@ outputs against the recorded integrity manifests.
 
 Generated tool documentation lives under `tools/man/`.
 
+In the website build, the generated HTML tool docs are copied into
+`tool-docs/`.
+
 Useful entry points include:
 
-- `build_package`
-- `build_tools`
-- `clean_webawesome`
-- `fetch_webawesome`
-- `prune_webawesome`
-- `report_components`
-- `check_integrity`
-- `review_binding_candidates`
-- `document_tools`
-- `test_tools`
+- [`build_package`](../tool-docs/build_package.html)
+- [`build_site`](../tool-docs/build_site.html)
+- [`build_tools`](../tool-docs/build_tools.html)
+- [`clean_webawesome`](../tool-docs/clean_webawesome.html)
+- [`fetch_webawesome`](../tool-docs/fetch_webawesome.html)
+- [`prune_webawesome`](../tool-docs/prune_webawesome.html)
+- [`report_components`](../tool-docs/report_components.html)
+- [`check_integrity`](../tool-docs/check_integrity.html)
+- [`review_binding_candidates`](../tool-docs/review_binding_candidates.html)
+- [`document_tools`](../tool-docs/document_tools.html)
+- [`test_tools`](../tool-docs/test_tools.html)
 
 These generated docs are useful when you need the CLI and function-level
 details for a specific tool.
@@ -124,6 +128,25 @@ binding-candidate review, report, and integrity checking.
 Because the repo is still moving toward later-stage documentation and release
 orchestration, this script should be understood as the current package-build
 orchestrator, not the final future release orchestrator.
+
+# Website Tool
+
+## `build_site.R`
+
+Builds the pkgdown documentation site using the checked-in `_pkgdown.yml`
+configuration and writes output to the configured destination, currently
+`website/`.
+
+When generated tool docs are present, this step also copies them into
+`website/tool-docs/`. When source apps are present under
+`tools/shinylive-examples/`, it can also publish matching standalone live-demo
+targets under `website/live-examples/` when invoked with
+`--with-live-examples`. If `shinylive` export emits warnings, the site build
+writes a placeholder page instead of publishing a likely-broken demo shell.
+
+This tool is intentionally separate from `build_package.R`. The docs-site
+workflow is maintainership-facing and may evolve on a different cadence from
+the core package-build stages.
 
 # Notes for Maintainers
 

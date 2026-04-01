@@ -379,20 +379,17 @@ rm(.bootstrap_cli_ui)
 
 #' Fetch a pinned Web Awesome dist-cdn bundle
 #'
-#' This tool supports both direct command-line execution and sourcing from R.
-#'
-#' Use `fetch_webawesome()` when the file has been sourced and you want to call
-#' the fetch stage programmatically. Use `run_fetch_webawesome()` as the
-#' command-line entry point when invoking `./tools/fetch_webawesome.R`.
-#'
 #' Downloads a specific version of the upstream Web Awesome npm package using
 #' `npm pack`, extracts the package tarball in a temporary directory, and
 #' copies the upstream browser-ready `dist-cdn/` tree into
-#' `vendor/webawesome/<version>/dist-cdn/`. The fetched version is also recorded in
-#' `vendor/webawesome/<version>/VERSION`.
+#' `vendor/webawesome/<version>/dist-cdn/`. The fetched version is also
+#' recorded in `vendor/webawesome/<version>/VERSION`.
 #'
 #' If `version` is `NULL`, the version pinned in `dev/webawesome-version.txt`
 #' is used.
+#'
+#' CLI entry point:
+#' `./tools/fetch_webawesome.R --help`
 #'
 #' @param version Optional Web Awesome version string. If `NULL`, reads the
 #'   pinned version from `dev/webawesome-version.txt`.
@@ -533,34 +530,7 @@ fetch_webawesome <- function(version = NULL,
   )
 }
 
-#' Run the fetch stage from the command line
-#'
-#' Parses CLI arguments, executes `fetch_webawesome()`, and prints a short
-#' status summary for the fetched upstream version.
-#'
-#' This is the command-line entry point for the fetch stage.
-#'
-#' Supported options are:
-#' - `--version` / `-v` to override the pinned upstream version
-#' - `--root` to run against a different repository root
-#' - `--quiet` to suppress stage-level progress messages
-#' - `--help` / `-h` to print CLI help
-#'
-#' @rdname fetch_webawesome
-#' @describeIn fetch_webawesome Run the fetch stage from the command line.
-#'
-#' @param args Character vector of CLI arguments. Defaults to
-#'   `commandArgs(trailingOnly = TRUE)`.
-#'
-#' @return Invisibly returns the result from `fetch_webawesome()`. If `--help`
-#'   or `-h` is supplied, returns invisibly with `NULL`.
-#'
-#' @examples
-#' \dontrun{
-#' run_fetch_webawesome()
-#' run_fetch_webawesome(c("--version", "3.3.1"))
-#' run_fetch_webawesome("--help")
-#' }
+# Run the fetch stage from the command line.
 run_fetch_webawesome <- function(args = commandArgs(trailingOnly = TRUE)) {
   options <- .parse_fetch_args(args)
 

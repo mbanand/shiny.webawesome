@@ -1,0 +1,51 @@
+@media (min-width: 992px) {
+  .navbar .nav-text {
+    margin-right: 0.75rem;
+    padding-right: 0.9rem;
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
+  }
+
+  .navbar .navbar-collapse {
+    margin-left: 0.75rem;
+  }
+
+  .navbar .navbar-nav.me-auto > .nav-item {
+    white-space: nowrap;
+  }
+
+  .navbar .navbar-nav:not(.me-auto) {
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0.45rem;
+  }
+
+  .navbar .navbar-nav:not(.me-auto) > .nav-item {
+    white-space: nowrap;
+  }
+
+  .navbar .navbar-nav:not(.me-auto) > .nav-item:first-child {
+    margin-left: 0.2rem;
+    padding-left: 0.9rem;
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .navbar .navbar-nav:not(.me-auto) > .nav-item:nth-child(2) {
+    margin-right: 0.1rem;
+  }
+
+  .navbar .navbar-nav:not(.me-auto) .form-control {
+    min-width: 10.5rem;
+  }
+
+  .navbar .navbar-nav:not(.me-auto) .nav-link {
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
+  }
+
+  .navbar .navbar-nav:not(.me-auto) > .nav-item:last-child {
+    margin-left: 0.2rem;
+    padding-left: 0.7rem;
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
+  }
+}

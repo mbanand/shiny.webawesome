@@ -355,13 +355,6 @@ rm(.bootstrap_cli_ui, .bootstrap_generate_helpers, .bootstrap_integrity_helpers)
 
 #' Build the intermediate Web Awesome component schema
 #'
-#' This tool supports both direct command-line execution and sourcing from R.
-#'
-#' Use `generate_components()` when the file has been sourced and you want to
-#' inspect the parsed metadata or normalized schema programmatically. Use
-#' `run_generate_components()` as the command-line entry point when invoking
-#' `./tools/generate_components.R`.
-#'
 #' The current implementation reads the copied metadata produced by the prune
 #' stage from `inst/extdata/webawesome/custom-elements.json`, extracts custom
 #' element declarations, and constructs a deterministic intermediate schema.
@@ -370,6 +363,9 @@ rm(.bootstrap_cli_ui, .bootstrap_generate_helpers, .bootstrap_integrity_helpers)
 #' element declarations, constructs a deterministic intermediate schema, and
 #' emits generated wrapper, binding, and update files for the selected
 #' component set.
+#'
+#' CLI entry point:
+#' `./tools/generate_components.R --help`
 #'
 #' @param root Repository root directory.
 #' @param metadata_file Path to the copied `custom-elements.json` file,
@@ -498,35 +494,7 @@ generate_components <- function(
   message(summary)
 }
 
-#' Run the generate stage from the command line
-#'
-#' Parses CLI arguments, executes `generate_components()`, and prints a short
-#' status summary for the parsed metadata and constructed schema.
-#'
-#' Supported options are:
-#' - `--root` to run against a different repository root
-#' - `--filter` to include only selected components
-#' - `--exclude` to omit selected components
-#' - `--schema-only` to skip writing generated outputs
-#' - `--debug` to write JSON snapshots under `scratch/debug/`
-#' - `--quiet` to suppress stage-level progress messages
-#' - `--help` / `-h` to print CLI help
-#'
-#' @rdname generate_components
-#' @describeIn generate_components Run the generate stage from the command line.
-#'
-#' @param args Character vector of CLI arguments. Defaults to
-#'   `commandArgs(trailingOnly = TRUE)`.
-#'
-#' @return Invisibly returns the result from `generate_components()`. If
-#'   `--help` or `-h` is supplied, returns invisibly with `NULL`.
-#'
-#' @examples
-#' \dontrun{
-#' run_generate_components()
-#' run_generate_components(c("--filter", "wa-card,wa-checkbox"))
-#' run_generate_components("--help")
-#' }
+# Run the generate stage from the command line.
 run_generate_components <- function(args = commandArgs(trailingOnly = TRUE)) {
   options <- .parse_generate_args(args)
 

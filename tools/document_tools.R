@@ -51,6 +51,7 @@ rm(.bootstrap_cli_ui)
 .default_tool_doc_files <- function() {
   c(
     "tools/build_package.R",
+    "tools/build_site.R",
     "tools/build_tools.R",
     "tools/check_integrity.R",
     "tools/clean_webawesome.R",
@@ -205,6 +206,9 @@ rm(.bootstrap_cli_ui)
 #' writes the generated artifacts to `tools/man/`. Documentation is generated
 #' file-by-file using the `document` package so tool scripts can be documented
 #' without moving them into the package `R/` tree.
+#'
+#' CLI entry point:
+#' `./tools/document_tools.R --help`
 #'
 #' @param files Optional character vector of tool script paths, relative to the
 #'   repository root. If `NULL`, documents the standard handwritten tool entry

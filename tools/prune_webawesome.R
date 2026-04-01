@@ -734,12 +734,6 @@ rm(.bootstrap_integrity_helpers)
 
 #' Prune a fetched Web Awesome dist-cdn bundle
 #'
-#' This tool supports both direct command-line execution and sourcing from R.
-#'
-#' Use `prune_webawesome()` when the file has been sourced and you want to call
-#' the prune stage programmatically. Use `run_prune_webawesome()` as the
-#' command-line entry point when invoking `./tools/prune_webawesome.R`.
-#'
 #' Reads one fetched Web Awesome `dist-cdn/` tree from
 #' `vendor/webawesome/<version>/dist-cdn/`, validates that the expected runtime
 #' inputs are present, copies the pruned browser runtime bundle into
@@ -749,6 +743,9 @@ rm(.bootstrap_integrity_helpers)
 #'
 #' If `version` is `NULL`, the version pinned in `dev/webawesome-version.txt`
 #' is used.
+#'
+#' CLI entry point:
+#' `./tools/prune_webawesome.R --help`
 #'
 #' @param version Optional Web Awesome version string. If `NULL`, reads the
 #'   pinned version from `dev/webawesome-version.txt`.
@@ -904,34 +901,7 @@ prune_webawesome <- function(version = NULL,
   )
 }
 
-#' Run the prune stage from the command line
-#'
-#' Parses CLI arguments, executes `prune_webawesome()`, and prints a short
-#' status summary for the pruned runtime bundle.
-#'
-#' This is the command-line entry point for the prune stage.
-#'
-#' Supported options are:
-#' - `--version` / `-v` to override the pinned upstream version
-#' - `--root` to run against a different repository root
-#' - `--quiet` to suppress stage-level progress messages
-#' - `--help` / `-h` to print CLI help
-#'
-#' @rdname prune_webawesome
-#' @describeIn prune_webawesome Run the prune stage from the command line.
-#'
-#' @param args Character vector of CLI arguments. Defaults to
-#'   `commandArgs(trailingOnly = TRUE)`.
-#'
-#' @return Invisibly returns the result from `prune_webawesome()`. If `--help`
-#'   or `-h` is supplied, returns invisibly with `NULL`.
-#'
-#' @examples
-#' \dontrun{
-#' run_prune_webawesome()
-#' run_prune_webawesome(c("--version", "3.3.1"))
-#' run_prune_webawesome("--help")
-#' }
+# Run the prune stage from the command line.
 run_prune_webawesome <- function(args = commandArgs(trailingOnly = TRUE)) {
   options <- .parse_prune_args(args)
 

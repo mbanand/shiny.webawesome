@@ -134,7 +134,9 @@ An HTML tag for the component.
 Invisibly returns \code{NULL}.
 }
 \description{
-Generated wrapper for the Web Awesome \code{wa-select} component.
+Generated wrapper for the Web Awesome \code{wa-select} component. When used
+as a Shiny input, \verb{input$<input_id>} reflects the component's current
+value.
 Generated from Web Awesome metadata.
 
 Generated update helper for the Web Awesome \code{wa-select} component.

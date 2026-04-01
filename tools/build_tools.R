@@ -168,6 +168,9 @@ rm(.bootstrap_cli_ui)
 #' Orchestrates the source-level tooling workflow by optionally running the tool
 #' test suite and regenerating tool documentation.
 #'
+#' CLI entry point:
+#' `./tools/build_tools.R --help`
+#'
 #' @param args Character vector of CLI arguments. Defaults to
 #'   `commandArgs(trailingOnly = TRUE)`.
 #'

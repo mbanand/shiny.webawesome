@@ -1,0 +1,196 @@
+url: https://www.shiny-webawesome.org
+destination: website
+
+template:
+  bootstrap: 5
+
+development:
+  mode: auto
+
+home:
+  title: shiny.webawesome
+  description: >-
+    Shiny bindings for Web Awesome components. Package version 0.1.0; bundled
+    upstream Web Awesome version 3.3.1.
+  strip:
+    title: shiny.webawesome
+    subtitle: >-
+      Shiny bindings for Web Awesome components. Package 0.1.0 with bundled
+      Web Awesome 3.3.1.
+  links:
+    - text: GitHub repository
+      href: https://github.com/mbanand/shiny.webawesome
+    - text: Report an issue
+      href: https://github.com/mbanand/shiny.webawesome/issues
+  sidebar:
+    structure: [links, license, community, citation, authors, dev]
+    components:
+      links:
+        title: Quick Links
+        text: |
+          <a href="articles/get-started.html">Getting Started</a><br>
+          <a href="reference/index.html">Function Reference</a><br>
+          <a href="news/index.html">News</a><br>
+          <a href="https://github.com/mbanand/shiny.webawesome">GitHub</a>
+      community:
+        title: Project Docs
+        text: |
+          <a href="CODE_OF_CONDUCT.html">Code of Conduct</a><br>
+          <a href="CONTRIBUTING.html">Contributing</a><br>
+          <a href="SECURITY.html">Security</a>
+
+navbar:
+  structure:
+    left: [home, get-started, articles, maintainers, reference, news]
+    right: [upstream, search, github]
+  components:
+    home:
+      text: Home
+      href: index.html
+    get-started:
+      text: Get Started
+      href: articles/get-started.html
+    articles:
+      text: Articles
+      menu:
+        - text: Layout Utilities
+          href: articles/layout-utilities.html
+        - text: Shiny Bindings
+          href: articles/shiny-bindings.html
+        - text: Extra Attributes via htmltools
+          href: articles/htmltools-attributes.html
+        - text: Command API
+          href: articles/command-api.html
+        - text: Package Options
+          href: articles/package-options.html
+        - text: Examples
+          href: articles/examples.html
+    maintainers:
+      text: Development
+      menu:
+        - text: Build Tools
+          href: articles/build-tools.html
+    upstream:
+      text: Web Awesome 3.3.1
+      href: https://webawesome.com/
+
+articles:
+  - title: Getting Started
+    navbar: Get Started
+    contents:
+      - get-started
+  - title: User Articles
+    navbar: Articles
+    contents:
+      - articles/layout-utilities
+      - articles/shiny-bindings
+      - articles/htmltools-attributes
+      - articles/command-api
+      - articles/package-options
+      - articles/examples
+  - title: Maintainer Articles
+    navbar: Development
+    contents:
+      - articles/build-tools
+
+reference:
+  - title: Package Overview
+    desc: Entry points for package-level orientation.
+    contents:
+      - shiny.webawesome-package
+
+  - title: Layout and Page Helpers
+    desc: Helpers for page scaffolding and layout convenience.
+    contents:
+      - wa_container
+      - wa_page
+
+  - title: Include and Icon Helpers
+    desc: Helpers for browser-side includes and icon components.
+    contents:
+      - wa_icon
+      - wa_include
+
+  - title: Shiny Command Layer
+    desc: Server-to-browser helpers and app-local JavaScript glue.
+    contents:
+      - wa_call_method
+      - wa_js
+      - wa_set_property
+
+  - title: Shiny Update Helpers
+    desc: Curated update helpers for supported interactive components.
+    contents:
+      - update_wa_input
+      - update_wa_number_input
+      - update_wa_select
+      - update_wa_slider
+      - update_wa_textarea
+
+  - title: Formatting Helpers
+    desc: Helpers for browser-side format components.
+    contents:
+      - wa_format_bytes
+      - wa_format_date
+      - wa_format_number
+      - wa_relative_time
+
+  - title: Observer Utilities
+    desc: Browser observer wrappers for intersection, mutation, and resize.
+    contents:
+      - wa_intersection_observer
+      - wa_mutation_observer
+      - wa_resize_observer
+
+  - title: Components
+    desc: Generated Web Awesome component wrappers.
+    contents:
+      - wa_animated_image
+      - wa_animation
+      - wa_avatar
+      - wa_badge
+      - wa_breadcrumb
+      - wa_breadcrumb_item
+      - wa_button
+      - wa_button_group
+      - wa_callout
+      - wa_card
+      - wa_carousel
+      - wa_carousel_item
+      - wa_checkbox
+      - wa_color_picker
+      - wa_comparison
+      - wa_copy_button
+      - wa_details
+      - wa_dialog
+      - wa_divider
+      - wa_drawer
+      - wa_dropdown
+      - wa_dropdown_item
+      - wa_input
+      - wa_number_input
+      - wa_option
+      - wa_popover
+      - wa_popup
+      - wa_progress_bar
+      - wa_progress_ring
+      - wa_qr_code
+      - wa_radio
+      - wa_radio_group
+      - wa_rating
+      - wa_scroller
+      - wa_select
+      - wa_skeleton
+      - wa_slider
+      - wa_spinner
+      - wa_split_panel
+      - wa_switch
+      - wa_tab
+      - wa_tab_group
+      - wa_tab_panel
+      - wa_tag
+      - wa_textarea
+      - wa_tooltip
+      - wa_tree
+      - wa_tree_item
+      - wa_zoomable_frame

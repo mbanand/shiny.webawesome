@@ -117,6 +117,8 @@ use the \code{label} attribute.}
 An HTML tag for the component.
 }
 \description{
-Generated wrapper for the Web Awesome \code{wa-color-picker} component.
+Generated wrapper for the Web Awesome \code{wa-color-picker} component. When
+used as a Shiny input, \verb{input$<input_id>} reflects the component's
+current value.
 Generated from Web Awesome metadata.
 }

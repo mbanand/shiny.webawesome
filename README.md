@@ -71,7 +71,7 @@ shinyApp(ui, server)
 
 ## Contributing
 
-Contributing guidance lives in [CONTRIBUTING.md](CONTRIBUTING.md).
+Please see contributing guidance in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-This repository's project and workflow documentation lives under
-`projectdocs/`.
+Repository project and workflow documentation is in the repo's
+`projectdocs/` directory.

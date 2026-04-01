@@ -271,6 +271,9 @@ rm(.bootstrap_cli_ui)
 #' pruned runtime bundle.
 #' `distclean` additionally removes fetched upstream inputs and copied metadata.
 #'
+#' CLI entry point:
+#' `./tools/clean_webawesome.R --help`
+#'
 #' @param level Cleanup level. Must be one of `"clean"` or `"distclean"`.
 #' @param dry_run Logical scalar. If `TRUE`, reports the paths that would be
 #'   removed without deleting them.
@@ -332,31 +335,7 @@ clean_webawesome <- function(level = c("clean", "distclean"),
   result
 }
 
-#' Run the clean stage from the command line
-#'
-#' Parses CLI arguments, executes [clean_webawesome()], and prints a short
-#' status summary for the requested cleanup level.
-#'
-#' Supported options are:
-#' - `--level` / `-l` for `clean` or `distclean`
-#' - `--dry-run` to report actions without deleting files
-#' - `--root` to point at a repository root other than the current directory
-#' - `--quiet` to suppress stage-level progress messages
-#' - `--help` / `-h` to print CLI help
-#'
-#' @param args Character vector of CLI arguments. Defaults to
-#'   `commandArgs(trailingOnly = TRUE)`.
-#'
-#' @return Invisibly returns the result from [clean_webawesome()]. If `--help`
-#'   or `-h` is supplied, returns invisibly with `NULL`.
-#'
-#' @examples
-#' \dontrun{
-#' run_clean_webawesome()
-#' run_clean_webawesome(c("--level", "distclean", "--dry-run"))
-#' run_clean_webawesome(c("--root", "/path/to/repo"))
-#' run_clean_webawesome("--help")
-#' }
+# Run the clean stage from the command line.
 run_clean_webawesome <- function(args = commandArgs(trailingOnly = TRUE)) {
   options <- .parse_clean_args(args)
 

@@ -28,3 +28,4 @@ Sends a one-way command from the Shiny server to a browser element targeted
 by DOM \code{id}. This is an internal transport helper used by package-level
 command helpers such as \code{wa_set_property()} and \code{wa_call_method()}.
 }
+\keyword{internal}

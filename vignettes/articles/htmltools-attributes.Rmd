@@ -1,0 +1,131 @@
+---
+title: "Extra Attributes via htmltools"
+output: html_document
+---
+
+# Overview
+
+One of Web Awesome's strengths is that its components behave like standard
+HTML elements.
+
+That matters in `shiny.webawesome` too. Even though the package provides R
+wrappers for Web Awesome components, the rendered output is still HTML. In
+practice, that means the components can still participate in normal HTML
+attribute patterns.
+
+Examples of standard attributes you may still want to apply include:
+
+- `title`
+- `role`
+- `tabindex`
+- `aria-label`
+- `aria-describedby`
+- `lang`
+- `data-*` attributes for app- or browser-side hooks
+
+# Why the wrappers do not expose every HTML attribute
+
+The generated wrappers intentionally keep their argument surface focused.
+
+For all components, the wrappers expose the most broadly useful HTML-level
+attributes directly:
+
+- `class`
+- `style`
+
+This keeps the package API smaller and easier to understand. If every wrapper
+also exposed the full standard HTML attribute surface, the generated API would
+grow substantially without adding much package-specific value.
+
+The design goal is:
+
+- expose the Web Awesome component API clearly
+- expose the most useful common HTML hooks directly
+- avoid wrapper-argument bloat for attributes that already belong to normal
+  HTML authoring
+
+# Adding extra attributes
+
+When you need standard HTML attributes beyond `class` and `style`, append them
+with `htmltools`.
+
+This works because the generated wrappers return normal HTML tag objects.
+
+## Example: accessibility and tooltip attributes
+
+```{r htmltools-attrs-basic, eval = FALSE}
+library(htmltools)
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "Extra attributes",
+  tagAppendAttributes(
+    wa_button("save_button", "Save"),
+    `aria-label` = "Save current form",
+    title = "Save"
+  )
+)
+
+server <- function(input, output, session) {
+}
+
+shinyApp(ui, server)
+```
+
+Here, `wa_button()` stays focused on the component API while `htmltools`
+provides the extra HTML attributes.
+
+## Example: role, tabindex, and custom data attributes
+
+```{r htmltools-attrs-advanced, eval = FALSE}
+library(htmltools)
+library(shiny)
+library(shiny.webawesome)
+
+ui <- wa_page(
+  title = "More attributes",
+  tagAppendAttributes(
+    wa_card("Keyboard focus example"),
+    role = "region",
+    tabindex = "0",
+    `data-section` = "summary"
+  )
+)
+
+server <- function(input, output, session) {
+}
+
+shinyApp(ui, server)
+```
+
+This is especially useful when:
+
+- you need accessibility attributes
+- you need browser-side hooks for app-local JavaScript
+- you need standard HTML semantics that are not worth surfacing as dedicated
+  wrapper arguments
+
+# When to use this pattern
+
+Prefer direct wrapper arguments when the package already exposes the attribute
+or component field intentionally.
+
+Prefer `tagAppendAttributes()` when:
+
+- the attribute is part of normal HTML rather than a Web Awesome-specific API
+- the attribute is app-specific rather than package-wide
+- adding a dedicated wrapper argument would add API noise without improving the
+  common case
+
+# Relationship to other package surfaces
+
+This pattern is separate from:
+
+- generated Shiny bindings
+- generated update helpers
+- the command-layer helpers such as `wa_set_property()` and `wa_call_method()`
+
+Use `htmltools` attribute appending when you are shaping static rendered HTML.
+Use the command layer when you need live browser-side interaction after the UI
+has already been rendered.

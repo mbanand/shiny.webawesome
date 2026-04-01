@@ -139,10 +139,9 @@ An HTML tag for the component.
 Invisibly returns \code{NULL}.
 }
 \description{
-\if{html}{\out{
-<wa-slider>
+\if{html}{\out{<wa-slider>}} When used as a Shiny input, \verb{input$<input_id>} reflects the
+component's current value.
 Generated from Web Awesome metadata.
-}}
 
 Generated update helper for the Web Awesome \code{wa-slider} component.
 }
