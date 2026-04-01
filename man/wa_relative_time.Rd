@@ -26,26 +26,26 @@ wa_relative_time(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{date}{The date from which to calculate time from. If not set, the
-current date and time will be used. When passing a string, it's
-strongly recommended to use the ISO 8601 format to ensure timezones are
-handled correctly. To convert a date to this format in JavaScript, use
-\code{date.toISOString()}. Defaults to \verb{new Date()} when omitted.}
+\item{date}{Default: \verb{new Date()}. The date from which to calculate
+time from. If not set, the current date and time will be used. When
+passing a string, it's strongly recommended to use the ISO 8601 format
+to ensure timezones are handled correctly. To convert a date to this
+format in JavaScript, use \code{date.toISOString()}.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{format}{The formatting style to use. Must be one of \code{"long"},
-\code{"narrow"}, \code{"short"}. Defaults to \code{long} when omitted.}
+\item{format}{Enumerated string. Allowed values: \code{long}, \code{narrow},
+\code{short}. Default: \code{long}. The formatting style to use.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{numeric}{When \code{auto}, values such as "yesterday" and "tomorrow"
+\item{numeric}{Enumerated string. Allowed values: \code{always}, \code{auto}.
+Default: \code{auto}. When \code{auto}, values such as "yesterday" and "tomorrow"
 will be shown when possible. When \code{always}, values such as "1 day ago"
-and "in 1 day" will be shown. Must be one of \code{"always"}, \code{"auto"}.
-Defaults to \code{auto} when omitted.}
+and "in 1 day" will be shown.}
 
-\item{sync}{Keep the displayed value up to date as time passes.
-Defaults to \code{false} when omitted.}
+\item{sync}{Boolean. Default: \code{FALSE}. Keep the displayed value up to
+date as time passes.}
 }
 \value{
 An HTML tag for the component.

@@ -27,12 +27,12 @@ the rendered DOM \code{id} attribute.}
 
 \item{style}{Optional inline CSS style string.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{position}{The position of the divider as a percentage. Defaults
-to \code{50} when omitted.}
+\item{position}{Number. Default: \code{50}. The position of the divider as a
+percentage.}
 
 \item{after}{The after content, often an \verb{<img>} or \verb{<svg>} element.}
 
@@ -46,6 +46,11 @@ An HTML tag for the component.
 \description{
 Generated wrapper for the Web Awesome \code{wa-comparison} component. When
 used as a Shiny input, \verb{input$<input_id>} reflects the component's
-current value.
+current \code{value} value.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current \code{value} value.
+}
+

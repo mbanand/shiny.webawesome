@@ -46,90 +46,89 @@ the rendered DOM \code{id} attribute.}
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The value of the button, submitted as a pair with the
-button's name as part of the form data, but only when this button is
-the submitter. This attribute is ignored when \code{href} is present.}
+\item{value}{String. The value of the button, submitted as a pair with
+the button's name as part of the form data, but only when this button
+is the submitter. This attribute is ignored when \code{href} is present.}
 
-\item{disabled}{Disables the button. Defaults to \code{false} when omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the button.}
 
-\item{name}{The name of the button, submitted as a name/value pair with
-form data, but only when this button is the submitter. This attribute
-is ignored when \code{href} is present. Defaults to \code{null} when omitted.}
+\item{name}{String. Default: \code{null}. The name of the button, submitted
+as a name/value pair with form data, but only when this button is the
+submitter. This attribute is ignored when \code{href} is present.}
 
-\item{appearance}{The button's visual appearance. Must be one of
-\code{"accent"}, \code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}, \code{"plain"}.
-Defaults to \code{accent} when omitted.}
+\item{appearance}{Enumerated string. Allowed values: \code{accent},
+\code{filled}, \code{filled-outlined}, \code{outlined}, \code{plain}. Default: \code{accent}.
+The button's visual appearance.}
 
-\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
-when omitted.}
+\item{custom_error}{String. Default: \code{null}. Optional Web Awesome
+attribute.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{download}{Tells the browser to download the linked file as this
-filename. Only used when \code{href} is present.}
+\item{download}{String. Tells the browser to download the linked file
+as this filename. Only used when \code{href} is present.}
 
-\item{formaction}{Used to override the form owner's \code{action} attribute.
-This wrapper argument sets the HTML \code{formaction} attribute, which maps
-to the component's \code{formAction} field/property.}
+\item{formaction}{String. Used to override the form owner's \code{action}
+attribute. This wrapper argument sets the HTML \code{formaction} attribute,
+which maps to the component's \code{formAction} field/property.}
 
-\item{formenctype}{Used to override the form owner's \code{enctype}
-attribute. This wrapper argument sets the HTML \code{formenctype} attribute,
-which maps to the component's \code{formEnctype} field/property. Must be one
-of \code{"application/x-www-form-urlencoded"}, \code{"multipart/form-data"},
-\code{"text/plain"}.}
+\item{formenctype}{Enumerated string. Allowed values:
+\code{application/x-www-form-urlencoded}, \code{multipart/form-data},
+\code{text/plain}. Used to override the form owner's \code{enctype} attribute.
+This wrapper argument sets the HTML \code{formenctype} attribute, which maps
+to the component's \code{formEnctype} field/property.}
 
-\item{formmethod}{Used to override the form owner's \code{method} attribute.
-This wrapper argument sets the HTML \code{formmethod} attribute, which maps
-to the component's \code{formMethod} field/property. Must be one of \code{"get"},
-\code{"post"}.}
+\item{formmethod}{Enumerated string. Allowed values: \code{get}, \code{post}.
+Used to override the form owner's \code{method} attribute. This wrapper
+argument sets the HTML \code{formmethod} attribute, which maps to the
+component's \code{formMethod} field/property.}
 
-\item{formnovalidate}{Used to override the form owner's \code{novalidate}
-attribute. This wrapper argument sets the HTML \code{formnovalidate}
-attribute, which maps to the component's \code{formNoValidate}
-field/property.}
+\item{formnovalidate}{Boolean. Used to override the form owner's
+\code{novalidate} attribute. This wrapper argument sets the HTML
+\code{formnovalidate} attribute, which maps to the component's
+\code{formNoValidate} field/property.}
 
 \item{formtarget}{Used to override the form owner's \code{target} attribute.
 This wrapper argument sets the HTML \code{formtarget} attribute, which maps
 to the component's \code{formTarget} field/property.}
 
-\item{href}{When set, the underlying button will be rendered as an
-\verb{<a>} with this \code{href} instead of a \verb{<button>}.}
+\item{href}{String. When set, the underlying button will be rendered as
+an \verb{<a>} with this \code{href} instead of a \verb{<button>}.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{loading}{Draws the button in a loading state. Defaults to \code{false}
-when omitted.}
+\item{loading}{Boolean. Default: \code{FALSE}. Draws the button in a loading
+state.}
 
-\item{pill}{Draws a pill-style button with rounded edges. Defaults to
-\code{false} when omitted.}
+\item{pill}{Boolean. Default: \code{FALSE}. Draws a pill-style button with
+rounded edges.}
 
-\item{rel}{When using \code{href}, this attribute will map to the underlying
-link's \code{rel} attribute.}
+\item{rel}{String. When using \code{href}, this attribute will map to the
+underlying link's \code{rel} attribute.}
 
-\item{size}{The button's size. Must be one of \code{"large"}, \code{"medium"},
-\code{"small"}. Defaults to \code{medium} when omitted.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. Default: \code{medium}. The button's size.}
 
-\item{target}{Tells the browser where to open the link. Only used when
-\code{href} is present. Must be one of \code{"_blank"}, \code{"_parent"}, \code{"_self"},
-\code{"_top"}.}
+\item{target}{Enumerated string. Allowed values: \verb{_blank}, \verb{_parent},
+\verb{_self}, \verb{_top}. Tells the browser where to open the link. Only used
+when \code{href} is present.}
 
-\item{title}{Optional Web Awesome attribute. Defaults to `` when
-omitted.}
+\item{title}{String. Default: \code{""}. Optional Web Awesome attribute.}
 
-\item{type}{The type of button. Note that the default value is \code{button}
-instead of \code{submit}, which is opposite of how native \verb{<button>}
-elements behave. When the type is \code{submit}, the button will submit the
-surrounding form. Must be one of \code{"button"}, \code{"reset"}, \code{"submit"}.
-Defaults to \code{button} when omitted.}
+\item{type}{Enumerated string. Allowed values: \code{button}, \code{reset},
+\code{submit}. Default: \code{button}. The type of button. Note that the default
+value is \code{button} instead of \code{submit}, which is opposite of how native
+\verb{<button>} elements behave. When the type is \code{submit}, the button will
+submit the surrounding form.}
 
-\item{variant}{The button's theme variant. Defaults to \code{neutral} if not
-within another element with a variant. Must be one of \code{"brand"},
-\code{"danger"}, \code{"neutral"}, \code{"success"}, \code{"warning"}. Defaults to
-\code{neutral} when omitted.}
+\item{variant}{Enumerated string. Allowed values: \code{brand}, \code{danger},
+\code{neutral}, \code{success}, \code{warning}. Default: \code{neutral}. The button's theme
+variant. Defaults to \code{neutral} if not within another element with a
+variant.}
 
-\item{with_caret}{Draws the button with a caret. Used to indicate that
-the button triggers a dropdown menu or similar behavior. Defaults to
-\code{false} when omitted.}
+\item{with_caret}{Boolean. Default: \code{FALSE}. Draws the button with a
+caret. Used to indicate that the button triggers a dropdown menu or
+similar behavior.}
 
 \item{end}{An element, such as \verb{<wa-icon>}, placed after the label.}
 
@@ -145,3 +144,9 @@ as a Shiny input, the component exposes action semantics through
 action rather than publishing a durable value payload.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} uses action semantics and invalidates on each
+committed action rather than publishing a durable value payload.
+}
+

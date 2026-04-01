@@ -5,7 +5,7 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-switch` component. When used
 #' as a Shiny input, `input$<input_id>` reflects the component's current
-#' value.
+#' `value` value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -13,32 +13,35 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The value of the switch, submitted as a name/value pair
-#' with form data.
-#' @param checked The default value of the form control. Primarily used
-#' for resetting the form control. This wrapper argument sets the HTML
-#' `checked` attribute, which maps to the component's `defaultChecked`
-#' field/property rather than its live `checked` property.
-#' @param disabled Disables the switch. Defaults to `false` when omitted.
-#' @param hint The switch's hint. If you need to display HTML, use the
-#' `hint` slot instead. Defaults to `` when omitted.
-#' @param name The name of the switch, submitted as a name/value pair with
-#' form data. Defaults to `null` when omitted.
-#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param required Makes the switch a required field. Defaults to `false`
-#' when omitted.
-#' @param size The switch's size. Must be one of `"large"`, `"medium"`,
-#' `"small"`. Defaults to `medium` when omitted.
-#' @param title Optional Web Awesome attribute. Defaults to `` when
-#' omitted.
-#' @param with_hint Used for SSR. If you slot in hint, make sure to add
-#' `with-hint` to your component to get it to properly render with SSR.
-#' Defaults to `false` when omitted.
+#' @param value String. The value of the switch, submitted as a name/value
+#' pair with form data.
+#' @param checked Boolean. The default value of the form control.
+#' Primarily used for resetting the form control. This wrapper argument
+#' sets the HTML `checked` attribute, which maps to the component's
+#' `defaultChecked` field/property rather than its live `checked`
+#' property.
+#' @param disabled Boolean. Default: `FALSE`. Disables the switch.
+#' @param hint String. Default: `""`. The switch's hint. If you need to
+#' display HTML, use the `hint` slot instead.
+#' @param name String. Default: `null`. The name of the switch, submitted
+#' as a name/value pair with form data.
+#' @param custom_error String. Default: `null`. Optional Web Awesome
+#' attribute.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param required Boolean. Default: `FALSE`. Makes the switch a required
+#' field.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. Default: `medium`. The switch's size.
+#' @param title String. Default: `""`. Optional Web Awesome attribute.
+#' @param with_hint Boolean. Default: `FALSE`. Used for SSR. If you slot
+#' in hint, make sure to add `with-hint` to your component to get it to
+#' properly render with SSR.
 #' @param hint_slot Text that describes how to use the switch.
 #' Alternatively, you can use the `hint` attribute.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current `value` value.
 #'
 #' @return An HTML tag for the component.
 #'

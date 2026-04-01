@@ -32,30 +32,30 @@ the rendered DOM \code{id} attribute.}
 
 \item{style}{Optional inline CSS style string.}
 
-\item{disabled}{Disables the details so it can't be toggled. Defaults
-to \code{false} when omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the details so it
+can't be toggled.}
 
-\item{name}{Groups related details elements. When one opens, others
-with the same name will close.}
+\item{name}{String. Groups related details elements. When one opens,
+others with the same name will close.}
 
-\item{appearance}{The element's visual appearance. Must be one of
-\code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}, \code{"plain"}. Defaults to
-\code{outlined} when omitted.}
+\item{appearance}{Enumerated string. Allowed values: \code{filled},
+\code{filled-outlined}, \code{outlined}, \code{plain}. Default: \code{outlined}. The
+element's visual appearance.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{icon_placement}{The location of the expand/collapse icon. Must be
-one of \code{"end"}, \code{"start"}. Defaults to \code{end} when omitted.}
+\item{icon_placement}{Enumerated string. Allowed values: \code{end},
+\code{start}. Default: \code{end}. The location of the expand/collapse icon.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{open}{Indicates whether or not the details is open. You can
-toggle this attribute to show and hide the details, or you can use the
-\code{show()} and \code{hide()} methods and this attribute will reflect the
-details' open state. Defaults to \code{false} when omitted.}
+\item{open}{Boolean. Default: \code{FALSE}. Indicates whether or not the
+details is open. You can toggle this attribute to show and hide the
+details, or you can use the \code{show()} and \code{hide()} methods and this
+attribute will reflect the details' open state.}
 
-\item{summary}{The summary to show in the header. If you need to
-display HTML, use the \code{summary} slot instead.}
+\item{summary}{String. The summary to show in the header. If you need
+to display HTML, use the \code{summary} slot instead.}
 
 \item{collapse_icon}{Optional collapse icon to use instead of the
 default. Works best with \verb{<wa-icon>}.}
@@ -75,3 +75,9 @@ as a Shiny input, \verb{input$<input_id>} reflects the component's current
 semantic \code{open} state.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current semantic \code{open}
+state.
+}
+

@@ -10,25 +10,24 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param dir Optional Web Awesome attribute.
-#' @param distance The distance in pixels from which to offset the popover
-#' away from its target. Defaults to `8` when omitted.
-#' @param for The ID of the popover's anchor element. This must be an
-#' interactive/focusable element such as a button. Defaults to `null` when
-#' omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param open Shows or hides the popover. Defaults to `false` when
-#' omitted.
-#' @param placement The preferred placement of the popover. Note that the
+#' @param dir String. Optional Web Awesome attribute.
+#' @param distance Number. Default: `8`. The distance in pixels from which
+#' to offset the popover away from its target.
+#' @param for String. Default: `null`. The ID of the popover's anchor
+#' element. This must be an interactive/focusable element such as a
+#' button.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param open Boolean. Default: `FALSE`. Shows or hides the popover.
+#' @param placement Enumerated string. Allowed values: `bottom`,
+#' `bottom-end`, `bottom-start`, `left`, `left-end`, `left-start`,
+#' `right`, `right-end`, `right-start`, `top`, `top-end`, `top-start`.
+#' Default: `top`. The preferred placement of the popover. Note that the
 #' actual placement may vary as needed to keep the popover inside of the
-#' viewport. Must be one of `"bottom"`, `"bottom-end"`, `"bottom-start"`,
-#' `"left"`, `"left-end"`, `"left-start"`, `"right"`, `"right-end"`,
-#' `"right-start"`, `"top"`, `"top-end"`, `"top-start"`. Defaults to `top`
-#' when omitted.
-#' @param skidding The distance in pixels from which to offset the popover
-#' along its target. Defaults to `0` when omitted.
-#' @param without_arrow Removes the arrow from the popover. Defaults to
-#' `false` when omitted.
+#' viewport.
+#' @param skidding Number. Default: `0`. The distance in pixels from which
+#' to offset the popover along its target.
+#' @param without_arrow Boolean. Default: `FALSE`. Removes the arrow from
+#' the popover.
 #'
 #' @return An HTML tag for the component.
 #'

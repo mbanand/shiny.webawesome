@@ -10,16 +10,16 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param allow_scripts Allows included scripts to be executed. Be sure
+#' @param allow_scripts Boolean. Default: `FALSE`. Allows included scripts
+#' to be executed. Be sure you trust the content you are including as it
+#' will be executed as code and can result in XSS attacks.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param mode Enumerated string. Allowed values: `cors`, `no-cors`,
+#' `same-origin`. Default: `cors`. The fetch mode to use.
+#' @param src String. The location of the HTML file to include. Be sure
 #' you trust the content you are including as it will be executed as code
-#' and can result in XSS attacks. Defaults to `false` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param mode The fetch mode to use. Must be one of `"cors"`,
-#' `"no-cors"`, `"same-origin"`. Defaults to `cors` when omitted.
-#' @param src The location of the HTML file to include. Be sure you trust
-#' the content you are including as it will be executed as code and can
-#' result in XSS attacks.
+#' and can result in XSS attacks.
 #'
 #' @return An HTML tag for the component.
 #'

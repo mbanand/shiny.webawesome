@@ -14,70 +14,73 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The value of the button, submitted as a pair with the
-#' button's name as part of the form data, but only when this button is
-#' the submitter. This attribute is ignored when `href` is present.
-#' @param disabled Disables the button. Defaults to `false` when omitted.
-#' @param name The name of the button, submitted as a name/value pair with
-#' form data, but only when this button is the submitter. This attribute
-#' is ignored when `href` is present. Defaults to `null` when omitted.
-#' @param appearance The button's visual appearance. Must be one of
-#' `"accent"`, `"filled"`, `"filled-outlined"`, `"outlined"`, `"plain"`.
-#' Defaults to `accent` when omitted.
-#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param download Tells the browser to download the linked file as this
-#' filename. Only used when `href` is present.
-#' @param formaction Used to override the form owner's `action` attribute.
-#' This wrapper argument sets the HTML `formaction` attribute, which maps
-#' to the component's `formAction` field/property.
-#' @param formenctype Used to override the form owner's `enctype`
-#' attribute. This wrapper argument sets the HTML `formenctype` attribute,
-#' which maps to the component's `formEnctype` field/property. Must be one
-#' of `"application/x-www-form-urlencoded"`, `"multipart/form-data"`,
-#' `"text/plain"`.
-#' @param formmethod Used to override the form owner's `method` attribute.
-#' This wrapper argument sets the HTML `formmethod` attribute, which maps
-#' to the component's `formMethod` field/property. Must be one of `"get"`,
-#' `"post"`.
-#' @param formnovalidate Used to override the form owner's `novalidate`
-#' attribute. This wrapper argument sets the HTML `formnovalidate`
-#' attribute, which maps to the component's `formNoValidate`
-#' field/property.
+#' @param value String. The value of the button, submitted as a pair with
+#' the button's name as part of the form data, but only when this button
+#' is the submitter. This attribute is ignored when `href` is present.
+#' @param disabled Boolean. Default: `FALSE`. Disables the button.
+#' @param name String. Default: `null`. The name of the button, submitted
+#' as a name/value pair with form data, but only when this button is the
+#' submitter. This attribute is ignored when `href` is present.
+#' @param appearance Enumerated string. Allowed values: `accent`,
+#' `filled`, `filled-outlined`, `outlined`, `plain`. Default: `accent`.
+#' The button's visual appearance.
+#' @param custom_error String. Default: `null`. Optional Web Awesome
+#' attribute.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param download String. Tells the browser to download the linked file
+#' as this filename. Only used when `href` is present.
+#' @param formaction String. Used to override the form owner's `action`
+#' attribute. This wrapper argument sets the HTML `formaction` attribute,
+#' which maps to the component's `formAction` field/property.
+#' @param formenctype Enumerated string. Allowed values:
+#' `application/x-www-form-urlencoded`, `multipart/form-data`,
+#' `text/plain`. Used to override the form owner's `enctype` attribute.
+#' This wrapper argument sets the HTML `formenctype` attribute, which maps
+#' to the component's `formEnctype` field/property.
+#' @param formmethod Enumerated string. Allowed values: `get`, `post`.
+#' Used to override the form owner's `method` attribute. This wrapper
+#' argument sets the HTML `formmethod` attribute, which maps to the
+#' component's `formMethod` field/property.
+#' @param formnovalidate Boolean. Used to override the form owner's
+#' `novalidate` attribute. This wrapper argument sets the HTML
+#' `formnovalidate` attribute, which maps to the component's
+#' `formNoValidate` field/property.
 #' @param formtarget Used to override the form owner's `target` attribute.
 #' This wrapper argument sets the HTML `formtarget` attribute, which maps
 #' to the component's `formTarget` field/property.
-#' @param href When set, the underlying button will be rendered as an
-#' `<a>` with this `href` instead of a `<button>`.
-#' @param lang Optional Web Awesome attribute.
-#' @param loading Draws the button in a loading state. Defaults to `false`
-#' when omitted.
-#' @param pill Draws a pill-style button with rounded edges. Defaults to
-#' `false` when omitted.
-#' @param rel When using `href`, this attribute will map to the underlying
-#' link's `rel` attribute.
-#' @param size The button's size. Must be one of `"large"`, `"medium"`,
-#' `"small"`. Defaults to `medium` when omitted.
-#' @param target Tells the browser where to open the link. Only used when
-#' `href` is present. Must be one of `"_blank"`, `"_parent"`, `"_self"`,
-#' `"_top"`.
-#' @param title Optional Web Awesome attribute. Defaults to `` when
-#' omitted.
-#' @param type The type of button. Note that the default value is `button`
-#' instead of `submit`, which is opposite of how native `<button>`
-#' elements behave. When the type is `submit`, the button will submit the
-#' surrounding form. Must be one of `"button"`, `"reset"`, `"submit"`.
-#' Defaults to `button` when omitted.
-#' @param variant The button's theme variant. Defaults to `neutral` if not
-#' within another element with a variant. Must be one of `"brand"`,
-#' `"danger"`, `"neutral"`, `"success"`, `"warning"`. Defaults to
-#' `neutral` when omitted.
-#' @param with_caret Draws the button with a caret. Used to indicate that
-#' the button triggers a dropdown menu or similar behavior. Defaults to
-#' `false` when omitted.
+#' @param href String. When set, the underlying button will be rendered as
+#' an `<a>` with this `href` instead of a `<button>`.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param loading Boolean. Default: `FALSE`. Draws the button in a loading
+#' state.
+#' @param pill Boolean. Default: `FALSE`. Draws a pill-style button with
+#' rounded edges.
+#' @param rel String. When using `href`, this attribute will map to the
+#' underlying link's `rel` attribute.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. Default: `medium`. The button's size.
+#' @param target Enumerated string. Allowed values: `_blank`, `_parent`,
+#' `_self`, `_top`. Tells the browser where to open the link. Only used
+#' when `href` is present.
+#' @param title String. Default: `""`. Optional Web Awesome attribute.
+#' @param type Enumerated string. Allowed values: `button`, `reset`,
+#' `submit`. Default: `button`. The type of button. Note that the default
+#' value is `button` instead of `submit`, which is opposite of how native
+#' `<button>` elements behave. When the type is `submit`, the button will
+#' submit the surrounding form.
+#' @param variant Enumerated string. Allowed values: `brand`, `danger`,
+#' `neutral`, `success`, `warning`. Default: `neutral`. The button's theme
+#' variant. Defaults to `neutral` if not within another element with a
+#' variant.
+#' @param with_caret Boolean. Default: `FALSE`. Draws the button with a
+#' caret. Used to indicate that the button triggers a dropdown menu or
+#' similar behavior.
 #' @param end An element, such as `<wa-icon>`, placed after the label.
 #' @param start An element, such as `<wa-icon>`, placed before the label.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` uses action semantics and invalidates on each
+#' committed action rather than publishing a durable value payload.
 #'
 #' @return An HTML tag for the component.
 #'

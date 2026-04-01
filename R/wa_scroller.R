@@ -10,14 +10,13 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param orientation The scroller's orientation. Must be one of
-#' `"horizontal"`, `"vertical"`. Defaults to `horizontal` when omitted.
-#' @param without_scrollbar Removes the visible scrollbar. Defaults to
-#' `false` when omitted.
-#' @param without_shadow Removes the shadows. Defaults to `false` when
-#' omitted.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param orientation Enumerated string. Allowed values: `horizontal`,
+#' `vertical`. Default: `horizontal`. The scroller's orientation.
+#' @param without_scrollbar Boolean. Default: `FALSE`. Removes the visible
+#' scrollbar.
+#' @param without_shadow Boolean. Default: `FALSE`. Removes the shadows.
 #'
 #' @return An HTML tag for the component.
 #'

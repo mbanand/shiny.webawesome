@@ -10,16 +10,17 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param appearance The callout's visual appearance. Must be one of
-#' `"accent"`, `"filled"`, `"filled-outlined"`, `"outlined"`, `"plain"`.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param size The callout's size. Must be one of `"large"`, `"medium"`,
-#' `"small"`. Defaults to `medium` when omitted.
-#' @param variant The callout's theme variant. Defaults to `brand` if not
-#' within another element with a variant. Must be one of `"brand"`,
-#' `"danger"`, `"neutral"`, `"success"`, `"warning"`. Defaults to `brand`
-#' when omitted.
+#' @param appearance Enumerated string. Allowed values: `accent`,
+#' `filled`, `filled-outlined`, `outlined`, `plain`. The callout's visual
+#' appearance.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. Default: `medium`. The callout's size.
+#' @param variant Enumerated string. Allowed values: `brand`, `danger`,
+#' `neutral`, `success`, `warning`. Default: `brand`. The callout's theme
+#' variant. Defaults to `brand` if not within another element with a
+#' variant.
 #' @param icon An icon to show in the callout. Works best with
 #' `<wa-icon>`.
 #'

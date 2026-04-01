@@ -10,36 +10,34 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param disabled Disables the tooltip so it won't show when triggered.
-#' Defaults to `false` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param distance The distance in pixels from which to offset the tooltip
-#' away from its target. Defaults to `8` when omitted.
-#' @param for Optional Web Awesome attribute. Defaults to `null` when
-#' omitted.
-#' @param hide_delay The amount of time to wait before hiding the tooltip
-#' when the user mouses out. Defaults to `0` when omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param open Indicates whether or not the tooltip is open. You can use
-#' this in lieu of the show/hide methods. Defaults to `false` when
-#' omitted.
-#' @param placement The preferred placement of the tooltip. Note that the
+#' @param disabled Boolean. Default: `FALSE`. Disables the tooltip so it
+#' won't show when triggered.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param distance Number. Default: `8`. The distance in pixels from which
+#' to offset the tooltip away from its target.
+#' @param for String. Default: `null`. Optional Web Awesome attribute.
+#' @param hide_delay Number. Default: `0`. The amount of time to wait
+#' before hiding the tooltip when the user mouses out.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param open Boolean. Default: `FALSE`. Indicates whether or not the
+#' tooltip is open. You can use this in lieu of the show/hide methods.
+#' @param placement Enumerated string. Allowed values: `bottom`,
+#' `bottom-end`, `bottom-start`, `left`, `left-end`, `left-start`,
+#' `right`, `right-end`, `right-start`, `top`, `top-end`, `top-start`.
+#' Default: `top`. The preferred placement of the tooltip. Note that the
 #' actual placement may vary as needed to keep the tooltip inside of the
-#' viewport. Must be one of `"bottom"`, `"bottom-end"`, `"bottom-start"`,
-#' `"left"`, `"left-end"`, `"left-start"`, `"right"`, `"right-end"`,
-#' `"right-start"`, `"top"`, `"top-end"`, `"top-start"`. Defaults to `top`
-#' when omitted.
-#' @param show_delay The amount of time to wait before showing the tooltip
-#' when the user mouses in. Defaults to `150` when omitted.
-#' @param skidding The distance in pixels from which to offset the tooltip
-#' along its target. Defaults to `0` when omitted.
-#' @param trigger Controls how the tooltip is activated. Possible options
-#' include `click`, `hover`, `focus`, and `manual`. Multiple options can
-#' be passed by separating them with a space. When manual is used, the
-#' tooltip must be activated programmatically. Defaults to `hover focus`
-#' when omitted.
-#' @param without_arrow Removes the arrow from the tooltip. Defaults to
-#' `false` when omitted.
+#' viewport.
+#' @param show_delay Number. Default: `150`. The amount of time to wait
+#' before showing the tooltip when the user mouses in.
+#' @param skidding Number. Default: `0`. The distance in pixels from which
+#' to offset the tooltip along its target.
+#' @param trigger String. Default: `hover focus`. Controls how the tooltip
+#' is activated. Possible options include `click`, `hover`, `focus`, and
+#' `manual`. Multiple options can be passed by separating them with a
+#' space. When manual is used, the tooltip must be activated
+#' programmatically.
+#' @param without_arrow Boolean. Default: `FALSE`. Removes the arrow from
+#' the tooltip.
 #'
 #' @return An HTML tag for the component.
 #'

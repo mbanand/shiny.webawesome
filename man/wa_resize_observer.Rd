@@ -23,12 +23,11 @@ wa_resize_observer(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{disabled}{Disables the observer. Defaults to \code{false} when
-omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the observer.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 }
 \value{
 An HTML tag for the component.

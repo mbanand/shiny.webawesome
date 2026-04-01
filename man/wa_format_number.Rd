@@ -32,39 +32,39 @@ wa_format_number(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The number to format. Defaults to \code{0} when omitted.}
+\item{value}{Number. Default: \code{0}. The number to format.}
 
-\item{currency}{The ISO 4217 currency code to use when formatting.
-Defaults to \code{USD} when omitted.}
+\item{currency}{String. Default: \code{USD}. The ISO 4217 currency code to
+use when formatting.}
 
-\item{currency_display}{How to display the currency. Must be one of
-\code{"code"}, \code{"name"}, \code{"narrowSymbol"}, \code{"symbol"}. Defaults to \code{symbol}
-when omitted.}
+\item{currency_display}{Enumerated string. Allowed values: \code{code},
+\code{name}, \code{narrowSymbol}, \code{symbol}. Default: \code{symbol}. How to display the
+currency.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{maximum_fraction_digits}{The maximum number of fraction digits to
-use. Possible values are 0-100.}
+\item{maximum_fraction_digits}{Number. The maximum number of fraction
+digits to use. Possible values are 0-100.}
 
-\item{maximum_significant_digits}{The maximum number of significant
-digits to use,. Possible values are 1-21.}
+\item{maximum_significant_digits}{Number. The maximum number of
+significant digits to use,. Possible values are 1-21.}
 
-\item{minimum_fraction_digits}{The minimum number of fraction digits to
-use. Possible values are 0-100.}
+\item{minimum_fraction_digits}{Number. The minimum number of fraction
+digits to use. Possible values are 0-100.}
 
-\item{minimum_integer_digits}{The minimum number of integer digits to
-use. Possible values are 1-21.}
-
-\item{minimum_significant_digits}{The minimum number of significant
+\item{minimum_integer_digits}{Number. The minimum number of integer
 digits to use. Possible values are 1-21.}
 
-\item{type}{The formatting style to use. Must be one of \code{"currency"},
-\code{"decimal"}, \code{"percent"}. Defaults to \code{decimal} when omitted.}
+\item{minimum_significant_digits}{Number. The minimum number of
+significant digits to use. Possible values are 1-21.}
 
-\item{without_grouping}{Turns off grouping separators. Defaults to
-\code{false} when omitted.}
+\item{type}{Enumerated string. Allowed values: \code{currency}, \code{decimal},
+\code{percent}. Default: \code{decimal}. The formatting style to use.}
+
+\item{without_grouping}{Boolean. Default: \code{FALSE}. Turns off grouping
+separators.}
 }
 \value{
 An HTML tag for the component.

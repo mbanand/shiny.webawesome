@@ -28,25 +28,24 @@ wa_avatar(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{label}{A label to use to describe the avatar to assistive
-devices. Defaults to `` when omitted.}
+\item{label}{String. Default: \code{""}. A label to use to describe the
+avatar to assistive devices.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{image}{The image source to use for the avatar. Defaults to ``
-when omitted.}
+\item{image}{String. Default: \code{""}. The image source to use for the
+avatar.}
 
-\item{initials}{Initials to use as a fallback when no image is
-available (1-2 characters max recommended). Defaults to `` when
-omitted.}
+\item{initials}{String. Default: \code{""}. Initials to use as a fallback
+when no image is available (1-2 characters max recommended).}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{loading}{Indicates how the browser should load the image. Must be
-one of \code{"eager"}, \code{"lazy"}. Defaults to \code{eager} when omitted.}
+\item{loading}{Enumerated string. Allowed values: \code{eager}, \code{lazy}.
+Default: \code{eager}. Indicates how the browser should load the image.}
 
-\item{shape}{The shape of the avatar. Must be one of \code{"circle"},
-\code{"rounded"}, \code{"square"}. Defaults to \code{circle} when omitted.}
+\item{shape}{Enumerated string. Allowed values: \code{circle}, \code{rounded},
+\code{square}. Default: \code{circle}. The shape of the avatar.}
 
 \item{icon}{The default icon to use when no image or initials are
 present. Works best with \verb{<wa-icon>}.}

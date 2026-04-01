@@ -10,34 +10,34 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param date The date/time to format. If not set, the current date and
-#' time will be used. When passing a string, it's strongly recommended to
-#' use the ISO 8601 format to ensure timezones are handled correctly. To
-#' convert a date to this format in JavaScript, use `date.toISOString()`.
-#' Defaults to `new Date()` when omitted.
-#' @param day The format for displaying the day. Must be one of
-#' `"2-digit"`, `"numeric"`.
-#' @param dir Optional Web Awesome attribute.
-#' @param era The format for displaying the era. Must be one of `"long"`,
-#' `"narrow"`, `"short"`.
-#' @param hour The format for displaying the hour. Must be one of
-#' `"2-digit"`, `"numeric"`.
-#' @param hour_format The format for displaying the hour. Must be one of
-#' `"12"`, `"24"`, `"auto"`. Defaults to `auto` when omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param minute The format for displaying the minute. Must be one of
-#' `"2-digit"`, `"numeric"`.
-#' @param month The format for displaying the month. Must be one of
-#' `"2-digit"`, `"long"`, `"narrow"`, `"numeric"`, `"short"`.
-#' @param second The format for displaying the second. Must be one of
-#' `"2-digit"`, `"numeric"`.
-#' @param time_zone The time zone to express the time in.
-#' @param time_zone_name The format for displaying the time. Must be one
-#' of `"long"`, `"short"`.
-#' @param weekday The format for displaying the weekday. Must be one of
-#' `"long"`, `"narrow"`, `"short"`.
-#' @param year The format for displaying the year. Must be one of
-#' `"2-digit"`, `"numeric"`.
+#' @param date Default: `new Date()`. The date/time to format. If not set,
+#' the current date and time will be used. When passing a string, it's
+#' strongly recommended to use the ISO 8601 format to ensure timezones are
+#' handled correctly. To convert a date to this format in JavaScript, use
+#' `date.toISOString()`.
+#' @param day Enumerated string. Allowed values: `2-digit`, `numeric`. The
+#' format for displaying the day.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param era Enumerated string. Allowed values: `long`, `narrow`,
+#' `short`. The format for displaying the era.
+#' @param hour Enumerated string. Allowed values: `2-digit`, `numeric`.
+#' The format for displaying the hour.
+#' @param hour_format Enumerated string. Allowed values: `12`, `24`,
+#' `auto`. Default: `auto`. The format for displaying the hour.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param minute Enumerated string. Allowed values: `2-digit`, `numeric`.
+#' The format for displaying the minute.
+#' @param month Enumerated string. Allowed values: `2-digit`, `long`,
+#' `narrow`, `numeric`, `short`. The format for displaying the month.
+#' @param second Enumerated string. Allowed values: `2-digit`, `numeric`.
+#' The format for displaying the second.
+#' @param time_zone String. The time zone to express the time in.
+#' @param time_zone_name Enumerated string. Allowed values: `long`,
+#' `short`. The format for displaying the time.
+#' @param weekday Enumerated string. Allowed values: `long`, `narrow`,
+#' `short`. The format for displaying the weekday.
+#' @param year Enumerated string. Allowed values: `2-digit`, `numeric`.
+#' The format for displaying the year.
 #'
 #' @return An HTML tag for the component.
 #'

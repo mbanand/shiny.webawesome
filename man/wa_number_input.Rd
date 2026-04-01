@@ -69,72 +69,70 @@ update_wa_number_input(
 
 \item{hint}{Optional hint text to send to the component.}
 
-\item{name}{The name of the input, submitted as a name/value pair with
-form data. Defaults to \code{null} when omitted.}
+\item{name}{String. Default: \code{null}. The name of the input, submitted
+as a name/value pair with form data.}
 
-\item{appearance}{The input's visual appearance. Must be one of
-\code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}. Defaults to \code{outlined}
-when omitted.}
+\item{appearance}{Enumerated string. Allowed values: \code{filled},
+\code{filled-outlined}, \code{outlined}. Default: \code{outlined}. The input's visual
+appearance.}
 
-\item{autocomplete}{Specifies what permission the browser has to
-provide assistance in filling out form field values. Refer to this page
-on MDN for available values.}
+\item{autocomplete}{String. Specifies what permission the browser has
+to provide assistance in filling out form field values. Refer to this
+page on MDN for available values.}
 
-\item{autofocus}{Indicates that the input should receive focus on page
-load.}
+\item{autofocus}{Boolean. Indicates that the input should receive focus
+on page load.}
 
-\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
-when omitted.}
+\item{custom_error}{String. Default: \code{null}. Optional Web Awesome
+attribute.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{enterkeyhint}{Used to customize the label or icon of the Enter
-key on virtual keyboards. Must be one of \code{"done"}, \code{"enter"}, \code{"go"},
-\code{"next"}, \code{"previous"}, \code{"search"}, \code{"send"}.}
+\item{enterkeyhint}{Enumerated string. Allowed values: \code{done}, \code{enter},
+\code{go}, \code{next}, \code{previous}, \code{search}, \code{send}. Used to customize the label
+or icon of the Enter key on virtual keyboards.}
 
-\item{inputmode}{Tells the browser what type of data will be entered by
-the user, allowing it to display the appropriate virtual keyboard on
-supportive devices. Must be one of \code{"decimal"}, \code{"numeric"}. Defaults
-to \code{numeric} when omitted.}
+\item{inputmode}{Enumerated string. Allowed values: \code{decimal},
+\code{numeric}. Default: \code{numeric}. Tells the browser what type of data will
+be entered by the user, allowing it to display the appropriate virtual
+keyboard on supportive devices.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{max}{The input's maximum value.}
+\item{max}{Number. The input's maximum value.}
 
-\item{min}{The input's minimum value.}
+\item{min}{Number. The input's minimum value.}
 
-\item{pill}{Draws a pill-style input with rounded edges. Defaults to
-\code{false} when omitted.}
+\item{pill}{Boolean. Default: \code{FALSE}. Draws a pill-style input with
+rounded edges.}
 
-\item{placeholder}{Placeholder text to show as a hint when the input is
-empty. Defaults to `` when omitted.}
+\item{placeholder}{String. Default: \code{""}. Placeholder text to show as a
+hint when the input is empty.}
 
-\item{readonly}{Makes the input readonly. Defaults to \code{false} when
-omitted.}
+\item{readonly}{Boolean. Default: \code{FALSE}. Makes the input readonly.}
 
-\item{required}{Makes the input a required field. Defaults to \code{false}
-when omitted.}
+\item{required}{Boolean. Default: \code{FALSE}. Makes the input a required
+field.}
 
-\item{size}{The input's size. Must be one of \code{"large"}, \code{"medium"},
-\code{"small"}. Defaults to \code{medium} when omitted.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. Default: \code{medium}. The input's size.}
 
-\item{step}{Specifies the granularity that the value must adhere to, or
-the special value \code{any} which means no stepping is implied, allowing
-any numeric value. Defaults to \code{1} when omitted.}
+\item{step}{Default: \code{1}. Specifies the granularity that the value must
+adhere to, or the special value \code{any} which means no stepping is
+implied, allowing any numeric value.}
 
-\item{title}{Optional Web Awesome attribute. Defaults to `` when
-omitted.}
+\item{title}{String. Default: \code{""}. Optional Web Awesome attribute.}
 
-\item{with_hint}{Used for SSR. Will determine if the SSRed component
-will have the hint slot rendered on initial paint. Defaults to \code{false}
-when omitted.}
+\item{with_hint}{Boolean. Default: \code{FALSE}. Used for SSR. Will
+determine if the SSRed component will have the hint slot rendered on
+initial paint.}
 
-\item{with_label}{Used for SSR. Will determine if the SSRed component
-will have the label slot rendered on initial paint. Defaults to \code{false}
-when omitted.}
+\item{with_label}{Boolean. Default: \code{FALSE}. Used for SSR. Will
+determine if the SSRed component will have the label slot rendered on
+initial paint.}
 
-\item{without_steppers}{Hides the increment/decrement stepper buttons.
-Defaults to \code{false} when omitted.}
+\item{without_steppers}{Boolean. Default: \code{FALSE}. Hides the
+increment/decrement stepper buttons.}
 
 \item{decrement_icon}{An icon to use in lieu of the default decrement
 icon.}
@@ -164,8 +162,13 @@ Invisibly returns \code{NULL}.
 \description{
 Generated wrapper for the Web Awesome \code{wa-number-input} component. When
 used as a Shiny input, \verb{input$<input_id>} reflects the component's
-current value.
+current \code{value} value.
 Generated from Web Awesome metadata.
 
 Generated update helper for the Web Awesome \code{wa-number-input} component.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current \code{value} value.
+}
+

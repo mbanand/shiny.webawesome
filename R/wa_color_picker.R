@@ -5,7 +5,7 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-color-picker` component. When
 #' used as a Shiny input, `input$<input_id>` reflects the component's
-#' current value.
+#' current `value` value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -13,58 +13,59 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The default value of the form control. Primarily used for
-#' resetting the form control. This wrapper argument sets the HTML `value`
-#' attribute, which maps to the component's `defaultValue` field/property
-#' rather than its live `value` property.
-#' @param disabled Disables the color picker. Defaults to `false` when
-#' omitted.
-#' @param label The color picker's label. This will not be displayed, but
-#' it will be announced by assistive devices. If you need to display HTML,
-#' you can use the `label` slot` instead. Defaults to `` when omitted.
-#' @param hint The color picker's hint. If you need to display HTML, use
-#' the `hint` slot instead. Defaults to `` when omitted.
-#' @param name The name of the form control, submitted as a name/value
-#' pair with form data. Defaults to `null` when omitted.
-#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param format The format to use. If opacity is enabled, these will
-#' translate to HEXA, RGBA, HSLA, and HSVA respectively. The color picker
-#' will accept user input in any format (including CSS color names) and
-#' convert it to the desired format. Must be one of `"hex"`, `"hsl"`,
-#' `"hsv"`, `"rgb"`. Defaults to `hex` when omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param opacity Shows the opacity slider. Enabling this will cause the
-#' formatted value to be HEXA, RGBA, or HSLA. Defaults to `false` when
-#' omitted.
-#' @param open Indicates whether or not the popup is open. You can toggle
-#' this attribute to show and hide the popup, or you can use the `show()`
-#' and `hide()` methods and this attribute will reflect the popup's open
-#' state. Defaults to `false` when omitted.
-#' @param required Makes the color picker a required field. Defaults to
-#' `false` when omitted.
-#' @param size Determines the size of the color picker's trigger Must be
-#' one of `"large"`, `"medium"`, `"small"`. Defaults to `medium` when
-#' omitted.
-#' @param swatches One or more predefined color swatches to display as
-#' presets in the color picker. Can include any format the color picker
-#' can parse, including HEX(A), RGB(A), HSL(A), HSV(A), and CSS color
-#' names. Each color must be separated by a semicolon (`;`).
+#' @param value String. The default value of the form control. Primarily
+#' used for resetting the form control. This wrapper argument sets the
+#' HTML `value` attribute, which maps to the component's `defaultValue`
+#' field/property rather than its live `value` property.
+#' @param disabled Boolean. Default: `FALSE`. Disables the color picker.
+#' @param label String. Default: `""`. The color picker's label. This will
+#' not be displayed, but it will be announced by assistive devices. If you
+#' need to display HTML, you can use the `label` slot` instead.
+#' @param hint String. Default: `""`. The color picker's hint. If you need
+#' to display HTML, use the `hint` slot instead.
+#' @param name String. Default: `null`. The name of the form control,
+#' submitted as a name/value pair with form data.
+#' @param custom_error String. Default: `null`. Optional Web Awesome
+#' attribute.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param format Enumerated string. Allowed values: `hex`, `hsl`, `hsv`,
+#' `rgb`. Default: `hex`. The format to use. If opacity is enabled, these
+#' will translate to HEXA, RGBA, HSLA, and HSVA respectively. The color
+#' picker will accept user input in any format (including CSS color names)
+#' and convert it to the desired format.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param opacity Boolean. Default: `FALSE`. Shows the opacity slider.
+#' Enabling this will cause the formatted value to be HEXA, RGBA, or HSLA.
+#' @param open Boolean. Default: `FALSE`. Indicates whether or not the
+#' popup is open. You can toggle this attribute to show and hide the
+#' popup, or you can use the `show()` and `hide()` methods and this
+#' attribute will reflect the popup's open state.
+#' @param required Boolean. Default: `FALSE`. Makes the color picker a
+#' required field.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. Default: `medium`. Determines the size of the color picker's
+#' trigger
+#' @param swatches Default: `""`. One or more predefined color swatches to
+#' display as presets in the color picker. Can include any format the
+#' color picker can parse, including HEX(A), RGB(A), HSL(A), HSV(A), and
+#' CSS color names. Each color must be separated by a semicolon (`;`).
 #' Alternatively, you can pass an array of color values to this property
-#' using JavaScript. Defaults to `` when omitted.
-#' @param uppercase By default, values are lowercase. With this attribute,
-#' values will be uppercase instead. Defaults to `false` when omitted.
-#' @param with_hint Optional Web Awesome attribute. Defaults to `false`
-#' when omitted.
-#' @param with_label Optional Web Awesome attribute. Defaults to `false`
-#' when omitted.
-#' @param without_format_toggle Removes the button that lets users toggle
-#' between format. Defaults to `false` when omitted.
+#' using JavaScript.
+#' @param uppercase Boolean. Default: `FALSE`. By default, values are
+#' lowercase. With this attribute, values will be uppercase instead.
+#' @param with_hint Boolean. Default: `FALSE`. Optional Web Awesome
+#' attribute.
+#' @param with_label Boolean. Default: `FALSE`. Optional Web Awesome
+#' attribute.
+#' @param without_format_toggle Boolean. Default: `FALSE`. Removes the
+#' button that lets users toggle between format.
 #' @param hint_slot The color picker's form hint. Alternatively, you can
 #' use the `hint` attribute.
 #' @param label_slot The color picker's form label. Alternatively, you can
 #' use the `label` attribute.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current `value` value.
 #'
 #' @return An HTML tag for the component.
 #'

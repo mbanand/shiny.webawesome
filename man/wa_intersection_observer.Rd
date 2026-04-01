@@ -28,30 +28,29 @@ wa_intersection_observer(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{disabled}{Deactivates the intersection observer functionality.
-Defaults to \code{false} when omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Deactivates the intersection
+observer functionality.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{intersect_class}{CSS class applied to elements during
-intersection. Automatically removed when elements leave the viewport,
-enabling pure CSS styling based on visibility state. Defaults to ``
-when omitted.}
+\item{intersect_class}{String. Default: \code{""}. CSS class applied to
+elements during intersection. Automatically removed when elements leave
+the viewport, enabling pure CSS styling based on visibility state.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{once}{If enabled, observation ceases after initial intersection.
-Defaults to \code{false} when omitted.}
+\item{once}{Boolean. Default: \code{FALSE}. If enabled, observation ceases
+after initial intersection.}
 
-\item{root}{Element ID to define the viewport boundaries for tracked
-targets. Defaults to \code{null} when omitted.}
+\item{root}{String. Default: \code{null}. Element ID to define the viewport
+boundaries for tracked targets.}
 
-\item{root_margin}{Offset space around the root boundary. Accepts
-values like CSS margin syntax. Defaults to \verb{0px} when omitted.}
+\item{root_margin}{String. Default: \verb{0px}. Offset space around the root
+boundary. Accepts values like CSS margin syntax.}
 
-\item{threshold}{One or more space-separated values representing
-visibility percentages that trigger the observer callback. Defaults to
-\code{0} when omitted.}
+\item{threshold}{String. Default: \code{0}. One or more space-separated
+values representing visibility percentages that trigger the observer
+callback.}
 }
 \value{
 An HTML tag for the component.

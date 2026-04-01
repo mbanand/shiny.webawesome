@@ -25,19 +25,18 @@ wa_format_bytes(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The number to format in bytes. Defaults to \code{0} when
-omitted.}
+\item{value}{Number. Default: \code{0}. The number to format in bytes.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{display}{Determines how to display the result, e.g. "100 bytes",
-"100 b", or "100b". Must be one of \code{"long"}, \code{"narrow"}, \code{"short"}.
-Defaults to \code{short} when omitted.}
+\item{display}{Enumerated string. Allowed values: \code{long}, \code{narrow},
+\code{short}. Default: \code{short}. Determines how to display the result, e.g.
+"100 bytes", "100 b", or "100b".}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{unit}{The type of unit to display. Must be one of \code{"bit"},
-\code{"byte"}. Defaults to \code{byte} when omitted.}
+\item{unit}{Enumerated string. Allowed values: \code{bit}, \code{byte}. Default:
+\code{byte}. The type of unit to display.}
 }
 \value{
 An HTML tag for the component.

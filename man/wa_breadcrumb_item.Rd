@@ -28,19 +28,20 @@ wa_breadcrumb_item(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{href}{Optional URL to direct the user to when the breadcrumb item
-is activated. When set, a link will be rendered internally. When unset,
-a button will be rendered instead.}
+\item{href}{String. Optional URL to direct the user to when the
+breadcrumb item is activated. When set, a link will be rendered
+internally. When unset, a button will be rendered instead.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{rel}{The \code{rel} attribute to use on the link. Only used when
-\code{href} is set. Defaults to \verb{noreferrer noopener} when omitted.}
+\item{rel}{String. Default: \verb{noreferrer noopener}. The \code{rel} attribute
+to use on the link. Only used when \code{href} is set.}
 
-\item{target}{Tells the browser where to open the link. Only used when
-\code{href} is set.}
+\item{target}{Enumerated string. Allowed values: \verb{_blank}, \verb{_parent},
+\verb{_self}, \verb{_top}. Tells the browser where to open the link. Only used
+when \code{href} is set.}
 
 \item{end}{An element, such as \verb{<wa-icon>}, placed after the label.}
 

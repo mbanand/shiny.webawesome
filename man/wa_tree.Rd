@@ -26,15 +26,15 @@ the rendered DOM \code{id} attribute.}
 
 \item{style}{Optional inline CSS style string.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{selection}{The selection behavior of the tree. Single selection
-allows only one node to be selected at a time. Multiple displays
-checkboxes and allows more than one node to be selected. Leaf allows
-only leaf nodes to be selected. Must be one of \code{"leaf"}, \code{"multiple"},
-\code{"single"}. Defaults to \code{single} when omitted.}
+\item{selection}{Enumerated string. Allowed values: \code{leaf}, \code{multiple},
+\code{single}. Default: \code{single}. The selection behavior of the tree. Single
+selection allows only one node to be selected at a time. Multiple
+displays checkboxes and allows more than one node to be selected. Leaf
+allows only leaf nodes to be selected.}
 
 \item{collapse_icon}{The icon to show when the tree item is collapsed.
 Works best with \verb{<wa-icon>}.}
@@ -53,3 +53,9 @@ selectable descendant \code{wa-tree-item} elements should have DOM \code{id}
 attributes.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current semantic
+\code{selectedItemIds} state.
+}
+

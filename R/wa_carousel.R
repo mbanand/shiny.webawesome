@@ -13,38 +13,40 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param autoplay When set, the slides will scroll automatically when the
-#' user is not interacting with them. Defaults to `false` when omitted.
-#' @param autoplay_interval Specifies the amount of time, in milliseconds,
-#' between each automatic scroll. Defaults to `3000` when omitted.
-#' @param current_slide Optional Web Awesome attribute. Defaults to `0`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param loop When set, allows the user to navigate the carousel in the
-#' same direction indefinitely. Defaults to `false` when omitted.
-#' @param mouse_dragging When set, it is possible to scroll through the
-#' slides by dragging them with the mouse. Defaults to `false` when
-#' omitted.
-#' @param navigation When set, show the carousel's navigation. Defaults to
-#' `false` when omitted.
-#' @param orientation Specifies the orientation in which the carousel will
-#' lay out. Must be one of `"horizontal"`, `"vertical"`. Defaults to
-#' `horizontal` when omitted.
-#' @param pagination When set, show the carousel's pagination indicators.
-#' Defaults to `false` when omitted.
-#' @param slides Optional Web Awesome attribute. Defaults to `0` when
-#' omitted.
-#' @param slides_per_move Specifies the number of slides the carousel will
-#' advance when scrolling, useful when specifying a `slides-per-page`
-#' greater than one. It can't be higher than `slides-per-page`. Defaults
-#' to `1` when omitted.
-#' @param slides_per_page Specifies how many slides should be shown at a
-#' given time. Defaults to `1` when omitted.
+#' @param autoplay Boolean. Default: `FALSE`. When set, the slides will
+#' scroll automatically when the user is not interacting with them.
+#' @param autoplay_interval Number. Default: `3000`. Specifies the amount
+#' of time, in milliseconds, between each automatic scroll.
+#' @param current_slide Number. Default: `0`. Optional Web Awesome
+#' attribute.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param loop Boolean. Default: `FALSE`. When set, allows the user to
+#' navigate the carousel in the same direction indefinitely.
+#' @param mouse_dragging Boolean. Default: `FALSE`. When set, it is
+#' possible to scroll through the slides by dragging them with the mouse.
+#' @param navigation Boolean. Default: `FALSE`. When set, show the
+#' carousel's navigation.
+#' @param orientation Enumerated string. Allowed values: `horizontal`,
+#' `vertical`. Default: `horizontal`. Specifies the orientation in which
+#' the carousel will lay out.
+#' @param pagination Boolean. Default: `FALSE`. When set, show the
+#' carousel's pagination indicators.
+#' @param slides Number. Default: `0`. Optional Web Awesome attribute.
+#' @param slides_per_move Number. Default: `1`. Specifies the number of
+#' slides the carousel will advance when scrolling, useful when specifying
+#' a `slides-per-page` greater than one. It can't be higher than
+#' `slides-per-page`.
+#' @param slides_per_page Number. Default: `1`. Specifies how many slides
+#' should be shown at a given time.
 #' @param next_icon Optional next icon to use instead of the default.
 #' Works best with `<wa-icon>`.
 #' @param previous_icon Optional previous icon to use instead of the
 #' default. Works best with `<wa-icon>`.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current semantic
+#' `activeSlide` state.
 #'
 #' @return An HTML tag for the component.
 #'

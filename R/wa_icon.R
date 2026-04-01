@@ -10,38 +10,41 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param label An alternate description to use for assistive devices. If
-#' omitted, the icon will be considered presentational and ignored by
-#' assistive devices. Defaults to `` when omitted.
-#' @param name The name of the icon to draw. Available names depend on the
-#' icon library being used.
-#' @param animation Sets the animation for the icon
-#' @param auto_width Sets the width of the icon to match the cropped SVG
-#' viewBox. This operates like the Font `fa-width-auto` class. Defaults to
-#' `false` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param family The family of icons to choose from. For Font Awesome
-#' Free, valid options include `classic` and `brands`. For Font Awesome
-#' Pro subscribers, valid options include, `classic`, `sharp`, `duotone`,
-#' `sharp-duotone`, and `brands`. A valid kit code must be present to show
-#' pro icons via CDN. You can set `<html data-fa-kit-code="...">` to
-#' provide one.
-#' @param flip Sets the flip direction of the icon along the 'x'
-#' (horizontal), 'y' (vertical), or 'both' axes.
-#' @param lang Optional Web Awesome attribute.
-#' @param library The name of a registered custom icon library. Defaults
-#' to `default` when omitted.
-#' @param rotate Sets the rotation degree of the icon Defaults to `0` when
-#' omitted.
-#' @param src An external URL of an SVG file. Be sure you trust the
-#' content you are including, as it will be executed as code and can
+#' @param label String. Default: `""`. An alternate description to use for
+#' assistive devices. If omitted, the icon will be considered
+#' presentational and ignored by assistive devices.
+#' @param name String. The name of the icon to draw. Available names
+#' depend on the icon library being used.
+#' @param animation Enumerated string. Allowed values: `beat`,
+#' `beat-fade`, `bounce`, `fade`, `flip`, `shake`, `spin`, `spin-pulse`,
+#' `spin-reverse`. Sets the animation for the icon
+#' @param auto_width Boolean. Default: `FALSE`. Sets the width of the icon
+#' to match the cropped SVG viewBox. This operates like the Font
+#' `fa-width-auto` class.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param family String. The family of icons to choose from. For Font
+#' Awesome Free, valid options include `classic` and `brands`. For Font
+#' Awesome Pro subscribers, valid options include, `classic`, `sharp`,
+#' `duotone`, `sharp-duotone`, and `brands`. A valid kit code must be
+#' present to show pro icons via CDN. You can set `<html
+#' data-fa-kit-code="...">` to provide one.
+#' @param flip Enumerated string. Allowed values: `both`, `x`, `y`. Sets
+#' the flip direction of the icon along the 'x' (horizontal), 'y'
+#' (vertical), or 'both' axes.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param library String. Default: `default`. The name of a registered
+#' custom icon library.
+#' @param rotate Number. Default: `0`. Sets the rotation degree of the
+#' icon
+#' @param src String. An external URL of an SVG file. Be sure you trust
+#' the content you are including, as it will be executed as code and can
 #' result in XSS attacks.
-#' @param swap_opacity Swaps the opacity of duotone icons. Defaults to
-#' `false` when omitted.
-#' @param variant The name of the icon's variant. For Font Awesome, valid
-#' options include `thin`, `light`, `regular`, and `solid` for the
-#' `classic` and `sharp` families. Some variants require a Font Awesome
-#' Pro subscription. Custom icon libraries may or may not use this
+#' @param swap_opacity Boolean. Default: `FALSE`. Swaps the opacity of
+#' duotone icons.
+#' @param variant String. The name of the icon's variant. For Font
+#' Awesome, valid options include `thin`, `light`, `regular`, and `solid`
+#' for the `classic` and `sharp` families. Some variants require a Font
+#' Awesome Pro subscription. Custom icon libraries may or may not use this
 #' property.
 #'
 #' @return An HTML tag for the component.
@@ -68,7 +71,35 @@ wa_icon <- function(
 ) {
   children <- list(...)
 
+  if (!is.null(animation)) {
+    animation <- .wa_match_arg(
+      animation,
+      "animation",
+      c(
+        "beat",
+        "beat-fade",
+        "bounce",
+        "fade",
+        "flip",
+        "shake",
+        "spin",
+        "spin-pulse",
+        "spin-reverse"
+      )
+    )
+  }
 
+  if (!is.null(flip)) {
+    flip <- .wa_match_arg(
+      flip,
+      "flip",
+      c(
+        "both",
+        "x",
+        "y"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

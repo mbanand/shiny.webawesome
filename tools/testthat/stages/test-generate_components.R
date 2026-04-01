@@ -995,7 +995,15 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     dropdown_wrapper
   )))
   testthat::expect_true(any(grepl(
+    "@section Shiny Bindings:",
+    dropdown_wrapper
+  )))
+  testthat::expect_true(any(grepl(
     "input\\$<input_id>_value",
+    dropdown_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "action semantics",
     dropdown_wrapper
   )))
   testthat::expect_true(any(grepl(
@@ -1015,6 +1023,14 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     select_wrapper
   )))
   testthat::expect_true(any(grepl(
+    "@section Shiny Bindings:",
+    select_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "reflects the component's current value\\.",
+    select_wrapper
+  )))
+  testthat::expect_true(any(grepl(
     "^wa_select <- function\\($",
     select_wrapper
   )))
@@ -1031,11 +1047,27 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     select_wrapper
   )))
   testthat::expect_true(any(grepl(
-    "Must be one of",
+    "Enumerated string\\.",
+    card_wrapper
+  )))
+  testthat::expect_false(any(grepl(
+    "@section Shiny Bindings:",
     card_wrapper
   )))
   testthat::expect_true(any(grepl(
-    "Defaults to `filled` when omitted\\.",
+    "Allowed values:",
+    card_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "`filled`",
+    card_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "`outlined`",
+    card_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "Default: `filled`\\.",
     card_wrapper
   )))
   testthat::expect_true(any(grepl(
@@ -1058,12 +1090,55 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     which(vapply(checkbox_component$attributes, `[[`, character(1), "name") == "checked")
   ]]
   checkbox_doc <- .wrapper_attr_param_doc(checkbox_component, checkbox_attr)
+  testthat::expect_match(checkbox_doc, "Boolean\\.")
   testthat::expect_match(checkbox_doc, "HTML `checked` attribute", fixed = TRUE)
   testthat::expect_match(checkbox_doc, "`defaultChecked`", fixed = TRUE)
   testthat::expect_match(
     checkbox_doc,
     "live `checked` property\\."
   )
+
+  icon_attrs <- list(list(
+    name = "animation",
+    argument_name = "animation",
+    field_name = "animation",
+    type = "IconAnimation | undefined",
+    default = NA_character_,
+    description = "Sets the animation for the icon",
+    is_boolean = FALSE,
+    enum_values = NULL
+  ))
+  icon_members <- list(list(
+    name = "animation",
+    type = list(text = "IconAnimation | undefined"),
+    parsedType = list(
+      text = "'beat' | 'fade' | 'spin' | undefined"
+    )
+  ))
+  enriched_icon_attrs <- .enrich_attribute_types(icon_attrs, icon_members)
+  icon_doc <- .wrapper_attr_param_doc(
+    list(properties = list()),
+    enriched_icon_attrs[[1]]
+  )
+  testthat::expect_match(icon_doc, "Enumerated string\\.")
+  testthat::expect_match(icon_doc, "Allowed values:")
+  testthat::expect_match(icon_doc, "`beat`", fixed = TRUE)
+
+  flip_doc <- .wrapper_attr_param_doc(
+    list(properties = list()),
+    list(
+      name = "flip",
+      argument_name = "flip",
+      field_name = "flip",
+      type = "'x' | 'y' | 'both' | undefined",
+      default = NA_character_,
+      description = "Sets the flip direction of the icon.",
+      is_boolean = FALSE,
+      enum_values = .enum_values("'x' | 'y' | 'both' | undefined")
+    )
+  )
+  testthat::expect_match(flip_doc, "Enumerated string\\.")
+  testthat::expect_match(flip_doc, "`x`", fixed = TRUE)
 
   button_binding <- readLines(
     file.path(root, "inst", "bindings", "wa_button.js"),
@@ -1161,7 +1236,7 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     tree_wrapper
   )))
   testthat::expect_true(any(grepl(
-    "stable Shiny selection values",
+    "selectable descendant",
     tree_wrapper
   )))
 

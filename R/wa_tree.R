@@ -15,17 +15,21 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param selection The selection behavior of the tree. Single selection
-#' allows only one node to be selected at a time. Multiple displays
-#' checkboxes and allows more than one node to be selected. Leaf allows
-#' only leaf nodes to be selected. Must be one of `"leaf"`, `"multiple"`,
-#' `"single"`. Defaults to `single` when omitted.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param selection Enumerated string. Allowed values: `leaf`, `multiple`,
+#' `single`. Default: `single`. The selection behavior of the tree. Single
+#' selection allows only one node to be selected at a time. Multiple
+#' displays checkboxes and allows more than one node to be selected. Leaf
+#' allows only leaf nodes to be selected.
 #' @param collapse_icon The icon to show when the tree item is collapsed.
 #' Works best with `<wa-icon>`.
 #' @param expand_icon The icon to show when the tree item is expanded.
 #' Works best with `<wa-icon>`.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current semantic
+#' `selectedItemIds` state.
 #'
 #' @return An HTML tag for the component.
 #'

@@ -25,18 +25,17 @@ wa_scroller(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{orientation}{The scroller's orientation. Must be one of
-\code{"horizontal"}, \code{"vertical"}. Defaults to \code{horizontal} when omitted.}
+\item{orientation}{Enumerated string. Allowed values: \code{horizontal},
+\code{vertical}. Default: \code{horizontal}. The scroller's orientation.}
 
-\item{without_scrollbar}{Removes the visible scrollbar. Defaults to
-\code{false} when omitted.}
+\item{without_scrollbar}{Boolean. Default: \code{FALSE}. Removes the visible
+scrollbar.}
 
-\item{without_shadow}{Removes the shadows. Defaults to \code{false} when
-omitted.}
+\item{without_shadow}{Boolean. Default: \code{FALSE}. Removes the shadows.}
 }
 \value{
 An HTML tag for the component.

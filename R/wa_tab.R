@@ -10,13 +10,12 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param disabled Disables the tab and prevents selection. Defaults to
-#' `false` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param panel The name of the tab panel this tab is associated with. The
-#' panel must be located in the same tab group. Defaults to `` when
-#' omitted.
+#' @param disabled Boolean. Default: `FALSE`. Disables the tab and
+#' prevents selection.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param panel String. Default: `""`. The name of the tab panel this tab
+#' is associated with. The panel must be located in the same tab group.
 #'
 #' @return An HTML tag for the component.
 #'

@@ -10,15 +10,16 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param dir Optional Web Awesome attribute.
-#' @param href Optional URL to direct the user to when the breadcrumb item
-#' is activated. When set, a link will be rendered internally. When unset,
-#' a button will be rendered instead.
-#' @param lang Optional Web Awesome attribute.
-#' @param rel The `rel` attribute to use on the link. Only used when
-#' `href` is set. Defaults to `noreferrer noopener` when omitted.
-#' @param target Tells the browser where to open the link. Only used when
-#' `href` is set.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param href String. Optional URL to direct the user to when the
+#' breadcrumb item is activated. When set, a link will be rendered
+#' internally. When unset, a button will be rendered instead.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param rel String. Default: `noreferrer noopener`. The `rel` attribute
+#' to use on the link. Only used when `href` is set.
+#' @param target Enumerated string. Allowed values: `_blank`, `_parent`,
+#' `_self`, `_top`. Tells the browser where to open the link. Only used
+#' when `href` is set.
 #' @param end An element, such as `<wa-icon>`, placed after the label.
 #' @param separator The separator to use for the breadcrumb item. This
 #' will only change the separator for this item. If you want to change it
@@ -63,7 +64,18 @@ wa_breadcrumb_item <- function(
     )
   )
 
-
+  if (!is.null(target)) {
+    target <- .wa_match_arg(
+      target,
+      "target",
+      c(
+        "_blank",
+        "_parent",
+        "_self",
+        "_top"
+      )
+    )
+  }
 
   attrs <- .wa_normalize_attrs(
     list(

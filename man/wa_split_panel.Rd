@@ -32,34 +32,35 @@ wa_split_panel(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{disabled}{Disables resizing. Note that the position may still
-change as a result of resizing the host element. Defaults to \code{false}
-when omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables resizing. Note that
+the position may still change as a result of resizing the host element.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{orientation}{Sets the split panel's orientation. Must be one of
-\code{"horizontal"}, \code{"vertical"}. Defaults to \code{horizontal} when omitted.}
+\item{orientation}{Enumerated string. Allowed values: \code{horizontal},
+\code{vertical}. Default: \code{horizontal}. Sets the split panel's orientation.}
 
-\item{position}{The current position of the divider from the primary
-panel's edge as a percentage 0-100. Defaults to 50\% of the container's
-initial size. Defaults to \code{50} when omitted.}
+\item{position}{Number. Default: \code{50}. The current position of the
+divider from the primary panel's edge as a percentage 0-100. Defaults
+to 50\% of the container's initial size.}
 
-\item{position_in_pixels}{The current position of the divider from the
-primary panel's edge in pixels.}
+\item{position_in_pixels}{Number. The current position of the divider
+from the primary panel's edge in pixels.}
 
-\item{primary}{If no primary panel is designated, both panels will
-resize proportionally when the host element is resized. If a primary
-panel is designated, it will maintain its size and the other panel will
-grow or shrink as needed when the host element is resized.}
+\item{primary}{Enumerated string. Allowed values: \code{end}, \code{start}. If no
+primary panel is designated, both panels will resize proportionally
+when the host element is resized. If a primary panel is designated, it
+will maintain its size and the other panel will grow or shrink as
+needed when the host element is resized.}
 
-\item{snap}{One or more space-separated values at which the divider
-should snap. Values can be in pixels or percentages, e.g. \code{"100px 50\%"}.}
+\item{snap}{String. One or more space-separated values at which the
+divider should snap. Values can be in pixels or percentages, e.g.
+\code{"100px 50\%"}.}
 
-\item{snap_threshold}{How close the divider must be to a snap point
-until snapping occurs. Defaults to \code{12} when omitted.}
+\item{snap_threshold}{Number. Default: \code{12}. How close the divider must
+be to a snap point until snapping occurs.}
 
 \item{divider}{The divider. Useful for slotting in a custom icon that
 renders as a handle.}

@@ -11,23 +11,22 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param disabled Deactivates the intersection observer functionality.
-#' Defaults to `false` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param intersect_class CSS class applied to elements during
-#' intersection. Automatically removed when elements leave the viewport,
-#' enabling pure CSS styling based on visibility state. Defaults to ``
-#' when omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param once If enabled, observation ceases after initial intersection.
-#' Defaults to `false` when omitted.
-#' @param root Element ID to define the viewport boundaries for tracked
-#' targets. Defaults to `null` when omitted.
-#' @param root_margin Offset space around the root boundary. Accepts
-#' values like CSS margin syntax. Defaults to `0px` when omitted.
-#' @param threshold One or more space-separated values representing
-#' visibility percentages that trigger the observer callback. Defaults to
-#' `0` when omitted.
+#' @param disabled Boolean. Default: `FALSE`. Deactivates the intersection
+#' observer functionality.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param intersect_class String. Default: `""`. CSS class applied to
+#' elements during intersection. Automatically removed when elements leave
+#' the viewport, enabling pure CSS styling based on visibility state.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param once Boolean. Default: `FALSE`. If enabled, observation ceases
+#' after initial intersection.
+#' @param root String. Default: `null`. Element ID to define the viewport
+#' boundaries for tracked targets.
+#' @param root_margin String. Default: `0px`. Offset space around the root
+#' boundary. Accepts values like CSS margin syntax.
+#' @param threshold String. Default: `0`. One or more space-separated
+#' values representing visibility percentages that trigger the observer
+#' callback.
 #'
 #' @return An HTML tag for the component.
 #'

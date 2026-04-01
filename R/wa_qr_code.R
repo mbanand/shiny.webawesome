@@ -10,24 +10,22 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The QR code's value. Defaults to `` when omitted.
-#' @param label The label for assistive devices to announce. If
-#' unspecified, the value will be used instead. Defaults to `` when
-#' omitted.
-#' @param background The background color. This can be any valid CSS color
-#' or `transparent`. It cannot be a CSS custom property. Defaults to ``
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param error_correction The level of error correction to use. Learn
-#' more Must be one of `"H"`, `"L"`, `"M"`, `"Q"`. Defaults to `H` when
-#' omitted.
-#' @param fill The fill color. This can be any valid CSS color, but not a
-#' CSS custom property. Defaults to `` when omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param radius The edge radius of each module. Must be between 0 and
-#' 0.5. Defaults to `0` when omitted.
-#' @param size The size of the QR code, in pixels. Defaults to `128` when
-#' omitted.
+#' @param value String. Default: `""`. The QR code's value.
+#' @param label String. Default: `""`. The label for assistive devices to
+#' announce. If unspecified, the value will be used instead.
+#' @param background String. Default: `""`. The background color. This can
+#' be any valid CSS color or `transparent`. It cannot be a CSS custom
+#' property.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param error_correction Enumerated string. Allowed values: `H`, `L`,
+#' `M`, `Q`. Default: `H`. The level of error correction to use. Learn
+#' more
+#' @param fill String. Default: `""`. The fill color. This can be any
+#' valid CSS color, but not a CSS custom property.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param radius Number. Default: `0`. The edge radius of each module.
+#' Must be between 0 and 0.5.
+#' @param size Number. Default: `128`. The size of the QR code, in pixels.
 #'
 #' @return An HTML tag for the component.
 #'

@@ -33,49 +33,50 @@ wa_animation(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{name}{The name of the built-in animation to use. For custom
-animations, use the \code{keyframes} prop. Defaults to \code{none} when omitted.}
+\item{name}{String. Default: \code{none}. The name of the built-in animation
+to use. For custom animations, use the \code{keyframes} prop.}
 
-\item{delay}{The number of milliseconds to delay the start of the
-animation. Defaults to \code{0} when omitted.}
+\item{delay}{Number. Default: \code{0}. The number of milliseconds to delay
+the start of the animation.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{direction}{Determines the direction of playback as well as the
-behavior when reaching the end of an iteration. Learn more Defaults to
-\code{normal} when omitted.}
+\item{direction}{Default: \code{'normal'}. Determines the direction of
+playback as well as the behavior when reaching the end of an iteration.
+Learn more}
 
-\item{duration}{The number of milliseconds each iteration of the
-animation takes to complete. Defaults to \code{1000} when omitted.}
+\item{duration}{Number. Default: \code{1000}. The number of milliseconds
+each iteration of the animation takes to complete.}
 
-\item{easing}{The easing function to use for the animation. This can be
-a Web Awesome easing function or a custom easing function such as
-\code{cubic-bezier(0, 1, .76, 1.14)}. Defaults to \code{linear} when omitted.}
+\item{easing}{String. Default: \code{linear}. The easing function to use for
+the animation. This can be a Web Awesome easing function or a custom
+easing function such as \code{cubic-bezier(0, 1, .76, 1.14)}.}
 
-\item{end_delay}{The number of milliseconds to delay after the active
-period of an animation sequence. Defaults to \code{0} when omitted.}
+\item{end_delay}{Number. Default: \code{0}. The number of milliseconds to
+delay after the active period of an animation sequence.}
 
-\item{fill}{Sets how the animation applies styles to its target before
-and after its execution. Defaults to \code{auto} when omitted.}
+\item{fill}{Default: \code{'auto'}. Sets how the animation applies styles to
+its target before and after its execution.}
 
-\item{iteration_start}{The offset at which to start the animation,
-usually between 0 (start) and 1 (end). Defaults to \code{0} when omitted.}
+\item{iteration_start}{Number. Default: \code{0}. The offset at which to
+start the animation, usually between 0 (start) and 1 (end).}
 
-\item{iterations}{The number of iterations to run before the animation
-completes. Defaults to \code{Infinity}, which loops. Defaults to \code{Infinity}
-when omitted.}
+\item{iterations}{Number. Default: \code{Infinity}. The number of iterations
+to run before the animation completes. Defaults to \code{Infinity}, which
+loops.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{play}{Plays the animation. When omitted, the animation will be
-paused. This attribute will be automatically removed when the animation
-finishes or gets canceled. Defaults to \code{false} when omitted.}
+\item{play}{Boolean. Default: \code{FALSE}. Plays the animation. When
+omitted, the animation will be paused. This attribute will be
+automatically removed when the animation finishes or gets canceled.}
 
-\item{playback_rate}{Sets the animation's playback rate. The default is
-\code{1}, which plays the animation at a normal speed. Setting this to \code{2},
-for example, will double the animation's speed. A negative value can be
-used to reverse the animation. This value can be changed without
-causing the animation to restart. Defaults to \code{1} when omitted.}
+\item{playback_rate}{Number. Default: \code{1}. Sets the animation's
+playback rate. The default is \code{1}, which plays the animation at a
+normal speed. Setting this to \code{2}, for example, will double the
+animation's speed. A negative value can be used to reverse the
+animation. This value can be changed without causing the animation to
+restart.}
 }
 \value{
 An HTML tag for the component.

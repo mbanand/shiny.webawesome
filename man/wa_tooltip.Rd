@@ -32,47 +32,45 @@ wa_tooltip(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{disabled}{Disables the tooltip so it won't show when triggered.
-Defaults to \code{false} when omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the tooltip so it
+won't show when triggered.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{distance}{The distance in pixels from which to offset the tooltip
-away from its target. Defaults to \code{8} when omitted.}
+\item{distance}{Number. Default: \code{8}. The distance in pixels from which
+to offset the tooltip away from its target.}
 
-\item{for}{Optional Web Awesome attribute. Defaults to \code{null} when
-omitted.}
+\item{for}{String. Default: \code{null}. Optional Web Awesome attribute.}
 
-\item{hide_delay}{The amount of time to wait before hiding the tooltip
-when the user mouses out. Defaults to \code{0} when omitted.}
+\item{hide_delay}{Number. Default: \code{0}. The amount of time to wait
+before hiding the tooltip when the user mouses out.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{open}{Indicates whether or not the tooltip is open. You can use
-this in lieu of the show/hide methods. Defaults to \code{false} when
-omitted.}
+\item{open}{Boolean. Default: \code{FALSE}. Indicates whether or not the
+tooltip is open. You can use this in lieu of the show/hide methods.}
 
-\item{placement}{The preferred placement of the tooltip. Note that the
+\item{placement}{Enumerated string. Allowed values: \code{bottom},
+\code{bottom-end}, \code{bottom-start}, \code{left}, \code{left-end}, \code{left-start},
+\code{right}, \code{right-end}, \code{right-start}, \code{top}, \code{top-end}, \code{top-start}.
+Default: \code{top}. The preferred placement of the tooltip. Note that the
 actual placement may vary as needed to keep the tooltip inside of the
-viewport. Must be one of \code{"bottom"}, \code{"bottom-end"}, \code{"bottom-start"},
-\code{"left"}, \code{"left-end"}, \code{"left-start"}, \code{"right"}, \code{"right-end"},
-\code{"right-start"}, \code{"top"}, \code{"top-end"}, \code{"top-start"}. Defaults to \code{top}
-when omitted.}
+viewport.}
 
-\item{show_delay}{The amount of time to wait before showing the tooltip
-when the user mouses in. Defaults to \code{150} when omitted.}
+\item{show_delay}{Number. Default: \code{150}. The amount of time to wait
+before showing the tooltip when the user mouses in.}
 
-\item{skidding}{The distance in pixels from which to offset the tooltip
-along its target. Defaults to \code{0} when omitted.}
+\item{skidding}{Number. Default: \code{0}. The distance in pixels from which
+to offset the tooltip along its target.}
 
-\item{trigger}{Controls how the tooltip is activated. Possible options
-include \code{click}, \code{hover}, \code{focus}, and \code{manual}. Multiple options can
-be passed by separating them with a space. When manual is used, the
-tooltip must be activated programmatically. Defaults to \verb{hover focus}
-when omitted.}
+\item{trigger}{String. Default: \verb{hover focus}. Controls how the tooltip
+is activated. Possible options include \code{click}, \code{hover}, \code{focus}, and
+\code{manual}. Multiple options can be passed by separating them with a
+space. When manual is used, the tooltip must be activated
+programmatically.}
 
-\item{without_arrow}{Removes the arrow from the tooltip. Defaults to
-\code{false} when omitted.}
+\item{without_arrow}{Boolean. Default: \code{FALSE}. Removes the arrow from
+the tooltip.}
 }
 \value{
 An HTML tag for the component.

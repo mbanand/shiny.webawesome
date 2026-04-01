@@ -36,46 +36,44 @@ the rendered DOM \code{id} attribute.}
 
 \item{style}{Optional inline CSS style string.}
 
-\item{autoplay}{When set, the slides will scroll automatically when the
-user is not interacting with them. Defaults to \code{false} when omitted.}
+\item{autoplay}{Boolean. Default: \code{FALSE}. When set, the slides will
+scroll automatically when the user is not interacting with them.}
 
-\item{autoplay_interval}{Specifies the amount of time, in milliseconds,
-between each automatic scroll. Defaults to \code{3000} when omitted.}
+\item{autoplay_interval}{Number. Default: \code{3000}. Specifies the amount
+of time, in milliseconds, between each automatic scroll.}
 
-\item{current_slide}{Optional Web Awesome attribute. Defaults to \code{0}
-when omitted.}
+\item{current_slide}{Number. Default: \code{0}. Optional Web Awesome
+attribute.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{loop}{When set, allows the user to navigate the carousel in the
-same direction indefinitely. Defaults to \code{false} when omitted.}
+\item{loop}{Boolean. Default: \code{FALSE}. When set, allows the user to
+navigate the carousel in the same direction indefinitely.}
 
-\item{mouse_dragging}{When set, it is possible to scroll through the
-slides by dragging them with the mouse. Defaults to \code{false} when
-omitted.}
+\item{mouse_dragging}{Boolean. Default: \code{FALSE}. When set, it is
+possible to scroll through the slides by dragging them with the mouse.}
 
-\item{navigation}{When set, show the carousel's navigation. Defaults to
-\code{false} when omitted.}
+\item{navigation}{Boolean. Default: \code{FALSE}. When set, show the
+carousel's navigation.}
 
-\item{orientation}{Specifies the orientation in which the carousel will
-lay out. Must be one of \code{"horizontal"}, \code{"vertical"}. Defaults to
-\code{horizontal} when omitted.}
+\item{orientation}{Enumerated string. Allowed values: \code{horizontal},
+\code{vertical}. Default: \code{horizontal}. Specifies the orientation in which
+the carousel will lay out.}
 
-\item{pagination}{When set, show the carousel's pagination indicators.
-Defaults to \code{false} when omitted.}
+\item{pagination}{Boolean. Default: \code{FALSE}. When set, show the
+carousel's pagination indicators.}
 
-\item{slides}{Optional Web Awesome attribute. Defaults to \code{0} when
-omitted.}
+\item{slides}{Number. Default: \code{0}. Optional Web Awesome attribute.}
 
-\item{slides_per_move}{Specifies the number of slides the carousel will
-advance when scrolling, useful when specifying a \code{slides-per-page}
-greater than one. It can't be higher than \code{slides-per-page}. Defaults
-to \code{1} when omitted.}
+\item{slides_per_move}{Number. Default: \code{1}. Specifies the number of
+slides the carousel will advance when scrolling, useful when specifying
+a \code{slides-per-page} greater than one. It can't be higher than
+\code{slides-per-page}.}
 
-\item{slides_per_page}{Specifies how many slides should be shown at a
-given time. Defaults to \code{1} when omitted.}
+\item{slides_per_page}{Number. Default: \code{1}. Specifies how many slides
+should be shown at a given time.}
 
 \item{next_icon}{Optional next icon to use instead of the default.
 Works best with \verb{<wa-icon>}.}
@@ -92,3 +90,9 @@ used as a Shiny input, \verb{input$<input_id>} reflects the component's
 current semantic \code{activeSlide} state.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current semantic
+\code{activeSlide} state.
+}
+

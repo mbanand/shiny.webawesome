@@ -28,27 +28,28 @@ wa_radio(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The radio's value. When selected, the radio group will
-receive this value.}
+\item{value}{String. The radio's value. When selected, the radio group
+will receive this value.}
 
-\item{disabled}{Disables the radio. Defaults to \code{false} when omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the radio.}
 
-\item{name}{The name of the input, submitted as a name/value pair with
-form data. Defaults to \code{null} when omitted.}
+\item{name}{String. Default: \code{null}. The name of the input, submitted
+as a name/value pair with form data.}
 
-\item{appearance}{The radio's visual appearance. Must be one of
-\code{"button"}, \code{"default"}. Defaults to \code{default} when omitted.}
+\item{appearance}{Enumerated string. Allowed values: \code{button},
+\code{default}. Default: \code{default}. The radio's visual appearance.}
 
-\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
-when omitted.}
+\item{custom_error}{String. Default: \code{null}. Optional Web Awesome
+attribute.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{size}{The radio's size. When used inside a radio group, the size
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. The radio's size. When used inside a radio group, the size
 will be determined by the radio group's size, which will override this
-attribute. Must be one of \code{"large"}, \code{"medium"}, \code{"small"}.}
+attribute.}
 }
 \value{
 An HTML tag for the component.

@@ -27,7 +27,7 @@
 # Normalize one attribute declaration into schema form.
 .normalize_attribute <- function(attribute) {
   name <- .scalar_string(attribute$name, fallback = NA_character_)
-  type_text <- .type_text(attribute$type)
+  type_text <- .effective_type_text(attribute$type, attribute$parsedType)
   field_name <- .scalar_string(attribute$fieldName, fallback = NA_character_)
   enum_values <- .enum_values(type_text)
 
@@ -52,7 +52,7 @@
   attribute_names_by_field = character()
 ) {
   name <- .scalar_string(member$name, fallback = NA_character_)
-  type_text <- .type_text(member$type)
+  type_text <- .effective_type_text(member$type, member$parsedType)
   enum_values <- .enum_values(type_text)
   attribute_name <- if (name %in% names(attribute_names_by_field)) {
     unname(attribute_names_by_field[[name]])
@@ -98,6 +98,43 @@
       .or_default(slot$description, slot$summary),
       fallback = NA_character_
     )
+  )
+}
+
+# Enrich normalized attributes with matching public-member type detail.
+.enrich_attribute_types <- function(attributes, public_members = list()) {
+  if (length(attributes) == 0L || length(public_members) == 0L) {
+    return(attributes)
+  }
+
+  members_by_name <- stats::setNames(
+    public_members,
+    vapply(public_members, `[[`, character(1), "name")
+  )
+
+  lapply(
+    attributes,
+    function(attr) {
+      field_name <- .scalar_string(attr$field_name, fallback = NA_character_)
+
+      if (is.na(field_name) || !field_name %in% names(members_by_name)) {
+        return(attr)
+      }
+
+      member <- members_by_name[[field_name]]
+      member_type <- .effective_type_text(member$type, member$parsedType)
+      member_enums <- .enum_values(member_type)
+
+      if (
+        length(attr$enum_values %||% character()) == 0L &&
+          length(member_enums) > 0L
+      ) {
+        attr$type <- member_type
+        attr$enum_values <- member_enums
+      }
+
+      attr
+    }
   )
 }
 
@@ -316,19 +353,20 @@
       next
     }
 
-    attributes <- .normalize_sorted(
-      declaration$attributes,
-      .normalize_attribute
-    )
-    attribute_names_by_field <- stats::setNames(
-      vapply(attributes, `[[`, character(1), "name"),
-      vapply(attributes, `[[`, character(1), "field_name")
-    )
-
     public_members <- .or_default(declaration$members, list())
     public_members <- public_members[
       vapply(public_members, .is_public_property_member, logical(1))
     ]
+
+    attributes <- .normalize_sorted(
+      declaration$attributes,
+      .normalize_attribute
+    )
+    attributes <- .enrich_attribute_types(attributes, public_members)
+    attribute_names_by_field <- stats::setNames(
+      vapply(attributes, `[[`, character(1), "name"),
+      vapply(attributes, `[[`, character(1), "field_name")
+    )
 
     properties <- .normalize_sorted(
       public_members,

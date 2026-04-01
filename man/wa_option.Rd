@@ -28,26 +28,25 @@ wa_option(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The option's value. When selected, the containing form
-control will receive this value. The value must be unique from other
-options in the same group. Values may not contain spaces, as spaces are
-used as delimiters when listing multiple values. Defaults to `` when
-omitted.}
+\item{value}{String. Default: \code{""}. The option's value. When selected,
+the containing form control will receive this value. The value must be
+unique from other options in the same group. Values may not contain
+spaces, as spaces are used as delimiters when listing multiple values.}
 
-\item{disabled}{Draws the option in a disabled state, preventing
-selection. Defaults to \code{false} when omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Draws the option in a
+disabled state, preventing selection.}
 
-\item{label}{The option’s plain text label. Usually automatically
-generated, but can be useful to provide manually for cases involving
-complex content.}
+\item{label}{String. The option’s plain text label. Usually
+automatically generated, but can be useful to provide manually for
+cases involving complex content.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{selected}{Selects an option initially. This wrapper argument sets
-the HTML \code{selected} attribute, which maps to the component's
-\code{defaultSelected} field/property. Defaults to \code{false} when omitted.}
+\item{selected}{Boolean. Default: \code{FALSE}. Selects an option initially.
+This wrapper argument sets the HTML \code{selected} attribute, which maps to
+the component's \code{defaultSelected} field/property.}
 
 \item{end}{An element, such as \verb{<wa-icon>}, placed after the label.}
 

@@ -19,10 +19,11 @@
     stop("`id` must be one non-missing string.", call. = FALSE)
   }
 
-  if (!is.character(command) ||
-    length(command) != 1L ||
-    is.na(command) ||
-    !nzchar(command)) {
+  valid_command <- is.character(command) &&
+    length(command) == 1L &&
+    !is.na(command) &&
+    nzchar(command)
+  if (!valid_command) {
     stop("`command` must be one non-missing string.", call. = FALSE)
   }
 
@@ -92,10 +93,11 @@ wa_set_property <- function(id,
                             property,
                             value,
                             session = shiny::getDefaultReactiveDomain()) {
-  if (!is.character(property) ||
-    length(property) != 1L ||
-    is.na(property) ||
-    !nzchar(property)) {
+  valid_property <- is.character(property) &&
+    length(property) == 1L &&
+    !is.na(property) &&
+    nzchar(property)
+  if (!valid_property) {
     stop("`property` must be one non-missing string.", call. = FALSE)
   }
 
@@ -146,10 +148,11 @@ wa_call_method <- function(id,
                            method,
                            args = list(),
                            session = shiny::getDefaultReactiveDomain()) {
-  if (!is.character(method) ||
-    length(method) != 1L ||
-    is.na(method) ||
-    !nzchar(method)) {
+  valid_method <- is.character(method) &&
+    length(method) == 1L &&
+    !is.na(method) &&
+    nzchar(method)
+  if (!valid_method) {
     stop("`method` must be one non-missing string.", call. = FALSE)
   }
 

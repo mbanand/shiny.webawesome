@@ -10,25 +10,25 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param allowfullscreen Allows fullscreen mode. Defaults to `false` when
-#' omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param loading Controls iframe loading behavior. Must be one of
-#' `"eager"`, `"lazy"`. Defaults to `eager` when omitted.
-#' @param referrerpolicy Controls referrer information.
-#' @param sandbox Security restrictions for the iframe.
-#' @param src The URL of the content to display.
-#' @param srcdoc Inline HTML to display.
-#' @param without_controls Removes the zoom controls. Defaults to `false`
-#' when omitted.
-#' @param without_interaction Disables interaction when present. Defaults
-#' to `false` when omitted.
-#' @param zoom The current zoom of the frame, e.g. 0 = 0% and 1 = 100%.
-#' Defaults to `1` when omitted.
-#' @param zoom_levels The zoom levels to step through when using zoom
-#' controls. This does not restrict programmatic changes to the zoom.
-#' Defaults to `25% 50% 75% 100% 125% 150% 175% 200%` when omitted.
+#' @param allowfullscreen Boolean. Default: `FALSE`. Allows fullscreen
+#' mode.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param loading Enumerated string. Allowed values: `eager`, `lazy`.
+#' Default: `eager`. Controls iframe loading behavior.
+#' @param referrerpolicy String. Controls referrer information.
+#' @param sandbox String. Security restrictions for the iframe.
+#' @param src String. The URL of the content to display.
+#' @param srcdoc String. Inline HTML to display.
+#' @param without_controls Boolean. Default: `FALSE`. Removes the zoom
+#' controls.
+#' @param without_interaction Boolean. Default: `FALSE`. Disables
+#' interaction when present.
+#' @param zoom Number. Default: `1`. The current zoom of the frame, e.g. 0
+#' = 0% and 1 = 100%.
+#' @param zoom_levels String. Default: `25% 50% 75% 100% 125% 150% 175%
+#' 200%`. The zoom levels to step through when using zoom controls. This
+#' does not restrict programmatic changes to the zoom.
 #' @param zoom_in_icon The slot that contains the zoom in icon.
 #' @param zoom_out_icon The slot that contains the zoom out icon.
 #'

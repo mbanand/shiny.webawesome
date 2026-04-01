@@ -13,28 +13,31 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param label The drawer's label as displayed in the header. You should
-#' always include a relevant label, as it is required for proper
-#' accessibility. If you need to display HTML, use the `label` slot
-#' instead. Defaults to `` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param light_dismiss When enabled, the drawer will be closed when the
-#' user clicks outside of it. Defaults to `true` when omitted.
-#' @param open Indicates whether or not the drawer is open. Toggle this
-#' attribute to show and hide the drawer. Defaults to `false` when
-#' omitted.
-#' @param placement The direction from which the drawer will open. Must be
-#' one of `"bottom"`, `"end"`, `"start"`, `"top"`. Defaults to `end` when
-#' omitted.
-#' @param without_header Disables the header. This will also remove the
-#' default close button. Defaults to `false` when omitted.
+#' @param label String. Default: `""`. The drawer's label as displayed in
+#' the header. You should always include a relevant label, as it is
+#' required for proper accessibility. If you need to display HTML, use the
+#' `label` slot instead.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param light_dismiss Boolean. Default: `TRUE`. When enabled, the drawer
+#' will be closed when the user clicks outside of it.
+#' @param open Boolean. Default: `FALSE`. Indicates whether or not the
+#' drawer is open. Toggle this attribute to show and hide the drawer.
+#' @param placement Enumerated string. Allowed values: `bottom`, `end`,
+#' `start`, `top`. Default: `end`. The direction from which the drawer
+#' will open.
+#' @param without_header Boolean. Default: `FALSE`. Disables the header.
+#' This will also remove the default close button.
 #' @param footer The drawer's footer, usually one or more buttons
 #' representing various options.
 #' @param header_actions Optional actions to add to the header. Works best
 #' with `<wa-button>`.
 #' @param label_slot The drawer's label. Alternatively, you can use the
 #' `label` attribute.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current semantic `open`
+#' state.
 #'
 #' @return An HTML tag for the component.
 #'

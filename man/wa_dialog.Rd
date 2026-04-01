@@ -30,24 +30,23 @@ the rendered DOM \code{id} attribute.}
 
 \item{style}{Optional inline CSS style string.}
 
-\item{label}{The dialog's label as displayed in the header. You should
-always include a relevant label, as it is required for proper
-accessibility. If you need to display HTML, use the \code{label} slot
-instead. Defaults to `` when omitted.}
+\item{label}{String. Default: \code{""}. The dialog's label as displayed in
+the header. You should always include a relevant label, as it is
+required for proper accessibility. If you need to display HTML, use the
+\code{label} slot instead.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{light_dismiss}{When enabled, the dialog will be closed when the
-user clicks outside of it. Defaults to \code{false} when omitted.}
+\item{light_dismiss}{Boolean. Default: \code{FALSE}. When enabled, the
+dialog will be closed when the user clicks outside of it.}
 
-\item{open}{Indicates whether or not the dialog is open. Toggle this
-attribute to show and hide the dialog. Defaults to \code{false} when
-omitted.}
+\item{open}{Boolean. Default: \code{FALSE}. Indicates whether or not the
+dialog is open. Toggle this attribute to show and hide the dialog.}
 
-\item{without_header}{Disables the header. This will also remove the
-default close button. Defaults to \code{false} when omitted.}
+\item{without_header}{Boolean. Default: \code{FALSE}. Disables the header.
+This will also remove the default close button.}
 
 \item{footer}{The dialog's footer, usually one or more buttons
 representing various options.}
@@ -67,3 +66,9 @@ as a Shiny input, \verb{input$<input_id>} reflects the component's current
 semantic \code{open} state.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current semantic \code{open}
+state.
+}
+

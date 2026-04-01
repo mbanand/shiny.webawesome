@@ -13,29 +13,33 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param disabled Disables the details so it can't be toggled. Defaults
-#' to `false` when omitted.
-#' @param name Groups related details elements. When one opens, others
-#' with the same name will close.
-#' @param appearance The element's visual appearance. Must be one of
-#' `"filled"`, `"filled-outlined"`, `"outlined"`, `"plain"`. Defaults to
-#' `outlined` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param icon_placement The location of the expand/collapse icon. Must be
-#' one of `"end"`, `"start"`. Defaults to `end` when omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param open Indicates whether or not the details is open. You can
-#' toggle this attribute to show and hide the details, or you can use the
-#' `show()` and `hide()` methods and this attribute will reflect the
-#' details' open state. Defaults to `false` when omitted.
-#' @param summary The summary to show in the header. If you need to
-#' display HTML, use the `summary` slot instead.
+#' @param disabled Boolean. Default: `FALSE`. Disables the details so it
+#' can't be toggled.
+#' @param name String. Groups related details elements. When one opens,
+#' others with the same name will close.
+#' @param appearance Enumerated string. Allowed values: `filled`,
+#' `filled-outlined`, `outlined`, `plain`. Default: `outlined`. The
+#' element's visual appearance.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param icon_placement Enumerated string. Allowed values: `end`,
+#' `start`. Default: `end`. The location of the expand/collapse icon.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param open Boolean. Default: `FALSE`. Indicates whether or not the
+#' details is open. You can toggle this attribute to show and hide the
+#' details, or you can use the `show()` and `hide()` methods and this
+#' attribute will reflect the details' open state.
+#' @param summary String. The summary to show in the header. If you need
+#' to display HTML, use the `summary` slot instead.
 #' @param collapse_icon Optional collapse icon to use instead of the
 #' default. Works best with `<wa-icon>`.
 #' @param expand_icon Optional expand icon to use instead of the default.
 #' Works best with `<wa-icon>`.
 #' @param summary_slot The details' summary. Alternatively, you can use
 #' the `summary` attribute.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current semantic `open`
+#' state.
 #'
 #' @return An HTML tag for the component.
 #'

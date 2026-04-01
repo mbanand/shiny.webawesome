@@ -10,21 +10,21 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param date The date from which to calculate time from. If not set, the
-#' current date and time will be used. When passing a string, it's
-#' strongly recommended to use the ISO 8601 format to ensure timezones are
-#' handled correctly. To convert a date to this format in JavaScript, use
-#' `date.toISOString()`. Defaults to `new Date()` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param format The formatting style to use. Must be one of `"long"`,
-#' `"narrow"`, `"short"`. Defaults to `long` when omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param numeric When `auto`, values such as "yesterday" and "tomorrow"
+#' @param date Default: `new Date()`. The date from which to calculate
+#' time from. If not set, the current date and time will be used. When
+#' passing a string, it's strongly recommended to use the ISO 8601 format
+#' to ensure timezones are handled correctly. To convert a date to this
+#' format in JavaScript, use `date.toISOString()`.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param format Enumerated string. Allowed values: `long`, `narrow`,
+#' `short`. Default: `long`. The formatting style to use.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param numeric Enumerated string. Allowed values: `always`, `auto`.
+#' Default: `auto`. When `auto`, values such as "yesterday" and "tomorrow"
 #' will be shown when possible. When `always`, values such as "1 day ago"
-#' and "in 1 day" will be shown. Must be one of `"always"`, `"auto"`.
-#' Defaults to `auto` when omitted.
-#' @param sync Keep the displayed value up to date as time passes.
-#' Defaults to `false` when omitted.
+#' and "in 1 day" will be shown.
+#' @param sync Boolean. Default: `FALSE`. Keep the displayed value up to
+#' date as time passes.
 #'
 #' @return An HTML tag for the component.
 #'

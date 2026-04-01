@@ -24,17 +24,17 @@ wa_button_group(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{label}{A label to use for the button group. This won't be
-displayed on the screen, but it will be announced by assistive devices
-when interacting with the control and is strongly recommended. Defaults
-to `` when omitted.}
+\item{label}{String. Default: \code{""}. A label to use for the button
+group. This won't be displayed on the screen, but it will be announced
+by assistive devices when interacting with the control and is strongly
+recommended.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{orientation}{The button group's orientation. Must be one of
-\code{"horizontal"}, \code{"vertical"}. Defaults to \code{horizontal} when omitted.}
+\item{orientation}{Enumerated string. Allowed values: \code{horizontal},
+\code{vertical}. Default: \code{horizontal}. The button group's orientation.}
 }
 \value{
 An HTML tag for the component.

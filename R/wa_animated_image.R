@@ -10,12 +10,13 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param alt A description of the image used by assistive devices.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param play Plays the animation. When this attribute is remove, the
-#' animation will pause.
-#' @param src The path to the image to load.
+#' @param alt String. A description of the image used by assistive
+#' devices.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param play Boolean. Plays the animation. When this attribute is
+#' remove, the animation will pause.
+#' @param src String. The path to the image to load.
 #' @param pause_icon Optional pause icon to use instead of the default.
 #' Works best with `<wa-icon>`.
 #' @param play_icon Optional play icon to use instead of the default.

@@ -15,9 +15,9 @@ wa_spinner(..., id = NULL, class = NULL, style = NULL, dir = NULL, lang = NULL)
 
 \item{style}{Optional inline CSS style string.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 }
 \value{
 An HTML tag for the component.

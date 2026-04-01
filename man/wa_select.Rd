@@ -62,52 +62,52 @@ update_wa_select(
 
 \item{hint}{Optional hint text to send to the component.}
 
-\item{name}{The name of the select, submitted as a name/value pair with
-form data. Defaults to `` when omitted.}
+\item{name}{String. Default: \code{""}. The name of the select, submitted as
+a name/value pair with form data.}
 
-\item{appearance}{The select's visual appearance. Must be one of
-\code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}. Defaults to \code{outlined}
-when omitted.}
+\item{appearance}{Enumerated string. Allowed values: \code{filled},
+\code{filled-outlined}, \code{outlined}. Default: \code{outlined}. The select's visual
+appearance.}
 
-\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
-when omitted.}
+\item{custom_error}{String. Default: \code{null}. Optional Web Awesome
+attribute.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{max_options_visible}{The maximum number of selected options to
-show when \code{multiple} is true. After the maximum, "+n" will be shown to
-indicate the number of additional items that are selected. Set to 0 to
-remove the limit. Defaults to \code{3} when omitted.}
+\item{max_options_visible}{Number. Default: \code{3}. The maximum number of
+selected options to show when \code{multiple} is TRUE. After the maximum,
+"+n" will be shown to indicate the number of additional items that are
+selected. Set to 0 to remove the limit.}
 
-\item{multiple}{Allows more than one option to be selected. Defaults to
-\code{false} when omitted.}
+\item{multiple}{Boolean. Default: \code{FALSE}. Allows more than one option
+to be selected.}
 
-\item{open}{Indicates whether or not the select is open. You can toggle
-this attribute to show and hide the menu, or you can use the \code{show()}
-and \code{hide()} methods and this attribute will reflect the select's open
-state. Defaults to \code{false} when omitted.}
+\item{open}{Boolean. Default: \code{FALSE}. Indicates whether or not the
+select is open. You can toggle this attribute to show and hide the
+menu, or you can use the \code{show()} and \code{hide()} methods and this
+attribute will reflect the select's open state.}
 
-\item{pill}{Draws a pill-style select with rounded edges. Defaults to
-\code{false} when omitted.}
+\item{pill}{Boolean. Default: \code{FALSE}. Draws a pill-style select with
+rounded edges.}
 
-\item{placeholder}{Placeholder text to show as a hint when the select
-is empty. Defaults to `` when omitted.}
+\item{placeholder}{String. Default: \code{""}. Placeholder text to show as a
+hint when the select is empty.}
 
-\item{placement}{The preferred placement of the select's menu. Note
+\item{placement}{Enumerated string. Allowed values: \code{bottom}, \code{top}.
+Default: \code{bottom}. The preferred placement of the select's menu. Note
 that the actual placement may vary as needed to keep the listbox inside
-of the viewport. Must be one of \code{"bottom"}, \code{"top"}. Defaults to
-\code{bottom} when omitted.}
+of the viewport.}
 
-\item{required}{The select's required attribute. Defaults to \code{false}
-when omitted.}
+\item{required}{Boolean. Default: \code{FALSE}. The select's required
+attribute.}
 
-\item{size}{The select's size. Must be one of \code{"large"}, \code{"medium"},
-\code{"small"}. Defaults to \code{medium} when omitted.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. Default: \code{medium}. The select's size.}
 
-\item{with_clear}{Adds a clear button when the select is not empty.
-Defaults to \code{false} when omitted.}
+\item{with_clear}{Boolean. Default: \code{FALSE}. Adds a clear button when
+the select is not empty.}
 
 \item{clear_icon}{An icon to use in lieu of the default clear icon.}
 
@@ -136,8 +136,13 @@ Invisibly returns \code{NULL}.
 \description{
 Generated wrapper for the Web Awesome \code{wa-select} component. When used
 as a Shiny input, \verb{input$<input_id>} reflects the component's current
-value.
+\code{value} value.
 Generated from Web Awesome metadata.
 
 Generated update helper for the Web Awesome \code{wa-select} component.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current \code{value} value.
+}
+

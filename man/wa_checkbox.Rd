@@ -34,43 +34,42 @@ the rendered DOM \code{id} attribute.}
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The value of the checkbox, submitted as a name/value pair
-with form data.}
+\item{value}{String. The value of the checkbox, submitted as a
+name/value pair with form data.}
 
-\item{checked}{The default value of the form control. Primarily used
-for resetting the form control. This wrapper argument sets the HTML
-\code{checked} attribute, which maps to the component's \code{defaultChecked}
-field/property rather than its live \code{checked} property.}
+\item{checked}{Boolean. The default value of the form control.
+Primarily used for resetting the form control. This wrapper argument
+sets the HTML \code{checked} attribute, which maps to the component's
+\code{defaultChecked} field/property rather than its live \code{checked}
+property.}
 
-\item{disabled}{Disables the checkbox. Defaults to \code{false} when
-omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the checkbox.}
 
-\item{hint}{The checkbox's hint. If you need to display HTML, use the
-\code{hint} slot instead. Defaults to `` when omitted.}
+\item{hint}{String. Default: \code{""}. The checkbox's hint. If you need to
+display HTML, use the \code{hint} slot instead.}
 
-\item{name}{The name of the checkbox, submitted as a name/value pair
-with form data. Defaults to \code{null} when omitted.}
+\item{name}{String. Default: \code{null}. The name of the checkbox,
+submitted as a name/value pair with form data.}
 
-\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
-when omitted.}
+\item{custom_error}{String. Default: \code{null}. Optional Web Awesome
+attribute.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{indeterminate}{Draws the checkbox in an indeterminate state. This
-is usually applied to checkboxes that represents a "select all/none"
-behavior when associated checkboxes have a mix of checked and unchecked
-states. Defaults to \code{false} when omitted.}
+\item{indeterminate}{Boolean. Default: \code{FALSE}. Draws the checkbox in
+an indeterminate state. This is usually applied to checkboxes that
+represents a "select all/none" behavior when associated checkboxes have
+a mix of checked and unchecked states.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{required}{Makes the checkbox a required field. Defaults to
-\code{false} when omitted.}
+\item{required}{Boolean. Default: \code{FALSE}. Makes the checkbox a
+required field.}
 
-\item{size}{The checkbox's size. Must be one of \code{"large"}, \code{"medium"},
-\code{"small"}. Defaults to \code{medium} when omitted.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. Default: \code{medium}. The checkbox's size.}
 
-\item{title}{Optional Web Awesome attribute. Defaults to `` when
-omitted.}
+\item{title}{String. Default: \code{""}. Optional Web Awesome attribute.}
 
 \item{hint_slot}{Text that describes how to use the checkbox.
 Alternatively, you can use the \code{hint} attribute.}
@@ -81,6 +80,11 @@ An HTML tag for the component.
 \description{
 Generated wrapper for the Web Awesome \code{wa-checkbox} component. When
 used as a Shiny input, \verb{input$<input_id>} reflects the component's
-current value.
+current \code{value} value.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current \code{value} value.
+}
+

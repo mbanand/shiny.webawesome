@@ -24,14 +24,14 @@ wa_breadcrumb(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{label}{The label to use for the breadcrumb control. This will not
-be shown on the screen, but it will be announced by screen readers and
-other assistive devices to provide more context for users. Defaults to
-`` when omitted.}
+\item{label}{String. Default: \code{""}. The label to use for the breadcrumb
+control. This will not be shown on the screen, but it will be announced
+by screen readers and other assistive devices to provide more context
+for users.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
 \item{separator}{The separator to use between breadcrumb items. Works
 best with \verb{<wa-icon>}.}

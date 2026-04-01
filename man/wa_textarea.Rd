@@ -67,80 +67,77 @@ update_wa_textarea(
 
 \item{hint}{Optional hint text to send to the component.}
 
-\item{name}{The name of the textarea, submitted as a name/value pair
-with form data. Defaults to \code{null} when omitted.}
+\item{name}{String. Default: \code{null}. The name of the textarea,
+submitted as a name/value pair with form data.}
 
-\item{appearance}{The textarea's visual appearance. Must be one of
-\code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}. Defaults to \code{outlined}
-when omitted.}
+\item{appearance}{Enumerated string. Allowed values: \code{filled},
+\code{filled-outlined}, \code{outlined}. Default: \code{outlined}. The textarea's
+visual appearance.}
 
-\item{autocapitalize}{Controls whether and how text input is
-automatically capitalized as it is entered by the user. Must be one of
-\code{"characters"}, \code{"none"}, \code{"off"}, \code{"on"}, \code{"sentences"}, \code{"words"}.}
+\item{autocapitalize}{Enumerated string. Allowed values: \code{characters},
+\code{none}, \code{off}, \code{on}, \code{sentences}, \code{words}. Controls whether and how
+text input is automatically capitalized as it is entered by the user.}
 
-\item{autocomplete}{Specifies what permission the browser has to
-provide assistance in filling out form field values. Refer to this page
-on MDN for available values.}
+\item{autocomplete}{String. Specifies what permission the browser has
+to provide assistance in filling out form field values. Refer to this
+page on MDN for available values.}
 
-\item{autocorrect}{Indicates whether the browser's autocorrect feature
-is on or off.}
+\item{autocorrect}{String. Indicates whether the browser's autocorrect
+feature is on or off.}
 
-\item{autofocus}{Indicates that the input should receive focus on page
-load.}
+\item{autofocus}{Boolean. Indicates that the input should receive focus
+on page load.}
 
-\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
-when omitted.}
+\item{custom_error}{String. Default: \code{null}. Optional Web Awesome
+attribute.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{enterkeyhint}{Used to customize the label or icon of the Enter
-key on virtual keyboards. Must be one of \code{"done"}, \code{"enter"}, \code{"go"},
-\code{"next"}, \code{"previous"}, \code{"search"}, \code{"send"}.}
+\item{enterkeyhint}{Enumerated string. Allowed values: \code{done}, \code{enter},
+\code{go}, \code{next}, \code{previous}, \code{search}, \code{send}. Used to customize the label
+or icon of the Enter key on virtual keyboards.}
 
-\item{inputmode}{Tells the browser what type of data will be entered by
-the user, allowing it to display the appropriate virtual keyboard on
-supportive devices. Must be one of \code{"decimal"}, \code{"email"}, \code{"none"},
-\code{"numeric"}, \code{"search"}, \code{"tel"}, \code{"text"}, \code{"url"}.}
+\item{inputmode}{Enumerated string. Allowed values: \code{decimal}, \code{email},
+\code{none}, \code{numeric}, \code{search}, \code{tel}, \code{text}, \code{url}. Tells the browser
+what type of data will be entered by the user, allowing it to display
+the appropriate virtual keyboard on supportive devices.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{maxlength}{The maximum length of input that will be considered
-valid.}
+\item{maxlength}{Number. The maximum length of input that will be
+considered valid.}
 
-\item{minlength}{The minimum length of input that will be considered
-valid.}
+\item{minlength}{Number. The minimum length of input that will be
+considered valid.}
 
-\item{placeholder}{Placeholder text to show as a hint when the input is
-empty. Defaults to `` when omitted.}
+\item{placeholder}{String. Default: \code{""}. Placeholder text to show as a
+hint when the input is empty.}
 
-\item{readonly}{Makes the textarea readonly. Defaults to \code{false} when
-omitted.}
+\item{readonly}{Boolean. Default: \code{FALSE}. Makes the textarea readonly.}
 
-\item{required}{Makes the textarea a required field. Defaults to
-\code{false} when omitted.}
+\item{required}{Boolean. Default: \code{FALSE}. Makes the textarea a
+required field.}
 
-\item{resize}{Controls how the textarea can be resized. Must be one of
-\code{"auto"}, \code{"both"}, \code{"horizontal"}, \code{"none"}, \code{"vertical"}. Defaults to
-\code{vertical} when omitted.}
+\item{resize}{Enumerated string. Allowed values: \code{auto}, \code{both},
+\code{horizontal}, \code{none}, \code{vertical}. Default: \code{vertical}. Controls how the
+textarea can be resized.}
 
-\item{rows}{The number of rows to display by default. Defaults to \code{4}
-when omitted.}
+\item{rows}{Number. Default: \code{4}. The number of rows to display by
+default.}
 
-\item{size}{The textarea's size. Must be one of \code{"large"}, \code{"medium"},
-\code{"small"}. Defaults to \code{medium} when omitted.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. Default: \code{medium}. The textarea's size.}
 
-\item{spellcheck}{Enables spell checking on the textarea. Defaults to
-\code{true} when omitted.}
+\item{spellcheck}{Boolean. Default: \code{TRUE}. Enables spell checking on
+the textarea.}
 
-\item{title}{Optional Web Awesome attribute. Defaults to `` when
-omitted.}
+\item{title}{String. Default: \code{""}. Optional Web Awesome attribute.}
 
-\item{with_hint}{Used for SSR. If you're slotting in a \code{hint} element,
-make sure to set this to \code{true}. Defaults to \code{false} when omitted.}
+\item{with_hint}{Boolean. Default: \code{FALSE}. Used for SSR. If you're
+slotting in a \code{hint} element, make sure to set this to \code{TRUE}.}
 
-\item{with_label}{Used for SSR. If you're slotting in a \code{label}
-element, make sure to set this to \code{true}. Defaults to \code{false} when
-omitted.}
+\item{with_label}{Boolean. Default: \code{FALSE}. Used for SSR. If you're
+slotting in a \code{label} element, make sure to set this to \code{TRUE}.}
 
 \item{hint_slot}{Text that describes how to use the input.
 Alternatively, you can use the \code{hint} attribute.}
@@ -158,8 +155,13 @@ Invisibly returns \code{NULL}.
 \description{
 Generated wrapper for the Web Awesome \code{wa-textarea} component. When
 used as a Shiny input, \verb{input$<input_id>} reflects the component's
-current value.
+current \code{value} value.
 Generated from Web Awesome metadata.
 
 Generated update helper for the Web Awesome \code{wa-textarea} component.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current \code{value} value.
+}
+

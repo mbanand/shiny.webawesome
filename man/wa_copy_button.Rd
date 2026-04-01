@@ -33,38 +33,37 @@ wa_copy_button(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The text value to copy. Defaults to `` when omitted.}
+\item{value}{String. Default: \code{""}. The text value to copy.}
 
-\item{disabled}{Disables the copy button. Defaults to \code{false} when
-omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the copy button.}
 
-\item{copy_label}{A custom label to show in the tooltip. Defaults to ``
-when omitted.}
+\item{copy_label}{String. Default: \code{""}. A custom label to show in the
+tooltip.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{error_label}{A custom label to show in the tooltip when a copy
-error occurs. Defaults to `` when omitted.}
+\item{error_label}{String. Default: \code{""}. A custom label to show in the
+tooltip when a copy error occurs.}
 
-\item{feedback_duration}{The length of time to show feedback before
-restoring the default trigger. Defaults to \code{1000} when omitted.}
+\item{feedback_duration}{Number. Default: \code{1000}. The length of time to
+show feedback before restoring the default trigger.}
 
-\item{from}{An id that references an element in the same document from
-which data will be copied. If both this and \code{value} are present, this
-value will take precedence. By default, the target element's
-\code{textContent} will be copied. To copy an attribute, append the
-attribute name wrapped in square brackets, e.g. \code{from="elvalue"}. To
-copy a property, append a dot and the property name, e.g.
-\code{from="el.value"}. Defaults to `` when omitted.}
+\item{from}{String. Default: \code{""}. An id that references an element in
+the same document from which data will be copied. If both this and
+\code{value} are present, this value will take precedence. By default, the
+target element's \code{textContent} will be copied. To copy an attribute,
+append the attribute name wrapped in square brackets, e.g.
+\code{from="elvalue"}. To copy a property, append a dot and the property
+name, e.g. \code{from="el.value"}.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{success_label}{A custom label to show in the tooltip after
-copying. Defaults to `` when omitted.}
+\item{success_label}{String. Default: \code{""}. A custom label to show in
+the tooltip after copying.}
 
-\item{tooltip_placement}{The preferred placement of the tooltip. Must
-be one of \code{"bottom"}, \code{"left"}, \code{"right"}, \code{"top"}. Defaults to \code{top}
-when omitted.}
+\item{tooltip_placement}{Enumerated string. Allowed values: \code{bottom},
+\code{left}, \code{right}, \code{top}. Default: \code{top}. The preferred placement of the
+tooltip.}
 
 \item{copy_icon}{The icon to show in the default copy state. Works best
 with \verb{<wa-icon>}.}

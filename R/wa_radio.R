@@ -10,20 +10,21 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The radio's value. When selected, the radio group will
-#' receive this value.
-#' @param disabled Disables the radio. Defaults to `false` when omitted.
-#' @param name The name of the input, submitted as a name/value pair with
-#' form data. Defaults to `null` when omitted.
-#' @param appearance The radio's visual appearance. Must be one of
-#' `"button"`, `"default"`. Defaults to `default` when omitted.
-#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param size The radio's size. When used inside a radio group, the size
+#' @param value String. The radio's value. When selected, the radio group
+#' will receive this value.
+#' @param disabled Boolean. Default: `FALSE`. Disables the radio.
+#' @param name String. Default: `null`. The name of the input, submitted
+#' as a name/value pair with form data.
+#' @param appearance Enumerated string. Allowed values: `button`,
+#' `default`. Default: `default`. The radio's visual appearance.
+#' @param custom_error String. Default: `null`. Optional Web Awesome
+#' attribute.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. The radio's size. When used inside a radio group, the size
 #' will be determined by the radio group's size, which will override this
-#' attribute. Must be one of `"large"`, `"medium"`, `"small"`.
+#' attribute.
 #'
 #' @return An HTML tag for the component.
 #'

@@ -27,16 +27,17 @@ wa_animated_image(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{alt}{A description of the image used by assistive devices.}
+\item{alt}{String. A description of the image used by assistive
+devices.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{play}{Plays the animation. When this attribute is remove, the
-animation will pause.}
+\item{play}{Boolean. Plays the animation. When this attribute is
+remove, the animation will pause.}
 
-\item{src}{The path to the image to load.}
+\item{src}{String. The path to the image to load.}
 
 \item{pause_icon}{Optional pause icon to use instead of the default.
 Works best with \verb{<wa-icon>}.}

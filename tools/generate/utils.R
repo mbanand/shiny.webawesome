@@ -76,9 +76,47 @@
   .scalar_string(type_node$text, fallback = NA_character_)
 }
 
+# Return one normalized metadata type string, preferring parsed enum details.
+.effective_type_text <- function(type_node, parsed_type_node = NULL) {
+  type_text <- .type_text(type_node)
+  parsed_type_text <- .type_text(parsed_type_node)
+
+  if (
+    length(.enum_values(type_text)) == 0L &&
+      length(.enum_values(parsed_type_text)) > 0L
+  ) {
+    return(parsed_type_text)
+  }
+
+  type_text
+}
+
 # Return whether a type string represents a boolean.
 .is_boolean_type <- function(type_text) {
-  identical(.scalar_string(type_text, fallback = ""), "boolean")
+  type_text <- .scalar_string(type_text, fallback = "")
+  parts <- trimws(strsplit(type_text, "|", fixed = TRUE)[[1]])
+  parts <- setdiff(parts, c("undefined", "null"))
+  identical(parts, "boolean")
+}
+
+# Return whether a type string represents a number.
+.is_number_type <- function(type_text) {
+  type_text <- .scalar_string(type_text, fallback = "")
+  parts <- trimws(strsplit(type_text, "|", fixed = TRUE)[[1]])
+  parts <- setdiff(parts, c("undefined", "null"))
+  identical(parts, "number")
+}
+
+# Return whether a type string represents a non-enum string.
+.is_string_type <- function(type_text) {
+  type_text <- .scalar_string(type_text, fallback = "")
+  if (!nzchar(type_text) || length(.enum_values(type_text)) > 0L) {
+    return(FALSE)
+  }
+
+  parts <- trimws(strsplit(type_text, "|", fixed = TRUE)[[1]])
+  parts <- setdiff(parts, c("undefined", "null"))
+  identical(parts, "string")
 }
 
 # Extract string enum values from a TypeScript union type.
@@ -91,6 +129,7 @@
 
   parts <- trimws(strsplit(type_text, "|", fixed = TRUE)[[1]])
   parts <- parts[nzchar(parts)]
+  parts <- setdiff(parts, c("undefined", "null"))
 
   if (length(parts) == 0L) {
     return(character())

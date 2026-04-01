@@ -10,14 +10,14 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param label A label to use for the button group. This won't be
-#' displayed on the screen, but it will be announced by assistive devices
-#' when interacting with the control and is strongly recommended. Defaults
-#' to `` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param orientation The button group's orientation. Must be one of
-#' `"horizontal"`, `"vertical"`. Defaults to `horizontal` when omitted.
+#' @param label String. Default: `""`. A label to use for the button
+#' group. This won't be displayed on the screen, but it will be announced
+#' by assistive devices when interacting with the control and is strongly
+#' recommended.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param orientation Enumerated string. Allowed values: `horizontal`,
+#' `vertical`. Default: `horizontal`. The button group's orientation.
 #'
 #' @return An HTML tag for the component.
 #'

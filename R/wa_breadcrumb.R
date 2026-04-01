@@ -10,12 +10,12 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param label The label to use for the breadcrumb control. This will not
-#' be shown on the screen, but it will be announced by screen readers and
-#' other assistive devices to provide more context for users. Defaults to
-#' `` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
+#' @param label String. Default: `""`. The label to use for the breadcrumb
+#' control. This will not be shown on the screen, but it will be announced
+#' by screen readers and other assistive devices to provide more context
+#' for users.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
 #' @param separator The separator to use between breadcrumb items. Works
 #' best with `<wa-icon>`.
 #'

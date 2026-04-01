@@ -24,14 +24,14 @@ wa_tab_panel(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{name}{The tab panel's name. Defaults to `` when omitted.}
+\item{name}{String. Default: \code{""}. The tab panel's name.}
 
-\item{active}{When true, the tab panel will be shown. Defaults to
-\code{false} when omitted.}
+\item{active}{Boolean. Default: \code{FALSE}. When TRUE, the tab panel will
+be shown.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 }
 \value{
 An HTML tag for the component.

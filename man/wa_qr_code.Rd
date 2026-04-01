@@ -29,32 +29,30 @@ wa_qr_code(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The QR code's value. Defaults to `` when omitted.}
+\item{value}{String. Default: \code{""}. The QR code's value.}
 
-\item{label}{The label for assistive devices to announce. If
-unspecified, the value will be used instead. Defaults to `` when
-omitted.}
+\item{label}{String. Default: \code{""}. The label for assistive devices to
+announce. If unspecified, the value will be used instead.}
 
-\item{background}{The background color. This can be any valid CSS color
-or \code{transparent}. It cannot be a CSS custom property. Defaults to ``
-when omitted.}
+\item{background}{String. Default: \code{""}. The background color. This can
+be any valid CSS color or \code{transparent}. It cannot be a CSS custom
+property.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{error_correction}{The level of error correction to use. Learn
-more Must be one of \code{"H"}, \code{"L"}, \code{"M"}, \code{"Q"}. Defaults to \code{H} when
-omitted.}
+\item{error_correction}{Enumerated string. Allowed values: \code{H}, \code{L},
+\code{M}, \code{Q}. Default: \code{H}. The level of error correction to use. Learn
+more}
 
-\item{fill}{The fill color. This can be any valid CSS color, but not a
-CSS custom property. Defaults to `` when omitted.}
+\item{fill}{String. Default: \code{""}. The fill color. This can be any
+valid CSS color, but not a CSS custom property.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{radius}{The edge radius of each module. Must be between 0 and
-0.5. Defaults to \code{0} when omitted.}
+\item{radius}{Number. Default: \code{0}. The edge radius of each module.
+Must be between 0 and 0.5.}
 
-\item{size}{The size of the QR code, in pixels. Defaults to \code{128} when
-omitted.}
+\item{size}{Number. Default: \code{128}. The size of the QR code, in pixels.}
 }
 \value{
 An HTML tag for the component.

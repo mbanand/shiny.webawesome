@@ -10,28 +10,28 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The number to format. Defaults to `0` when omitted.
-#' @param currency The ISO 4217 currency code to use when formatting.
-#' Defaults to `USD` when omitted.
-#' @param currency_display How to display the currency. Must be one of
-#' `"code"`, `"name"`, `"narrowSymbol"`, `"symbol"`. Defaults to `symbol`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param maximum_fraction_digits The maximum number of fraction digits to
-#' use. Possible values are 0-100.
-#' @param maximum_significant_digits The maximum number of significant
-#' digits to use,. Possible values are 1-21.
-#' @param minimum_fraction_digits The minimum number of fraction digits to
-#' use. Possible values are 0-100.
-#' @param minimum_integer_digits The minimum number of integer digits to
-#' use. Possible values are 1-21.
-#' @param minimum_significant_digits The minimum number of significant
+#' @param value Number. Default: `0`. The number to format.
+#' @param currency String. Default: `USD`. The ISO 4217 currency code to
+#' use when formatting.
+#' @param currency_display Enumerated string. Allowed values: `code`,
+#' `name`, `narrowSymbol`, `symbol`. Default: `symbol`. How to display the
+#' currency.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param maximum_fraction_digits Number. The maximum number of fraction
+#' digits to use. Possible values are 0-100.
+#' @param maximum_significant_digits Number. The maximum number of
+#' significant digits to use,. Possible values are 1-21.
+#' @param minimum_fraction_digits Number. The minimum number of fraction
+#' digits to use. Possible values are 0-100.
+#' @param minimum_integer_digits Number. The minimum number of integer
 #' digits to use. Possible values are 1-21.
-#' @param type The formatting style to use. Must be one of `"currency"`,
-#' `"decimal"`, `"percent"`. Defaults to `decimal` when omitted.
-#' @param without_grouping Turns off grouping separators. Defaults to
-#' `false` when omitted.
+#' @param minimum_significant_digits Number. The minimum number of
+#' significant digits to use. Possible values are 1-21.
+#' @param type Enumerated string. Allowed values: `currency`, `decimal`,
+#' `percent`. Default: `decimal`. The formatting style to use.
+#' @param without_grouping Boolean. Default: `FALSE`. Turns off grouping
+#' separators.
 #'
 #' @return An HTML tag for the component.
 #'

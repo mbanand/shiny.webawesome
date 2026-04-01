@@ -36,47 +36,47 @@ the rendered DOM \code{id} attribute.}
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The default value of the form control. Primarily used for
-resetting the form control. This wrapper argument sets the HTML \code{value}
-attribute, which maps to the component's \code{defaultValue} field/property
-rather than its live \code{value} property.}
+\item{value}{String. The default value of the form control. Primarily
+used for resetting the form control. This wrapper argument sets the
+HTML \code{value} attribute, which maps to the component's \code{defaultValue}
+field/property rather than its live \code{value} property.}
 
-\item{disabled}{Disables the radio group and all child radios. Defaults
-to \code{false} when omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the radio group and
+all child radios.}
 
-\item{label}{The radio group's label. Required for proper
-accessibility. If you need to display HTML, use the \code{label} slot
-instead. Defaults to `` when omitted.}
+\item{label}{String. Default: \code{""}. The radio group's label. Required
+for proper accessibility. If you need to display HTML, use the \code{label}
+slot instead.}
 
-\item{hint}{The radio groups's hint. If you need to display HTML, use
-the \code{hint} slot instead. Defaults to `` when omitted.}
+\item{hint}{String. Default: \code{""}. The radio groups's hint. If you need
+to display HTML, use the \code{hint} slot instead.}
 
-\item{name}{The name of the radio group, submitted as a name/value pair
-with form data. Defaults to \code{null} when omitted.}
+\item{name}{String. Default: \code{null}. The name of the radio group,
+submitted as a name/value pair with form data.}
 
-\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
-when omitted.}
+\item{custom_error}{String. Default: \code{null}. Optional Web Awesome
+attribute.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{orientation}{The orientation in which to show radio items. Must
-be one of \code{"horizontal"}, \code{"vertical"}. Defaults to \code{vertical} when
-omitted.}
+\item{orientation}{Enumerated string. Allowed values: \code{horizontal},
+\code{vertical}. Default: \code{vertical}. The orientation in which to show radio
+items.}
 
-\item{required}{Ensures a child radio is checked before allowing the
-containing form to submit. Defaults to \code{false} when omitted.}
+\item{required}{Boolean. Default: \code{FALSE}. Ensures a child radio is
+checked before allowing the containing form to submit.}
 
-\item{size}{The radio group's size. When present, this size will be
-applied to all \verb{<wa-radio>} items inside. Must be one of \code{"large"},
-\code{"medium"}, \code{"small"}.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. The radio group's size. When present, this size will be
+applied to all \verb{<wa-radio>} items inside.}
 
-\item{with_hint}{Used for SSR. if true, will show slotted hint on
-initial render. Defaults to \code{false} when omitted.}
+\item{with_hint}{Boolean. Default: \code{FALSE}. Used for SSR. if TRUE, will
+show slotted hint on initial render.}
 
-\item{with_label}{Used for SSR. if true, will show slotted label on
-initial render. Defaults to \code{false} when omitted.}
+\item{with_label}{Boolean. Default: \code{FALSE}. Used for SSR. if TRUE,
+will show slotted label on initial render.}
 
 \item{hint_slot}{Text that describes how to use the radio group.
 Alternatively, you can use the \code{hint} attribute.}
@@ -90,6 +90,11 @@ An HTML tag for the component.
 \description{
 Generated wrapper for the Web Awesome \code{wa-radio-group} component. When
 used as a Shiny input, \verb{input$<input_id>} reflects the component's
-current value.
+current \code{value} value.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current \code{value} value.
+}
+

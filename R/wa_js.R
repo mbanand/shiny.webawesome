@@ -114,10 +114,11 @@
 #' }
 # nolint start: object_usage_linter.
 wa_js <- function(code) {
-  if (!is.character(code) ||
-        length(code) != 1L ||
-        is.na(code) ||
-        !nzchar(code)) {
+  valid_code <- is.character(code) &&
+    length(code) == 1L &&
+    !is.na(code) &&
+    nzchar(code)
+  if (!valid_code) {
     stop("`code` must be one non-missing string.", call. = FALSE)
   }
 

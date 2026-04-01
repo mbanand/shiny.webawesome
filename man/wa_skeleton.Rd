@@ -23,12 +23,13 @@ wa_skeleton(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{effect}{Determines which effect the skeleton will use. Must be
-one of \code{"none"}, \code{"pulse"}, \code{"sheen"}. Defaults to \code{none} when omitted.}
+\item{effect}{Enumerated string. Allowed values: \code{none}, \code{pulse},
+\code{sheen}. Default: \code{none}. Determines which effect the skeleton will
+use.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 }
 \value{
 An HTML tag for the component.

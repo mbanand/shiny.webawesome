@@ -4,7 +4,7 @@
 #' Create a `wa-slider` component
 #'
 #' <wa-slider> When used as a Shiny input, `input$<input_id>` reflects the
-#' component's current value.
+#' component's current `value` value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -12,58 +12,61 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The default value of the form control. Primarily used for
-#' resetting the form control. This wrapper argument sets the HTML `value`
-#' attribute, which maps to the component's `defaultValue` field/property
-#' rather than its live `value` property.
-#' @param disabled Disables the slider. Defaults to `false` when omitted.
-#' @param label The slider's label. If you need to provide HTML in the
-#' label, use the `label` slot instead. Defaults to `` when omitted.
-#' @param hint The slider hint. If you need to display HTML, use the hint
-#' slot instead. Defaults to `` when omitted.
-#' @param name The name of the slider. This will be submitted with the
-#' form as a name/value pair. Defaults to `null` when omitted.
-#' @param autofocus Tells the browser to focus the slider when the page
-#' loads or a dialog is shown.
-#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param indicator_offset The starting value from which to draw the
-#' slider's fill, which is based on its current value.
-#' @param lang Optional Web Awesome attribute.
-#' @param max The maximum value allowed. Defaults to `100` when omitted.
-#' @param max_value The maximum value of a range selection. Used only when
-#' range attribute is set. Defaults to `50` when omitted.
-#' @param min The minimum value allowed. Defaults to `0` when omitted.
-#' @param min_value The minimum value of a range selection. Used only when
-#' range attribute is set. Defaults to `0` when omitted.
-#' @param orientation The orientation of the slider. Must be one of
-#' `"horizontal"`, `"vertical"`. Defaults to `horizontal` when omitted.
-#' @param range Converts the slider to a range slider with two thumbs.
-#' Defaults to `false` when omitted.
-#' @param readonly Makes the slider a read-only field. Defaults to `false`
-#' when omitted.
-#' @param required Makes the slider a required field. Defaults to `false`
-#' when omitted.
-#' @param size The slider's size. Must be one of `"large"`, `"medium"`,
-#' `"small"`. Defaults to `medium` when omitted.
-#' @param step The granularity the value must adhere to when incrementing
-#' and decrementing. Defaults to `1` when omitted.
-#' @param tooltip_distance The distance of the tooltip from the slider's
-#' thumb. Defaults to `8` when omitted.
-#' @param tooltip_placement The placement of the tooltip in reference to
-#' the slider's thumb. Must be one of `"bottom"`, `"left"`, `"right"`,
-#' `"top"`. Defaults to `top` when omitted.
-#' @param with_markers Draws markers at each step along the slider.
-#' Defaults to `false` when omitted.
-#' @param with_tooltip Draws a tooltip above the thumb when the control
-#' has focus or is dragged. Defaults to `false` when omitted.
+#' @param value Number. The default value of the form control. Primarily
+#' used for resetting the form control. This wrapper argument sets the
+#' HTML `value` attribute, which maps to the component's `defaultValue`
+#' field/property rather than its live `value` property.
+#' @param disabled Boolean. Default: `FALSE`. Disables the slider.
+#' @param label String. Default: `""`. The slider's label. If you need to
+#' provide HTML in the label, use the `label` slot instead.
+#' @param hint String. Default: `""`. The slider hint. If you need to
+#' display HTML, use the hint slot instead.
+#' @param name String. Default: `null`. The name of the slider. This will
+#' be submitted with the form as a name/value pair.
+#' @param autofocus Boolean. Tells the browser to focus the slider when
+#' the page loads or a dialog is shown.
+#' @param custom_error String. Default: `null`. Optional Web Awesome
+#' attribute.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param indicator_offset Number. The starting value from which to draw
+#' the slider's fill, which is based on its current value.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param max Number. Default: `100`. The maximum value allowed.
+#' @param max_value Number. Default: `50`. The maximum value of a range
+#' selection. Used only when range attribute is set.
+#' @param min Number. Default: `0`. The minimum value allowed.
+#' @param min_value Number. Default: `0`. The minimum value of a range
+#' selection. Used only when range attribute is set.
+#' @param orientation Enumerated string. Allowed values: `horizontal`,
+#' `vertical`. Default: `horizontal`. The orientation of the slider.
+#' @param range Boolean. Default: `FALSE`. Converts the slider to a range
+#' slider with two thumbs.
+#' @param readonly Boolean. Default: `FALSE`. Makes the slider a read-only
+#' field.
+#' @param required Boolean. Default: `FALSE`. Makes the slider a required
+#' field.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. Default: `medium`. The slider's size.
+#' @param step Number. Default: `1`. The granularity the value must adhere
+#' to when incrementing and decrementing.
+#' @param tooltip_distance Number. Default: `8`. The distance of the
+#' tooltip from the slider's thumb.
+#' @param tooltip_placement Enumerated string. Allowed values: `bottom`,
+#' `left`, `right`, `top`. Default: `top`. The placement of the tooltip in
+#' reference to the slider's thumb.
+#' @param with_markers Boolean. Default: `FALSE`. Draws markers at each
+#' step along the slider.
+#' @param with_tooltip Boolean. Default: `FALSE`. Draws a tooltip above
+#' the thumb when the control has focus or is dragged.
 #' @param hint_slot Text that describes how to use the input.
 #' Alternatively, you can use the `hint` attribute. instead.
 #' @param label_slot The slider label. Alternatively, you can use the
 #' `label` attribute.
 #' @param reference One or more reference labels to show visually below
 #' the slider.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current `value` value.
 #'
 #' @return An HTML tag for the component.
 #'

@@ -10,20 +10,20 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param appearance The badge's visual appearance. Must be one of
-#' `"accent"`, `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to
-#' `accent` when omitted.
-#' @param attention Adds an animation to draw attention to the badge. Must
-#' be one of `"bounce"`, `"none"`, `"pulse"`. Defaults to `none` when
-#' omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param pill Draws a pill-style badge with rounded edges. Defaults to
-#' `false` when omitted.
-#' @param variant The badge's theme variant. Defaults to `brand` if not
-#' within another element with a variant. Must be one of `"brand"`,
-#' `"danger"`, `"neutral"`, `"success"`, `"warning"`. Defaults to `brand`
-#' when omitted.
+#' @param appearance Enumerated string. Allowed values: `accent`,
+#' `filled`, `filled-outlined`, `outlined`. Default: `accent`. The badge's
+#' visual appearance.
+#' @param attention Enumerated string. Allowed values: `bounce`, `none`,
+#' `pulse`. Default: `none`. Adds an animation to draw attention to the
+#' badge.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param pill Boolean. Default: `FALSE`. Draws a pill-style badge with
+#' rounded edges.
+#' @param variant Enumerated string. Allowed values: `brand`, `danger`,
+#' `neutral`, `success`, `warning`. Default: `brand`. The badge's theme
+#' variant. Defaults to `brand` if not within another element with a
+#' variant.
 #' @param end An element, such as `<wa-icon>`, placed after the label.
 #' @param start An element, such as `<wa-icon>`, placed before the label.
 #'

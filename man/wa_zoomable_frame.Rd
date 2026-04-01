@@ -34,36 +34,35 @@ wa_zoomable_frame(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{allowfullscreen}{Allows fullscreen mode. Defaults to \code{false} when
-omitted.}
+\item{allowfullscreen}{Boolean. Default: \code{FALSE}. Allows fullscreen
+mode.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{loading}{Controls iframe loading behavior. Must be one of
-\code{"eager"}, \code{"lazy"}. Defaults to \code{eager} when omitted.}
+\item{loading}{Enumerated string. Allowed values: \code{eager}, \code{lazy}.
+Default: \code{eager}. Controls iframe loading behavior.}
 
-\item{referrerpolicy}{Controls referrer information.}
+\item{referrerpolicy}{String. Controls referrer information.}
 
-\item{sandbox}{Security restrictions for the iframe.}
+\item{sandbox}{String. Security restrictions for the iframe.}
 
-\item{src}{The URL of the content to display.}
+\item{src}{String. The URL of the content to display.}
 
-\item{srcdoc}{Inline HTML to display.}
+\item{srcdoc}{String. Inline HTML to display.}
 
-\item{without_controls}{Removes the zoom controls. Defaults to \code{false}
-when omitted.}
+\item{without_controls}{Boolean. Default: \code{FALSE}. Removes the zoom
+controls.}
 
-\item{without_interaction}{Disables interaction when present. Defaults
-to \code{false} when omitted.}
+\item{without_interaction}{Boolean. Default: \code{FALSE}. Disables
+interaction when present.}
 
-\item{zoom}{The current zoom of the frame, e.g. 0 = 0\% and 1 = 100\%.
-Defaults to \code{1} when omitted.}
+\item{zoom}{Number. Default: \code{1}. The current zoom of the frame, e.g. 0
+= 0\% and 1 = 100\%.}
 
-\item{zoom_levels}{The zoom levels to step through when using zoom
-controls. This does not restrict programmatic changes to the zoom.
-Defaults to \verb{25\% 50\% 75\% 100\% 125\% 150\% 175\% 200\%} when omitted.}
+\item{zoom_levels}{String. Default: \verb{25\% 50\% 75\% 100\% 125\% 150\% 175\% 200\%}. The zoom levels to step through when using zoom controls. This
+does not restrict programmatic changes to the zoom.}
 
 \item{zoom_in_icon}{The slot that contains the zoom in icon.}
 

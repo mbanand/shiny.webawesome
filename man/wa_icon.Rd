@@ -33,50 +33,52 @@ wa_icon(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{label}{An alternate description to use for assistive devices. If
-omitted, the icon will be considered presentational and ignored by
-assistive devices. Defaults to `` when omitted.}
+\item{label}{String. Default: \code{""}. An alternate description to use for
+assistive devices. If omitted, the icon will be considered
+presentational and ignored by assistive devices.}
 
-\item{name}{The name of the icon to draw. Available names depend on the
-icon library being used.}
+\item{name}{String. The name of the icon to draw. Available names
+depend on the icon library being used.}
 
-\item{animation}{Sets the animation for the icon}
+\item{animation}{Enumerated string. Allowed values: \code{beat},
+\code{beat-fade}, \code{bounce}, \code{fade}, \code{flip}, \code{shake}, \code{spin}, \code{spin-pulse},
+\code{spin-reverse}. Sets the animation for the icon}
 
-\item{auto_width}{Sets the width of the icon to match the cropped SVG
-viewBox. This operates like the Font \code{fa-width-auto} class. Defaults to
-\code{false} when omitted.}
+\item{auto_width}{Boolean. Default: \code{FALSE}. Sets the width of the icon
+to match the cropped SVG viewBox. This operates like the Font
+\code{fa-width-auto} class.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{family}{The family of icons to choose from. For Font Awesome
-Free, valid options include \code{classic} and \code{brands}. For Font Awesome
-Pro subscribers, valid options include, \code{classic}, \code{sharp}, \code{duotone},
-\code{sharp-duotone}, and \code{brands}. A valid kit code must be present to show
-pro icons via CDN. You can set \verb{<html data-fa-kit-code="...">} to
-provide one.}
+\item{family}{String. The family of icons to choose from. For Font
+Awesome Free, valid options include \code{classic} and \code{brands}. For Font
+Awesome Pro subscribers, valid options include, \code{classic}, \code{sharp},
+\code{duotone}, \code{sharp-duotone}, and \code{brands}. A valid kit code must be
+present to show pro icons via CDN. You can set \verb{<html data-fa-kit-code="...">} to provide one.}
 
-\item{flip}{Sets the flip direction of the icon along the 'x'
-(horizontal), 'y' (vertical), or 'both' axes.}
+\item{flip}{Enumerated string. Allowed values: \code{both}, \code{x}, \code{y}. Sets
+the flip direction of the icon along the 'x' (horizontal), 'y'
+(vertical), or 'both' axes.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{library}{The name of a registered custom icon library. Defaults
-to \code{default} when omitted.}
+\item{library}{String. Default: \code{default}. The name of a registered
+custom icon library.}
 
-\item{rotate}{Sets the rotation degree of the icon Defaults to \code{0} when
-omitted.}
+\item{rotate}{Number. Default: \code{0}. Sets the rotation degree of the
+icon}
 
-\item{src}{An external URL of an SVG file. Be sure you trust the
-content you are including, as it will be executed as code and can
+\item{src}{String. An external URL of an SVG file. Be sure you trust
+the content you are including, as it will be executed as code and can
 result in XSS attacks.}
 
-\item{swap_opacity}{Swaps the opacity of duotone icons. Defaults to
-\code{false} when omitted.}
+\item{swap_opacity}{Boolean. Default: \code{FALSE}. Swaps the opacity of
+duotone icons.}
 
-\item{variant}{The name of the icon's variant. For Font Awesome, valid
-options include \code{thin}, \code{light}, \code{regular}, and \code{solid} for the
-\code{classic} and \code{sharp} families. Some variants require a Font Awesome
-Pro subscription. Custom icon libraries may or may not use this
+\item{variant}{String. The name of the icon's variant. For Font
+Awesome, valid options include \code{thin}, \code{light}, \code{regular}, and \code{solid}
+for the \code{classic} and \code{sharp} families. Some variants require a Font
+Awesome Pro subscription. Custom icon libraries may or may not use this
 property.}
 }
 \value{

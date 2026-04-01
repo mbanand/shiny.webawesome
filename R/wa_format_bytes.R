@@ -10,15 +10,14 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The number to format in bytes. Defaults to `0` when
-#' omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param display Determines how to display the result, e.g. "100 bytes",
-#' "100 b", or "100b". Must be one of `"long"`, `"narrow"`, `"short"`.
-#' Defaults to `short` when omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param unit The type of unit to display. Must be one of `"bit"`,
-#' `"byte"`. Defaults to `byte` when omitted.
+#' @param value Number. Default: `0`. The number to format in bytes.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param display Enumerated string. Allowed values: `long`, `narrow`,
+#' `short`. Default: `short`. Determines how to display the result, e.g.
+#' "100 bytes", "100 b", or "100b".
+#' @param lang String. Optional Web Awesome attribute.
+#' @param unit Enumerated string. Allowed values: `bit`, `byte`. Default:
+#' `byte`. The type of unit to display.
 #'
 #' @return An HTML tag for the component.
 #'

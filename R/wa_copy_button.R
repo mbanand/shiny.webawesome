@@ -10,29 +10,28 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The text value to copy. Defaults to `` when omitted.
-#' @param disabled Disables the copy button. Defaults to `false` when
-#' omitted.
-#' @param copy_label A custom label to show in the tooltip. Defaults to ``
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param error_label A custom label to show in the tooltip when a copy
-#' error occurs. Defaults to `` when omitted.
-#' @param feedback_duration The length of time to show feedback before
-#' restoring the default trigger. Defaults to `1000` when omitted.
-#' @param from An id that references an element in the same document from
-#' which data will be copied. If both this and `value` are present, this
-#' value will take precedence. By default, the target element's
-#' `textContent` will be copied. To copy an attribute, append the
-#' attribute name wrapped in square brackets, e.g. `from="elvalue"`. To
-#' copy a property, append a dot and the property name, e.g.
-#' `from="el.value"`. Defaults to `` when omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param success_label A custom label to show in the tooltip after
-#' copying. Defaults to `` when omitted.
-#' @param tooltip_placement The preferred placement of the tooltip. Must
-#' be one of `"bottom"`, `"left"`, `"right"`, `"top"`. Defaults to `top`
-#' when omitted.
+#' @param value String. Default: `""`. The text value to copy.
+#' @param disabled Boolean. Default: `FALSE`. Disables the copy button.
+#' @param copy_label String. Default: `""`. A custom label to show in the
+#' tooltip.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param error_label String. Default: `""`. A custom label to show in the
+#' tooltip when a copy error occurs.
+#' @param feedback_duration Number. Default: `1000`. The length of time to
+#' show feedback before restoring the default trigger.
+#' @param from String. Default: `""`. An id that references an element in
+#' the same document from which data will be copied. If both this and
+#' `value` are present, this value will take precedence. By default, the
+#' target element's `textContent` will be copied. To copy an attribute,
+#' append the attribute name wrapped in square brackets, e.g.
+#' `from="elvalue"`. To copy a property, append a dot and the property
+#' name, e.g. `from="el.value"`.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param success_label String. Default: `""`. A custom label to show in
+#' the tooltip after copying.
+#' @param tooltip_placement Enumerated string. Allowed values: `bottom`,
+#' `left`, `right`, `top`. Default: `top`. The preferred placement of the
+#' tooltip.
 #' @param copy_icon The icon to show in the default copy state. Works best
 #' with `<wa-icon>`.
 #' @param error_icon The icon to show when a copy error occurs. Works best

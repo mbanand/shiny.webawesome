@@ -5,7 +5,7 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-rating` component. When used
 #' as a Shiny input, `input$<input_id>` reflects the component's current
-#' value.
+#' `value` value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -13,24 +13,26 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The current rating. Defaults to `0` when omitted.
-#' @param disabled Disables the rating. Defaults to `false` when omitted.
-#' @param label A label that describes the rating to assistive devices.
-#' Defaults to `` when omitted.
-#' @param dir Optional Web Awesome attribute.
+#' @param value Number. Default: `0`. The current rating.
+#' @param disabled Boolean. Default: `FALSE`. Disables the rating.
+#' @param label String. Default: `""`. A label that describes the rating
+#' to assistive devices.
+#' @param dir String. Optional Web Awesome attribute.
 #' @param get_symbol A function that customizes the symbol to be rendered.
 #' The first and only argument is the rating's current value. The function
 #' should return a string containing trusted HTML of the symbol to render
 #' at the specified value. Works well with `<wa-icon>` elements.
-#' @param lang Optional Web Awesome attribute.
-#' @param max The highest rating to show. Defaults to `5` when omitted.
-#' @param precision The precision at which the rating will increase and
-#' decrease. For example, to allow half-star ratings, set this attribute
-#' to `0.5`. Defaults to `1` when omitted.
-#' @param readonly Makes the rating readonly. Defaults to `false` when
-#' omitted.
-#' @param size The component's size. Must be one of `"large"`, `"medium"`,
-#' `"small"`. Defaults to `medium` when omitted.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param max Number. Default: `5`. The highest rating to show.
+#' @param precision Number. Default: `1`. The precision at which the
+#' rating will increase and decrease. For example, to allow half-star
+#' ratings, set this attribute to `0.5`.
+#' @param readonly Boolean. Default: `FALSE`. Makes the rating readonly.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. Default: `medium`. The component's size.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current `value` value.
 #'
 #' @return An HTML tag for the component.
 #'

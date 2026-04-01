@@ -10,19 +10,18 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param label A label to use to describe the avatar to assistive
-#' devices. Defaults to `` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param image The image source to use for the avatar. Defaults to ``
-#' when omitted.
-#' @param initials Initials to use as a fallback when no image is
-#' available (1-2 characters max recommended). Defaults to `` when
-#' omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param loading Indicates how the browser should load the image. Must be
-#' one of `"eager"`, `"lazy"`. Defaults to `eager` when omitted.
-#' @param shape The shape of the avatar. Must be one of `"circle"`,
-#' `"rounded"`, `"square"`. Defaults to `circle` when omitted.
+#' @param label String. Default: `""`. A label to use to describe the
+#' avatar to assistive devices.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param image String. Default: `""`. The image source to use for the
+#' avatar.
+#' @param initials String. Default: `""`. Initials to use as a fallback
+#' when no image is available (1-2 characters max recommended).
+#' @param lang String. Optional Web Awesome attribute.
+#' @param loading Enumerated string. Allowed values: `eager`, `lazy`.
+#' Default: `eager`. Indicates how the browser should load the image.
+#' @param shape Enumerated string. Allowed values: `circle`, `rounded`,
+#' `square`. Default: `circle`. The shape of the avatar.
 #' @param icon The default icon to use when no image or initials are
 #' present. Works best with `<wa-icon>`.
 #'

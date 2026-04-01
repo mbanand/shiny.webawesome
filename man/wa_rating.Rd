@@ -31,33 +31,32 @@ the rendered DOM \code{id} attribute.}
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The current rating. Defaults to \code{0} when omitted.}
+\item{value}{Number. Default: \code{0}. The current rating.}
 
-\item{disabled}{Disables the rating. Defaults to \code{false} when omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the rating.}
 
-\item{label}{A label that describes the rating to assistive devices.
-Defaults to `` when omitted.}
+\item{label}{String. Default: \code{""}. A label that describes the rating
+to assistive devices.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
 \item{get_symbol}{A function that customizes the symbol to be rendered.
 The first and only argument is the rating's current value. The function
 should return a string containing trusted HTML of the symbol to render
 at the specified value. Works well with \verb{<wa-icon>} elements.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{max}{The highest rating to show. Defaults to \code{5} when omitted.}
+\item{max}{Number. Default: \code{5}. The highest rating to show.}
 
-\item{precision}{The precision at which the rating will increase and
-decrease. For example, to allow half-star ratings, set this attribute
-to \code{0.5}. Defaults to \code{1} when omitted.}
+\item{precision}{Number. Default: \code{1}. The precision at which the
+rating will increase and decrease. For example, to allow half-star
+ratings, set this attribute to \code{0.5}.}
 
-\item{readonly}{Makes the rating readonly. Defaults to \code{false} when
-omitted.}
+\item{readonly}{Boolean. Default: \code{FALSE}. Makes the rating readonly.}
 
-\item{size}{The component's size. Must be one of \code{"large"}, \code{"medium"},
-\code{"small"}. Defaults to \code{medium} when omitted.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. Default: \code{medium}. The component's size.}
 }
 \value{
 An HTML tag for the component.
@@ -65,6 +64,11 @@ An HTML tag for the component.
 \description{
 Generated wrapper for the Web Awesome \code{wa-rating} component. When used
 as a Shiny input, \verb{input$<input_id>} reflects the component's current
-value.
+\code{value} value.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current \code{value} value.
+}
+

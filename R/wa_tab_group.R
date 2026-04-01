@@ -13,21 +13,25 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param activation When set to auto, navigating tabs with the arrow keys
+#' @param activation Enumerated string. Allowed values: `auto`, `manual`.
+#' Default: `auto`. When set to auto, navigating tabs with the arrow keys
 #' will instantly show the corresponding tab panel. When set to manual,
 #' the tab will receive focus but will not show until the user presses
-#' spacebar or enter. Must be one of `"auto"`, `"manual"`. Defaults to
-#' `auto` when omitted.
-#' @param active Sets the active tab. Defaults to `` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param placement The placement of the tabs. Must be one of `"bottom"`,
-#' `"end"`, `"start"`, `"top"`. Defaults to `top` when omitted.
-#' @param without_scroll_controls Disables the scroll arrows that appear
-#' when tabs overflow. Defaults to `false` when omitted.
+#' spacebar or enter.
+#' @param active String. Default: `""`. Sets the active tab.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param placement Enumerated string. Allowed values: `bottom`, `end`,
+#' `start`, `top`. Default: `top`. The placement of the tabs.
+#' @param without_scroll_controls Boolean. Default: `FALSE`. Disables the
+#' scroll arrows that appear when tabs overflow.
 #' @param nav Used for grouping tabs in the tab group. Must be `<wa-tab>`
 #' elements. Note that `<wa-tab>` will set this slot on itself
 #' automatically.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current semantic `active`
+#' state.
 #'
 #' @return An HTML tag for the component.
 #'

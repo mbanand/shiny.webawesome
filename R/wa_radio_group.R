@@ -5,7 +5,7 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-radio-group` component. When
 #' used as a Shiny input, `input$<input_id>` reflects the component's
-#' current value.
+#' current `value` value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -13,39 +13,42 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The default value of the form control. Primarily used for
-#' resetting the form control. This wrapper argument sets the HTML `value`
-#' attribute, which maps to the component's `defaultValue` field/property
-#' rather than its live `value` property.
-#' @param disabled Disables the radio group and all child radios. Defaults
-#' to `false` when omitted.
-#' @param label The radio group's label. Required for proper
-#' accessibility. If you need to display HTML, use the `label` slot
-#' instead. Defaults to `` when omitted.
-#' @param hint The radio groups's hint. If you need to display HTML, use
-#' the `hint` slot instead. Defaults to `` when omitted.
-#' @param name The name of the radio group, submitted as a name/value pair
-#' with form data. Defaults to `null` when omitted.
-#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param orientation The orientation in which to show radio items. Must
-#' be one of `"horizontal"`, `"vertical"`. Defaults to `vertical` when
-#' omitted.
-#' @param required Ensures a child radio is checked before allowing the
-#' containing form to submit. Defaults to `false` when omitted.
-#' @param size The radio group's size. When present, this size will be
-#' applied to all `<wa-radio>` items inside. Must be one of `"large"`,
-#' `"medium"`, `"small"`.
-#' @param with_hint Used for SSR. if true, will show slotted hint on
-#' initial render. Defaults to `false` when omitted.
-#' @param with_label Used for SSR. if true, will show slotted label on
-#' initial render. Defaults to `false` when omitted.
+#' @param value String. The default value of the form control. Primarily
+#' used for resetting the form control. This wrapper argument sets the
+#' HTML `value` attribute, which maps to the component's `defaultValue`
+#' field/property rather than its live `value` property.
+#' @param disabled Boolean. Default: `FALSE`. Disables the radio group and
+#' all child radios.
+#' @param label String. Default: `""`. The radio group's label. Required
+#' for proper accessibility. If you need to display HTML, use the `label`
+#' slot instead.
+#' @param hint String. Default: `""`. The radio groups's hint. If you need
+#' to display HTML, use the `hint` slot instead.
+#' @param name String. Default: `null`. The name of the radio group,
+#' submitted as a name/value pair with form data.
+#' @param custom_error String. Default: `null`. Optional Web Awesome
+#' attribute.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param orientation Enumerated string. Allowed values: `horizontal`,
+#' `vertical`. Default: `vertical`. The orientation in which to show radio
+#' items.
+#' @param required Boolean. Default: `FALSE`. Ensures a child radio is
+#' checked before allowing the containing form to submit.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. The radio group's size. When present, this size will be
+#' applied to all `<wa-radio>` items inside.
+#' @param with_hint Boolean. Default: `FALSE`. Used for SSR. if TRUE, will
+#' show slotted hint on initial render.
+#' @param with_label Boolean. Default: `FALSE`. Used for SSR. if TRUE,
+#' will show slotted label on initial render.
 #' @param hint_slot Text that describes how to use the radio group.
 #' Alternatively, you can use the `hint` attribute.
 #' @param label_slot The radio group's label. Required for proper
 #' accessibility. Alternatively, you can use the `label` attribute.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current `value` value.
 #'
 #' @return An HTML tag for the component.
 #'

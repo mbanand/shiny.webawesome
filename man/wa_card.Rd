@@ -30,16 +30,16 @@ wa_card(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{appearance}{The card's visual appearance. Must be one of
-\code{"accent"}, \code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}, \code{"plain"}.
-Defaults to \code{outlined} when omitted.}
+\item{appearance}{Enumerated string. Allowed values: \code{accent},
+\code{filled}, \code{filled-outlined}, \code{outlined}, \code{plain}. Default: \code{outlined}.
+The card's visual appearance.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{orientation}{Renders the card's orientation * Must be one of
-\code{"horizontal"}, \code{"vertical"}. Defaults to \code{vertical} when omitted.}
+\item{orientation}{Enumerated string. Allowed values: \code{horizontal},
+\code{vertical}. Default: \code{vertical}. Renders the card's orientation *}
 
 \item{actions}{An optional actions section to render at the end for the
 horizontal card.}

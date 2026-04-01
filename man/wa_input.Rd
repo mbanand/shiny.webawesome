@@ -80,110 +80,107 @@ update_wa_input(
 
 \item{hint}{Optional hint text to send to the component.}
 
-\item{name}{The name of the input, submitted as a name/value pair with
-form data. Defaults to \code{null} when omitted.}
+\item{name}{String. Default: \code{null}. The name of the input, submitted
+as a name/value pair with form data.}
 
-\item{appearance}{The input's visual appearance. Must be one of
-\code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}. Defaults to \code{outlined}
-when omitted.}
+\item{appearance}{Enumerated string. Allowed values: \code{filled},
+\code{filled-outlined}, \code{outlined}. Default: \code{outlined}. The input's visual
+appearance.}
 
-\item{autocapitalize}{Controls whether and how text input is
-automatically capitalized as it is entered by the user. Must be one of
-\code{"characters"}, \code{"none"}, \code{"off"}, \code{"on"}, \code{"sentences"}, \code{"words"}.}
+\item{autocapitalize}{Enumerated string. Allowed values: \code{characters},
+\code{none}, \code{off}, \code{on}, \code{sentences}, \code{words}. Controls whether and how
+text input is automatically capitalized as it is entered by the user.}
 
-\item{autocomplete}{Specifies what permission the browser has to
-provide assistance in filling out form field values. Refer to this page
-on MDN for available values.}
+\item{autocomplete}{String. Specifies what permission the browser has
+to provide assistance in filling out form field values. Refer to this
+page on MDN for available values.}
 
-\item{autocorrect}{Indicates whether the browser's autocorrect feature
-is on or off. Must be one of \code{"off"}, \code{"on"}.}
+\item{autocorrect}{Enumerated string. Allowed values: \code{off}, \code{on}.
+Indicates whether the browser's autocorrect feature is on or off.}
 
-\item{autofocus}{Indicates that the input should receive focus on page
-load.}
+\item{autofocus}{Boolean. Indicates that the input should receive focus
+on page load.}
 
-\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
-when omitted.}
+\item{custom_error}{String. Default: \code{null}. Optional Web Awesome
+attribute.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{enterkeyhint}{Used to customize the label or icon of the Enter
-key on virtual keyboards. Must be one of \code{"done"}, \code{"enter"}, \code{"go"},
-\code{"next"}, \code{"previous"}, \code{"search"}, \code{"send"}.}
+\item{enterkeyhint}{Enumerated string. Allowed values: \code{done}, \code{enter},
+\code{go}, \code{next}, \code{previous}, \code{search}, \code{send}. Used to customize the label
+or icon of the Enter key on virtual keyboards.}
 
-\item{inputmode}{Tells the browser what type of data will be entered by
-the user, allowing it to display the appropriate virtual keyboard on
-supportive devices. Must be one of \code{"decimal"}, \code{"email"}, \code{"none"},
-\code{"numeric"}, \code{"search"}, \code{"tel"}, \code{"text"}, \code{"url"}.}
+\item{inputmode}{Enumerated string. Allowed values: \code{decimal}, \code{email},
+\code{none}, \code{numeric}, \code{search}, \code{tel}, \code{text}, \code{url}. Tells the browser
+what type of data will be entered by the user, allowing it to display
+the appropriate virtual keyboard on supportive devices.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
 \item{max}{The input's maximum value. Only applies to date and number
 input types.}
 
-\item{maxlength}{The maximum length of input that will be considered
-valid.}
+\item{maxlength}{Number. The maximum length of input that will be
+considered valid.}
 
 \item{min}{The input's minimum value. Only applies to date and number
 input types.}
 
-\item{minlength}{The minimum length of input that will be considered
-valid.}
+\item{minlength}{Number. The minimum length of input that will be
+considered valid.}
 
-\item{password_toggle}{Adds a button to toggle the password's
-visibility. Only applies to password types. Defaults to \code{false} when
-omitted.}
+\item{password_toggle}{Boolean. Default: \code{FALSE}. Adds a button to
+toggle the password's visibility. Only applies to password types.}
 
-\item{password_visible}{Determines whether or not the password is
-currently visible. Only applies to password input types. Defaults to
-\code{false} when omitted.}
+\item{password_visible}{Boolean. Default: \code{FALSE}. Determines whether
+or not the password is currently visible. Only applies to password
+input types.}
 
-\item{pattern}{A regular expression pattern to validate input against.}
+\item{pattern}{String. A regular expression pattern to validate input
+against.}
 
-\item{pill}{Draws a pill-style input with rounded edges. Defaults to
-\code{false} when omitted.}
+\item{pill}{Boolean. Default: \code{FALSE}. Draws a pill-style input with
+rounded edges.}
 
-\item{placeholder}{Placeholder text to show as a hint when the input is
-empty. Defaults to `` when omitted.}
+\item{placeholder}{String. Default: \code{""}. Placeholder text to show as a
+hint when the input is empty.}
 
-\item{readonly}{Makes the input readonly. Defaults to \code{false} when
-omitted.}
+\item{readonly}{Boolean. Default: \code{FALSE}. Makes the input readonly.}
 
-\item{required}{Makes the input a required field. Defaults to \code{false}
-when omitted.}
+\item{required}{Boolean. Default: \code{FALSE}. Makes the input a required
+field.}
 
-\item{size}{The input's size. Must be one of \code{"large"}, \code{"medium"},
-\code{"small"}. Defaults to \code{medium} when omitted.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. Default: \code{medium}. The input's size.}
 
-\item{spellcheck}{Enables spell checking on the input. Defaults to
-\code{true} when omitted.}
+\item{spellcheck}{Boolean. Default: \code{TRUE}. Enables spell checking on
+the input.}
 
 \item{step}{Specifies the granularity that the value must adhere to, or
 the special value \code{any} which means no stepping is implied, allowing
 any numeric value. Only applies to date and number input types.}
 
-\item{title}{Optional Web Awesome attribute. Defaults to `` when
-omitted.}
+\item{title}{String. Default: \code{""}. Optional Web Awesome attribute.}
 
-\item{type}{The type of input. Works the same as a native \verb{<input>}
-element, but only a subset of types are supported. Defaults to \code{text}.
-Must be one of \code{"date"}, \code{"datetime-local"}, \code{"email"}, \code{"number"},
-\code{"password"}, \code{"search"}, \code{"tel"}, \code{"text"}, \code{"time"}, \code{"url"}.
-Defaults to \code{text} when omitted.}
+\item{type}{Enumerated string. Allowed values: \code{date},
+\code{datetime-local}, \code{email}, \code{number}, \code{password}, \code{search}, \code{tel},
+\code{text}, \code{time}, \code{url}. Default: \code{text}. The type of input. Works the
+same as a native \verb{<input>} element, but only a subset of types are
+supported. Defaults to \code{text}.}
 
-\item{with_clear}{Adds a clear button when the input is not empty.
-Defaults to \code{false} when omitted.}
+\item{with_clear}{Boolean. Default: \code{FALSE}. Adds a clear button when
+the input is not empty.}
 
-\item{with_hint}{Used for SSR. Will determine if the SSRed component
-will have the hint slot rendered on initial paint. Defaults to \code{false}
-when omitted.}
+\item{with_hint}{Boolean. Default: \code{FALSE}. Used for SSR. Will
+determine if the SSRed component will have the hint slot rendered on
+initial paint.}
 
-\item{with_label}{Used for SSR. Will determine if the SSRed component
-will have the label slot rendered on initial paint. Defaults to \code{false}
-when omitted.}
+\item{with_label}{Boolean. Default: \code{FALSE}. Used for SSR. Will
+determine if the SSRed component will have the label slot rendered on
+initial paint.}
 
-\item{without_spin_buttons}{Hides the browser's built-in
-increment/decrement spin buttons for number inputs. Defaults to \code{false}
-when omitted.}
+\item{without_spin_buttons}{Boolean. Default: \code{FALSE}. Hides the
+browser's built-in increment/decrement spin buttons for number inputs.}
 
 \item{clear_icon}{An icon to use in lieu of the default clear icon.}
 
@@ -215,8 +212,13 @@ Invisibly returns \code{NULL}.
 \description{
 Generated wrapper for the Web Awesome \code{wa-input} component. When used
 as a Shiny input, \verb{input$<input_id>} reflects the component's current
-value.
+\code{value} value.
 Generated from Web Awesome metadata.
 
 Generated update helper for the Web Awesome \code{wa-input} component.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current \code{value} value.
+}
+

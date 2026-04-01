@@ -25,20 +25,20 @@ wa_include(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{allow_scripts}{Allows included scripts to be executed. Be sure
+\item{allow_scripts}{Boolean. Default: \code{FALSE}. Allows included scripts
+to be executed. Be sure you trust the content you are including as it
+will be executed as code and can result in XSS attacks.}
+
+\item{dir}{String. Optional Web Awesome attribute.}
+
+\item{lang}{String. Optional Web Awesome attribute.}
+
+\item{mode}{Enumerated string. Allowed values: \code{cors}, \code{no-cors},
+\code{same-origin}. Default: \code{cors}. The fetch mode to use.}
+
+\item{src}{String. The location of the HTML file to include. Be sure
 you trust the content you are including as it will be executed as code
-and can result in XSS attacks. Defaults to \code{false} when omitted.}
-
-\item{dir}{Optional Web Awesome attribute.}
-
-\item{lang}{Optional Web Awesome attribute.}
-
-\item{mode}{The fetch mode to use. Must be one of \code{"cors"},
-\code{"no-cors"}, \code{"same-origin"}. Defaults to \code{cors} when omitted.}
-
-\item{src}{The location of the HTML file to include. Be sure you trust
-the content you are including as it will be executed as code and can
-result in XSS attacks.}
+and can result in XSS attacks.}
 }
 \value{
 An HTML tag for the component.

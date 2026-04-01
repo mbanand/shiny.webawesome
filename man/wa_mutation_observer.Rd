@@ -28,30 +28,27 @@ wa_mutation_observer(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{disabled}{Disables the observer. Defaults to \code{false} when
-omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the observer.}
 
-\item{attr}{Watches for changes to attributes. To watch only specific
-attributes, separate them by a space, e.g. \code{attr="class id title"}. To
-watch all attributes, use \code{*}.}
+\item{attr}{String. Watches for changes to attributes. To watch only
+specific attributes, separate them by a space, e.g. \code{attr="class id title"}. To watch all attributes, use \code{*}.}
 
-\item{attr_old_value}{Indicates whether or not the attribute's previous
-value should be recorded when monitoring changes. Defaults to \code{false}
-when omitted.}
+\item{attr_old_value}{Boolean. Default: \code{FALSE}. Indicates whether or
+not the attribute's previous value should be recorded when monitoring
+changes.}
 
-\item{char_data}{Watches for changes to the character data contained
-within the node. Defaults to \code{false} when omitted.}
+\item{char_data}{Boolean. Default: \code{FALSE}. Watches for changes to the
+character data contained within the node.}
 
-\item{char_data_old_value}{Indicates whether or not the previous value
-of the node's text should be recorded. Defaults to \code{false} when
-omitted.}
+\item{char_data_old_value}{Boolean. Default: \code{FALSE}. Indicates whether
+or not the previous value of the node's text should be recorded.}
 
-\item{child_list}{Watches for the addition or removal of new child
-nodes. Defaults to \code{false} when omitted.}
+\item{child_list}{Boolean. Default: \code{FALSE}. Watches for the addition
+or removal of new child nodes.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 }
 \value{
 An HTML tag for the component.

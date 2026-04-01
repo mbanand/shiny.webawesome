@@ -28,25 +28,25 @@ wa_badge(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{appearance}{The badge's visual appearance. Must be one of
-\code{"accent"}, \code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}. Defaults to
-\code{accent} when omitted.}
+\item{appearance}{Enumerated string. Allowed values: \code{accent},
+\code{filled}, \code{filled-outlined}, \code{outlined}. Default: \code{accent}. The badge's
+visual appearance.}
 
-\item{attention}{Adds an animation to draw attention to the badge. Must
-be one of \code{"bounce"}, \code{"none"}, \code{"pulse"}. Defaults to \code{none} when
-omitted.}
+\item{attention}{Enumerated string. Allowed values: \code{bounce}, \code{none},
+\code{pulse}. Default: \code{none}. Adds an animation to draw attention to the
+badge.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{pill}{Draws a pill-style badge with rounded edges. Defaults to
-\code{false} when omitted.}
+\item{pill}{Boolean. Default: \code{FALSE}. Draws a pill-style badge with
+rounded edges.}
 
-\item{variant}{The badge's theme variant. Defaults to \code{brand} if not
-within another element with a variant. Must be one of \code{"brand"},
-\code{"danger"}, \code{"neutral"}, \code{"success"}, \code{"warning"}. Defaults to \code{brand}
-when omitted.}
+\item{variant}{Enumerated string. Allowed values: \code{brand}, \code{danger},
+\code{neutral}, \code{success}, \code{warning}. Default: \code{brand}. The badge's theme
+variant. Defaults to \code{brand} if not within another element with a
+variant.}
 
 \item{end}{An element, such as \verb{<wa-icon>}, placed after the label.}
 

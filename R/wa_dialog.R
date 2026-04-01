@@ -13,25 +13,28 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param label The dialog's label as displayed in the header. You should
-#' always include a relevant label, as it is required for proper
-#' accessibility. If you need to display HTML, use the `label` slot
-#' instead. Defaults to `` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param light_dismiss When enabled, the dialog will be closed when the
-#' user clicks outside of it. Defaults to `false` when omitted.
-#' @param open Indicates whether or not the dialog is open. Toggle this
-#' attribute to show and hide the dialog. Defaults to `false` when
-#' omitted.
-#' @param without_header Disables the header. This will also remove the
-#' default close button. Defaults to `false` when omitted.
+#' @param label String. Default: `""`. The dialog's label as displayed in
+#' the header. You should always include a relevant label, as it is
+#' required for proper accessibility. If you need to display HTML, use the
+#' `label` slot instead.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param light_dismiss Boolean. Default: `FALSE`. When enabled, the
+#' dialog will be closed when the user clicks outside of it.
+#' @param open Boolean. Default: `FALSE`. Indicates whether or not the
+#' dialog is open. Toggle this attribute to show and hide the dialog.
+#' @param without_header Boolean. Default: `FALSE`. Disables the header.
+#' This will also remove the default close button.
 #' @param footer The dialog's footer, usually one or more buttons
 #' representing various options.
 #' @param header_actions Optional actions to add to the header. Works best
 #' with `<wa-button>`.
 #' @param label_slot The dialog's label. Alternatively, you can use the
 #' `label` attribute.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current semantic `open`
+#' state.
 #'
 #' @return An HTML tag for the component.
 #'

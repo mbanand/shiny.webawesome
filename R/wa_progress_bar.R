@@ -10,15 +10,15 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The current progress as a percentage, 0 to 100. Defaults
-#' to `0` when omitted.
-#' @param label A custom label for assistive devices. Defaults to `` when
-#' omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param indeterminate When true, percentage is ignored, the label is
-#' hidden, and the progress bar is drawn in an indeterminate state.
-#' Defaults to `false` when omitted.
-#' @param lang Optional Web Awesome attribute.
+#' @param value Number. Default: `0`. The current progress as a
+#' percentage, 0 to 100.
+#' @param label String. Default: `""`. A custom label for assistive
+#' devices.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param indeterminate Boolean. Default: `FALSE`. When TRUE, percentage
+#' is ignored, the label is hidden, and the progress bar is drawn in an
+#' indeterminate state.
+#' @param lang String. Optional Web Awesome attribute.
 #'
 #' @return An HTML tag for the component.
 #'

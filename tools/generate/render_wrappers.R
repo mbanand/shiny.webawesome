@@ -33,7 +33,60 @@
   text <- as.character(text[[1]])
   text <- gsub("\\]\\([^)]+\\)", "]", text, perl = TRUE)
   text <- gsub("\\[([^]]+)\\]", "\\1", text, perl = TRUE)
+  text <- gsub("(?i)\\btrue\\b", "TRUE", text, perl = TRUE)
+  text <- gsub("(?i)\\bfalse\\b", "FALSE", text, perl = TRUE)
   trimws(gsub("[[:space:]]+", " ", text))
+}
+
+# Return one concise doc label for a wrapper attribute type.
+.wrapper_attr_type_label <- function(attr) {
+  type_text <- .scalar_string(attr$type, fallback = "")
+
+  if (length(attr$enum_values %||% character()) > 0L) {
+    return("Enumerated string.")
+  }
+
+  if (.is_boolean_type(type_text)) {
+    return("Boolean.")
+  }
+
+  if (.is_number_type(type_text)) {
+    return("Number.")
+  }
+
+  if (.is_string_type(type_text)) {
+    return("String.")
+  }
+
+  ""
+}
+
+# Return one formatted doc literal for a default or allowed value.
+.wrapper_doc_value <- function(value, string_like = FALSE) {
+  value <- .scalar_string(value, fallback = NA_character_)
+
+  if (is.na(value)) {
+    return(value)
+  }
+
+  if (identical(value, "''")) {
+    return('`""`')
+  }
+
+  if (string_like) {
+    value <- sub("^'(.*)'$", "\\1", value, perl = TRUE)
+    return(paste0("`", value, "`"))
+  }
+
+  if (identical(tolower(value), "true")) {
+    return("`TRUE`")
+  }
+
+  if (identical(tolower(value), "false")) {
+    return("`FALSE`")
+  }
+
+  paste0("`", value, "`")
 }
 
 # Return whether one attribute has a same-name live property mapping ambiguity.
@@ -94,28 +147,44 @@
   }
 
   enum_values <- attr$enum_values %||% character()
-  if (length(enum_values) > 0L) {
-    description <- paste(
-      description,
-      "Must be one of",
-      paste(sprintf('`"%s"`', enum_values), collapse = ", "),
-      sep = " "
-    )
-    description <- paste0(description, ".")
-  }
-
   default <- .scalar_string(attr$default, fallback = NA_character_)
-  if (!is.na(default) && nzchar(default)) {
-    default <- sub("^'(.*)'$", "\\1", default, perl = TRUE)
-    description <- paste(
-      description,
-      "Defaults to",
-      paste0("`", default, "`"),
-      "when omitted."
+  type_text <- .scalar_string(attr$type, fallback = "")
+  is_string_like <- .is_string_type(type_text) || length(enum_values) > 0L
+
+  details <- c(.wrapper_attr_type_label(attr))
+
+  if (length(enum_values) > 0L) {
+    details <- c(
+      details,
+      paste0(
+        "Allowed values:",
+        " ",
+        paste(
+          vapply(
+            enum_values,
+            .wrapper_doc_value,
+            character(1),
+            string_like = TRUE
+          ),
+          collapse = ", "
+        ),
+        "."
+      )
     )
   }
 
-  description
+  if (!is.na(default) && nzchar(default)) {
+    details <- c(
+      details,
+      paste0(
+        "Default: ",
+        .wrapper_doc_value(default, string_like = is_string_like),
+        "."
+      )
+    )
+  }
+
+  paste(c(details[nzchar(details)], description), collapse = " ")
 }
 
 # Return wrapped roxygen lines for one text fragment.
@@ -126,6 +195,23 @@
 # Return wrapped roxygen lines for one parameter description.
 .roxygen_param_lines <- function(name, description) {
   .roxygen_lines(paste("@param", name, description))
+}
+
+# Return wrapped roxygen lines for one generated documentation section.
+.roxygen_section_lines <- function(title, paragraphs) {
+  paragraphs <- paragraphs[nzchar(paragraphs)]
+
+  if (length(paragraphs) == 0L) {
+    return(character())
+  }
+
+  lines <- c(paste0("#' @section ", title, ":"))
+
+  for (paragraph in paragraphs) {
+    lines <- c(lines, .roxygen_lines(paragraph), "#'")
+  }
+
+  lines
 }
 
 # Return one generated roxygen line for the wrapper identity argument.
@@ -485,6 +571,11 @@
     component$classification$binding_value_field,
     fallback = NA_character_
   )
+  binding_value_field <- if (is.na(binding_value_field) || !nzchar(binding_value_field)) {
+    "value"
+  } else {
+    binding_value_field
+  }
   warning_key <- .component_wrapper_warning(component)
   notes <- character()
 
@@ -546,8 +637,8 @@
   if (!is.na(warning_key) && nzchar(warning_key)) {
     if (identical(warning_key, "missing_tree_item_id")) {
       notes <- c(notes, paste(
-      "For stable Shiny selection values, selectable descendant",
-      "`wa-tree-item` elements should have DOM `id` attributes."
+        "For stable Shiny selection values, selectable descendant",
+        "`wa-tree-item` elements should have DOM `id` attributes."
       ))
     } else {
       stop(
@@ -561,6 +652,98 @@
   }
 
   paste(notes[nzchar(notes)], collapse = " ")
+}
+
+# Return any wrapper-specific Shiny binding section paragraphs.
+.render_bind_section_paras <- function(component) {
+  binding_mode <- .scalar_string(
+    component$classification$binding_mode,
+    fallback = "none"
+  )
+  binding_value_field <- .scalar_string(
+    component$classification$binding_value_field,
+    fallback = NA_character_
+  )
+  binding_value_field <- if (is.na(binding_value_field) || !nzchar(binding_value_field)) {
+    "value"
+  } else {
+    binding_value_field
+  }
+
+  if (identical(binding_mode, "action_with_payload")) {
+    return(c(
+      paste(
+        paste0("`input$", "<input_id>", "`"),
+        "uses action semantics and invalidates on each committed action,",
+        "including repeated selection of the same item."
+      ),
+      paste(
+        paste0("`input$", "<input_id>_value", "`"),
+        "reflects the latest selected item's",
+        paste0("`", binding_value_field, "`"),
+        "value, returns `NULL` when the selected item has no",
+        paste0("`", binding_value_field, "`"),
+        ", and preserves an explicit empty string `\"\"` when that is",
+        "the selected item's value."
+      )
+    ))
+  }
+
+  if (identical(binding_mode, "action")) {
+    return(paste(
+      paste0("`input$", "<input_id>", "`"),
+      "uses action semantics and invalidates on each committed action",
+      "rather than publishing a durable value payload."
+    ))
+  }
+
+  if (identical(binding_mode, "semantic")) {
+    if (!is.na(binding_value_field) && nzchar(binding_value_field)) {
+      return(paste(
+        paste0("`input$", "<input_id>", "`"),
+        "reflects the component's current semantic",
+        paste0("`", binding_value_field, "`"),
+        "state."
+      ))
+    }
+
+    return(paste(
+      paste0("`input$", "<input_id>", "`"),
+      "reflects the component's current committed semantic state."
+    ))
+  }
+
+  if (identical(binding_mode, "value")) {
+    if (!is.na(binding_value_field) && nzchar(binding_value_field)) {
+      return(paste(
+        paste0("`input$", "<input_id>", "`"),
+        "reflects the component's current",
+        paste0("`", binding_value_field, "`"),
+        "value."
+      ))
+    }
+
+    return(paste(
+      paste0("`input$", "<input_id>", "`"),
+      "reflects the component's current value."
+    ))
+  }
+
+  character()
+}
+
+# Return any generated wrapper-specific Shiny binding section block.
+.render_bind_section <- function(component) {
+  lines <- .roxygen_section_lines(
+    "Shiny Bindings",
+    .render_bind_section_paras(component)
+  )
+
+  if (length(lines) == 0L) {
+    return("")
+  }
+
+  paste(c(lines, ""), collapse = "\n")
 }
 
 # Render enum validation lines for one wrapper.
@@ -704,6 +887,7 @@
     FUNCTION_TITLE = paste("Create a", paste0("`", component$tag_name, "`"), "component"),
     FUNCTION_DESCRIPTION = paste(.roxygen_lines(description), collapse = "\n"),
     PARAM_DOCS = paste(param_docs, collapse = "\n"),
+    BINDING_SECTION = .render_bind_section(component),
     TAG_NAME = .r_string(component$tag_name),
     SIGNATURE = .render_wrapper_signature(component),
     VALIDATIONS = .render_wrapper_validations(component),

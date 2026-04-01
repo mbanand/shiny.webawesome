@@ -10,10 +10,11 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param dir Optional Web Awesome attribute.
-#' @param effect Determines which effect the skeleton will use. Must be
-#' one of `"none"`, `"pulse"`, `"sheen"`. Defaults to `none` when omitted.
-#' @param lang Optional Web Awesome attribute.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param effect Enumerated string. Allowed values: `none`, `pulse`,
+#' `sheen`. Default: `none`. Determines which effect the skeleton will
+#' use.
+#' @param lang String. Optional Web Awesome attribute.
 #'
 #' @return An HTML tag for the component.
 #'

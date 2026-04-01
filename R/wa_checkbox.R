@@ -5,7 +5,7 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-checkbox` component. When
 #' used as a Shiny input, `input$<input_id>` reflects the component's
-#' current value.
+#' current `value` value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -13,34 +13,36 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The value of the checkbox, submitted as a name/value pair
-#' with form data.
-#' @param checked The default value of the form control. Primarily used
-#' for resetting the form control. This wrapper argument sets the HTML
-#' `checked` attribute, which maps to the component's `defaultChecked`
-#' field/property rather than its live `checked` property.
-#' @param disabled Disables the checkbox. Defaults to `false` when
-#' omitted.
-#' @param hint The checkbox's hint. If you need to display HTML, use the
-#' `hint` slot instead. Defaults to `` when omitted.
-#' @param name The name of the checkbox, submitted as a name/value pair
-#' with form data. Defaults to `null` when omitted.
-#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param indeterminate Draws the checkbox in an indeterminate state. This
-#' is usually applied to checkboxes that represents a "select all/none"
-#' behavior when associated checkboxes have a mix of checked and unchecked
-#' states. Defaults to `false` when omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param required Makes the checkbox a required field. Defaults to
-#' `false` when omitted.
-#' @param size The checkbox's size. Must be one of `"large"`, `"medium"`,
-#' `"small"`. Defaults to `medium` when omitted.
-#' @param title Optional Web Awesome attribute. Defaults to `` when
-#' omitted.
+#' @param value String. The value of the checkbox, submitted as a
+#' name/value pair with form data.
+#' @param checked Boolean. The default value of the form control.
+#' Primarily used for resetting the form control. This wrapper argument
+#' sets the HTML `checked` attribute, which maps to the component's
+#' `defaultChecked` field/property rather than its live `checked`
+#' property.
+#' @param disabled Boolean. Default: `FALSE`. Disables the checkbox.
+#' @param hint String. Default: `""`. The checkbox's hint. If you need to
+#' display HTML, use the `hint` slot instead.
+#' @param name String. Default: `null`. The name of the checkbox,
+#' submitted as a name/value pair with form data.
+#' @param custom_error String. Default: `null`. Optional Web Awesome
+#' attribute.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param indeterminate Boolean. Default: `FALSE`. Draws the checkbox in
+#' an indeterminate state. This is usually applied to checkboxes that
+#' represents a "select all/none" behavior when associated checkboxes have
+#' a mix of checked and unchecked states.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param required Boolean. Default: `FALSE`. Makes the checkbox a
+#' required field.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. Default: `medium`. The checkbox's size.
+#' @param title String. Default: `""`. Optional Web Awesome attribute.
 #' @param hint_slot Text that describes how to use the checkbox.
 #' Alternatively, you can use the `hint` attribute.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current `value` value.
 #'
 #' @return An HTML tag for the component.
 #'

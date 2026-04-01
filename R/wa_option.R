@@ -10,21 +10,20 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The option's value. When selected, the containing form
-#' control will receive this value. The value must be unique from other
-#' options in the same group. Values may not contain spaces, as spaces are
-#' used as delimiters when listing multiple values. Defaults to `` when
-#' omitted.
-#' @param disabled Draws the option in a disabled state, preventing
-#' selection. Defaults to `false` when omitted.
-#' @param label The option’s plain text label. Usually automatically
-#' generated, but can be useful to provide manually for cases involving
-#' complex content.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param selected Selects an option initially. This wrapper argument sets
-#' the HTML `selected` attribute, which maps to the component's
-#' `defaultSelected` field/property. Defaults to `false` when omitted.
+#' @param value String. Default: `""`. The option's value. When selected,
+#' the containing form control will receive this value. The value must be
+#' unique from other options in the same group. Values may not contain
+#' spaces, as spaces are used as delimiters when listing multiple values.
+#' @param disabled Boolean. Default: `FALSE`. Draws the option in a
+#' disabled state, preventing selection.
+#' @param label String. The option’s plain text label. Usually
+#' automatically generated, but can be useful to provide manually for
+#' cases involving complex content.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param selected Boolean. Default: `FALSE`. Selects an option initially.
+#' This wrapper argument sets the HTML `selected` attribute, which maps to
+#' the component's `defaultSelected` field/property.
 #' @param end An element, such as `<wa-icon>`, placed after the label.
 #' @param start An element, such as `<wa-icon>`, placed before the label.
 #'

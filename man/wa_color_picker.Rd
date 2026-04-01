@@ -41,71 +41,69 @@ the rendered DOM \code{id} attribute.}
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The default value of the form control. Primarily used for
-resetting the form control. This wrapper argument sets the HTML \code{value}
-attribute, which maps to the component's \code{defaultValue} field/property
-rather than its live \code{value} property.}
+\item{value}{String. The default value of the form control. Primarily
+used for resetting the form control. This wrapper argument sets the
+HTML \code{value} attribute, which maps to the component's \code{defaultValue}
+field/property rather than its live \code{value} property.}
 
-\item{disabled}{Disables the color picker. Defaults to \code{false} when
-omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the color picker.}
 
-\item{label}{The color picker's label. This will not be displayed, but
-it will be announced by assistive devices. If you need to display HTML,
-you can use the \code{label} slot` instead. Defaults to `` when omitted.}
+\item{label}{String. Default: \code{""}. The color picker's label. This will
+not be displayed, but it will be announced by assistive devices. If you
+need to display HTML, you can use the \code{label} slot` instead.}
 
-\item{hint}{The color picker's hint. If you need to display HTML, use
-the \code{hint} slot instead. Defaults to `` when omitted.}
+\item{hint}{String. Default: \code{""}. The color picker's hint. If you need
+to display HTML, use the \code{hint} slot instead.}
 
-\item{name}{The name of the form control, submitted as a name/value
-pair with form data. Defaults to \code{null} when omitted.}
+\item{name}{String. Default: \code{null}. The name of the form control,
+submitted as a name/value pair with form data.}
 
-\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
-when omitted.}
+\item{custom_error}{String. Default: \code{null}. Optional Web Awesome
+attribute.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{format}{The format to use. If opacity is enabled, these will
-translate to HEXA, RGBA, HSLA, and HSVA respectively. The color picker
-will accept user input in any format (including CSS color names) and
-convert it to the desired format. Must be one of \code{"hex"}, \code{"hsl"},
-\code{"hsv"}, \code{"rgb"}. Defaults to \code{hex} when omitted.}
+\item{format}{Enumerated string. Allowed values: \code{hex}, \code{hsl}, \code{hsv},
+\code{rgb}. Default: \code{hex}. The format to use. If opacity is enabled, these
+will translate to HEXA, RGBA, HSLA, and HSVA respectively. The color
+picker will accept user input in any format (including CSS color names)
+and convert it to the desired format.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{opacity}{Shows the opacity slider. Enabling this will cause the
-formatted value to be HEXA, RGBA, or HSLA. Defaults to \code{false} when
-omitted.}
+\item{opacity}{Boolean. Default: \code{FALSE}. Shows the opacity slider.
+Enabling this will cause the formatted value to be HEXA, RGBA, or HSLA.}
 
-\item{open}{Indicates whether or not the popup is open. You can toggle
-this attribute to show and hide the popup, or you can use the \code{show()}
-and \code{hide()} methods and this attribute will reflect the popup's open
-state. Defaults to \code{false} when omitted.}
+\item{open}{Boolean. Default: \code{FALSE}. Indicates whether or not the
+popup is open. You can toggle this attribute to show and hide the
+popup, or you can use the \code{show()} and \code{hide()} methods and this
+attribute will reflect the popup's open state.}
 
-\item{required}{Makes the color picker a required field. Defaults to
-\code{false} when omitted.}
+\item{required}{Boolean. Default: \code{FALSE}. Makes the color picker a
+required field.}
 
-\item{size}{Determines the size of the color picker's trigger Must be
-one of \code{"large"}, \code{"medium"}, \code{"small"}. Defaults to \code{medium} when
-omitted.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. Default: \code{medium}. Determines the size of the color picker's
+trigger}
 
-\item{swatches}{One or more predefined color swatches to display as
-presets in the color picker. Can include any format the color picker
-can parse, including HEX(A), RGB(A), HSL(A), HSV(A), and CSS color
-names. Each color must be separated by a semicolon (\verb{;}).
+\item{swatches}{Default: \code{""}. One or more predefined color swatches to
+display as presets in the color picker. Can include any format the
+color picker can parse, including HEX(A), RGB(A), HSL(A), HSV(A), and
+CSS color names. Each color must be separated by a semicolon (\verb{;}).
 Alternatively, you can pass an array of color values to this property
-using JavaScript. Defaults to `` when omitted.}
+using JavaScript.}
 
-\item{uppercase}{By default, values are lowercase. With this attribute,
-values will be uppercase instead. Defaults to \code{false} when omitted.}
+\item{uppercase}{Boolean. Default: \code{FALSE}. By default, values are
+lowercase. With this attribute, values will be uppercase instead.}
 
-\item{with_hint}{Optional Web Awesome attribute. Defaults to \code{false}
-when omitted.}
+\item{with_hint}{Boolean. Default: \code{FALSE}. Optional Web Awesome
+attribute.}
 
-\item{with_label}{Optional Web Awesome attribute. Defaults to \code{false}
-when omitted.}
+\item{with_label}{Boolean. Default: \code{FALSE}. Optional Web Awesome
+attribute.}
 
-\item{without_format_toggle}{Removes the button that lets users toggle
-between format. Defaults to \code{false} when omitted.}
+\item{without_format_toggle}{Boolean. Default: \code{FALSE}. Removes the
+button that lets users toggle between format.}
 
 \item{hint_slot}{The color picker's form hint. Alternatively, you can
 use the \code{hint} attribute.}
@@ -119,6 +117,11 @@ An HTML tag for the component.
 \description{
 Generated wrapper for the Web Awesome \code{wa-color-picker} component. When
 used as a Shiny input, \verb{input$<input_id>} reflects the component's
-current value.
+current \code{value} value.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current \code{value} value.
+}
+

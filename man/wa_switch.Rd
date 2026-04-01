@@ -34,41 +34,41 @@ the rendered DOM \code{id} attribute.}
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The value of the switch, submitted as a name/value pair
-with form data.}
+\item{value}{String. The value of the switch, submitted as a name/value
+pair with form data.}
 
-\item{checked}{The default value of the form control. Primarily used
-for resetting the form control. This wrapper argument sets the HTML
-\code{checked} attribute, which maps to the component's \code{defaultChecked}
-field/property rather than its live \code{checked} property.}
+\item{checked}{Boolean. The default value of the form control.
+Primarily used for resetting the form control. This wrapper argument
+sets the HTML \code{checked} attribute, which maps to the component's
+\code{defaultChecked} field/property rather than its live \code{checked}
+property.}
 
-\item{disabled}{Disables the switch. Defaults to \code{false} when omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the switch.}
 
-\item{hint}{The switch's hint. If you need to display HTML, use the
-\code{hint} slot instead. Defaults to `` when omitted.}
+\item{hint}{String. Default: \code{""}. The switch's hint. If you need to
+display HTML, use the \code{hint} slot instead.}
 
-\item{name}{The name of the switch, submitted as a name/value pair with
-form data. Defaults to \code{null} when omitted.}
+\item{name}{String. Default: \code{null}. The name of the switch, submitted
+as a name/value pair with form data.}
 
-\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
-when omitted.}
+\item{custom_error}{String. Default: \code{null}. Optional Web Awesome
+attribute.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{required}{Makes the switch a required field. Defaults to \code{false}
-when omitted.}
+\item{required}{Boolean. Default: \code{FALSE}. Makes the switch a required
+field.}
 
-\item{size}{The switch's size. Must be one of \code{"large"}, \code{"medium"},
-\code{"small"}. Defaults to \code{medium} when omitted.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. Default: \code{medium}. The switch's size.}
 
-\item{title}{Optional Web Awesome attribute. Defaults to `` when
-omitted.}
+\item{title}{String. Default: \code{""}. Optional Web Awesome attribute.}
 
-\item{with_hint}{Used for SSR. If you slot in hint, make sure to add
-\code{with-hint} to your component to get it to properly render with SSR.
-Defaults to \code{false} when omitted.}
+\item{with_hint}{Boolean. Default: \code{FALSE}. Used for SSR. If you slot
+in hint, make sure to add \code{with-hint} to your component to get it to
+properly render with SSR.}
 
 \item{hint_slot}{Text that describes how to use the switch.
 Alternatively, you can use the \code{hint} attribute.}
@@ -79,6 +79,11 @@ An HTML tag for the component.
 \description{
 Generated wrapper for the Web Awesome \code{wa-switch} component. When used
 as a Shiny input, \verb{input$<input_id>} reflects the component's current
-value.
+\code{value} value.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current \code{value} value.
+}
+

@@ -34,47 +34,47 @@ wa_format_date(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{date}{The date/time to format. If not set, the current date and
-time will be used. When passing a string, it's strongly recommended to
-use the ISO 8601 format to ensure timezones are handled correctly. To
-convert a date to this format in JavaScript, use \code{date.toISOString()}.
-Defaults to \verb{new Date()} when omitted.}
+\item{date}{Default: \verb{new Date()}. The date/time to format. If not set,
+the current date and time will be used. When passing a string, it's
+strongly recommended to use the ISO 8601 format to ensure timezones are
+handled correctly. To convert a date to this format in JavaScript, use
+\code{date.toISOString()}.}
 
-\item{day}{The format for displaying the day. Must be one of
-\code{"2-digit"}, \code{"numeric"}.}
+\item{day}{Enumerated string. Allowed values: \code{2-digit}, \code{numeric}. The
+format for displaying the day.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{era}{The format for displaying the era. Must be one of \code{"long"},
-\code{"narrow"}, \code{"short"}.}
+\item{era}{Enumerated string. Allowed values: \code{long}, \code{narrow},
+\code{short}. The format for displaying the era.}
 
-\item{hour}{The format for displaying the hour. Must be one of
-\code{"2-digit"}, \code{"numeric"}.}
+\item{hour}{Enumerated string. Allowed values: \code{2-digit}, \code{numeric}.
+The format for displaying the hour.}
 
-\item{hour_format}{The format for displaying the hour. Must be one of
-\code{"12"}, \code{"24"}, \code{"auto"}. Defaults to \code{auto} when omitted.}
+\item{hour_format}{Enumerated string. Allowed values: \code{12}, \code{24},
+\code{auto}. Default: \code{auto}. The format for displaying the hour.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{minute}{The format for displaying the minute. Must be one of
-\code{"2-digit"}, \code{"numeric"}.}
+\item{minute}{Enumerated string. Allowed values: \code{2-digit}, \code{numeric}.
+The format for displaying the minute.}
 
-\item{month}{The format for displaying the month. Must be one of
-\code{"2-digit"}, \code{"long"}, \code{"narrow"}, \code{"numeric"}, \code{"short"}.}
+\item{month}{Enumerated string. Allowed values: \code{2-digit}, \code{long},
+\code{narrow}, \code{numeric}, \code{short}. The format for displaying the month.}
 
-\item{second}{The format for displaying the second. Must be one of
-\code{"2-digit"}, \code{"numeric"}.}
+\item{second}{Enumerated string. Allowed values: \code{2-digit}, \code{numeric}.
+The format for displaying the second.}
 
-\item{time_zone}{The time zone to express the time in.}
+\item{time_zone}{String. The time zone to express the time in.}
 
-\item{time_zone_name}{The format for displaying the time. Must be one
-of \code{"long"}, \code{"short"}.}
+\item{time_zone_name}{Enumerated string. Allowed values: \code{long},
+\code{short}. The format for displaying the time.}
 
-\item{weekday}{The format for displaying the weekday. Must be one of
-\code{"long"}, \code{"narrow"}, \code{"short"}.}
+\item{weekday}{Enumerated string. Allowed values: \code{long}, \code{narrow},
+\code{short}. The format for displaying the weekday.}
 
-\item{year}{The format for displaying the year. Must be one of
-\code{"2-digit"}, \code{"numeric"}.}
+\item{year}{Enumerated string. Allowed values: \code{2-digit}, \code{numeric}.
+The format for displaying the year.}
 }
 \value{
 An HTML tag for the component.

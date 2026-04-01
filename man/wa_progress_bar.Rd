@@ -25,19 +25,19 @@ wa_progress_bar(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The current progress as a percentage, 0 to 100. Defaults
-to \code{0} when omitted.}
+\item{value}{Number. Default: \code{0}. The current progress as a
+percentage, 0 to 100.}
 
-\item{label}{A custom label for assistive devices. Defaults to `` when
-omitted.}
+\item{label}{String. Default: \code{""}. A custom label for assistive
+devices.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{indeterminate}{When true, percentage is ignored, the label is
-hidden, and the progress bar is drawn in an indeterminate state.
-Defaults to \code{false} when omitted.}
+\item{indeterminate}{Boolean. Default: \code{FALSE}. When TRUE, percentage
+is ignored, the label is hidden, and the progress bar is drawn in an
+indeterminate state.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 }
 \value{
 An HTML tag for the component.

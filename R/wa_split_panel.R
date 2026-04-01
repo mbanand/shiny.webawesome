@@ -10,27 +10,27 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param disabled Disables resizing. Note that the position may still
-#' change as a result of resizing the host element. Defaults to `false`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param orientation Sets the split panel's orientation. Must be one of
-#' `"horizontal"`, `"vertical"`. Defaults to `horizontal` when omitted.
-#' @param position The current position of the divider from the primary
-#' panel's edge as a percentage 0-100. Defaults to 50% of the container's
-#' initial size. Defaults to `50` when omitted.
-#' @param position_in_pixels The current position of the divider from the
-#' primary panel's edge in pixels.
-#' @param primary If no primary panel is designated, both panels will
-#' resize proportionally when the host element is resized. If a primary
-#' panel is designated, it will maintain its size and the other panel will
-#' grow or shrink as needed when the host element is resized.
-#' @param snap One or more space-separated values at which the divider
-#' should snap. Values can be in pixels or percentages, e.g. `"100px
-#' 50%"`.
-#' @param snap_threshold How close the divider must be to a snap point
-#' until snapping occurs. Defaults to `12` when omitted.
+#' @param disabled Boolean. Default: `FALSE`. Disables resizing. Note that
+#' the position may still change as a result of resizing the host element.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param orientation Enumerated string. Allowed values: `horizontal`,
+#' `vertical`. Default: `horizontal`. Sets the split panel's orientation.
+#' @param position Number. Default: `50`. The current position of the
+#' divider from the primary panel's edge as a percentage 0-100. Defaults
+#' to 50% of the container's initial size.
+#' @param position_in_pixels Number. The current position of the divider
+#' from the primary panel's edge in pixels.
+#' @param primary Enumerated string. Allowed values: `end`, `start`. If no
+#' primary panel is designated, both panels will resize proportionally
+#' when the host element is resized. If a primary panel is designated, it
+#' will maintain its size and the other panel will grow or shrink as
+#' needed when the host element is resized.
+#' @param snap String. One or more space-separated values at which the
+#' divider should snap. Values can be in pixels or percentages, e.g.
+#' `"100px 50%"`.
+#' @param snap_threshold Number. Default: `12`. How close the divider must
+#' be to a snap point until snapping occurs.
 #' @param divider The divider. Useful for slotting in a custom icon that
 #' renders as a handle.
 #' @param end Content to place in the end panel.
@@ -84,6 +84,17 @@ wa_split_panel <- function(
       c(
         "horizontal",
         "vertical"
+      )
+    )
+  }
+
+  if (!is.null(primary)) {
+    primary <- .wa_match_arg(
+      primary,
+      "primary",
+      c(
+        "end",
+        "start"
       )
     )
   }

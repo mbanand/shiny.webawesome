@@ -5,7 +5,7 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-select` component. When used
 #' as a Shiny input, `input$<input_id>` reflects the component's current
-#' value.
+#' `value` value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -15,45 +15,44 @@
 #' @param style Optional inline CSS style string.
 #' @param value The select's value. This will be a string for single
 #' select or an array for multi-select.
-#' @param disabled Disables the select control. Defaults to `false` when
-#' omitted.
-#' @param label The select's label. If you need to display HTML, use the
-#' `label` slot instead. Defaults to `` when omitted.
-#' @param hint The select's hint. If you need to display HTML, use the
-#' `hint` slot instead. Defaults to `` when omitted.
-#' @param name The name of the select, submitted as a name/value pair with
-#' form data. Defaults to `` when omitted.
-#' @param appearance The select's visual appearance. Must be one of
-#' `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to `outlined`
-#' when omitted.
-#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param max_options_visible The maximum number of selected options to
-#' show when `multiple` is true. After the maximum, "+n" will be shown to
-#' indicate the number of additional items that are selected. Set to 0 to
-#' remove the limit. Defaults to `3` when omitted.
-#' @param multiple Allows more than one option to be selected. Defaults to
-#' `false` when omitted.
-#' @param open Indicates whether or not the select is open. You can toggle
-#' this attribute to show and hide the menu, or you can use the `show()`
-#' and `hide()` methods and this attribute will reflect the select's open
-#' state. Defaults to `false` when omitted.
-#' @param pill Draws a pill-style select with rounded edges. Defaults to
-#' `false` when omitted.
-#' @param placeholder Placeholder text to show as a hint when the select
-#' is empty. Defaults to `` when omitted.
-#' @param placement The preferred placement of the select's menu. Note
+#' @param disabled Boolean. Default: `FALSE`. Disables the select control.
+#' @param label String. Default: `""`. The select's label. If you need to
+#' display HTML, use the `label` slot instead.
+#' @param hint String. Default: `""`. The select's hint. If you need to
+#' display HTML, use the `hint` slot instead.
+#' @param name String. Default: `""`. The name of the select, submitted as
+#' a name/value pair with form data.
+#' @param appearance Enumerated string. Allowed values: `filled`,
+#' `filled-outlined`, `outlined`. Default: `outlined`. The select's visual
+#' appearance.
+#' @param custom_error String. Default: `null`. Optional Web Awesome
+#' attribute.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param max_options_visible Number. Default: `3`. The maximum number of
+#' selected options to show when `multiple` is TRUE. After the maximum,
+#' "+n" will be shown to indicate the number of additional items that are
+#' selected. Set to 0 to remove the limit.
+#' @param multiple Boolean. Default: `FALSE`. Allows more than one option
+#' to be selected.
+#' @param open Boolean. Default: `FALSE`. Indicates whether or not the
+#' select is open. You can toggle this attribute to show and hide the
+#' menu, or you can use the `show()` and `hide()` methods and this
+#' attribute will reflect the select's open state.
+#' @param pill Boolean. Default: `FALSE`. Draws a pill-style select with
+#' rounded edges.
+#' @param placeholder String. Default: `""`. Placeholder text to show as a
+#' hint when the select is empty.
+#' @param placement Enumerated string. Allowed values: `bottom`, `top`.
+#' Default: `bottom`. The preferred placement of the select's menu. Note
 #' that the actual placement may vary as needed to keep the listbox inside
-#' of the viewport. Must be one of `"bottom"`, `"top"`. Defaults to
-#' `bottom` when omitted.
-#' @param required The select's required attribute. Defaults to `false`
-#' when omitted.
-#' @param size The select's size. Must be one of `"large"`, `"medium"`,
-#' `"small"`. Defaults to `medium` when omitted.
-#' @param with_clear Adds a clear button when the select is not empty.
-#' Defaults to `false` when omitted.
+#' of the viewport.
+#' @param required Boolean. Default: `FALSE`. The select's required
+#' attribute.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. Default: `medium`. The select's size.
+#' @param with_clear Boolean. Default: `FALSE`. Adds a clear button when
+#' the select is not empty.
 #' @param clear_icon An icon to use in lieu of the default clear icon.
 #' @param end An element, such as `<wa-icon>`, placed at the end of the
 #' combobox.
@@ -65,6 +64,9 @@
 #' `label` attribute.
 #' @param start An element, such as `<wa-icon>`, placed at the start of
 #' the combobox.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current `value` value.
 #'
 #' @return An HTML tag for the component.
 #'

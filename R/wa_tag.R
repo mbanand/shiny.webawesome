@@ -10,21 +10,21 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param appearance The tag's visual appearance. Must be one of
-#' `"accent"`, `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to
-#' `filled-outlined` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param pill Draws a pill-style tag with rounded edges. Defaults to
-#' `false` when omitted.
-#' @param size The tag's size. Must be one of `"large"`, `"medium"`,
-#' `"small"`. Defaults to `medium` when omitted.
-#' @param variant The tag's theme variant. Defaults to `neutral` if not
-#' within another element with a variant. Must be one of `"brand"`,
-#' `"danger"`, `"neutral"`, `"success"`, `"warning"`. Defaults to
-#' `neutral` when omitted.
-#' @param with_remove Makes the tag removable and shows a remove button.
-#' Defaults to `false` when omitted.
+#' @param appearance Enumerated string. Allowed values: `accent`,
+#' `filled`, `filled-outlined`, `outlined`. Default: `filled-outlined`.
+#' The tag's visual appearance.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param pill Boolean. Default: `FALSE`. Draws a pill-style tag with
+#' rounded edges.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. Default: `medium`. The tag's size.
+#' @param variant Enumerated string. Allowed values: `brand`, `danger`,
+#' `neutral`, `success`, `warning`. Default: `neutral`. The tag's theme
+#' variant. Defaults to `neutral` if not within another element with a
+#' variant.
+#' @param with_remove Boolean. Default: `FALSE`. Makes the tag removable
+#' and shows a remove button.
 #'
 #' @return An HTML tag for the component.
 #'

@@ -29,28 +29,27 @@ the rendered DOM \code{id} attribute.}
 
 \item{style}{Optional inline CSS style string.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{distance}{The distance of the dropdown menu from its trigger.
-Defaults to \code{0} when omitted.}
+\item{distance}{Number. Default: \code{0}. The distance of the dropdown menu
+from its trigger.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{open}{Opens or closes the dropdown. Defaults to \code{false} when
-omitted.}
+\item{open}{Boolean. Default: \code{FALSE}. Opens or closes the dropdown.}
 
-\item{placement}{The placement of the dropdown menu in reference to the
-trigger. The menu will shift to a more optimal location if the
-preferred placement doesn't have enough room. Must be one of
-\code{"bottom"}, \code{"bottom-end"}, \code{"bottom-start"}, \code{"left"}, \code{"left-end"},
-\code{"left-start"}, \code{"right"}, \code{"right-end"}, \code{"right-start"}, \code{"top"},
-\code{"top-end"}, \code{"top-start"}. Defaults to \code{bottom-start} when omitted.}
+\item{placement}{Enumerated string. Allowed values: \code{bottom},
+\code{bottom-end}, \code{bottom-start}, \code{left}, \code{left-end}, \code{left-start},
+\code{right}, \code{right-end}, \code{right-start}, \code{top}, \code{top-end}, \code{top-start}.
+Default: \code{bottom-start}. The placement of the dropdown menu in
+reference to the trigger. The menu will shift to a more optimal
+location if the preferred placement doesn't have enough room.}
 
-\item{size}{The dropdown's size. Must be one of \code{"large"}, \code{"medium"},
-\code{"small"}. Defaults to \code{medium} when omitted.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. Default: \code{medium}. The dropdown's size.}
 
-\item{skidding}{The offset of the dropdown menu along its trigger.
-Defaults to \code{0} when omitted.}
+\item{skidding}{Number. Default: \code{0}. The offset of the dropdown menu
+along its trigger.}
 
 \item{trigger}{The element that triggers the dropdown, such as a
 \verb{<wa-button>} or \verb{<button>}.}
@@ -69,3 +68,14 @@ companion value input reflects the selected item's \code{value}, returns
 empty string \code{""} when that is the selected item's value.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} uses action semantics and invalidates on each
+committed action, including repeated selection of the same item.
+
+\verb{input$<input_id>_value} reflects the latest selected item's \code{value}
+value, returns \code{NULL} when the selected item has no \code{value} , and
+preserves an explicit empty string \code{""} when that is the selected
+item's value.
+}
+

@@ -24,15 +24,15 @@ wa_progress_ring(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{The current progress as a percentage, 0 to 100. Defaults
-to \code{0} when omitted.}
+\item{value}{Number. Default: \code{0}. The current progress as a
+percentage, 0 to 100.}
 
-\item{label}{A custom label for assistive devices. Defaults to `` when
-omitted.}
+\item{label}{String. Default: \code{""}. A custom label for assistive
+devices.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 }
 \value{
 An HTML tag for the component.

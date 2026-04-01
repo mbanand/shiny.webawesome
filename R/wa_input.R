@@ -5,7 +5,7 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-input` component. When used
 #' as a Shiny input, `input$<input_id>` reflects the component's current
-#' value.
+#' `value` value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -13,90 +13,86 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The default value of the form control. Primarily used for
-#' resetting the form control. This wrapper argument sets the HTML `value`
-#' attribute, which maps to the component's `defaultValue` field/property
-#' rather than its live `value` property.
-#' @param disabled Disables the form control. Defaults to `false` when
-#' omitted.
-#' @param label The input's label. If you need to display HTML, use the
-#' `label` slot instead. Defaults to `` when omitted.
-#' @param hint The input's hint. If you need to display HTML, use the
-#' `hint` slot instead. Defaults to `` when omitted.
-#' @param name The name of the input, submitted as a name/value pair with
-#' form data. Defaults to `null` when omitted.
-#' @param appearance The input's visual appearance. Must be one of
-#' `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to `outlined`
-#' when omitted.
-#' @param autocapitalize Controls whether and how text input is
-#' automatically capitalized as it is entered by the user. Must be one of
-#' `"characters"`, `"none"`, `"off"`, `"on"`, `"sentences"`, `"words"`.
-#' @param autocomplete Specifies what permission the browser has to
-#' provide assistance in filling out form field values. Refer to this page
-#' on MDN for available values.
-#' @param autocorrect Indicates whether the browser's autocorrect feature
-#' is on or off. Must be one of `"off"`, `"on"`.
-#' @param autofocus Indicates that the input should receive focus on page
-#' load.
-#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param enterkeyhint Used to customize the label or icon of the Enter
-#' key on virtual keyboards. Must be one of `"done"`, `"enter"`, `"go"`,
-#' `"next"`, `"previous"`, `"search"`, `"send"`.
-#' @param inputmode Tells the browser what type of data will be entered by
-#' the user, allowing it to display the appropriate virtual keyboard on
-#' supportive devices. Must be one of `"decimal"`, `"email"`, `"none"`,
-#' `"numeric"`, `"search"`, `"tel"`, `"text"`, `"url"`.
-#' @param lang Optional Web Awesome attribute.
+#' @param value String. The default value of the form control. Primarily
+#' used for resetting the form control. This wrapper argument sets the
+#' HTML `value` attribute, which maps to the component's `defaultValue`
+#' field/property rather than its live `value` property.
+#' @param disabled Boolean. Default: `FALSE`. Disables the form control.
+#' @param label String. Default: `""`. The input's label. If you need to
+#' display HTML, use the `label` slot instead.
+#' @param hint String. Default: `""`. The input's hint. If you need to
+#' display HTML, use the `hint` slot instead.
+#' @param name String. Default: `null`. The name of the input, submitted
+#' as a name/value pair with form data.
+#' @param appearance Enumerated string. Allowed values: `filled`,
+#' `filled-outlined`, `outlined`. Default: `outlined`. The input's visual
+#' appearance.
+#' @param autocapitalize Enumerated string. Allowed values: `characters`,
+#' `none`, `off`, `on`, `sentences`, `words`. Controls whether and how
+#' text input is automatically capitalized as it is entered by the user.
+#' @param autocomplete String. Specifies what permission the browser has
+#' to provide assistance in filling out form field values. Refer to this
+#' page on MDN for available values.
+#' @param autocorrect Enumerated string. Allowed values: `off`, `on`.
+#' Indicates whether the browser's autocorrect feature is on or off.
+#' @param autofocus Boolean. Indicates that the input should receive focus
+#' on page load.
+#' @param custom_error String. Default: `null`. Optional Web Awesome
+#' attribute.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param enterkeyhint Enumerated string. Allowed values: `done`, `enter`,
+#' `go`, `next`, `previous`, `search`, `send`. Used to customize the label
+#' or icon of the Enter key on virtual keyboards.
+#' @param inputmode Enumerated string. Allowed values: `decimal`, `email`,
+#' `none`, `numeric`, `search`, `tel`, `text`, `url`. Tells the browser
+#' what type of data will be entered by the user, allowing it to display
+#' the appropriate virtual keyboard on supportive devices.
+#' @param lang String. Optional Web Awesome attribute.
 #' @param max The input's maximum value. Only applies to date and number
 #' input types.
-#' @param maxlength The maximum length of input that will be considered
-#' valid.
+#' @param maxlength Number. The maximum length of input that will be
+#' considered valid.
 #' @param min The input's minimum value. Only applies to date and number
 #' input types.
-#' @param minlength The minimum length of input that will be considered
-#' valid.
-#' @param password_toggle Adds a button to toggle the password's
-#' visibility. Only applies to password types. Defaults to `false` when
-#' omitted.
-#' @param password_visible Determines whether or not the password is
-#' currently visible. Only applies to password input types. Defaults to
-#' `false` when omitted.
-#' @param pattern A regular expression pattern to validate input against.
-#' @param pill Draws a pill-style input with rounded edges. Defaults to
-#' `false` when omitted.
-#' @param placeholder Placeholder text to show as a hint when the input is
-#' empty. Defaults to `` when omitted.
-#' @param readonly Makes the input readonly. Defaults to `false` when
-#' omitted.
-#' @param required Makes the input a required field. Defaults to `false`
-#' when omitted.
-#' @param size The input's size. Must be one of `"large"`, `"medium"`,
-#' `"small"`. Defaults to `medium` when omitted.
-#' @param spellcheck Enables spell checking on the input. Defaults to
-#' `true` when omitted.
+#' @param minlength Number. The minimum length of input that will be
+#' considered valid.
+#' @param password_toggle Boolean. Default: `FALSE`. Adds a button to
+#' toggle the password's visibility. Only applies to password types.
+#' @param password_visible Boolean. Default: `FALSE`. Determines whether
+#' or not the password is currently visible. Only applies to password
+#' input types.
+#' @param pattern String. A regular expression pattern to validate input
+#' against.
+#' @param pill Boolean. Default: `FALSE`. Draws a pill-style input with
+#' rounded edges.
+#' @param placeholder String. Default: `""`. Placeholder text to show as a
+#' hint when the input is empty.
+#' @param readonly Boolean. Default: `FALSE`. Makes the input readonly.
+#' @param required Boolean. Default: `FALSE`. Makes the input a required
+#' field.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. Default: `medium`. The input's size.
+#' @param spellcheck Boolean. Default: `TRUE`. Enables spell checking on
+#' the input.
 #' @param step Specifies the granularity that the value must adhere to, or
 #' the special value `any` which means no stepping is implied, allowing
 #' any numeric value. Only applies to date and number input types.
-#' @param title Optional Web Awesome attribute. Defaults to `` when
-#' omitted.
-#' @param type The type of input. Works the same as a native `<input>`
-#' element, but only a subset of types are supported. Defaults to `text`.
-#' Must be one of `"date"`, `"datetime-local"`, `"email"`, `"number"`,
-#' `"password"`, `"search"`, `"tel"`, `"text"`, `"time"`, `"url"`.
-#' Defaults to `text` when omitted.
-#' @param with_clear Adds a clear button when the input is not empty.
-#' Defaults to `false` when omitted.
-#' @param with_hint Used for SSR. Will determine if the SSRed component
-#' will have the hint slot rendered on initial paint. Defaults to `false`
-#' when omitted.
-#' @param with_label Used for SSR. Will determine if the SSRed component
-#' will have the label slot rendered on initial paint. Defaults to `false`
-#' when omitted.
-#' @param without_spin_buttons Hides the browser's built-in
-#' increment/decrement spin buttons for number inputs. Defaults to `false`
-#' when omitted.
+#' @param title String. Default: `""`. Optional Web Awesome attribute.
+#' @param type Enumerated string. Allowed values: `date`,
+#' `datetime-local`, `email`, `number`, `password`, `search`, `tel`,
+#' `text`, `time`, `url`. Default: `text`. The type of input. Works the
+#' same as a native `<input>` element, but only a subset of types are
+#' supported. Defaults to `text`.
+#' @param with_clear Boolean. Default: `FALSE`. Adds a clear button when
+#' the input is not empty.
+#' @param with_hint Boolean. Default: `FALSE`. Used for SSR. Will
+#' determine if the SSRed component will have the hint slot rendered on
+#' initial paint.
+#' @param with_label Boolean. Default: `FALSE`. Used for SSR. Will
+#' determine if the SSRed component will have the label slot rendered on
+#' initial paint.
+#' @param without_spin_buttons Boolean. Default: `FALSE`. Hides the
+#' browser's built-in increment/decrement spin buttons for number inputs.
 #' @param clear_icon An icon to use in lieu of the default clear icon.
 #' @param end An element, such as `<wa-icon>`, placed at the end of the
 #' input control.
@@ -110,6 +106,9 @@
 #' password icon.
 #' @param start An element, such as `<wa-icon>`, placed at the start of
 #' the input control.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current `value` value.
 #'
 #' @return An HTML tag for the component.
 #'

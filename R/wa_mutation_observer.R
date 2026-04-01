@@ -10,23 +10,21 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param disabled Disables the observer. Defaults to `false` when
-#' omitted.
-#' @param attr Watches for changes to attributes. To watch only specific
-#' attributes, separate them by a space, e.g. `attr="class id title"`. To
-#' watch all attributes, use `*`.
-#' @param attr_old_value Indicates whether or not the attribute's previous
-#' value should be recorded when monitoring changes. Defaults to `false`
-#' when omitted.
-#' @param char_data Watches for changes to the character data contained
-#' within the node. Defaults to `false` when omitted.
-#' @param char_data_old_value Indicates whether or not the previous value
-#' of the node's text should be recorded. Defaults to `false` when
-#' omitted.
-#' @param child_list Watches for the addition or removal of new child
-#' nodes. Defaults to `false` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
+#' @param disabled Boolean. Default: `FALSE`. Disables the observer.
+#' @param attr String. Watches for changes to attributes. To watch only
+#' specific attributes, separate them by a space, e.g. `attr="class id
+#' title"`. To watch all attributes, use `*`.
+#' @param attr_old_value Boolean. Default: `FALSE`. Indicates whether or
+#' not the attribute's previous value should be recorded when monitoring
+#' changes.
+#' @param char_data Boolean. Default: `FALSE`. Watches for changes to the
+#' character data contained within the node.
+#' @param char_data_old_value Boolean. Default: `FALSE`. Indicates whether
+#' or not the previous value of the node's text should be recorded.
+#' @param child_list Boolean. Default: `FALSE`. Watches for the addition
+#' or removal of new child nodes.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
 #'
 #' @return An HTML tag for the component.
 #'

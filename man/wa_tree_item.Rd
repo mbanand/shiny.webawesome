@@ -28,21 +28,18 @@ wa_tree_item(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{disabled}{Disables the tree item. Defaults to \code{false} when
-omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the tree item.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{expanded}{Expands the tree item. Defaults to \code{false} when
-omitted.}
+\item{expanded}{Boolean. Default: \code{FALSE}. Expands the tree item.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{lazy}{Enables lazy loading behavior. Defaults to \code{false} when
-omitted.}
+\item{lazy}{Boolean. Default: \code{FALSE}. Enables lazy loading behavior.}
 
-\item{selected}{Draws the tree item in a selected state. Defaults to
-\code{false} when omitted.}
+\item{selected}{Boolean. Default: \code{FALSE}. Draws the tree item in a
+selected state.}
 
 \item{collapse_icon}{The icon to show when the tree item is collapsed.}
 

@@ -5,7 +5,7 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-comparison` component. When
 #' used as a Shiny input, `input$<input_id>` reflects the component's
-#' current value.
+#' current `value` value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -13,13 +13,16 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param position The position of the divider as a percentage. Defaults
-#' to `50` when omitted.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param position Number. Default: `50`. The position of the divider as a
+#' percentage.
 #' @param after The after content, often an `<img>` or `<svg>` element.
 #' @param before The before content, often an `<img>` or `<svg>` element.
 #' @param handle The icon used inside the handle.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current `value` value.
 #'
 #' @return An HTML tag for the component.
 #'

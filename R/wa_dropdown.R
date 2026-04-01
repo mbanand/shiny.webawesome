@@ -18,24 +18,32 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param dir Optional Web Awesome attribute.
-#' @param distance The distance of the dropdown menu from its trigger.
-#' Defaults to `0` when omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param open Opens or closes the dropdown. Defaults to `false` when
-#' omitted.
-#' @param placement The placement of the dropdown menu in reference to the
-#' trigger. The menu will shift to a more optimal location if the
-#' preferred placement doesn't have enough room. Must be one of
-#' `"bottom"`, `"bottom-end"`, `"bottom-start"`, `"left"`, `"left-end"`,
-#' `"left-start"`, `"right"`, `"right-end"`, `"right-start"`, `"top"`,
-#' `"top-end"`, `"top-start"`. Defaults to `bottom-start` when omitted.
-#' @param size The dropdown's size. Must be one of `"large"`, `"medium"`,
-#' `"small"`. Defaults to `medium` when omitted.
-#' @param skidding The offset of the dropdown menu along its trigger.
-#' Defaults to `0` when omitted.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param distance Number. Default: `0`. The distance of the dropdown menu
+#' from its trigger.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param open Boolean. Default: `FALSE`. Opens or closes the dropdown.
+#' @param placement Enumerated string. Allowed values: `bottom`,
+#' `bottom-end`, `bottom-start`, `left`, `left-end`, `left-start`,
+#' `right`, `right-end`, `right-start`, `top`, `top-end`, `top-start`.
+#' Default: `bottom-start`. The placement of the dropdown menu in
+#' reference to the trigger. The menu will shift to a more optimal
+#' location if the preferred placement doesn't have enough room.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. Default: `medium`. The dropdown's size.
+#' @param skidding Number. Default: `0`. The offset of the dropdown menu
+#' along its trigger.
 #' @param trigger The element that triggers the dropdown, such as a
 #' `<wa-button>` or `<button>`.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` uses action semantics and invalidates on each
+#' committed action, including repeated selection of the same item.
+#'
+#' `input$<input_id>_value` reflects the latest selected item's `value`
+#' value, returns `NULL` when the selected item has no `value` , and
+#' preserves an explicit empty string `""` when that is the selected
+#' item's value.
 #'
 #' @return An HTML tag for the component.
 #'

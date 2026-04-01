@@ -31,28 +31,27 @@ wa_dropdown_item(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{value}{An optional value for the menu item. This is useful for
-determining which item was selected when listening to the dropdown's
-\code{wa-select} event.}
+\item{value}{String. An optional value for the menu item. This is
+useful for determining which item was selected when listening to the
+dropdown's \code{wa-select} event.}
 
-\item{checked}{Set to true to check the dropdown item. Only valid when
-\code{type} is \code{checkbox}. Defaults to \code{false} when omitted.}
+\item{checked}{Boolean. Default: \code{FALSE}. Set to TRUE to check the
+dropdown item. Only valid when \code{type} is \code{checkbox}.}
 
-\item{disabled}{Disables the dropdown item. Defaults to \code{false} when
-omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the dropdown item.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{submenu_open}{Whether the submenu is currently open. Defaults to
-\code{false} when omitted.}
+\item{submenu_open}{Boolean. Default: \code{FALSE}. Whether the submenu is
+currently open.}
 
-\item{type}{Set to \code{checkbox} to make the item a checkbox. Must be one
-of \code{"checkbox"}, \code{"normal"}. Defaults to \code{normal} when omitted.}
+\item{type}{Enumerated string. Allowed values: \code{checkbox}, \code{normal}.
+Default: \code{normal}. Set to \code{checkbox} to make the item a checkbox.}
 
-\item{variant}{The type of menu item to render. Must be one of
-\code{"danger"}, \code{"default"}. Defaults to \code{default} when omitted.}
+\item{variant}{Enumerated string. Allowed values: \code{danger}, \code{default}.
+Default: \code{default}. The type of menu item to render.}
 
 \item{details}{Additional content or details to display after the
 label.}

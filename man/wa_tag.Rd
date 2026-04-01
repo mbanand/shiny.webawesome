@@ -27,27 +27,27 @@ wa_tag(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{appearance}{The tag's visual appearance. Must be one of
-\code{"accent"}, \code{"filled"}, \code{"filled-outlined"}, \code{"outlined"}. Defaults to
-\code{filled-outlined} when omitted.}
+\item{appearance}{Enumerated string. Allowed values: \code{accent},
+\code{filled}, \code{filled-outlined}, \code{outlined}. Default: \code{filled-outlined}.
+The tag's visual appearance.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{pill}{Draws a pill-style tag with rounded edges. Defaults to
-\code{false} when omitted.}
+\item{pill}{Boolean. Default: \code{FALSE}. Draws a pill-style tag with
+rounded edges.}
 
-\item{size}{The tag's size. Must be one of \code{"large"}, \code{"medium"},
-\code{"small"}. Defaults to \code{medium} when omitted.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. Default: \code{medium}. The tag's size.}
 
-\item{variant}{The tag's theme variant. Defaults to \code{neutral} if not
-within another element with a variant. Must be one of \code{"brand"},
-\code{"danger"}, \code{"neutral"}, \code{"success"}, \code{"warning"}. Defaults to
-\code{neutral} when omitted.}
+\item{variant}{Enumerated string. Allowed values: \code{brand}, \code{danger},
+\code{neutral}, \code{success}, \code{warning}. Default: \code{neutral}. The tag's theme
+variant. Defaults to \code{neutral} if not within another element with a
+variant.}
 
-\item{with_remove}{Makes the tag removable and shows a remove button.
-Defaults to \code{false} when omitted.}
+\item{with_remove}{Boolean. Default: \code{FALSE}. Makes the tag removable
+and shows a remove button.}
 }
 \value{
 An HTML tag for the component.

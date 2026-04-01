@@ -5,7 +5,7 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-textarea` component. When
 #' used as a Shiny input, `input$<input_id>` reflects the component's
-#' current value.
+#' current `value` value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -13,72 +13,71 @@
 #' the rendered DOM `id` attribute.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value The default value of the form control. Primarily used for
-#' resetting the form control. This wrapper argument sets the HTML `value`
-#' attribute, which maps to the component's `defaultValue` field/property
-#' rather than its live `value` property.
-#' @param disabled Disables the textarea. Defaults to `false` when
-#' omitted.
-#' @param label The textarea's label. If you need to display HTML, use the
-#' `label` slot instead. Defaults to `` when omitted.
-#' @param hint The textarea's hint. If you need to display HTML, use the
-#' `hint` slot instead. Defaults to `` when omitted.
-#' @param name The name of the textarea, submitted as a name/value pair
-#' with form data. Defaults to `null` when omitted.
-#' @param appearance The textarea's visual appearance. Must be one of
-#' `"filled"`, `"filled-outlined"`, `"outlined"`. Defaults to `outlined`
-#' when omitted.
-#' @param autocapitalize Controls whether and how text input is
-#' automatically capitalized as it is entered by the user. Must be one of
-#' `"characters"`, `"none"`, `"off"`, `"on"`, `"sentences"`, `"words"`.
-#' @param autocomplete Specifies what permission the browser has to
-#' provide assistance in filling out form field values. Refer to this page
-#' on MDN for available values.
-#' @param autocorrect Indicates whether the browser's autocorrect feature
-#' is on or off.
-#' @param autofocus Indicates that the input should receive focus on page
-#' load.
-#' @param custom_error Optional Web Awesome attribute. Defaults to `null`
-#' when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param enterkeyhint Used to customize the label or icon of the Enter
-#' key on virtual keyboards. Must be one of `"done"`, `"enter"`, `"go"`,
-#' `"next"`, `"previous"`, `"search"`, `"send"`.
-#' @param inputmode Tells the browser what type of data will be entered by
-#' the user, allowing it to display the appropriate virtual keyboard on
-#' supportive devices. Must be one of `"decimal"`, `"email"`, `"none"`,
-#' `"numeric"`, `"search"`, `"tel"`, `"text"`, `"url"`.
-#' @param lang Optional Web Awesome attribute.
-#' @param maxlength The maximum length of input that will be considered
-#' valid.
-#' @param minlength The minimum length of input that will be considered
-#' valid.
-#' @param placeholder Placeholder text to show as a hint when the input is
-#' empty. Defaults to `` when omitted.
-#' @param readonly Makes the textarea readonly. Defaults to `false` when
-#' omitted.
-#' @param required Makes the textarea a required field. Defaults to
-#' `false` when omitted.
-#' @param resize Controls how the textarea can be resized. Must be one of
-#' `"auto"`, `"both"`, `"horizontal"`, `"none"`, `"vertical"`. Defaults to
-#' `vertical` when omitted.
-#' @param rows The number of rows to display by default. Defaults to `4`
-#' when omitted.
-#' @param size The textarea's size. Must be one of `"large"`, `"medium"`,
-#' `"small"`. Defaults to `medium` when omitted.
-#' @param spellcheck Enables spell checking on the textarea. Defaults to
-#' `true` when omitted.
-#' @param title Optional Web Awesome attribute. Defaults to `` when
-#' omitted.
-#' @param with_hint Used for SSR. If you're slotting in a `hint` element,
-#' make sure to set this to `true`. Defaults to `false` when omitted.
-#' @param with_label Used for SSR. If you're slotting in a `label`
-#' element, make sure to set this to `true`. Defaults to `false` when
-#' omitted.
+#' @param value String. The default value of the form control. Primarily
+#' used for resetting the form control. This wrapper argument sets the
+#' HTML `value` attribute, which maps to the component's `defaultValue`
+#' field/property rather than its live `value` property.
+#' @param disabled Boolean. Default: `FALSE`. Disables the textarea.
+#' @param label String. Default: `""`. The textarea's label. If you need
+#' to display HTML, use the `label` slot instead.
+#' @param hint String. Default: `""`. The textarea's hint. If you need to
+#' display HTML, use the `hint` slot instead.
+#' @param name String. Default: `null`. The name of the textarea,
+#' submitted as a name/value pair with form data.
+#' @param appearance Enumerated string. Allowed values: `filled`,
+#' `filled-outlined`, `outlined`. Default: `outlined`. The textarea's
+#' visual appearance.
+#' @param autocapitalize Enumerated string. Allowed values: `characters`,
+#' `none`, `off`, `on`, `sentences`, `words`. Controls whether and how
+#' text input is automatically capitalized as it is entered by the user.
+#' @param autocomplete String. Specifies what permission the browser has
+#' to provide assistance in filling out form field values. Refer to this
+#' page on MDN for available values.
+#' @param autocorrect String. Indicates whether the browser's autocorrect
+#' feature is on or off.
+#' @param autofocus Boolean. Indicates that the input should receive focus
+#' on page load.
+#' @param custom_error String. Default: `null`. Optional Web Awesome
+#' attribute.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param enterkeyhint Enumerated string. Allowed values: `done`, `enter`,
+#' `go`, `next`, `previous`, `search`, `send`. Used to customize the label
+#' or icon of the Enter key on virtual keyboards.
+#' @param inputmode Enumerated string. Allowed values: `decimal`, `email`,
+#' `none`, `numeric`, `search`, `tel`, `text`, `url`. Tells the browser
+#' what type of data will be entered by the user, allowing it to display
+#' the appropriate virtual keyboard on supportive devices.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param maxlength Number. The maximum length of input that will be
+#' considered valid.
+#' @param minlength Number. The minimum length of input that will be
+#' considered valid.
+#' @param placeholder String. Default: `""`. Placeholder text to show as a
+#' hint when the input is empty.
+#' @param readonly Boolean. Default: `FALSE`. Makes the textarea readonly.
+#' @param required Boolean. Default: `FALSE`. Makes the textarea a
+#' required field.
+#' @param resize Enumerated string. Allowed values: `auto`, `both`,
+#' `horizontal`, `none`, `vertical`. Default: `vertical`. Controls how the
+#' textarea can be resized.
+#' @param rows Number. Default: `4`. The number of rows to display by
+#' default.
+#' @param size Enumerated string. Allowed values: `large`, `medium`,
+#' `small`. Default: `medium`. The textarea's size.
+#' @param spellcheck Boolean. Default: `TRUE`. Enables spell checking on
+#' the textarea.
+#' @param title String. Default: `""`. Optional Web Awesome attribute.
+#' @param with_hint Boolean. Default: `FALSE`. Used for SSR. If you're
+#' slotting in a `hint` element, make sure to set this to `TRUE`.
+#' @param with_label Boolean. Default: `FALSE`. Used for SSR. If you're
+#' slotting in a `label` element, make sure to set this to `TRUE`.
 #' @param hint_slot Text that describes how to use the input.
 #' Alternatively, you can use the `hint` attribute.
 #' @param label_slot The textarea's label. Alternatively, you can use the
 #' `label` attribute.
+#'
+#' @section Shiny Bindings:
+#' `input$<input_id>` reflects the component's current `value` value.
 #'
 #' @return An HTML tag for the component.
 #'

@@ -10,11 +10,11 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param name The tab panel's name. Defaults to `` when omitted.
-#' @param active When true, the tab panel will be shown. Defaults to
-#' `false` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
+#' @param name String. Default: `""`. The tab panel's name.
+#' @param active Boolean. Default: `FALSE`. When TRUE, the tab panel will
+#' be shown.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
 #'
 #' @return An HTML tag for the component.
 #'

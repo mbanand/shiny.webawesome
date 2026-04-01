@@ -10,13 +10,13 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param appearance The card's visual appearance. Must be one of
-#' `"accent"`, `"filled"`, `"filled-outlined"`, `"outlined"`, `"plain"`.
-#' Defaults to `outlined` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param orientation Renders the card's orientation * Must be one of
-#' `"horizontal"`, `"vertical"`. Defaults to `vertical` when omitted.
+#' @param appearance Enumerated string. Allowed values: `accent`,
+#' `filled`, `filled-outlined`, `outlined`, `plain`. Default: `outlined`.
+#' The card's visual appearance.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param orientation Enumerated string. Allowed values: `horizontal`,
+#' `vertical`. Default: `vertical`. Renders the card's orientation *
 #' @param actions An optional actions section to render at the end for the
 #' horizontal card.
 #' @param footer An optional footer for the card.

@@ -10,16 +10,13 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param disabled Disables the tree item. Defaults to `false` when
-#' omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param expanded Expands the tree item. Defaults to `false` when
-#' omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param lazy Enables lazy loading behavior. Defaults to `false` when
-#' omitted.
-#' @param selected Draws the tree item in a selected state. Defaults to
-#' `false` when omitted.
+#' @param disabled Boolean. Default: `FALSE`. Disables the tree item.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param expanded Boolean. Default: `FALSE`. Expands the tree item.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param lazy Boolean. Default: `FALSE`. Enables lazy loading behavior.
+#' @param selected Boolean. Default: `FALSE`. Draws the tree item in a
+#' selected state.
 #' @param collapse_icon The icon to show when the tree item is collapsed.
 #' @param expand_icon The icon to show when the tree item is expanded.
 #'

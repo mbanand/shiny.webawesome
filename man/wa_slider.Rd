@@ -65,62 +65,62 @@ update_wa_slider(
 
 \item{hint}{Optional hint text to send to the component.}
 
-\item{name}{The name of the slider. This will be submitted with the
-form as a name/value pair. Defaults to \code{null} when omitted.}
+\item{name}{String. Default: \code{null}. The name of the slider. This will
+be submitted with the form as a name/value pair.}
 
-\item{autofocus}{Tells the browser to focus the slider when the page
-loads or a dialog is shown.}
+\item{autofocus}{Boolean. Tells the browser to focus the slider when
+the page loads or a dialog is shown.}
 
-\item{custom_error}{Optional Web Awesome attribute. Defaults to \code{null}
-when omitted.}
+\item{custom_error}{String. Default: \code{null}. Optional Web Awesome
+attribute.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{indicator_offset}{The starting value from which to draw the
-slider's fill, which is based on its current value.}
+\item{indicator_offset}{Number. The starting value from which to draw
+the slider's fill, which is based on its current value.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{max}{The maximum value allowed. Defaults to \code{100} when omitted.}
+\item{max}{Number. Default: \code{100}. The maximum value allowed.}
 
-\item{max_value}{The maximum value of a range selection. Used only when
-range attribute is set. Defaults to \code{50} when omitted.}
+\item{max_value}{Number. Default: \code{50}. The maximum value of a range
+selection. Used only when range attribute is set.}
 
-\item{min}{The minimum value allowed. Defaults to \code{0} when omitted.}
+\item{min}{Number. Default: \code{0}. The minimum value allowed.}
 
-\item{min_value}{The minimum value of a range selection. Used only when
-range attribute is set. Defaults to \code{0} when omitted.}
+\item{min_value}{Number. Default: \code{0}. The minimum value of a range
+selection. Used only when range attribute is set.}
 
-\item{orientation}{The orientation of the slider. Must be one of
-\code{"horizontal"}, \code{"vertical"}. Defaults to \code{horizontal} when omitted.}
+\item{orientation}{Enumerated string. Allowed values: \code{horizontal},
+\code{vertical}. Default: \code{horizontal}. The orientation of the slider.}
 
-\item{range}{Converts the slider to a range slider with two thumbs.
-Defaults to \code{false} when omitted.}
+\item{range}{Boolean. Default: \code{FALSE}. Converts the slider to a range
+slider with two thumbs.}
 
-\item{readonly}{Makes the slider a read-only field. Defaults to \code{false}
-when omitted.}
+\item{readonly}{Boolean. Default: \code{FALSE}. Makes the slider a read-only
+field.}
 
-\item{required}{Makes the slider a required field. Defaults to \code{false}
-when omitted.}
+\item{required}{Boolean. Default: \code{FALSE}. Makes the slider a required
+field.}
 
-\item{size}{The slider's size. Must be one of \code{"large"}, \code{"medium"},
-\code{"small"}. Defaults to \code{medium} when omitted.}
+\item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
+\code{small}. Default: \code{medium}. The slider's size.}
 
-\item{step}{The granularity the value must adhere to when incrementing
-and decrementing. Defaults to \code{1} when omitted.}
+\item{step}{Number. Default: \code{1}. The granularity the value must adhere
+to when incrementing and decrementing.}
 
-\item{tooltip_distance}{The distance of the tooltip from the slider's
-thumb. Defaults to \code{8} when omitted.}
+\item{tooltip_distance}{Number. Default: \code{8}. The distance of the
+tooltip from the slider's thumb.}
 
-\item{tooltip_placement}{The placement of the tooltip in reference to
-the slider's thumb. Must be one of \code{"bottom"}, \code{"left"}, \code{"right"},
-\code{"top"}. Defaults to \code{top} when omitted.}
+\item{tooltip_placement}{Enumerated string. Allowed values: \code{bottom},
+\code{left}, \code{right}, \code{top}. Default: \code{top}. The placement of the tooltip in
+reference to the slider's thumb.}
 
-\item{with_markers}{Draws markers at each step along the slider.
-Defaults to \code{false} when omitted.}
+\item{with_markers}{Boolean. Default: \code{FALSE}. Draws markers at each
+step along the slider.}
 
-\item{with_tooltip}{Draws a tooltip above the thumb when the control
-has focus or is dragged. Defaults to \code{false} when omitted.}
+\item{with_tooltip}{Boolean. Default: \code{FALSE}. Draws a tooltip above
+the thumb when the control has focus or is dragged.}
 
 \item{hint_slot}{Text that describes how to use the input.
 Alternatively, you can use the \code{hint} attribute. instead.}
@@ -140,8 +140,13 @@ Invisibly returns \code{NULL}.
 }
 \description{
 \if{html}{\out{<wa-slider>}} When used as a Shiny input, \verb{input$<input_id>} reflects the
-component's current value.
+component's current \code{value} value.
 Generated from Web Awesome metadata.
 
 Generated update helper for the Web Awesome \code{wa-slider} component.
 }
+\section{Shiny Bindings}{
+
+\verb{input$<input_id>} reflects the component's current \code{value} value.
+}
+

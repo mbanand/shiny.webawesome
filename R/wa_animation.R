@@ -10,37 +10,38 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param name The name of the built-in animation to use. For custom
-#' animations, use the `keyframes` prop. Defaults to `none` when omitted.
-#' @param delay The number of milliseconds to delay the start of the
-#' animation. Defaults to `0` when omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param direction Determines the direction of playback as well as the
-#' behavior when reaching the end of an iteration. Learn more Defaults to
-#' `normal` when omitted.
-#' @param duration The number of milliseconds each iteration of the
-#' animation takes to complete. Defaults to `1000` when omitted.
-#' @param easing The easing function to use for the animation. This can be
-#' a Web Awesome easing function or a custom easing function such as
-#' `cubic-bezier(0, 1, .76, 1.14)`. Defaults to `linear` when omitted.
-#' @param end_delay The number of milliseconds to delay after the active
-#' period of an animation sequence. Defaults to `0` when omitted.
-#' @param fill Sets how the animation applies styles to its target before
-#' and after its execution. Defaults to `auto` when omitted.
-#' @param iteration_start The offset at which to start the animation,
-#' usually between 0 (start) and 1 (end). Defaults to `0` when omitted.
-#' @param iterations The number of iterations to run before the animation
-#' completes. Defaults to `Infinity`, which loops. Defaults to `Infinity`
-#' when omitted.
-#' @param lang Optional Web Awesome attribute.
-#' @param play Plays the animation. When omitted, the animation will be
-#' paused. This attribute will be automatically removed when the animation
-#' finishes or gets canceled. Defaults to `false` when omitted.
-#' @param playback_rate Sets the animation's playback rate. The default is
-#' `1`, which plays the animation at a normal speed. Setting this to `2`,
-#' for example, will double the animation's speed. A negative value can be
-#' used to reverse the animation. This value can be changed without
-#' causing the animation to restart. Defaults to `1` when omitted.
+#' @param name String. Default: `none`. The name of the built-in animation
+#' to use. For custom animations, use the `keyframes` prop.
+#' @param delay Number. Default: `0`. The number of milliseconds to delay
+#' the start of the animation.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param direction Default: `'normal'`. Determines the direction of
+#' playback as well as the behavior when reaching the end of an iteration.
+#' Learn more
+#' @param duration Number. Default: `1000`. The number of milliseconds
+#' each iteration of the animation takes to complete.
+#' @param easing String. Default: `linear`. The easing function to use for
+#' the animation. This can be a Web Awesome easing function or a custom
+#' easing function such as `cubic-bezier(0, 1, .76, 1.14)`.
+#' @param end_delay Number. Default: `0`. The number of milliseconds to
+#' delay after the active period of an animation sequence.
+#' @param fill Default: `'auto'`. Sets how the animation applies styles to
+#' its target before and after its execution.
+#' @param iteration_start Number. Default: `0`. The offset at which to
+#' start the animation, usually between 0 (start) and 1 (end).
+#' @param iterations Number. Default: `Infinity`. The number of iterations
+#' to run before the animation completes. Defaults to `Infinity`, which
+#' loops.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param play Boolean. Default: `FALSE`. Plays the animation. When
+#' omitted, the animation will be paused. This attribute will be
+#' automatically removed when the animation finishes or gets canceled.
+#' @param playback_rate Number. Default: `1`. Sets the animation's
+#' playback rate. The default is `1`, which plays the animation at a
+#' normal speed. Setting this to `2`, for example, will double the
+#' animation's speed. A negative value can be used to reverse the
+#' animation. This value can be changed without causing the animation to
+#' restart.
 #'
 #' @return An HTML tag for the component.
 #'

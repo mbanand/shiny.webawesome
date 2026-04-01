@@ -10,21 +10,20 @@
 #' @param id Optional DOM id attribute for HTML, CSS, and JS targeting.
 #' @param class Optional CSS class string.
 #' @param style Optional inline CSS style string.
-#' @param value An optional value for the menu item. This is useful for
-#' determining which item was selected when listening to the dropdown's
-#' `wa-select` event.
-#' @param checked Set to true to check the dropdown item. Only valid when
-#' `type` is `checkbox`. Defaults to `false` when omitted.
-#' @param disabled Disables the dropdown item. Defaults to `false` when
-#' omitted.
-#' @param dir Optional Web Awesome attribute.
-#' @param lang Optional Web Awesome attribute.
-#' @param submenu_open Whether the submenu is currently open. Defaults to
-#' `false` when omitted.
-#' @param type Set to `checkbox` to make the item a checkbox. Must be one
-#' of `"checkbox"`, `"normal"`. Defaults to `normal` when omitted.
-#' @param variant The type of menu item to render. Must be one of
-#' `"danger"`, `"default"`. Defaults to `default` when omitted.
+#' @param value String. An optional value for the menu item. This is
+#' useful for determining which item was selected when listening to the
+#' dropdown's `wa-select` event.
+#' @param checked Boolean. Default: `FALSE`. Set to TRUE to check the
+#' dropdown item. Only valid when `type` is `checkbox`.
+#' @param disabled Boolean. Default: `FALSE`. Disables the dropdown item.
+#' @param dir String. Optional Web Awesome attribute.
+#' @param lang String. Optional Web Awesome attribute.
+#' @param submenu_open Boolean. Default: `FALSE`. Whether the submenu is
+#' currently open.
+#' @param type Enumerated string. Allowed values: `checkbox`, `normal`.
+#' Default: `normal`. Set to `checkbox` to make the item a checkbox.
+#' @param variant Enumerated string. Allowed values: `danger`, `default`.
+#' Default: `default`. The type of menu item to render.
 #' @param details Additional content or details to display after the
 #' label.
 #' @param icon An optional icon to display before the label.

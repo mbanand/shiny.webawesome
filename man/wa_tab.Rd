@@ -24,16 +24,15 @@ wa_tab(
 
 \item{style}{Optional inline CSS style string.}
 
-\item{disabled}{Disables the tab and prevents selection. Defaults to
-\code{false} when omitted.}
+\item{disabled}{Boolean. Default: \code{FALSE}. Disables the tab and
+prevents selection.}
 
-\item{dir}{Optional Web Awesome attribute.}
+\item{dir}{String. Optional Web Awesome attribute.}
 
-\item{lang}{Optional Web Awesome attribute.}
+\item{lang}{String. Optional Web Awesome attribute.}
 
-\item{panel}{The name of the tab panel this tab is associated with. The
-panel must be located in the same tab group. Defaults to `` when
-omitted.}
+\item{panel}{String. Default: \code{""}. The name of the tab panel this tab
+is associated with. The panel must be located in the same tab group.}
 }
 \value{
 An HTML tag for the component.
