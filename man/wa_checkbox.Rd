@@ -37,11 +37,11 @@ the rendered DOM \code{id} attribute.}
 \item{value}{String. The value of the checkbox, submitted as a
 name/value pair with form data.}
 
-\item{checked}{Boolean. The default value of the form control.
-Primarily used for resetting the form control. This wrapper argument
-sets the HTML \code{checked} attribute, which maps to the component's
-\code{defaultChecked} field/property rather than its live \code{checked}
-property.}
+\item{checked}{Boolean. Default: \code{FALSE}. The default value of the form
+control. Primarily used for resetting the form control. This wrapper
+argument sets the HTML \code{checked} attribute, which maps to the
+component's \code{defaultChecked} field/property rather than its live
+\code{checked} property.}
 
 \item{disabled}{Boolean. Default: \code{FALSE}. Disables the checkbox.}
 
@@ -80,11 +80,12 @@ An HTML tag for the component.
 \description{
 Generated wrapper for the Web Awesome \code{wa-checkbox} component. When
 used as a Shiny input, \verb{input$<input_id>} reflects the component's
-current \code{value} value.
+current \code{value} value. The Shiny value is returned as a logical value.
 Generated from Web Awesome metadata.
 }
 \section{Shiny Bindings}{
 
-\verb{input$<input_id>} reflects the component's current \code{value} value.
+\verb{input$<input_id>} reflects the component's current \code{value} value. The
+Shiny value is returned as a logical value.
 }
 

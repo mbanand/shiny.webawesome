@@ -10,7 +10,8 @@
 #' on every selection, including repeated selection of the same item. The
 #' companion value input reflects the selected item's `value`, returns
 #' `NULL` when the selected item has no `value`, and preserves an explicit
-#' empty string `""` when that is the selected item's value.
+#' empty string `""` when that is the selected item's value. Each
+#' committed action publishes a numeric action value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -38,12 +39,14 @@
 #'
 #' @section Shiny Bindings:
 #' `input$<input_id>` uses action semantics and invalidates on each
-#' committed action, including repeated selection of the same item.
+#' committed action, including repeated selection of the same item. The
+#' Shiny action value is returned as a numeric action value.
 #'
 #' `input$<input_id>_value` reflects the latest selected item's `value`
 #' value, returns `NULL` when the selected item has no `value` , and
 #' preserves an explicit empty string `""` when that is the selected
-#' item's value.
+#' item's value. The payload value is returned as a character string or
+#' `NULL`.
 #'
 #' @return An HTML tag for the component.
 #'

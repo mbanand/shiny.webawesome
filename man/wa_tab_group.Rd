@@ -56,12 +56,13 @@ An HTML tag for the component.
 \description{
 Generated wrapper for the Web Awesome \code{wa-tab-group} component. When
 used as a Shiny input, \verb{input$<input_id>} reflects the component's
-current semantic \code{active} state.
+current semantic \code{active} state. The Shiny value is returned as a
+character string.
 Generated from Web Awesome metadata.
 }
 \section{Shiny Bindings}{
 
 \verb{input$<input_id>} reflects the component's current semantic \code{active}
-state.
+state. The Shiny value is returned as a character string.
 }
 

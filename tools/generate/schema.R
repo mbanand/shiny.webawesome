@@ -252,6 +252,11 @@
   } else {
     binding_override$wrapper_warning
   }
+  binding_doc_note <- if (is.null(binding_override)) {
+    NA_character_
+  } else {
+    binding_override$doc_note
+  }
   binding_policy_reason <- if (is.null(binding_override)) {
     NA_character_
   } else {
@@ -312,6 +317,7 @@
     binding_payload_field = binding_payload_field,
     binding_js_warning = binding_js_warning,
     binding_wrapper_warning = binding_wrapper_warning,
+    binding_doc_note = binding_doc_note,
     binding_source = if (is.null(binding_override)) "metadata" else "policy",
     update = has_update,
     reasons = list(
@@ -324,7 +330,8 @@
       binding_value_kind = binding_value_kind,
       binding_value_field = binding_value_field,
       binding_js_warning = binding_js_warning,
-      binding_wrapper_warning = binding_wrapper_warning
+      binding_wrapper_warning = binding_wrapper_warning,
+      binding_doc_note = binding_doc_note
     )
   )
 }

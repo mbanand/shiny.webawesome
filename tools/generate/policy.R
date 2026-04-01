@@ -98,6 +98,25 @@
   .scalar_string(value, fallback = NA_character_)
 }
 
+# Return one normalized binding documentation note key.
+.normalize_binding_doc_note_key <- function(value) {
+  key <- .scalar_string(value, fallback = NA_character_)
+
+  if (is.na(key) || !nzchar(key)) {
+    return(NA_character_)
+  }
+
+  if (!key %in% c("zero_based_index")) {
+    stop(
+      "Unsupported binding documentation note key: ",
+      key,
+      call. = FALSE
+    )
+  }
+
+  key
+}
+
 # Return the known runtime warning-registry keys from package source.
 .known_warning_registry_keys <- function(root) {
   registry_path <- file.path(root, .warning_registry_file())
@@ -198,6 +217,7 @@
       payload_field <- .normalize_binding_payload_field(binding$payload_field)
       js_warning <- .normalize_binding_warning_key(binding$js_warning)
       wrapper_warning <- .normalize_binding_warning_key(binding$wrapper_warning)
+      doc_note <- .normalize_binding_doc_note_key(binding$doc_note)
       rationale <- .scalar_string(binding$rationale, fallback = NA_character_)
 
       if (is.na(tag)) {
@@ -289,6 +309,7 @@
           payload_field = payload_field,
           js_warning = js_warning,
           wrapper_warning = wrapper_warning,
+          doc_note = doc_note,
           rationale = rationale
         )
       )

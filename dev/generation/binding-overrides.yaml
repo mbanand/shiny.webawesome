@@ -21,6 +21,7 @@
 #         payload_field: <field-or-extractor-key>     # action_with_payload only
 #         js_warning: <warning-registry-key>          # optional, semantic mode
 #         wrapper_warning: <warning-registry-key>     # optional, semantic mode
+#         doc_note: <known-doc-note-key>              # optional generated doc note
 #         rationale: <short maintainer note>
 #
 # Field rules:
@@ -41,6 +42,8 @@
 # - `binding.wrapper_warning` is optional and should reference a known package
 #   runtime warning-registry key for wrapper-side structural warnings, not
 #   arbitrary warning text.
+# - `binding.doc_note` is optional and should reference a known generated
+#   documentation note key, not arbitrary prose.
 # - `binding.rationale` should briefly explain why metadata alone is not the
 #   right source of truth for this binding decision.
 #
@@ -60,6 +63,8 @@
 # - `selectedItemIds` with `value_kind: custom` for `wa-tree`
 # Current action-with-payload extractor keys:
 # - `selectedItemValue` with `payload_kind: custom` for `wa-dropdown`
+# Current generated doc note keys:
+# - `zero_based_index` for values exposed as 0-based indices
 #
 schema_version: 1
 
@@ -82,6 +87,7 @@ components:
       event: wa-slide-change
       value_kind: property
       value_field: activeSlide
+      doc_note: zero_based_index
       rationale: Carousel slide changes represent committed component state that can drive Shiny outputs.
   - tag: wa-details
     binding:

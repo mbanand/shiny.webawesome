@@ -17,7 +17,11 @@ source(file.path("..", "..", "report_components.R"))
 }
 
 .create_fake_repo <- function(root, version = "3.3.1") {
-  dir.create(file.path(root, "projectdocs"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(
+    file.path(root, "projectdocs"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
   dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
   .write_file(file.path(root, "DESCRIPTION"), "Package: fake")
   .write_file(

@@ -17,6 +17,13 @@ source(file.path("..", "..", "generate_components.R"))
   )
 }
 
+.collapse_doc_text <- function(lines) {
+  text <- paste(lines, collapse = " ")
+  text <- gsub("#' ?", "", text)
+  text <- gsub("[[:space:]]+", " ", text)
+  trimws(text)
+}
+
 .create_fake_repo <- function(root, version = "3.3.1") {
   dir.create(file.path(root, "projectdocs"), recursive = TRUE, showWarnings = FALSE)
   dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
@@ -63,6 +70,7 @@ source(file.path("..", "..", "generate_components.R"))
       "      event: wa-slide-change",
       "      value_kind: property",
       "      value_field: activeSlide",
+      "      doc_note: zero_based_index",
       "      rationale: Carousel slide changes represent committed component state.",
       "  - tag: wa-details",
       "    binding:",
@@ -473,6 +481,7 @@ testthat::test_that("generate builds deterministic intermediate schema", {
   testthat::expect_equal(carousel$classification$binding_event, "wa-slide-change")
   testthat::expect_equal(carousel$classification$binding_value_kind, "property")
   testthat::expect_equal(carousel$classification$binding_value_field, "activeSlide")
+  testthat::expect_equal(carousel$classification$binding_doc_note, "zero_based_index")
   testthat::expect_equal(carousel$classification$binding_source, "policy")
   testthat::expect_match(
     carousel$classification$reasons$binding_policy_reason,
@@ -603,6 +612,40 @@ testthat::test_that("generate fails fast on unknown policy warning keys", {
   )
 })
 
+testthat::test_that("generate fails fast on unknown binding doc note keys", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+  .create_fake_metadata(root)
+  .create_fake_binding_policy(root)
+
+  .write_file(
+    file.path(root, "dev", "generation", "binding-overrides.yaml"),
+    c(
+      "schema_version: 1",
+      "",
+      "components:",
+      "  - tag: wa-carousel",
+      "    binding:",
+      "      mode: semantic",
+      "      event: wa-slide-change",
+      "      value_kind: property",
+      "      value_field: activeSlide",
+      "      doc_note: unsupported_note_key",
+      "      rationale: Carousel slide changes represent committed component state."
+    )
+  )
+
+  testthat::expect_error(
+    generate_components(
+      root = root,
+      filter = "wa-carousel",
+      emit = FALSE,
+      verbose = FALSE
+    ),
+    regexp = "Unsupported binding documentation note key: unsupported_note_key"
+  )
+})
+
 testthat::test_that("generate fails fast on incomplete action-with-payload policy", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
@@ -717,6 +760,10 @@ testthat::test_that("generate writes debug artifacts when requested", {
   testthat::expect_equal(
     schema_debug$components[["wa-carousel"]]$classification$binding_value_field,
     "activeSlide"
+  )
+  testthat::expect_equal(
+    schema_debug$components[["wa-carousel"]]$classification$binding_doc_note,
+    "zero_based_index"
   )
   testthat::expect_equal(
     unlist(schema_debug$components[["wa-details"]]$classification$binding_events),
@@ -920,10 +967,19 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     file.path(root, "R", "wa_carousel.R"),
     warn = FALSE
   )
+  carousel_text <- .collapse_doc_text(carousel_wrapper)
   testthat::expect_true(any(grepl(
     "@param input_id Shiny input id for the component\\.",
     carousel_wrapper
   )))
+  testthat::expect_match(
+    carousel_text,
+    "The Shiny value is returned as a numeric value\\."
+  )
+  testthat::expect_match(
+    carousel_text,
+    "This index is 0-based\\."
+  )
   testthat::expect_true(any(grepl(
     "^wa_carousel <- function\\($",
     carousel_wrapper
@@ -990,6 +1046,7 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     file.path(root, "R", "wa_dropdown.R"),
     warn = FALSE
   )
+  dropdown_text <- .collapse_doc_text(dropdown_wrapper)
   testthat::expect_true(any(grepl(
     "@param input_id Shiny input id for the component\\.",
     dropdown_wrapper
@@ -1006,6 +1063,15 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     "action semantics",
     dropdown_wrapper
   )))
+  testthat::expect_match(
+    dropdown_text,
+    "The Shiny action value is returned as a numeric action value\\."
+  )
+  testthat::expect_match(
+    dropdown_text,
+    "The payload value is returned as a character string or `NULL`.",
+    fixed = TRUE
+  )
   testthat::expect_true(any(grepl(
     "returns `NULL` when the selected item has no `value`",
     dropdown_wrapper,
@@ -1018,6 +1084,7 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   )))
 
   select_wrapper <- readLines(file.path(root, "R", "wa_select.R"), warn = FALSE)
+  select_text <- .collapse_doc_text(select_wrapper)
   testthat::expect_true(any(grepl(
     "@param input_id Shiny input id for the component\\.",
     select_wrapper
@@ -1026,10 +1093,14 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     "@section Shiny Bindings:",
     select_wrapper
   )))
-  testthat::expect_true(any(grepl(
-    "reflects the component's current value\\.",
-    select_wrapper
-  )))
+  testthat::expect_match(
+    select_text,
+    paste(
+      "The Shiny value is returned as a character string for single-select",
+      "usage, or a character vector when `multiple` is `TRUE`."
+    ),
+    fixed = TRUE
+  )
   testthat::expect_true(any(grepl(
     "^wa_select <- function\\($",
     select_wrapper
@@ -1091,6 +1162,7 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
   ]]
   checkbox_doc <- .wrapper_attr_param_doc(checkbox_component, checkbox_attr)
   testthat::expect_match(checkbox_doc, "Boolean\\.")
+  testthat::expect_match(checkbox_doc, "Default: `FALSE`.", fixed = TRUE)
   testthat::expect_match(checkbox_doc, "HTML `checked` attribute", fixed = TRUE)
   testthat::expect_match(checkbox_doc, "`defaultChecked`", fixed = TRUE)
   testthat::expect_match(
@@ -1211,6 +1283,7 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     file.path(root, "R", "wa_tree.R"),
     warn = FALSE
   )
+  tree_text <- .collapse_doc_text(tree_wrapper)
   testthat::expect_true(any(grepl(
     "return el.__shinyWebawesomeValue \\|\\| \\[\\];",
     tree_binding
@@ -1239,6 +1312,10 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     "selectable descendant",
     tree_wrapper
   )))
+  testthat::expect_match(
+    tree_text,
+    "The Shiny value is returned as a character vector\\."
+  )
 
   details_binding <- readLines(
     file.path(root, "inst", "bindings", "wa_details.js"),

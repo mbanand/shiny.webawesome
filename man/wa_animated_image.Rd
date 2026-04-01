@@ -34,8 +34,8 @@ devices.}
 
 \item{lang}{String. Optional Web Awesome attribute.}
 
-\item{play}{Boolean. Plays the animation. When this attribute is
-remove, the animation will pause.}
+\item{play}{Boolean. Default: \code{FALSE}. Plays the animation. When this
+attribute is remove, the animation will pause.}
 
 \item{src}{String. The path to the image to load.}
 

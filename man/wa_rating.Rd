@@ -64,11 +64,12 @@ An HTML tag for the component.
 \description{
 Generated wrapper for the Web Awesome \code{wa-rating} component. When used
 as a Shiny input, \verb{input$<input_id>} reflects the component's current
-\code{value} value.
+\code{value} value. The Shiny value is returned as a numeric value.
 Generated from Web Awesome metadata.
 }
 \section{Shiny Bindings}{
 
-\verb{input$<input_id>} reflects the component's current \code{value} value.
+\verb{input$<input_id>} reflects the component's current \code{value} value. The
+Shiny value is returned as a numeric value.
 }
 

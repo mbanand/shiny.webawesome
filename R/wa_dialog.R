@@ -5,7 +5,7 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-dialog` component. When used
 #' as a Shiny input, `input$<input_id>` reflects the component's current
-#' semantic `open` state.
+#' semantic `open` state. The Shiny value is returned as a logical value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -34,7 +34,7 @@
 #'
 #' @section Shiny Bindings:
 #' `input$<input_id>` reflects the component's current semantic `open`
-#' state.
+#' state. The Shiny value is returned as a logical value.
 #'
 #' @return An HTML tag for the component.
 #'

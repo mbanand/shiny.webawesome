@@ -53,13 +53,13 @@
 }
 
 # Return whether at least one fetched upstream Web Awesome dist-cdn exists.
-.has_fetched_webawesome_dist_cdn <- function(root) {
+.has_fetched_dist_cdn <- function(root) {
   length(.vendor_metadata_candidates(root)) > 0L
 }
 
 # Build the missing-input remediation message for the generate stage.
 .generate_input_error <- function(root, metadata_file) {
-  if (.has_fetched_webawesome_dist_cdn(root)) {
+  if (.has_fetched_dist_cdn(root)) {
     return(
       paste(
         "Generator metadata does not exist:",

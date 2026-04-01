@@ -48,14 +48,15 @@ An HTML tag for the component.
 \description{
 Generated wrapper for the Web Awesome \code{wa-tree} component. When used as
 a Shiny input, \verb{input$<input_id>} reflects the component's current
-semantic \code{selectedItemIds} state. For stable Shiny selection values,
-selectable descendant \code{wa-tree-item} elements should have DOM \code{id}
-attributes.
+semantic \code{selectedItemIds} state. The Shiny value is returned as a
+character vector. For stable Shiny selection values, selectable
+descendant \code{wa-tree-item} elements should have DOM \code{id} attributes.
 Generated from Web Awesome metadata.
 }
 \section{Shiny Bindings}{
 
 \verb{input$<input_id>} reflects the component's current semantic
-\code{selectedItemIds} state.
+\code{selectedItemIds} state. The Shiny value is returned as a character
+vector.
 }
 

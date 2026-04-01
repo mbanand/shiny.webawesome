@@ -5,7 +5,7 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-rating` component. When used
 #' as a Shiny input, `input$<input_id>` reflects the component's current
-#' `value` value.
+#' `value` value. The Shiny value is returned as a numeric value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -32,7 +32,8 @@
 #' `small`. Default: `medium`. The component's size.
 #'
 #' @section Shiny Bindings:
-#' `input$<input_id>` reflects the component's current `value` value.
+#' `input$<input_id>` reflects the component's current `value` value. The
+#' Shiny value is returned as a numeric value.
 #'
 #' @return An HTML tag for the component.
 #'

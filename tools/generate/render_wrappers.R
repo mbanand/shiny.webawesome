@@ -150,6 +150,9 @@
   default <- .scalar_string(attr$default, fallback = NA_character_)
   type_text <- .scalar_string(attr$type, fallback = "")
   is_string_like <- .is_string_type(type_text) || length(enum_values) > 0L
+  if ((is.na(default) || !nzchar(default)) && .is_boolean_type(type_text)) {
+    default <- "false"
+  }
 
   details <- c(.wrapper_attr_type_label(attr))
 
@@ -540,6 +543,215 @@
   )
 }
 
+# Return the configured binding documentation note key for one component.
+.component_binding_doc_note <- function(component) {
+  .scalar_string(
+    component$classification$binding_doc_note,
+    fallback = NA_character_
+  )
+}
+
+# Return one normalized type string for a component property by name.
+.component_property_type <- function(component, field_name) {
+  properties <- component$properties %||% list()
+
+  if (length(properties) == 0L) {
+    return(NA_character_)
+  }
+
+  matches <- properties[vapply(
+    properties,
+    function(prop) identical(prop$name, field_name),
+    logical(1)
+  )]
+
+  if (length(matches) == 0L) {
+    return(NA_character_)
+  }
+
+  .scalar_string(matches[[1]]$type, fallback = NA_character_)
+}
+
+# Return one normalized type string for a component attribute by name.
+.component_attribute_type <- function(component, field_name) {
+  attributes <- component$attributes %||% list()
+
+  if (length(attributes) == 0L) {
+    return(NA_character_)
+  }
+
+  matches <- attributes[vapply(
+    attributes,
+    function(attr) {
+      identical(attr$name, field_name) || identical(attr$field_name, field_name)
+    },
+    logical(1)
+  )]
+
+  if (length(matches) == 0L) {
+    return(NA_character_)
+  }
+
+  .scalar_string(matches[[1]]$type, fallback = NA_character_)
+}
+
+# Return one concise Shiny binding value-type phrase for one metadata type.
+.binding_value_type_phrase <- function(type_text) {
+  type_text <- .scalar_string(type_text, fallback = NA_character_)
+
+  if (is.na(type_text) || !nzchar(type_text)) {
+    return(NA_character_)
+  }
+
+  if (.is_boolean_type(type_text)) {
+    return("a logical value")
+  }
+
+  if (.is_number_type(type_text)) {
+    return("a numeric value")
+  }
+
+  if (
+    grepl("(^|[^[:alnum:]_])string\\s*\\[\\]", type_text) ||
+      grepl("Array\\s*<\\s*string\\s*>", type_text)
+  ) {
+    return("a character vector")
+  }
+
+  if (.is_string_type(type_text) || length(.enum_values(type_text)) > 0L) {
+    return("a character string")
+  }
+
+  NA_character_
+}
+
+# Return one concise Shiny binding value-type phrase for one component binding.
+.binding_value_doc_type <- function(component) {
+  binding_mode <- .scalar_string(
+    component$classification$binding_mode,
+    fallback = "none"
+  )
+
+  if (identical(binding_mode, "action")) {
+    return("a numeric action value")
+  }
+
+  if (identical(binding_mode, "action_with_payload")) {
+    return("a numeric action value")
+  }
+
+  if (identical(binding_mode, "semantic")) {
+    value_kind <- .scalar_string(
+      component$classification$binding_value_kind,
+      fallback = NA_character_
+    )
+    value_field <- .scalar_string(
+      component$classification$binding_value_field,
+      fallback = NA_character_
+    )
+
+    if (
+      identical(value_kind, "custom") &&
+        identical(value_field, "selectedItemIds")
+    ) {
+      return("a character vector")
+    }
+
+    if (identical(value_kind, "property")) {
+      return(.binding_value_type_phrase(
+        .component_property_type(component, value_field)
+      ))
+    }
+
+    if (identical(value_kind, "attribute")) {
+      return(.binding_value_type_phrase(
+        .component_attribute_type(component, value_field)
+      ))
+    }
+
+    return(NA_character_)
+  }
+
+  if (identical(binding_mode, "value")) {
+    if ("wa-select" == .scalar_string(component$tag_name, fallback = "")) {
+      return(
+        paste(
+          "a character string for single-select usage, or a character",
+          "vector when `multiple` is `TRUE`"
+        )
+      )
+    }
+
+    if (any(vapply(
+      component$properties %||% list(),
+      function(prop) identical(prop$name, "checked"),
+      logical(1)
+    ))) {
+      return("a logical value")
+    }
+
+    return(.binding_value_type_phrase(
+      .component_property_type(component, "value")
+    ))
+  }
+
+  NA_character_
+}
+
+# Return one concise Shiny payload type phrase for one action-with-payload binding.
+.binding_payload_doc_type <- function(component) {
+  payload_kind <- .scalar_string(
+    component$classification$binding_payload_kind,
+    fallback = NA_character_
+  )
+  payload_field <- .scalar_string(
+    component$classification$binding_payload_field,
+    fallback = NA_character_
+  )
+
+  if (
+    identical(payload_kind, "custom") &&
+      identical(payload_field, "selectedItemValue")
+  ) {
+    return("a character string or `NULL`")
+  }
+
+  if (identical(payload_kind, "property")) {
+    return(.binding_value_type_phrase(
+      .component_property_type(component, payload_field)
+    ))
+  }
+
+  if (identical(payload_kind, "attribute")) {
+    return(.binding_value_type_phrase(
+      .component_attribute_type(component, payload_field)
+    ))
+  }
+
+  NA_character_
+}
+
+# Return one optional binding documentation note sentence for one component.
+.binding_doc_note_text <- function(component) {
+  note_key <- .component_binding_doc_note(component)
+
+  if (is.na(note_key) || !nzchar(note_key)) {
+    return(NA_character_)
+  }
+
+  if (identical(note_key, "zero_based_index")) {
+    return("This index is 0-based.")
+  }
+
+  stop(
+    "Unsupported binding documentation note for ",
+    component$tag_name,
+    ": ",
+    note_key,
+    call. = FALSE
+  )
+}
+
 # Return any wrapper-side warning hook code for one wrapper.
 .render_wrapper_warnings <- function(component) {
   warning_key <- .component_wrapper_warning(component)
@@ -580,7 +792,8 @@
   notes <- character()
 
   if (identical(binding_mode, "action_with_payload")) {
-    notes <- c(notes, paste(
+    value_type <- .binding_value_doc_type(component)
+    note <- paste(
       "When used as a Shiny input,",
       "action semantics are exposed through",
       paste0("`input$", "<input_id>", "`"),
@@ -591,46 +804,106 @@
       "selected item's `value`, returns `NULL` when the selected item has",
       "no `value`, and preserves an explicit empty string `\"\"` when that",
       "is the selected item's value."
-    ))
+    )
+    if (!is.na(value_type) && nzchar(value_type)) {
+      note <- paste(
+        note,
+        "Each committed action publishes",
+        paste0(value_type, ".")
+      )
+    }
+    notes <- c(notes, note)
   } else if (identical(binding_mode, "action")) {
-    notes <- c(notes, paste(
+    value_type <- .binding_value_doc_type(component)
+    note <- paste(
       "When used as a Shiny input,",
       "the component exposes action semantics through",
       paste0("`input$", "<input_id>", "`."),
       "The Shiny input invalidates on each committed action rather than",
       "publishing a durable value payload."
-    ))
+    )
+    if (!is.na(value_type) && nzchar(value_type)) {
+      note <- paste(
+        note,
+        "Each committed action publishes",
+        paste0(value_type, ".")
+      )
+    }
+    notes <- c(notes, note)
   } else if (identical(binding_mode, "semantic")) {
+    value_type <- .binding_value_doc_type(component)
+    note_text <- .binding_doc_note_text(component)
+
     if (!is.na(binding_value_field) && nzchar(binding_value_field)) {
-      notes <- c(notes, paste(
+      note <- paste(
         "When used as a Shiny input,",
         paste0("`input$", "<input_id>", "`"),
         "reflects the component's current semantic",
         paste0("`", binding_value_field, "`"),
         "state."
-      ))
+      )
+      if (!is.na(value_type) && nzchar(value_type)) {
+        note <- paste(
+          note,
+          "The Shiny value is returned as",
+          paste0(value_type, ".")
+        )
+      }
+      if (!is.na(note_text) && nzchar(note_text)) {
+        note <- paste(note, note_text)
+      }
+      notes <- c(notes, note)
     } else {
-      notes <- c(notes, paste(
+      note <- paste(
         "When used as a Shiny input,",
         paste0("`input$", "<input_id>", "`"),
         "reflects the component's current committed semantic state."
-      ))
+      )
+      if (!is.na(value_type) && nzchar(value_type)) {
+        note <- paste(
+          note,
+          "The Shiny value is returned as",
+          paste0(value_type, ".")
+        )
+      }
+      if (!is.na(note_text) && nzchar(note_text)) {
+        note <- paste(note, note_text)
+      }
+      notes <- c(notes, note)
     }
   } else if (identical(binding_mode, "value")) {
+    value_type <- .binding_value_doc_type(component)
+
     if (!is.na(binding_value_field) && nzchar(binding_value_field)) {
-      notes <- c(notes, paste(
+      note <- paste(
         "When used as a Shiny input,",
         paste0("`input$", "<input_id>", "`"),
         "reflects the component's current",
         paste0("`", binding_value_field, "`"),
         "value."
-      ))
+      )
+      if (!is.na(value_type) && nzchar(value_type)) {
+        note <- paste(
+          note,
+          "The Shiny value is returned as",
+          paste0(value_type, ".")
+        )
+      }
+      notes <- c(notes, note)
     } else {
-      notes <- c(notes, paste(
+      note <- paste(
         "When used as a Shiny input,",
         paste0("`input$", "<input_id>", "`"),
         "reflects the component's current value."
-      ))
+      )
+      if (!is.na(value_type) && nzchar(value_type)) {
+        note <- paste(
+          note,
+          "The Shiny value is returned as",
+          paste0(value_type, ".")
+        )
+      }
+      notes <- c(notes, note)
     }
   }
 
@@ -671,62 +944,141 @@
   }
 
   if (identical(binding_mode, "action_with_payload")) {
-    return(c(
-      paste(
-        paste0("`input$", "<input_id>", "`"),
-        "uses action semantics and invalidates on each committed action,",
-        "including repeated selection of the same item."
-      ),
-      paste(
-        paste0("`input$", "<input_id>_value", "`"),
-        "reflects the latest selected item's",
-        paste0("`", binding_value_field, "`"),
-        "value, returns `NULL` when the selected item has no",
-        paste0("`", binding_value_field, "`"),
-        ", and preserves an explicit empty string `\"\"` when that is",
-        "the selected item's value."
+    value_type <- .binding_value_doc_type(component)
+    payload_type <- .binding_payload_doc_type(component)
+
+    action_sentence <- paste(
+      paste0("`input$", "<input_id>", "`"),
+      "uses action semantics and invalidates on each committed action,",
+      "including repeated selection of the same item."
+    )
+    if (!is.na(value_type) && nzchar(value_type)) {
+      action_sentence <- paste(
+        action_sentence,
+        "The Shiny action value is returned as",
+        paste0(value_type, ".")
       )
+    }
+
+    payload_sentence <- paste(
+      paste0("`input$", "<input_id>_value", "`"),
+      "reflects the latest selected item's",
+      paste0("`", binding_value_field, "`"),
+      "value, returns `NULL` when the selected item has no",
+      paste0("`", binding_value_field, "`"),
+      ", and preserves an explicit empty string `\"\"` when that is",
+      "the selected item's value."
+    )
+    if (!is.na(payload_type) && nzchar(payload_type)) {
+      payload_sentence <- paste(
+        payload_sentence,
+        "The payload value is returned as",
+        paste0(payload_type, ".")
+      )
+    }
+
+    return(c(
+      action_sentence,
+      payload_sentence
     ))
   }
 
   if (identical(binding_mode, "action")) {
-    return(paste(
+    value_type <- .binding_value_doc_type(component)
+
+    paragraph <- paste(
       paste0("`input$", "<input_id>", "`"),
       "uses action semantics and invalidates on each committed action",
       "rather than publishing a durable value payload."
-    ))
+    )
+    if (!is.na(value_type) && nzchar(value_type)) {
+      paragraph <- paste(
+        paragraph,
+        "The Shiny action value is returned as",
+        paste0(value_type, ".")
+      )
+    }
+
+    return(paragraph)
   }
 
   if (identical(binding_mode, "semantic")) {
+    value_type <- .binding_value_doc_type(component)
+    note_text <- .binding_doc_note_text(component)
+
     if (!is.na(binding_value_field) && nzchar(binding_value_field)) {
-      return(paste(
+      paragraph <- paste(
         paste0("`input$", "<input_id>", "`"),
         "reflects the component's current semantic",
         paste0("`", binding_value_field, "`"),
         "state."
-      ))
+      )
+      if (!is.na(value_type) && nzchar(value_type)) {
+        paragraph <- paste(
+          paragraph,
+          "The Shiny value is returned as",
+          paste0(value_type, ".")
+        )
+      }
+      if (!is.na(note_text) && nzchar(note_text)) {
+        paragraph <- paste(paragraph, note_text)
+      }
+
+      return(paragraph)
     }
 
-    return(paste(
+    paragraph <- paste(
       paste0("`input$", "<input_id>", "`"),
       "reflects the component's current committed semantic state."
-    ))
+    )
+    if (!is.na(value_type) && nzchar(value_type)) {
+      paragraph <- paste(
+        paragraph,
+        "The Shiny value is returned as",
+        paste0(value_type, ".")
+      )
+    }
+    if (!is.na(note_text) && nzchar(note_text)) {
+      paragraph <- paste(paragraph, note_text)
+    }
+
+    return(paragraph)
   }
 
   if (identical(binding_mode, "value")) {
+    value_type <- .binding_value_doc_type(component)
+
     if (!is.na(binding_value_field) && nzchar(binding_value_field)) {
-      return(paste(
+      paragraph <- paste(
         paste0("`input$", "<input_id>", "`"),
         "reflects the component's current",
         paste0("`", binding_value_field, "`"),
         "value."
-      ))
+      )
+      if (!is.na(value_type) && nzchar(value_type)) {
+        paragraph <- paste(
+          paragraph,
+          "The Shiny value is returned as",
+          paste0(value_type, ".")
+        )
+      }
+
+      return(paragraph)
     }
 
-    return(paste(
+    paragraph <- paste(
       paste0("`input$", "<input_id>", "`"),
       "reflects the component's current value."
-    ))
+    )
+    if (!is.na(value_type) && nzchar(value_type)) {
+      paragraph <- paste(
+        paragraph,
+        "The Shiny value is returned as",
+        paste0(value_type, ".")
+      )
+    }
+
+    return(paragraph)
   }
 
   character()

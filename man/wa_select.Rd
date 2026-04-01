@@ -136,13 +136,16 @@ Invisibly returns \code{NULL}.
 \description{
 Generated wrapper for the Web Awesome \code{wa-select} component. When used
 as a Shiny input, \verb{input$<input_id>} reflects the component's current
-\code{value} value.
+\code{value} value. The Shiny value is returned as a character string for
+single-select usage, or a character vector when \code{multiple} is \code{TRUE}.
 Generated from Web Awesome metadata.
 
 Generated update helper for the Web Awesome \code{wa-select} component.
 }
 \section{Shiny Bindings}{
 
-\verb{input$<input_id>} reflects the component's current \code{value} value.
+\verb{input$<input_id>} reflects the component's current \code{value} value. The
+Shiny value is returned as a character string for single-select usage,
+or a character vector when \code{multiple} is \code{TRUE}.
 }
 

@@ -30,8 +30,8 @@
 #' @param autocomplete String. Specifies what permission the browser has
 #' to provide assistance in filling out form field values. Refer to this
 #' page on MDN for available values.
-#' @param autofocus Boolean. Indicates that the input should receive focus
-#' on page load.
+#' @param autofocus Boolean. Default: `FALSE`. Indicates that the input
+#' should receive focus on page load.
 #' @param custom_error String. Default: `null`. Optional Web Awesome
 #' attribute.
 #' @param dir String. Optional Web Awesome attribute.

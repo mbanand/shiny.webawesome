@@ -87,12 +87,14 @@ An HTML tag for the component.
 \description{
 Generated wrapper for the Web Awesome \code{wa-carousel} component. When
 used as a Shiny input, \verb{input$<input_id>} reflects the component's
-current semantic \code{activeSlide} state.
+current semantic \code{activeSlide} state. The Shiny value is returned as a
+numeric value. This index is 0-based.
 Generated from Web Awesome metadata.
 }
 \section{Shiny Bindings}{
 
 \verb{input$<input_id>} reflects the component's current semantic
-\code{activeSlide} state.
+\code{activeSlide} state. The Shiny value is returned as a numeric value.
+This index is 0-based.
 }
 

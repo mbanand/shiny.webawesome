@@ -80,8 +80,8 @@ appearance.}
 to provide assistance in filling out form field values. Refer to this
 page on MDN for available values.}
 
-\item{autofocus}{Boolean. Indicates that the input should receive focus
-on page load.}
+\item{autofocus}{Boolean. Default: \code{FALSE}. Indicates that the input
+should receive focus on page load.}
 
 \item{custom_error}{String. Default: \code{null}. Optional Web Awesome
 attribute.}

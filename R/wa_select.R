@@ -5,7 +5,8 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-select` component. When used
 #' as a Shiny input, `input$<input_id>` reflects the component's current
-#' `value` value.
+#' `value` value. The Shiny value is returned as a character string for
+#' single-select usage, or a character vector when `multiple` is `TRUE`.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -66,7 +67,9 @@
 #' the combobox.
 #'
 #' @section Shiny Bindings:
-#' `input$<input_id>` reflects the component's current `value` value.
+#' `input$<input_id>` reflects the component's current `value` value. The
+#' Shiny value is returned as a character string for single-select usage,
+#' or a character vector when `multiple` is `TRUE`.
 #'
 #' @return An HTML tag for the component.
 #'

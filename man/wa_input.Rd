@@ -98,8 +98,8 @@ page on MDN for available values.}
 \item{autocorrect}{Enumerated string. Allowed values: \code{off}, \code{on}.
 Indicates whether the browser's autocorrect feature is on or off.}
 
-\item{autofocus}{Boolean. Indicates that the input should receive focus
-on page load.}
+\item{autofocus}{Boolean. Default: \code{FALSE}. Indicates that the input
+should receive focus on page load.}
 
 \item{custom_error}{String. Default: \code{null}. Optional Web Awesome
 attribute.}

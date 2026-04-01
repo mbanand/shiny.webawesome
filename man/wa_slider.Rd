@@ -68,8 +68,8 @@ update_wa_slider(
 \item{name}{String. Default: \code{null}. The name of the slider. This will
 be submitted with the form as a name/value pair.}
 
-\item{autofocus}{Boolean. Tells the browser to focus the slider when
-the page loads or a dialog is shown.}
+\item{autofocus}{Boolean. Default: \code{FALSE}. Tells the browser to focus
+the slider when the page loads or a dialog is shown.}
 
 \item{custom_error}{String. Default: \code{null}. Optional Web Awesome
 attribute.}
@@ -140,13 +140,15 @@ Invisibly returns \code{NULL}.
 }
 \description{
 \if{html}{\out{<wa-slider>}} When used as a Shiny input, \verb{input$<input_id>} reflects the
-component's current \code{value} value.
+component's current \code{value} value. The Shiny value is returned as a
+numeric value.
 Generated from Web Awesome metadata.
 
 Generated update helper for the Web Awesome \code{wa-slider} component.
 }
 \section{Shiny Bindings}{
 
-\verb{input$<input_id>} reflects the component's current \code{value} value.
+\verb{input$<input_id>} reflects the component's current \code{value} value. The
+Shiny value is returned as a numeric value.
 }
 

@@ -4,7 +4,8 @@
 #' Create a `wa-slider` component
 #'
 #' <wa-slider> When used as a Shiny input, `input$<input_id>` reflects the
-#' component's current `value` value.
+#' component's current `value` value. The Shiny value is returned as a
+#' numeric value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -23,8 +24,8 @@
 #' display HTML, use the hint slot instead.
 #' @param name String. Default: `null`. The name of the slider. This will
 #' be submitted with the form as a name/value pair.
-#' @param autofocus Boolean. Tells the browser to focus the slider when
-#' the page loads or a dialog is shown.
+#' @param autofocus Boolean. Default: `FALSE`. Tells the browser to focus
+#' the slider when the page loads or a dialog is shown.
 #' @param custom_error String. Default: `null`. Optional Web Awesome
 #' attribute.
 #' @param dir String. Optional Web Awesome attribute.
@@ -66,7 +67,8 @@
 #' the slider.
 #'
 #' @section Shiny Bindings:
-#' `input$<input_id>` reflects the component's current `value` value.
+#' `input$<input_id>` reflects the component's current `value` value. The
+#' Shiny value is returned as a numeric value.
 #'
 #' @return An HTML tag for the component.
 #'

@@ -35,8 +35,8 @@
 #' page on MDN for available values.
 #' @param autocorrect String. Indicates whether the browser's autocorrect
 #' feature is on or off.
-#' @param autofocus Boolean. Indicates that the input should receive focus
-#' on page load.
+#' @param autofocus Boolean. Default: `FALSE`. Indicates that the input
+#' should receive focus on page load.
 #' @param custom_error String. Default: `null`. Optional Web Awesome
 #' attribute.
 #' @param dir String. Optional Web Awesome attribute.

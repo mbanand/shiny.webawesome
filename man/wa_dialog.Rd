@@ -63,12 +63,12 @@ An HTML tag for the component.
 \description{
 Generated wrapper for the Web Awesome \code{wa-dialog} component. When used
 as a Shiny input, \verb{input$<input_id>} reflects the component's current
-semantic \code{open} state.
+semantic \code{open} state. The Shiny value is returned as a logical value.
 Generated from Web Awesome metadata.
 }
 \section{Shiny Bindings}{
 
 \verb{input$<input_id>} reflects the component's current semantic \code{open}
-state.
+state. The Shiny value is returned as a logical value.
 }
 

@@ -6,7 +6,8 @@
 #' Generated wrapper for the Web Awesome `wa-button` component. When used
 #' as a Shiny input, the component exposes action semantics through
 #' `input$<input_id>`. The Shiny input invalidates on each committed
-#' action rather than publishing a durable value payload.
+#' action rather than publishing a durable value payload. Each committed
+#' action publishes a numeric action value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -41,9 +42,9 @@
 #' Used to override the form owner's `method` attribute. This wrapper
 #' argument sets the HTML `formmethod` attribute, which maps to the
 #' component's `formMethod` field/property.
-#' @param formnovalidate Boolean. Used to override the form owner's
-#' `novalidate` attribute. This wrapper argument sets the HTML
-#' `formnovalidate` attribute, which maps to the component's
+#' @param formnovalidate Boolean. Default: `FALSE`. Used to override the
+#' form owner's `novalidate` attribute. This wrapper argument sets the
+#' HTML `formnovalidate` attribute, which maps to the component's
 #' `formNoValidate` field/property.
 #' @param formtarget Used to override the form owner's `target` attribute.
 #' This wrapper argument sets the HTML `formtarget` attribute, which maps
@@ -80,7 +81,8 @@
 #'
 #' @section Shiny Bindings:
 #' `input$<input_id>` uses action semantics and invalidates on each
-#' committed action rather than publishing a durable value payload.
+#' committed action rather than publishing a durable value payload. The
+#' Shiny action value is returned as a numeric action value.
 #'
 #' @return An HTML tag for the component.
 #'

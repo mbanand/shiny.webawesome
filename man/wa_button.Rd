@@ -83,9 +83,9 @@ Used to override the form owner's \code{method} attribute. This wrapper
 argument sets the HTML \code{formmethod} attribute, which maps to the
 component's \code{formMethod} field/property.}
 
-\item{formnovalidate}{Boolean. Used to override the form owner's
-\code{novalidate} attribute. This wrapper argument sets the HTML
-\code{formnovalidate} attribute, which maps to the component's
+\item{formnovalidate}{Boolean. Default: \code{FALSE}. Used to override the
+form owner's \code{novalidate} attribute. This wrapper argument sets the
+HTML \code{formnovalidate} attribute, which maps to the component's
 \code{formNoValidate} field/property.}
 
 \item{formtarget}{Used to override the form owner's \code{target} attribute.
@@ -141,12 +141,14 @@ An HTML tag for the component.
 Generated wrapper for the Web Awesome \code{wa-button} component. When used
 as a Shiny input, the component exposes action semantics through
 \verb{input$<input_id>}. The Shiny input invalidates on each committed
-action rather than publishing a durable value payload.
+action rather than publishing a durable value payload. Each committed
+action publishes a numeric action value.
 Generated from Web Awesome metadata.
 }
 \section{Shiny Bindings}{
 
 \verb{input$<input_id>} uses action semantics and invalidates on each
-committed action rather than publishing a durable value payload.
+committed action rather than publishing a durable value payload. The
+Shiny action value is returned as a numeric action value.
 }
 

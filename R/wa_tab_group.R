@@ -5,7 +5,8 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-tab-group` component. When
 #' used as a Shiny input, `input$<input_id>` reflects the component's
-#' current semantic `active` state.
+#' current semantic `active` state. The Shiny value is returned as a
+#' character string.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -31,7 +32,7 @@
 #'
 #' @section Shiny Bindings:
 #' `input$<input_id>` reflects the component's current semantic `active`
-#' state.
+#' state. The Shiny value is returned as a character string.
 #'
 #' @return An HTML tag for the component.
 #'

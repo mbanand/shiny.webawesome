@@ -65,17 +65,20 @@ exposed through \verb{input$<input_id>_value}. The action input increments
 on every selection, including repeated selection of the same item. The
 companion value input reflects the selected item's \code{value}, returns
 \code{NULL} when the selected item has no \code{value}, and preserves an explicit
-empty string \code{""} when that is the selected item's value.
+empty string \code{""} when that is the selected item's value. Each
+committed action publishes a numeric action value.
 Generated from Web Awesome metadata.
 }
 \section{Shiny Bindings}{
 
 \verb{input$<input_id>} uses action semantics and invalidates on each
-committed action, including repeated selection of the same item.
+committed action, including repeated selection of the same item. The
+Shiny action value is returned as a numeric action value.
 
 \verb{input$<input_id>_value} reflects the latest selected item's \code{value}
 value, returns \code{NULL} when the selected item has no \code{value} , and
 preserves an explicit empty string \code{""} when that is the selected
-item's value.
+item's value. The payload value is returned as a character string or
+\code{NULL}.
 }
 

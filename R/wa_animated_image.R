@@ -14,8 +14,8 @@
 #' devices.
 #' @param dir String. Optional Web Awesome attribute.
 #' @param lang String. Optional Web Awesome attribute.
-#' @param play Boolean. Plays the animation. When this attribute is
-#' remove, the animation will pause.
+#' @param play Boolean. Default: `FALSE`. Plays the animation. When this
+#' attribute is remove, the animation will pause.
 #' @param src String. The path to the image to load.
 #' @param pause_icon Optional pause icon to use instead of the default.
 #' Works best with `<wa-icon>`.

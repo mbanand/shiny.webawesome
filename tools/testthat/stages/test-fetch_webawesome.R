@@ -36,7 +36,11 @@ source(file.path("..", "..", "fetch_webawesome.R"))
 
 .create_fake_repo <- function(root, version = .repo_pinned_version()) {
   dir.create(file.path(root, "dev"), recursive = TRUE, showWarnings = FALSE)
-  dir.create(file.path(root, "projectdocs"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(
+    file.path(root, "projectdocs"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
   dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
   .write_file(file.path(root, "DESCRIPTION"), "Package: fake")
   .write_file(file.path(root, "dev", "webawesome-version.txt"), version)
@@ -113,7 +117,9 @@ testthat::test_that("fetch uses the pinned version by default", {
 
   testthat::expect_equal(result$version, pinned_version)
   testthat::expect_true(
-    dir.exists(file.path(root, "vendor", "webawesome", pinned_version, "dist-cdn"))
+    dir.exists(file.path(
+      root, "vendor", "webawesome", pinned_version, "dist-cdn"
+    ))
   )
   testthat::expect_true(
     file.exists(
@@ -146,10 +152,14 @@ testthat::test_that(
 
     testthat::expect_equal(result$target_dir, "vendor/webawesome/3.0.0-beta.5")
     testthat::expect_true(
-      file.exists(file.path(version_root, "dist-cdn", "components", "wa-button.js"))
+      file.exists(file.path(
+        version_root, "dist-cdn", "components", "wa-button.js"
+      ))
     )
     testthat::expect_true(
-      file.exists(file.path(version_root, "dist-cdn", "styles", "webawesome.css"))
+      file.exists(file.path(
+        version_root, "dist-cdn", "styles", "webawesome.css"
+      ))
     )
     testthat::expect_false(file.exists(file.path(version_root, "package")))
   }
@@ -173,10 +183,14 @@ testthat::test_that("fetch requires dist-cdn when the tarball provides both", {
 
   testthat::expect_equal(result$target_dir, "vendor/webawesome/3.0.0-beta.5")
   testthat::expect_true(
-    file.exists(file.path(version_root, "dist-cdn", "components", "from-dist-cdn.js"))
+    file.exists(file.path(
+      version_root, "dist-cdn", "components", "from-dist-cdn.js"
+    ))
   )
   testthat::expect_false(
-    file.exists(file.path(version_root, "dist-cdn", "components", "from-dist.js"))
+    file.exists(file.path(
+      version_root, "dist-cdn", "components", "from-dist.js"
+    ))
   )
 })
 

@@ -5,7 +5,7 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-checkbox` component. When
 #' used as a Shiny input, `input$<input_id>` reflects the component's
-#' current `value` value.
+#' current `value` value. The Shiny value is returned as a logical value.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -15,11 +15,11 @@
 #' @param style Optional inline CSS style string.
 #' @param value String. The value of the checkbox, submitted as a
 #' name/value pair with form data.
-#' @param checked Boolean. The default value of the form control.
-#' Primarily used for resetting the form control. This wrapper argument
-#' sets the HTML `checked` attribute, which maps to the component's
-#' `defaultChecked` field/property rather than its live `checked`
-#' property.
+#' @param checked Boolean. Default: `FALSE`. The default value of the form
+#' control. Primarily used for resetting the form control. This wrapper
+#' argument sets the HTML `checked` attribute, which maps to the
+#' component's `defaultChecked` field/property rather than its live
+#' `checked` property.
 #' @param disabled Boolean. Default: `FALSE`. Disables the checkbox.
 #' @param hint String. Default: `""`. The checkbox's hint. If you need to
 #' display HTML, use the `hint` slot instead.
@@ -42,7 +42,8 @@
 #' Alternatively, you can use the `hint` attribute.
 #'
 #' @section Shiny Bindings:
-#' `input$<input_id>` reflects the component's current `value` value.
+#' `input$<input_id>` reflects the component's current `value` value. The
+#' Shiny value is returned as a logical value.
 #'
 #' @return An HTML tag for the component.
 #'

@@ -36,7 +36,11 @@
                               version = .repo_pinned_version(),
                               npm_lines = NULL) {
   dir.create(file.path(root, "dev"), recursive = TRUE, showWarnings = FALSE)
-  dir.create(file.path(root, "projectdocs"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(
+    file.path(root, "projectdocs"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
   dir.create(file.path(root, "tools"), recursive = TRUE, showWarnings = FALSE)
   .write_file(file.path(root, "DESCRIPTION"), "Package: fake")
   .write_file(file.path(root, "dev", "webawesome-version.txt"), version)
@@ -52,19 +56,19 @@
 
   if (is.null(npm_lines)) {
     npm_lines <- c(
-    "#!/usr/bin/env bash",
-    "set -eu",
-    "if [ \"$1\" != \"pack\" ]; then",
-    "  echo \"unexpected command\" >&2",
-    "  exit 1",
-    "fi",
-    "pkgdir=\"$PWD/package\"",
-    "mkdir -p \"$pkgdir/dist-cdn/components\" \"$pkgdir/dist-cdn/styles\"",
-    "printf 'button\\n' > \"$pkgdir/dist-cdn/components/wa-button.js\"",
-    "printf 'css\\n' > \"$pkgdir/dist-cdn/styles/webawesome.css\"",
-    "tarball=\"webawesome-cli.tgz\"",
-    "tar -czf \"$tarball\" -C \"$PWD\" package",
-    "printf '%s\\n' \"$tarball\""
+      "#!/usr/bin/env bash",
+      "set -eu",
+      "if [ \"$1\" != \"pack\" ]; then",
+      "  echo \"unexpected command\" >&2",
+      "  exit 1",
+      "fi",
+      "pkgdir=\"$PWD/package\"",
+      "mkdir -p \"$pkgdir/dist-cdn/components\" \"$pkgdir/dist-cdn/styles\"",
+      "printf 'button\\n' > \"$pkgdir/dist-cdn/components/wa-button.js\"",
+      "printf 'css\\n' > \"$pkgdir/dist-cdn/styles/webawesome.css\"",
+      "tarball=\"webawesome-cli.tgz\"",
+      "tar -czf \"$tarball\" -C \"$PWD\" package",
+      "printf '%s\\n' \"$tarball\""
     )
   }
   .write_file(file.path(root, "bin", "npm"), npm_lines)

@@ -31,7 +31,10 @@
   )
 
   for (component in components) {
-    wrapper_path <- file.path(.r_output_dir(root), paste0(component$r_function_name, ".R"))
+    wrapper_path <- file.path(
+      .r_output_dir(root),
+      paste0(component$r_function_name, ".R")
+    )
     wrapper_text <- .render_wrapper_file(component, wrapper_template)
     update_text <- .render_update_file(component, update_template)
 

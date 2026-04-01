@@ -5,9 +5,9 @@
 #'
 #' Generated wrapper for the Web Awesome `wa-tree` component. When used as
 #' a Shiny input, `input$<input_id>` reflects the component's current
-#' semantic `selectedItemIds` state. For stable Shiny selection values,
-#' selectable descendant `wa-tree-item` elements should have DOM `id`
-#' attributes.
+#' semantic `selectedItemIds` state. The Shiny value is returned as a
+#' character vector. For stable Shiny selection values, selectable
+#' descendant `wa-tree-item` elements should have DOM `id` attributes.
 #' Generated from Web Awesome metadata.
 #'
 #' @param ... Child content for the component's default slot.
@@ -29,7 +29,8 @@
 #'
 #' @section Shiny Bindings:
 #' `input$<input_id>` reflects the component's current semantic
-#' `selectedItemIds` state.
+#' `selectedItemIds` state. The Shiny value is returned as a character
+#' vector.
 #'
 #' @return An HTML tag for the component.
 #'
