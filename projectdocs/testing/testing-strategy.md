@@ -312,7 +312,7 @@ CI environments should include:
 * Node/npm (for Web Awesome fetch step if required)
 * a Chromium-based browser for `shinytest2`
 
-The CI pipeline should execute:
+The CI pipeline should execute the core reproducible build-and-test stages:
 
 ```text 
 clean → fetch → prune → generate → test → report
@@ -323,6 +323,12 @@ This ensures that:
 * the generator pipeline works
 * wrappers regenerate correctly
 * runtime behavior remains valid
+
+The later `finalize` and `publish` stages serve a different purpose. They are
+release-oriented gates rather than baseline CI test responsibilities.
+`finalize` may be run in CI for stricter pre-release validation when desired,
+but `publish` should remain a separate explicit maintainer-invoked stage
+because it changes external release state.
 
 ---
 

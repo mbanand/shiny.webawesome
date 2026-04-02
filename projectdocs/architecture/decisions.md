@@ -553,7 +553,7 @@ Because large parts of the package are generated automatically, the build proces
 The development workflow is:
 
 ```text
-clean → fetch → prune → generate → test → report
+clean → fetch → prune → generate → test → report → finalize → publish
 ```
 
 Where:
@@ -564,6 +564,9 @@ Where:
 * `generate` builds wrappers and bindings
 * `test` validates the system
 * `report` generates manifests and reports
+* `finalize` performs the late-stage release-preparation gate and writes the
+  release handoff artifacts
+* `publish` is the separate explicit maintainer-invoked release action
 
 Detailed workflow documentation is located in:
 

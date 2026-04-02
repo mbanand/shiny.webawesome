@@ -101,9 +101,9 @@ Agents should consult this documentation for:
 
 # Development Lifecycle Overview
 
-The typical development cycle for this project is:
+The full development and release pipeline for this project is:
 
-clean → fetch → prune → generate → test → report
+clean → fetch → prune → generate → test → report → finalize → publish
 
 Where:
 
@@ -113,6 +113,12 @@ Where:
 * **generate** builds R wrappers and bindings from component metadata
 * **test** runs unit tests and browser-based functional tests
 * **report** generates manifests and reports
+* **finalize** performs late-stage release-preparation validation, rebuilds
+  declared derived artifacts such as package docs, the pkgdown site, and the
+  release tarball, and writes a machine-readable release handoff record
+* **publish** is a separate explicit maintainer-invoked release stage that
+  verifies the finalize handoff, creates release state in git, and deploys
+  the already-built website; it does not cover CRAN submission
 
 Details of this workflow are documented in:
 
@@ -133,6 +139,5 @@ It assumes familiarity with:
 * R package development
 * Shiny applications
 * modern JavaScript component libraries
-
 
 

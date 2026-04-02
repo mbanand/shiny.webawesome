@@ -176,7 +176,8 @@ rm(.bootstrap_cli_ui)
         "inst/extdata/webawesome",
         "inst/www/wa",
         "manifests",
-        "reports"
+        "reports",
+        "website"
       )
     ),
     distclean = list(
@@ -186,6 +187,7 @@ rm(.bootstrap_cli_ui)
         "inst/www/wa",
         "manifests",
         "reports",
+        "website",
         "vendor/webawesome"
       )
     )

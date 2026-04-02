@@ -57,6 +57,7 @@ rm(.bootstrap_cli_ui)
     "tools/clean_webawesome.R",
     "tools/document_tools.R",
     "tools/fetch_webawesome.R",
+    "tools/finalize_package.R",
     "tools/prune_webawesome.R",
     "tools/report_components.R",
     "tools/review_binding_candidates.R",

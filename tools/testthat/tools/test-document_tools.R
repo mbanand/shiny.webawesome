@@ -63,6 +63,10 @@ source(file.path("..", "..", "document_tools.R"))
     file.path(root, "tools", "fetch_webawesome.R")
   )
   file.copy(
+    normalizePath(file.path("..", "..", "finalize_package.R"), mustWork = TRUE),
+    file.path(root, "tools", "finalize_package.R")
+  )
+  file.copy(
     normalizePath(file.path("..", "..", "prune_webawesome.R"), mustWork = TRUE),
     file.path(root, "tools", "prune_webawesome.R")
   )
@@ -131,6 +135,7 @@ testthat::test_that(
 
     testthat::expect_true("build_site.Rd" %in% result$generated)
     testthat::expect_true("fetch_webawesome.Rd" %in% result$generated)
+    testthat::expect_true("finalize_package.Rd" %in% result$generated)
     testthat::expect_true("check_integrity.Rd" %in% result$generated)
     testthat::expect_true("prune_webawesome.Rd" %in% result$generated)
     testthat::expect_true("report_components.Rd" %in% result$generated)
@@ -140,6 +145,9 @@ testthat::test_that(
     )
     testthat::expect_true(
       file.exists(file.path(root, "tools", "man", "fetch_webawesome.Rd"))
+    )
+    testthat::expect_true(
+      file.exists(file.path(root, "tools", "man", "finalize_package.Rd"))
     )
     testthat::expect_true(
       file.exists(file.path(root, "tools", "man", "check_integrity.Rd"))

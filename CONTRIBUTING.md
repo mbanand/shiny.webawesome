@@ -21,12 +21,19 @@ or build logic, then regenerate.
 
 ## Development workflow
 
-The core package workflow is:
+The full documented pipeline is:
 
-`clean -> fetch -> prune -> generate -> test -> report`
+`clean -> fetch -> prune -> generate -> test -> report -> finalize -> publish`
+
+In ordinary development, work often stops before the release-oriented stages.
+The recurring local package-build flow usually runs through `report`, with
+`finalize` used for late-stage release preparation and `publish` kept as a
+separate explicit maintainer decision because it changes external release
+state.
 
 When generator or build logic changes, regenerate the affected outputs and run
-the relevant validation steps.
+the relevant validation steps. Do not edit generated package files, manifests,
+reports, or bundled runtime outputs directly.
 
 ## Style and validation
 
@@ -42,6 +49,15 @@ When applicable:
 Formatting and linting are separate checks in this repository. Do not treat a
 successful style pass as a substitute for linting.
 
+For late-stage finalize work, the repository also expects the developer
+environment to support:
+
+- handwritten JavaScript linting via ESLint
+- the package/site validation tooling used by `finalize`
+
+The current official ESLint bootstrap command is
+`npm init @eslint/config@latest`.
+
 ## Documentation
 
 Update `projectdocs/` when changes affect:
@@ -54,6 +70,14 @@ Update `projectdocs/` when changes affect:
 
 User-facing package documentation should also be kept in sync with public API
 changes.
+
+Contributor-facing docs should also stay synchronized with the actual stage
+contracts. If you change the workflow around `report`, `finalize`, or
+`publish`, update:
+
+- `projectdocs/`
+- maintainer-facing long-form docs such as `vignettes/articles/build-tools.Rmd`
+- any contributor guidance that describes the workflow directly
 
 ## Coding agents
 

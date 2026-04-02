@@ -48,17 +48,28 @@
     "#!/usr/bin/env Rscript",
     "cat('integrity invoked\\n')"
   ))
-  Sys.chmod(file.path(root, "tools", "build_package.R"), mode = "0755")
-  Sys.chmod(file.path(root, "tools", "build_tools.R"), mode = "0755")
-  Sys.chmod(file.path(root, "tools", "fetch_webawesome.R"), mode = "0755")
-  Sys.chmod(file.path(root, "tools", "prune_webawesome.R"), mode = "0755")
-  Sys.chmod(file.path(root, "tools", "generate_components.R"), mode = "0755")
-  Sys.chmod(
-    file.path(root, "tools", "review_binding_candidates.R"),
-    mode = "0755"
+  .write_file(file.path(root, "tools", "finalize_package.R"), c(
+    "#!/usr/bin/env Rscript",
+    "args <- commandArgs(trailingOnly = TRUE)",
+    "strict <- if ('--strict' %in% args) 'yes' else 'no'",
+    "cat(paste0('finalize strict: ', strict, '\\n'))"
+  ))
+
+  scripts <- c(
+    "build_package.R",
+    "build_tools.R",
+    "fetch_webawesome.R",
+    "prune_webawesome.R",
+    "generate_components.R",
+    "review_binding_candidates.R",
+    "report_components.R",
+    "check_integrity.R",
+    "finalize_package.R"
   )
-  Sys.chmod(file.path(root, "tools", "report_components.R"), mode = "0755")
-  Sys.chmod(file.path(root, "tools", "check_integrity.R"), mode = "0755")
+
+  for (script in scripts) {
+    Sys.chmod(file.path(root, "tools", script), mode = "0755")
+  }
 }
 
 .run_build_package_script <- function(root, args = character()) {
@@ -80,6 +91,7 @@ testthat::test_that("build_package prints help", {
   testthat::expect_equal(result$status, 0)
   testthat::expect_match(result$stdout, "Usage: ./tools/build_package.R")
   testthat::expect_match(result$stdout, "--skip-tools")
+  testthat::expect_match(result$stdout, "--finalize-strict")
 })
 
 testthat::test_that("build_package runs build_tools first when present", {
@@ -113,6 +125,10 @@ testthat::test_that("build_package runs build_tools first when present", {
   testthat::expect_match(
     result$stderr,
     "Running check_integrity\\.R \\.{2,} Done"
+  )
+  testthat::expect_match(
+    result$stderr,
+    "Running finalize_package\\.R \\.{2,} Done"
   )
 })
 
@@ -148,4 +164,35 @@ testthat::test_that("build_package supports skipping the tool workflow", {
     result$stderr,
     "Running check_integrity\\.R \\.{2,} Done"
   )
+  testthat::expect_match(
+    result$stderr,
+    "Running finalize_package\\.R \\.{2,} Done"
+  )
 })
+
+testthat::test_that("build_package passes strict mode only to finalize", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  result <- .run_build_package_script(root, "--finalize-strict")
+
+  testthat::expect_equal(result$status, 0)
+  testthat::expect_match(result$stderr, "finalize strict: yes")
+})
+
+testthat::test_that(
+  "build_package strict mode rejects pre-existing stage-owned artifacts",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+    dir.create(file.path(root, "vendor", "webawesome"), recursive = TRUE)
+
+    result <- .run_build_package_script(root, "--finalize-strict")
+
+    testthat::expect_false(identical(result$status, 0L))
+    testthat::expect_match(
+      result$stderr,
+      "Strict finalize requires a clean release-build starting state"
+    )
+  }
+)

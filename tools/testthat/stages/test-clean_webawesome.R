@@ -30,6 +30,7 @@ testthat::test_that(
     dir.create(file.path(root, "inst", "www", "wa"), recursive = TRUE)
     dir.create(file.path(root, "manifests"), recursive = TRUE)
     dir.create(file.path(root, "reports"), recursive = TRUE)
+    dir.create(file.path(root, "website"), recursive = TRUE)
 
     .write_file(
       file.path(root, "R", "wa_select.R"),
@@ -48,6 +49,7 @@ testthat::test_that(
       root, "manifests", "report", "component-coverage.yaml"
     ))
     .write_file(file.path(root, "reports", "report", "summary.md"))
+    .write_file(file.path(root, "website", "index.html"))
 
     result <- clean_webawesome(root = root, verbose = FALSE)
 
@@ -61,6 +63,7 @@ testthat::test_that(
     )
     testthat::expect_false(dir.exists(file.path(root, "manifests")))
     testthat::expect_false(dir.exists(file.path(root, "reports")))
+    testthat::expect_false(dir.exists(file.path(root, "website")))
 
     testthat::expect_equal(result$level, "clean")
     testthat::expect_setequal(
@@ -71,7 +74,8 @@ testthat::test_that(
         "inst/extdata/webawesome",
         "inst/www/wa",
         "manifests",
-        "reports"
+        "reports",
+        "website"
       )
     )
   }

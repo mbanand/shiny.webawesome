@@ -11,7 +11,7 @@ This article is maintainer-facing.
 implement the documented package workflow.
 
 These tools are the operational entry points for the repository's generator,
-runtime-pruning, reporting, integrity-check, and website-build steps.
+runtime-pruning, reporting, finalize, and website-build steps.
 
 This article is a practical companion to the authoritative workflow
 documentation in `projectdocs/`. It describes the tool entry points and how
@@ -20,9 +20,10 @@ they fit together, but it does not replace the project workflow docs.
 All top-level tool entry points support `--help` (and `-h`) to print a summary
 of their command-line options.
 
-# Core Pipeline Tools
+# Core Build Stages
 
-The core stage tools map closely to the documented build pipeline:
+The core reproducible package-build stages map closely to the documented
+pipeline through `report`:
 
 - `clean_webawesome()`
 - `fetch_webawesome()`
@@ -36,7 +37,8 @@ The core stage tools map closely to the documented build pipeline:
 Removes generated artifacts and build outputs.
 
 Use `clean_webawesome()` for the ordinary clean stage and `distclean` when you
-also want to remove fetched upstream inputs.
+also want to remove fetched upstream inputs. The clean stage also removes the
+generated site output under `website/`.
 
 ## `fetch_webawesome()`
 
@@ -72,12 +74,47 @@ Builds deterministic manifests and human-readable reports describing:
 - API conformance
 - handwritten package API inventory
 
+This stage is the structural diagnostics and reporting boundary. It is not the
+late-stage release-preparation step.
+
 ## `check_integrity()`
 
 Runs the final integrity gate over the recorded build surfaces.
 
-This is the hard end-of-pipeline integrity check that compares current stage
-outputs against the recorded integrity manifests.
+This tool remains the hard integrity gate for the current generated surfaces,
+and it is also invoked by the later `finalize_package.R` workflow.
+
+# Late-Stage Release Preparation
+
+## `finalize_package.R`
+
+Runs the recurring late-stage local release-preparation workflow.
+
+This tool performs the documented finalize sequence, including:
+
+- stale handoff cleanup
+- integrity checking via `check_integrity()`
+- dry-run style and lint checks
+- dependency auditing
+- package documentation regeneration
+- package tests
+- site building
+- package checking
+- tarball creation
+- finalize handoff reporting under `manifests/finalize/` and
+  `reports/finalize/`
+
+The finalize workflow supports iterative default mode and a stricter
+`--strict` release-preparation mode.
+
+The finalize workflow also checks handwritten JavaScript with ESLint. That
+means the developer environment should have ESLint available before finalize
+is treated as ready-to-run. The current official bootstrap command is
+`npm init @eslint/config@latest`.
+
+External pre-release checks such as `rhub` and the final manual visual review
+remain outside the automatic finalize execution path. In strict mode,
+`finalize_package.R` requires explicit confirmation flags for those checks.
 
 # Tool Documentation
 
@@ -93,6 +130,7 @@ Useful entry points include:
 - [`build_tools`](../tool-docs/build_tools.html)
 - [`clean_webawesome`](../tool-docs/clean_webawesome.html)
 - [`fetch_webawesome`](../tool-docs/fetch_webawesome.html)
+- [`finalize_package`](../tool-docs/finalize_package.html)
 - [`prune_webawesome`](../tool-docs/prune_webawesome.html)
 - [`report_components`](../tool-docs/report_components.html)
 - [`check_integrity`](../tool-docs/check_integrity.html)
@@ -105,7 +143,8 @@ details for a specific tool.
 
 # Orchestration Tools
 
-Two top-level orchestrators currently exist:
+The top-level orchestrators are intentionally explicit rather than collapsing
+multiple responsibilities into one opaque release command.
 
 ## `build_tools.R`
 
@@ -121,13 +160,13 @@ This is the prerequisite workflow for the tooling surface itself.
 Runs `build_tools.R` first by default, then executes the currently available
 package build-stage scripts in sequence.
 
-At the current stage of the repository, that sequence includes the currently
-implemented package-build stage scripts such as fetch, prune, generate,
-binding-candidate review, report, and integrity checking.
+At the current stage of the repository, that sequence includes the package
+build stages through `finalize`, including fetch, prune, generate,
+binding-candidate review, report, integrity checking, and finalize.
 
-Because the repo is still moving toward later-stage documentation and release
-orchestration, this script should be understood as the current package-build
-orchestrator, not the final future release orchestrator.
+`build_package.R` does not own publish. The release publication step remains
+separate so git tagging, pushing, and website deployment happen only when the
+maintainer explicitly decides the repository is ready to put out.
 
 # Website Tool
 
@@ -148,6 +187,23 @@ This tool is intentionally separate from `build_package.R`. The docs-site
 workflow is maintainership-facing and may evolve on a different cadence from
 the core package-build stages.
 
+# Publish Boundary
+
+The documented pipeline now ends with a separate `publish` stage after
+`finalize`, but that publish tooling remains intentionally distinct from the
+current package-build orchestrators.
+
+The publish contract is:
+
+- consume the recorded strict finalize handoff
+- verify the repo state still matches it
+- create and push the release tag
+- push the current branch
+- deploy the already-built `website/` output
+
+This separation is deliberate. `build_package.R` is the recurring local
+package-build orchestrator; publish is the explicit maintainer release action.
+
 # Notes for Maintainers
 
 This article complements the authoritative project docs under `projectdocs/`,
@@ -161,7 +217,5 @@ change, update both:
 
 - the relevant tool documentation
 - the authoritative workflow docs in `projectdocs/`
-
-As the repository adds the planned `finalize` and `publish` stages, this
-article should also be updated so the maintainer-facing tooling overview
-remains consistent with the actual orchestrators and entry points.
+- this maintainer-facing article so it remains consistent with the actual
+  orchestrators and entry points

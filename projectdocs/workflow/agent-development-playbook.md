@@ -71,11 +71,16 @@ Most development follows this workflow:
 5. Inspect generated code if necessary.
 6. Generate reports.
 
-The standard build pipeline is:
+The standard build-and-release pipeline is:
 
-clean → fetch → prune → generate → test → report
+clean → fetch → prune → generate → test → report → finalize → publish
 
 Agents should use the scripts in `tools/` to run these steps.
+
+In ordinary development, work often stops before the final release-oriented
+stages. `finalize` is the recurring late-stage local release-preparation gate,
+while `publish` remains a separate explicit maintainer decision because it
+changes external release state.
 
 ---
 
@@ -181,7 +186,10 @@ Top-level orchestration should remain explicit:
   explicitly requested
 - `build_tools.R` orchestrates the top-level tool workflow
 - `build_package.R` runs `build_tools.R` first, then executes the currently
-  available package-build step scripts
+  available package-build step scripts, including the recurring `finalize`
+  stage once that stage is implemented
+- the separate `publish` stage remains outside `build_package.R` so that
+  release tagging, pushing, and website deployment stay explicit
 - the current package-build orchestration includes an advisory
   `review_binding_candidates.R` step between generate and report
 
@@ -193,6 +201,15 @@ Once generation exists, these package-level actions should be added as
 separate top-level `build_package.R` steps, not collapsed into one combined
 "generate package" action. They should also support explicit skip flags, and
 `devtools::check()` should be treated as the heaviest optional local gate.
+
+For late-stage release preparation, prefer a dedicated `finalize` orchestrator
+that keeps its substeps explicit and reviewable. `finalize` may update
+declared derived artifacts such as package documentation, the built website,
+release tarballs, and release handoff records, but it should not be treated
+as a license to edit handwritten source inputs opportunistically. A stricter
+mode should be available for release preparation, while external release
+actions such as tagging, pushing, and website deployment should remain in the
+separate `publish` stage.
 
 For the documentation site, treat ordinary pkgdown/vignette rendering as the
 baseline. User-facing long-form documentation should be maintained as
@@ -440,7 +457,9 @@ When working on this repository, agents should:
 
 - follow the generator-driven architecture
 - modify generator logic rather than generated files
-- follow the clean → fetch → prune → generate → test → report workflow
+- follow the clean → fetch → prune → generate → test → report → finalize →
+  publish workflow, while recognizing that ordinary development often stops
+  before the final release-oriented stages
 - run validation checks including `devtools::test()` and `devtools::check()`
   once generated package surface exists
 - update documentation when architecture changes occur

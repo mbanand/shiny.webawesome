@@ -298,6 +298,7 @@ Example structure:
 ```text
 tools/
   build_site.R
+  finalize_package.R
   clean_webawesome.R
   fetch_webawesome.R
   prune_webawesome.R
@@ -310,8 +311,11 @@ Responsibilities of examples:
   currently `website/`, copies generated tool docs into `website/tool-docs/`,
   and may also publish standalone live demos into `website/live-examples/`
   when explicitly requested.
+* `finalize_package.R` runs the late-stage local release-preparation workflow,
+  rebuilds declared derived artifacts, and writes finalize handoff records
+  under `manifests/finalize/` and `reports/finalize/`.
 * `clean_webawesome.R` removes generated artifacts, copied metadata, and
-  pruned runtime assets.
+  pruned runtime assets, including generated website output.
 * `fetch_webawesome.R` downloads a pinned Web Awesome release.
 * `prune_webawesome.R` creates the minimal runtime bundle, copies generation
   metadata into `inst/extdata/webawesome/`, and writes versioned prune reports.
@@ -319,7 +323,8 @@ Responsibilities of examples:
 
 The clean tool supports two levels of cleanup:
 
-* **clean** — removes generated files and pruned runtime assets
+* **clean** — removes generated files, pruned runtime assets, and generated
+  website output
 * **distclean** — also removes the fetched upstream Web Awesome cache stored under `vendor/`
 
 Tools listed above are examples and not intended to be exhaustive. Other tools may be implemented as needed, for example: build manifest generation and reporting.

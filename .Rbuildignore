@@ -34,3 +34,4 @@
 ^CONTRIBUTING\.md$
 ^LICENSE\.md$
 ^SECURITY\.md$
+^eslint\.config\.cjs$
