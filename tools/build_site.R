@@ -281,7 +281,7 @@ rm(.bootstrap_cli_ui)
   writeLines(lines, file.path(target_dir, "index.html"))
 }
 
-# Export shinylive examples into the built site or write placeholders.
+# Export deferred live-example placeholders into the built site.
 .publish_live_examples <- function(root,
                                    destination_dir,
                                    source_dir =
@@ -297,12 +297,6 @@ rm(.bootstrap_cli_ui)
 
   target_root <- .shinylive_site_dir(destination_dir)
   dir.create(target_root, recursive = TRUE, showWarnings = FALSE)
-
-  if (is.null(export_fun) && isTRUE(fallback_to_installed)) {
-    if (requireNamespace("shinylive", quietly = TRUE)) {
-      export_fun <- shinylive::export
-    }
-  }
 
   exported_paths <- character(length(example_dirs))
 
@@ -320,8 +314,9 @@ rm(.bootstrap_cli_ui)
         target_dir = target_dir,
         example_name = example_name,
         details = paste(
-          "Install the `shinylive` package and its web assets, then rerun",
-          "`./tools/build_site.R` to publish the exported app."
+          "Live demo export is deferred for this release.",
+          "The website currently publishes a placeholder page",
+          "for this example instead."
         )
       )
 

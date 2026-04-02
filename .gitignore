@@ -5,7 +5,11 @@
 .Ruserdata
 .Renviron
 *.Rcheck/
+shiny.webawesome.Rcheck/
 shiny.webawesome_*.tar.gz
+node_modules/
+package.json
+package-lock.json
 
 # RStudio / Posit local state
 .Rproj.user/

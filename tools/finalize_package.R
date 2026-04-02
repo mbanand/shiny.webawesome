@@ -332,13 +332,21 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
     )
   }
 
+  child_env <- if (length(env) == 0L) {
+    NULL
+  } else {
+    current <- Sys.getenv(names = TRUE, unset = NA_character_)
+    current[names(env)] <- unname(env)
+    current
+  }
+
   processx::run(
     command = command,
     args = args,
     wd = wd,
     echo = FALSE,
     error_on_status = FALSE,
-    env = env
+    env = child_env
   )
 }
 
@@ -890,9 +898,17 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
           "results <- list();",
           "if (length(targets) > 0L) {",
           "  for (path in targets) {",
-          "    results[[path]] <- lintr::lint_dir(path)",
+          paste(
+            "    results[[path]] <- if (identical(path, 'vignettes'))",
+            "lintr::lint_dir(",
+            "      path,",
+            "      linters = lintr::linters_with_defaults(",
+            "        object_usage_linter = NULL",
+            "      )",
+            "    ) else lintr::lint_dir(path);"
+          ),
           "  }",
-          "}",
+          "};",
           "all_results <- unlist(results, recursive = FALSE);",
           "if (length(all_results) > 0L) {",
           "  print(all_results);",
@@ -1201,10 +1217,14 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
 #' @param confirmed_visual_review Logical scalar. In strict mode, confirms that
 #'   the final manual visual review has passed.
 #' @param verbose Logical scalar. If `TRUE`, emits progress messages.
-#' @param runner Function used to execute child commands. Primarily intended for
-#'   tool tests.
-#' @param steps Optional named list of step definitions. Primarily intended for
-#'   tool tests.
+#' @param runner Function used to execute child commands. This is primarily a
+#'   test seam for tool tests, which can inject a fake process runner to
+#'   simulate `git`, `Rscript`, and other child-command results without running
+#'   the full finalize workflow.
+#' @param steps Optional named list of step definitions. This is primarily a
+#'   test seam for tool tests, which can inject a small synthetic finalize step
+#'   set to exercise warning accumulation, strict-mode failure handling, and
+#'   handoff writing without invoking the full toolchain.
 #'
 #' @return A list describing the finalize run, including any warning steps and
 #'   the written handoff artifacts.

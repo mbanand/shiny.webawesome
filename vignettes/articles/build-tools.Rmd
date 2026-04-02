@@ -108,9 +108,11 @@ The finalize workflow supports iterative default mode and a stricter
 `--strict` release-preparation mode.
 
 The finalize workflow also checks handwritten JavaScript with ESLint. That
-means the developer environment should have ESLint available before finalize
-is treated as ready-to-run. The current official bootstrap command is
-`npm init @eslint/config@latest`.
+means the developer environment should have ESLint, which in turn requires
+Node.js and npm, available before finalize is treated as ready-to-run. Use the
+manual setup command:
+
+`npm install --save-dev eslint@latest @eslint/js@latest`
 
 External pre-release checks such as `rhub` and the final manual visual review
 remain outside the automatic finalize execution path. In strict mode,

@@ -71,8 +71,7 @@ ui <- wa_page(
   )
 )
 
-server <- function(input, output, session) {
-}
+server <- function(input, output, session) {}
 
 shinyApp(ui, server)
 ```
@@ -97,8 +96,7 @@ ui <- wa_page(
   )
 )
 
-server <- function(input, output, session) {
-}
+server <- function(input, output, session) {}
 
 shinyApp(ui, server)
 ```

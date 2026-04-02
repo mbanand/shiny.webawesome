@@ -7,6 +7,9 @@ Repository paths mentioned below refer to paths in the source repository.
 ## Before you change code
 
 - Read the authoritative project documentation under `projectdocs/`.
+- Read the maintainer-facing build-tools article in
+  `vignettes/articles/build-tools.Rmd` for the current tool entry points and
+  late-stage workflow.
 - Do not edit generated files directly.
 
 Generated and derived surfaces include, in particular:
@@ -56,7 +59,7 @@ environment to support:
 - the package/site validation tooling used by `finalize`
 
 The current official ESLint bootstrap command is
-`npm init @eslint/config@latest`.
+`npm install --save-dev eslint@latest @eslint/js@latest`.
 
 ## Documentation
 

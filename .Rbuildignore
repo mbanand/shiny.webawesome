@@ -4,6 +4,12 @@
 ^\.gitignore$
 ^_pkgdown\.yml$
 ^\.Renviron$
+^node_modules$
+^node_modules/
+^package\.json$
+^package-lock\.json$
+^shiny\.webawesome\.Rcheck$
+^shiny\.webawesome\.Rcheck/
 ^vendor$
 ^vendor/
 ^tools$

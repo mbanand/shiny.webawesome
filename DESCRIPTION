@@ -19,14 +19,17 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests:
     chromote,
+    devtools,
     digest,
     document,
     jsonlite,
     knitr,
+    lintr,
     processx,
     pkgdown,
     rmarkdown,
     shinytest2,
+    styler,
     testthat (>= 3.0.0),
     withr,
     yaml

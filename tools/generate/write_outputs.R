@@ -11,6 +11,11 @@
   file.path(root, "inst", "bindings")
 }
 
+# Normalize generated R text before writing.
+.normalize_generated_r_text <- function(text) {
+  gsub("\n{3,}", "\n\n", text, perl = TRUE)
+}
+
 # Write one deterministic text file.
 .write_text_file <- function(path, text) {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
@@ -41,6 +46,7 @@
     if (!is.null(update_text)) {
       wrapper_text <- paste(wrapper_text, update_text, sep = "\n\n")
     }
+    wrapper_text <- .normalize_generated_r_text(wrapper_text)
 
     written$wrappers <- c(
       written$wrappers,

@@ -216,7 +216,10 @@ testthat::test_that(
 )
 
 testthat::test_that(
-  "finalize confirmations are advisory in default mode and strict in strict mode",
+  paste(
+    "finalize confirmations are advisory in default mode and",
+    "strict in strict mode"
+  ),
   {
     steps <- .finalize_steps()
 
@@ -248,32 +251,42 @@ testthat::test_that(
   }
 )
 
-testthat::test_that("dependency audit reports missing imports and support deps", {
-  root <- withr::local_tempdir()
-  .create_fake_repo(root)
+testthat::test_that(
+  "dependency audit reports missing imports and support deps",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
 
-  dir.create(file.path(root, "R"), recursive = TRUE, showWarnings = FALSE)
-  dir.create(file.path(root, "tests"), recursive = TRUE, showWarnings = FALSE)
-  dir.create(file.path(root, "vignettes"), recursive = TRUE, showWarnings = FALSE)
+    dir.create(file.path(root, "R"), recursive = TRUE, showWarnings = FALSE)
+    dir.create(file.path(root, "tests"), recursive = TRUE, showWarnings = FALSE)
+    dir.create(
+      file.path(root, "vignettes"),
+      recursive = TRUE,
+      showWarnings = FALSE
+    )
 
-  .write_file(file.path(root, "R", "helper.R"), "pkgload::load_all()")
-  .write_file(
-    file.path(root, "tests", "testthat.R"),
-    "library(withr)\nrequireNamespace('pkgdown')"
-  )
+    .write_file(
+      file.path(root, "R", "helper.R"),
+      "devtools::load_all()"
+    )
+    .write_file(
+      file.path(root, "tests", "testthat.R"),
+      "library(withr)\nrequireNamespace('pkgdown')"
+    )
 
-  audit <- .audit_dependencies(root)
+    audit <- .audit_dependencies(root)
 
-  testthat::expect_false(audit$ok)
-  testthat::expect_match(
-    paste(audit$details, collapse = "\n"),
-    "pkgload"
-  )
-  testthat::expect_match(
-    paste(audit$details, collapse = "\n"),
-    "pkgdown"
-  )
-})
+    testthat::expect_false(audit$ok)
+    testthat::expect_match(
+      paste(audit$details, collapse = "\n"),
+      "devtools"
+    )
+    testthat::expect_match(
+      paste(audit$details, collapse = "\n"),
+      "pkgdown"
+    )
+  }
+)
 
 testthat::test_that("strict finalize validates clean start state directly", {
   root <- withr::local_tempdir()
