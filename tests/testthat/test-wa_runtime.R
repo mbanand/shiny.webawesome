@@ -40,8 +40,25 @@ test_that(
 )
 
 test_that("package dependency points at the shipped bootstrap assets", {
+  binding_dir <- system.file("bindings", package = "shiny.webawesome")
+  binding_files <- if (nzchar(binding_dir) && dir.exists(binding_dir)) {
+    sort(list.files(binding_dir, full.names = FALSE))
+  } else {
+    character()
+  }
   dep <- shiny.webawesome:::.wa_dependency()
   script_src <- vapply(dep$script, `[[`, character(1), "src")
+
+  message("runtime-test binding_dir: ", binding_dir)
+  message("runtime-test binding_dir_exists: ", dir.exists(binding_dir))
+  message(
+    "runtime-test binding_files: ",
+    paste(binding_files, collapse = ", ")
+  )
+  message(
+    "runtime-test script_src: ",
+    paste(script_src, collapse = ", ")
+  )
 
   expect_equal(dep$name, "shiny.webawesome")
   expect_equal(dep$src$file, ".")
