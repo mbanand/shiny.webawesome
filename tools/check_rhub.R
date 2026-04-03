@@ -275,6 +275,22 @@ rm(.bootstrap_cli_ui)
   NULL
 }
 
+# Return the remote default branch name when discoverable.
+.git_default_branch <- function(root, runner = .run_process) {
+  result <- .git_run(
+    root = root,
+    args = c("symbolic-ref", "refs/remotes/origin/HEAD"),
+    runner = runner
+  )
+
+  if (!identical(result$status, 0L)) {
+    return(NULL)
+  }
+
+  ref <- trimws(result$stdout)
+  sub("^refs/remotes/origin/", "", ref)
+}
+
 # Return the expected R-hub workflow path.
 .rhub_workflow <- function(root) {
   file.path(root, ".github", "workflows", "rhub.yaml")
@@ -321,7 +337,8 @@ rm(.bootstrap_cli_ui)
 #' `./tools/check_rhub.R --help`
 #'
 #' @param root Repository root directory.
-#' @param allow_main Logical scalar. If `FALSE`, refuse to run from `main`.
+#' @param allow_main Logical scalar. If `FALSE`, refuse to run from the
+#'   repository's default branch when it can be detected.
 #' @param run_doctor Logical scalar. If `TRUE`, call `rhub::rhub_doctor()`
 #'   before `rhub::rhub_check()`.
 #' @param verbose Logical scalar. If `TRUE`, emit progress messages.
@@ -381,14 +398,24 @@ check_rhub <- function(root = ".",
   .cli_step_start(ui, "Inspecting git branch")
   branch <- .git_branch(root, runner = git_runner)
   upstream <- .git_upstream(root, runner = git_runner)
+  default_branch <- .git_default_branch(root, runner = git_runner)
   dirty <- .git_dirty(root, runner = git_runner)
 
-  if (identical(branch, "main") && !isTRUE(allow_main)) {
+  protected_branches <- unique(
+    stats::na.omit(c(default_branch, "main", "master"))
+  )
+
+  if (branch %in% protected_branches && !isTRUE(allow_main)) {
     .cli_step_fail(
       ui,
       details = paste(
-        "Refusing to run rhub from `main` without `--allow-main`.",
-        "Use a release-candidate branch instead when possible."
+        "Refusing to run rhub from the default branch without `--allow-main`.",
+        "Use a release-candidate branch instead when possible.",
+        if (!is.null(default_branch) && nzchar(default_branch)) {
+          paste("Detected default branch:", sprintf("`%s`.", default_branch))
+        } else {
+          "The remote default branch could not be detected automatically."
+        }
       )
     )
     .cli_abort_handled("Main-branch rhub runs require explicit override.")

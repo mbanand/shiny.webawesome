@@ -28,7 +28,8 @@ source(file.path("..", "..", "check_rhub.R"))
 
 .make_git_runner <- function(branch = "release-candidate",
                              dirty = FALSE,
-                             upstream = "origin/release-candidate") {
+                             upstream = "origin/release-candidate",
+                             default_branch = "main") {
   function(command, args = character(), wd = ".", env = character()) {
     key <- paste(command, paste(args, collapse = " "))
 
@@ -45,6 +46,18 @@ source(file.path("..", "..", "check_rhub.R"))
       }
 
       return(list(status = 0L, stdout = upstream, stderr = ""))
+    }
+
+    if (identical(key, "git symbolic-ref refs/remotes/origin/HEAD")) {
+      if (is.null(default_branch)) {
+        return(list(status = 1L, stdout = "", stderr = "no origin HEAD"))
+      }
+
+      return(list(
+        status = 0L,
+        stdout = paste0("refs/remotes/origin/", default_branch),
+        stderr = ""
+      ))
     }
 
     if (identical(key, "git status --porcelain")) {
@@ -91,6 +104,26 @@ testthat::test_that("check_rhub refuses to run from main by default", {
 
   testthat::expect_false(doctor_called)
   testthat::expect_false(check_called)
+})
+
+testthat::test_that("check_rhub also guards master when it is default", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+
+  testthat::expect_error(
+    check_rhub(
+      root = root,
+      verbose = FALSE,
+      git_runner = .make_git_runner(
+        branch = "master",
+        upstream = "origin/master",
+        default_branch = "master"
+      ),
+      doctor_fun = function() NULL,
+      check_fun = function(branch) NULL
+    ),
+    "Main-branch rhub runs require explicit override"
+  )
 })
 
 testthat::test_that("check_rhub requires a pushed upstream branch", {
