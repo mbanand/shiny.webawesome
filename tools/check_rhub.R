@@ -87,8 +87,8 @@ rm(.bootstrap_cli_ui)
       "Defaults to the current directory."
     ),
     paste(
-      "--platform <name>  Add one rhub platform name.",
-      "May be supplied multiple times."
+      "--platform <name>  Use one rhub platform name.",
+      "Supply multiple times to override the defaults."
     ),
     paste(
       "--allow-main    Permit running from `main`.",
@@ -127,6 +127,7 @@ rm(.bootstrap_cli_ui)
 # Parse command-line arguments for the rhub helper tool.
 .parse_rhub_args <- function(args) {
   options <- .rhub_defaults()
+  platform_args <- character()
   skip_next <- FALSE
 
   for (i in seq_along(args)) {
@@ -152,7 +153,7 @@ rm(.bootstrap_cli_ui)
         stop("Missing value for --platform.", call. = FALSE)
       }
 
-      options$platforms <- c(options$platforms, args[[i + 1L]])
+      platform_args <- c(platform_args, args[[i + 1L]])
       skip_next <- TRUE
       next
     }
@@ -178,10 +179,7 @@ rm(.bootstrap_cli_ui)
     }
 
     if (startsWith(arg, "--platform=")) {
-      options$platforms <- c(
-        options$platforms,
-        sub("^--platform=", "", arg)
-      )
+      platform_args <- c(platform_args, sub("^--platform=", "", arg))
       next
     }
 
@@ -189,6 +187,10 @@ rm(.bootstrap_cli_ui)
       paste0("Unknown argument: ", arg, "\n", .rhub_usage()),
       call. = FALSE
     )
+  }
+
+  if (length(platform_args) > 0L) {
+    options$platforms <- platform_args
   }
 
   options$platforms <- unique(options$platforms[nzchar(options$platforms)])

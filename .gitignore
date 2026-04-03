@@ -20,9 +20,7 @@ package-lock.json
 # Build artifacts
 R/generated/
 R/generated_updates/
-inst/bindings/
 inst/extdata/webawesome/
-inst/www/webawesome/
 manifests/
 reports/
 tools/man/

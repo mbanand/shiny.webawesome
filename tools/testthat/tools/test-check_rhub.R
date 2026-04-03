@@ -81,7 +81,16 @@ testthat::test_that("check_rhub prints help", {
   testthat::expect_match(result, "--skip-doctor")
 })
 
-testthat::test_that("check_rhub parses repeated platform arguments", {
+testthat::test_that("check_rhub uses defaults when no platform is supplied", {
+  options <- .parse_rhub_args(character())
+
+  testthat::expect_identical(
+    options$platforms,
+    c("linux", "macos", "macos-arm64", "windows")
+  )
+})
+
+testthat::test_that("check_rhub platform arguments override defaults", {
   options <- .parse_rhub_args(c(
     "--platform", "linux",
     "--platform=windows"
@@ -89,7 +98,7 @@ testthat::test_that("check_rhub parses repeated platform arguments", {
 
   testthat::expect_identical(
     options$platforms,
-    c("linux", "macos", "macos-arm64", "windows")
+    c("linux", "windows")
   )
 })
 
