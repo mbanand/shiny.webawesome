@@ -76,8 +76,21 @@ testthat::test_that("check_rhub prints help", {
   result <- paste(capture.output(run_check_rhub("--help")), collapse = "\n")
 
   testthat::expect_match(result, "Usage: ./tools/check_rhub.R")
+  testthat::expect_match(result, "--platform")
   testthat::expect_match(result, "--allow-main")
   testthat::expect_match(result, "--skip-doctor")
+})
+
+testthat::test_that("check_rhub parses repeated platform arguments", {
+  options <- .parse_rhub_args(c(
+    "--platform", "linux",
+    "--platform=windows"
+  ))
+
+  testthat::expect_identical(
+    options$platforms,
+    c("linux", "macos", "macos-arm64", "windows")
+  )
 })
 
 testthat::test_that("check_rhub refuses to run from main by default", {
@@ -95,7 +108,7 @@ testthat::test_that("check_rhub refuses to run from main by default", {
       doctor_fun = function() {
         doctor_called <<- TRUE
       },
-      check_fun = function(branch) {
+      check_fun = function(branch, platforms) {
         check_called <<- TRUE
       }
     ),
@@ -120,7 +133,7 @@ testthat::test_that("check_rhub also guards master when it is default", {
         default_branch = "master"
       ),
       doctor_fun = function() NULL,
-      check_fun = function(branch) NULL
+      check_fun = function(branch, platforms) NULL
     ),
     "Main-branch rhub runs require explicit override"
   )
@@ -136,7 +149,7 @@ testthat::test_that("check_rhub requires a pushed upstream branch", {
       verbose = FALSE,
       git_runner = .make_git_runner(upstream = NULL),
       doctor_fun = function() NULL,
-      check_fun = function(branch) NULL
+      check_fun = function(branch, platforms) NULL
     ),
     "Rhub checks require a pushed branch"
   )
@@ -158,18 +171,33 @@ testthat::test_that(
         calls[[length(calls) + 1L]] <<- "doctor"
         invisible(NULL)
       },
-      check_fun = function(branch) {
-        calls[[length(calls) + 1L]] <<- paste0("check:", branch)
+      check_fun = function(branch, platforms) {
+        calls[[length(calls) + 1L]] <<- list(
+          type = "check",
+          branch = branch,
+          platforms = platforms
+        )
         invisible(NULL)
       }
     )
 
     testthat::expect_identical(
       calls,
-      list("doctor", "check:release-candidate")
+      list(
+        "doctor",
+        list(
+          type = "check",
+          branch = "release-candidate",
+          platforms = c("linux", "macos", "macos-arm64", "windows")
+        )
+      )
     )
     testthat::expect_identical(result$branch, "release-candidate")
     testthat::expect_identical(result$upstream, "origin/release-candidate")
+    testthat::expect_identical(
+      result$platforms,
+      c("linux", "macos", "macos-arm64", "windows")
+    )
     testthat::expect_true(isTRUE(result$ran_doctor))
   }
 )
@@ -184,7 +212,7 @@ testthat::test_that("check_rhub requires the rhub workflow file", {
       verbose = FALSE,
       git_runner = .make_git_runner(),
       doctor_fun = function() NULL,
-      check_fun = function(branch) NULL
+      check_fun = function(branch, platforms) NULL
     ),
     "Rhub workflow file is not present in the repository"
   )

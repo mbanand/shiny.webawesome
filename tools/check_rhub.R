@@ -64,7 +64,10 @@ rm(.bootstrap_cli_ui)
 .rhub_usage <- function() {
   paste(
     "Usage: ./tools/check_rhub.R",
-    "[--root <path>] [--allow-main] [--skip-doctor] [--help]"
+    paste(
+      "[--root <path>] [--platform <name>] [--allow-main]",
+      "[--skip-doctor] [--help]"
+    )
   )
 }
 
@@ -82,6 +85,10 @@ rm(.bootstrap_cli_ui)
     paste(
       "--root <path>   Repository root.",
       "Defaults to the current directory."
+    ),
+    paste(
+      "--platform <name>  Add one rhub platform name.",
+      "May be supplied multiple times."
     ),
     paste(
       "--allow-main    Permit running from `main`.",
@@ -110,6 +117,7 @@ rm(.bootstrap_cli_ui)
 .rhub_defaults <- function() {
   list(
     root = ".",
+    platforms = c("linux", "macos", "macos-arm64", "windows"),
     allow_main = FALSE,
     run_doctor = TRUE,
     help = FALSE
@@ -139,6 +147,16 @@ rm(.bootstrap_cli_ui)
       next
     }
 
+    if (arg == "--platform") {
+      if (i == length(args)) {
+        stop("Missing value for --platform.", call. = FALSE)
+      }
+
+      options$platforms <- c(options$platforms, args[[i + 1L]])
+      skip_next <- TRUE
+      next
+    }
+
     if (arg == "--skip-doctor") {
       options$run_doctor <- FALSE
       next
@@ -159,11 +177,21 @@ rm(.bootstrap_cli_ui)
       next
     }
 
+    if (startsWith(arg, "--platform=")) {
+      options$platforms <- c(
+        options$platforms,
+        sub("^--platform=", "", arg)
+      )
+      next
+    }
+
     stop(
       paste0("Unknown argument: ", arg, "\n", .rhub_usage()),
       call. = FALSE
     )
   }
+
+  options$platforms <- unique(options$platforms[nzchar(options$platforms)])
 
   options
 }
@@ -316,10 +344,10 @@ rm(.bootstrap_cli_ui)
 }
 
 # Return the default rhub check function.
-.default_rhub_check <- function(branch) {
+.default_rhub_check <- function(branch, platforms) {
   rhub::rhub_check(
     gh_url = NULL,
-    platforms = NULL,
+    platforms = platforms,
     branch = branch
   )
 }
@@ -337,6 +365,8 @@ rm(.bootstrap_cli_ui)
 #' `./tools/check_rhub.R --help`
 #'
 #' @param root Repository root directory.
+#' @param platforms Character vector of rhub platform names. Defaults to
+#'   `c("linux", "macos", "macos-arm64", "windows")`.
 #' @param allow_main Logical scalar. If `FALSE`, refuse to run from the
 #'   repository's default branch when it can be detected.
 #' @param run_doctor Logical scalar. If `TRUE`, call `rhub::rhub_doctor()`
@@ -354,10 +384,17 @@ rm(.bootstrap_cli_ui)
 #' @examples
 #' \dontrun{
 #' check_rhub()
+#' check_rhub(platforms = c("linux", "windows"))
 #' check_rhub(allow_main = TRUE)
 #' check_rhub(run_doctor = FALSE)
 #' }
 check_rhub <- function(root = ".",
+                       platforms = c(
+                         "linux",
+                         "macos",
+                         "macos-arm64",
+                         "windows"
+                       ),
                        allow_main = FALSE,
                        run_doctor = TRUE,
                        verbose = interactive(),
@@ -368,6 +405,13 @@ check_rhub <- function(root = ".",
 
   if (!.is_repo_root(root)) {
     stop("`root` does not appear to be the repository root.", call. = FALSE)
+  }
+
+  if (length(platforms) == 0L || any(!nzchar(platforms))) {
+    stop(
+      "`platforms` must contain at least one non-empty platform.",
+      call. = FALSE
+    )
   }
 
   if (is.null(doctor_fun)) {
@@ -479,7 +523,7 @@ check_rhub <- function(root = ".",
   .cli_step_start(ui, "Starting rhub check")
   tryCatch(
     {
-      check_fun(branch)
+      check_fun(branch, platforms)
     },
     error = function(condition) {
       .cli_step_fail(ui, details = conditionMessage(condition))
@@ -502,6 +546,7 @@ check_rhub <- function(root = ".",
       branch = branch,
       upstream = upstream,
       workflow = .strip_root(workflow, root),
+      platforms = platforms,
       ran_doctor = isTRUE(run_doctor)
     )
   )
@@ -520,6 +565,7 @@ run_check_rhub <- function(args = commandArgs(trailingOnly = TRUE)) {
     invisible(
       check_rhub(
         root = options$root,
+        platforms = options$platforms,
         allow_main = options$allow_main,
         run_doctor = options$run_doctor
       )
