@@ -713,7 +713,8 @@ Two release-oriented checks remain outside the automatic finalize execution
 path because they are external or maintainer-judgment workflows:
 
 - `rhub` or equivalent external pre-release checks
-- a final human visual review of a representative Shiny application
+- a final human visual review of a representative Shiny application, launched
+  locally with `./tools/check_interactive.R`
 
 In default mode, finalize should print explicit next-step instructions for
 those checks. In strict mode, finalize should require the maintainer to supply

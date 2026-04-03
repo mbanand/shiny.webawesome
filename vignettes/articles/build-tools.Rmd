@@ -117,31 +117,14 @@ manual setup command:
 External pre-release checks such as `rhub` and the final manual visual review
 remain outside the automatic finalize execution path. In strict mode,
 `finalize_package.R` requires explicit confirmation flags for those checks.
+The repository's representative manual visual review app is launched with:
 
-# Tool Documentation
+`./tools/check_interactive.R`
 
-Generated tool documentation lives under `tools/man/`.
+The repository's helper for launching external R-hub checks from the current
+git branch is:
 
-In the website build, the generated HTML tool docs are copied into
-`tool-docs/`.
-
-Useful entry points include:
-
-- [`build_package`](../tool-docs/build_package.html)
-- [`build_site`](../tool-docs/build_site.html)
-- [`build_tools`](../tool-docs/build_tools.html)
-- [`clean_webawesome`](../tool-docs/clean_webawesome.html)
-- [`fetch_webawesome`](../tool-docs/fetch_webawesome.html)
-- [`finalize_package`](../tool-docs/finalize_package.html)
-- [`prune_webawesome`](../tool-docs/prune_webawesome.html)
-- [`report_components`](../tool-docs/report_components.html)
-- [`check_integrity`](../tool-docs/check_integrity.html)
-- [`review_binding_candidates`](../tool-docs/review_binding_candidates.html)
-- [`document_tools`](../tool-docs/document_tools.html)
-- [`test_tools`](../tool-docs/test_tools.html)
-
-These generated docs are useful when you need the CLI and function-level
-details for a specific tool.
+`./tools/check_rhub.R`
 
 # Orchestration Tools
 
@@ -205,6 +188,33 @@ The publish contract is:
 
 This separation is deliberate. `build_package.R` is the recurring local
 package-build orchestrator; publish is the explicit maintainer release action.
+
+# Tool Documentation
+
+Generated tool documentation lives under `tools/man/`.
+
+In the website build, the generated HTML tool docs are copied into
+`tool-docs/`.
+
+Useful entry points include:
+
+- [`build_package`](../tool-docs/build_package.html)
+- [`build_site`](../tool-docs/build_site.html)
+- [`build_tools`](../tool-docs/build_tools.html)
+- [`check_integrity`](../tool-docs/check_integrity.html)
+- [`check_interactive`](../tool-docs/check_interactive.html)
+- [`check_rhub`](../tool-docs/check_rhub.html)
+- [`clean_webawesome`](../tool-docs/clean_webawesome.html)
+- [`document_tools`](../tool-docs/document_tools.html)
+- [`fetch_webawesome`](../tool-docs/fetch_webawesome.html)
+- [`finalize_package`](../tool-docs/finalize_package.html)
+- [`prune_webawesome`](../tool-docs/prune_webawesome.html)
+- [`report_components`](../tool-docs/report_components.html)
+- [`review_binding_candidates`](../tool-docs/review_binding_candidates.html)
+- [`test_tools`](../tool-docs/test_tools.html)
+
+These generated docs are useful when you need the CLI and function-level
+details for a specific tool.
 
 # Notes for Maintainers
 

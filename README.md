@@ -5,7 +5,9 @@ component library.
 
 The package is largely generated from the upstream Web Awesome metadata file
 `custom-elements.json`, which the package treats as the primary source of
-truth for component wrappers and related generated surface.
+truth for component wrappers and related generated surface. It also bundles
+the Web Awesome runtime it needs, so package users do not need to install Web
+Awesome assets separately in their Shiny apps.
 
 The package design aims to stay as close as practical to upstream Web Awesome
 names, conventions, and component APIs, while adopting normal R naming

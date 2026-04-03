@@ -1,6 +1,6 @@
 Package: shiny.webawesome
 Title: Shiny Bindings for Web Awesome Components
-Version: 0.1.0
+Version: 1.0.0
 Authors@R: 
     person("M. B.", "Anand", , "anand@owlcyberlabs.com", role = c("aut", "cre"))
 Description: Provides an R and Shiny interface to the Web Awesome component
@@ -28,6 +28,7 @@ Suggests:
     processx,
     pkgdown,
     rmarkdown,
+    rhub,
     shinytest2,
     styler,
     testthat (>= 3.0.0),

@@ -1038,8 +1038,9 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
               "Next steps:",
               "- Run external pre-release checks such as rhub separately.",
               paste(
-                "- Run the representative Shiny review app and complete the",
-                "manual visual review separately."
+                "- Run `./tools/check_interactive.R`, review the printed local",
+                "URL in a browser, and complete the manual visual review",
+                "separately."
               )
             )
           ))

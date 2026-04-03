@@ -22,7 +22,9 @@ component library.
 Most component wrappers are generated from the upstream Web Awesome metadata
 file `custom-elements.json`. The package aims to stay close to upstream Web
 Awesome names and component APIs while adopting normal R conventions such as
-snake_case argument names.
+snake_case argument names. The package also bundles the Web Awesome runtime it
+needs, so you do not need to install Web Awesome assets separately in your
+app.
 
 Because Web Awesome lives in the browser and Shiny spans both server and
 client, the package includes more than generated wrappers alone. In practice,

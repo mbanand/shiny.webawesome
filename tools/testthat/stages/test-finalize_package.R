@@ -239,6 +239,10 @@ testthat::test_that(
       paste(default_result$details, collapse = "\n"),
       "Run external pre-release checks"
     )
+    testthat::expect_match(
+      paste(default_result$details, collapse = "\n"),
+      "./tools/check_interactive.R"
+    )
     testthat::expect_false(strict_result$ok)
     testthat::expect_match(
       paste(strict_result$details, collapse = "\n"),

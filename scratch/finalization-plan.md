@@ -10,11 +10,9 @@ relevant workflow and release process decisions are finalized.
 ## Status notes
 
 - Current documented pipeline:
-  `clean -> fetch -> prune -> generate -> test -> report`
-- Planned pipeline extension:
   `clean -> fetch -> prune -> generate -> test -> report -> finalize -> publish`
 - Current focus:
-  establish the working plan, then execute it phase by phase
+  finish Section J with the strict finalize pass from a clean start state
 
 ## A. One-Time Repo Setup
 
@@ -209,20 +207,26 @@ relevant workflow and release process decisions are finalized.
 
 ## J. Full Local Finalize Validation
 
-- [ ] Run `devtools::document()`
-- [ ] Run required style passes
-- [ ] Run required lint passes
-- [ ] Run a dependency audit for package, test, and vignette usage and review
-      any `DESCRIPTION` updates intentionally rather than mutating them
-      blindly
-- [ ] Build vignettes/articles/site
-- [ ] Run `devtools::test()`
-- [ ] Run `devtools::check()`
-- [ ] Run `devtools::build()`
-- [ ] Run release-audit checks
+- [x] Run default `./tools/finalize_package.R`
+- [x] Fix surfaced finalize issues until the default pass is clean
+- [ ] Run strict `./tools/finalize_package.R --strict` from a clean
+      release-build starting state, with the required confirmation flags when
+      ready
+
+### Section J notes
+
+- The working execution model for this section is now the finalize
+  orchestrator rather than a manual replay of the older discrete substeps.
+- The default finalize pass is green.
+- A simulated CRAN-style test run using `NOT_CRAN=false` completed with the
+  browser tests skipped and the remaining suite finishing quickly.
+- The next remaining Section J gate is the strict finalize pass.
 
 ## K. External Pre-Release Validation
 
+- [x] Run the representative Shiny app visual review via
+      `./tools/check_interactive.R` for the strict finalize
+      `--confirmed-visual-review` gate
 - [ ] Review and refine GitHub Actions coverage
 - [ ] Ensure Linux, macOS, and Windows validation coverage
 - [ ] Add or refine remote release-oriented checks
