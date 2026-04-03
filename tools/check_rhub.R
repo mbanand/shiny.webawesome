@@ -88,7 +88,7 @@ rm(.bootstrap_cli_ui)
     ),
     paste(
       "--platform <name>  Use one rhub platform name.",
-      "Supply multiple times to override the defaults."
+      "Supply multiple times to override the default r-release set."
     ),
     paste(
       "--allow-main    Permit running from `main`.",
@@ -117,7 +117,12 @@ rm(.bootstrap_cli_ui)
 .rhub_defaults <- function() {
   list(
     root = ".",
-    platforms = c("linux", "macos", "macos-arm64", "windows"),
+    platforms = c(
+      "r-release-linux-x86_64",
+      "r-release-macos-arm64",
+      "r-release-macos-x86_64",
+      "r-release-windows-x86_64"
+    ),
     allow_main = FALSE,
     run_doctor = TRUE,
     help = FALSE
@@ -358,17 +363,24 @@ rm(.bootstrap_cli_ui)
 #'
 #' Verifies that the repository is on a clean, pushed git branch, optionally
 #' runs `rhub::rhub_doctor()`, and then launches `rhub::rhub_check()` for the
-#' current branch using rhub's interactive platform selection.
+#' current branch using an explicit `r-release` platform set by default.
 #'
 #' This helper intentionally does not create, push, or delete branches. Run it
 #' from the branch that should own the external release check.
+#'
+#' When `platforms` is left at its default, the helper runs
+#' `r-release-linux-x86_64`, `r-release-macos-arm64`,
+#' `r-release-macos-x86_64`, and `r-release-windows-x86_64`. For the current
+#' full list of available platform names, see CRAN check flavors:
+#' <https://cran.r-project.org/web/checks/check_flavors.html>.
 #'
 #' CLI entry point:
 #' `./tools/check_rhub.R --help`
 #'
 #' @param root Repository root directory.
 #' @param platforms Character vector of rhub platform names. Defaults to
-#'   `c("linux", "macos", "macos-arm64", "windows")`.
+#'   `c("r-release-linux-x86_64", "r-release-macos-arm64",
+#'   "r-release-macos-x86_64", "r-release-windows-x86_64")`.
 #' @param allow_main Logical scalar. If `FALSE`, refuse to run from the
 #'   repository's default branch when it can be detected.
 #' @param run_doctor Logical scalar. If `TRUE`, call `rhub::rhub_doctor()`
@@ -386,16 +398,19 @@ rm(.bootstrap_cli_ui)
 #' @examples
 #' \dontrun{
 #' check_rhub()
-#' check_rhub(platforms = c("linux", "windows"))
+#' check_rhub(platforms = c(
+#'   "r-release-linux-x86_64",
+#'   "r-release-windows-x86_64"
+#' ))
 #' check_rhub(allow_main = TRUE)
 #' check_rhub(run_doctor = FALSE)
 #' }
 check_rhub <- function(root = ".",
                        platforms = c(
-                         "linux",
-                         "macos",
-                         "macos-arm64",
-                         "windows"
+                         "r-release-linux-x86_64",
+                         "r-release-macos-arm64",
+                         "r-release-macos-x86_64",
+                         "r-release-windows-x86_64"
                        ),
                        allow_main = FALSE,
                        run_doctor = TRUE,

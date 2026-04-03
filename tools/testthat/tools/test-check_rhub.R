@@ -86,7 +86,12 @@ testthat::test_that("check_rhub uses defaults when no platform is supplied", {
 
   testthat::expect_identical(
     options$platforms,
-    c("linux", "macos", "macos-arm64", "windows")
+    c(
+      "r-release-linux-x86_64",
+      "r-release-macos-arm64",
+      "r-release-macos-x86_64",
+      "r-release-windows-x86_64"
+    )
   )
 })
 
@@ -197,7 +202,12 @@ testthat::test_that(
         list(
           type = "check",
           branch = "release-candidate",
-          platforms = c("linux", "macos", "macos-arm64", "windows")
+          platforms = c(
+            "r-release-linux-x86_64",
+            "r-release-macos-arm64",
+            "r-release-macos-x86_64",
+            "r-release-windows-x86_64"
+          )
         )
       )
     )
@@ -205,7 +215,12 @@ testthat::test_that(
     testthat::expect_identical(result$upstream, "origin/release-candidate")
     testthat::expect_identical(
       result$platforms,
-      c("linux", "macos", "macos-arm64", "windows")
+      c(
+        "r-release-linux-x86_64",
+        "r-release-macos-arm64",
+        "r-release-macos-x86_64",
+        "r-release-windows-x86_64"
+      )
     )
     testthat::expect_true(isTRUE(result$ran_doctor))
   }
