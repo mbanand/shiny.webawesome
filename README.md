@@ -6,6 +6,7 @@
 -->
 ![CRAN status](https://img.shields.io/badge/CRAN-not%20published-lightgrey)
 [![R-CMD-check](https://github.com/mbanand/shiny.webawesome/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mbanand/shiny.webawesome/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/mbanand/shiny.webawesome/graph/badge.svg)](https://app.codecov.io/gh/mbanand/shiny.webawesome)
 <!-- badges: end -->
 
 `shiny.webawesome` provides an R and Shiny interface to the Web Awesome
