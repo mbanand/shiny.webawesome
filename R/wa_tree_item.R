@@ -20,6 +20,9 @@
 #' @param collapse_icon The icon to show when the tree item is collapsed.
 #' @param expand_icon The icon to show when the tree item is expanded.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

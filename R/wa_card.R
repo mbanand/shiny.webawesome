@@ -28,6 +28,9 @@
 #' @param media An optional media section to render at the start of the
 #' card.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

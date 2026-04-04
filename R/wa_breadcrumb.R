@@ -19,6 +19,9 @@
 #' @param separator The separator to use between breadcrumb items. Works
 #' best with `<wa-icon>`.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

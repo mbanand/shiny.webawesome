@@ -33,6 +33,9 @@
 #' @param without_grouping Boolean. Default: `FALSE`. Turns off grouping
 #' separators.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

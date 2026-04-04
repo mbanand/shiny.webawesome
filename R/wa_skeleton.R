@@ -16,6 +16,9 @@
 #' use.
 #' @param lang String. Optional Web Awesome attribute.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

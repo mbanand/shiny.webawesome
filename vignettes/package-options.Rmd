@@ -39,13 +39,17 @@ Known keys currently include:
 Controls the warning path used by `wa_tree()` when selected descendant
 `wa-tree-item` elements do not have stable DOM `id` attributes.
 
-This matters because the tree binding publishes selected item ids back to
+The default is `TRUE`.
+
+This is useful because the tree binding publishes selected item ids back to
 Shiny. Selected items without ids cannot participate in that Shiny value.
 
 ## `command_layer`
 
 Controls warnings emitted by the runtime command bridge used by
 `wa_set_property()` and `wa_call_method()`.
+
+The default is `TRUE`.
 
 These warnings help surface problems such as:
 
@@ -57,6 +61,8 @@ These warnings help surface problems such as:
 ## `command_layer_debug`
 
 Controls additional debug logging for the runtime command bridge.
+
+The default is `FALSE`.
 
 When enabled, the browser console receives debug messages for successful
 command-layer operations.

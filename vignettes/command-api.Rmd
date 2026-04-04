@@ -13,7 +13,7 @@ vignette: >
 command/helper layer for advanced cases that are outside the generated
 wrapper, binding, and update-helper surface.
 
-This layer exists for cases where you need to:
+This layer is useful for cases where you need to:
 
 - set a live browser-side property from the Shiny server
 - call a browser-side method from the Shiny server
@@ -58,6 +58,16 @@ a live browser-side property on the target element.
 This is useful when a component property needs to change from server logic but
 the package does not already provide a generated update helper for that field.
 
+On the server side, `wa_set_property()` validates only the helper inputs such
+as the target `id`, property name, and session. It does not validate whether
+the requested property exists on the browser-side element.
+
+In the browser runtime, the command layer validates that the DOM `id` resolves
+to an element and that a property name was supplied, then assigns the value
+directly. Warning messages for this command path are controlled by the package
+warning registry, especially the `command_layer` key. For details, refer to
+the Package Options article.
+
 ```{r command-set-property, eval = FALSE}
 library(shiny)
 library(shiny.webawesome)
@@ -88,6 +98,16 @@ browser-side method on the target element.
 
 This is useful when the component already exposes a meaningful browser-side
 method and you want to trigger it directly from server logic.
+
+On the server side, `wa_call_method()` validates only the helper inputs such as
+the target `id`, method name, argument list, and session. It does not validate
+whether the requested method exists on the browser-side element.
+
+In the browser runtime, the command layer validates that the DOM `id` resolves
+to an element, that a method name was supplied, and that the named member is
+callable on the target element before invoking it. Warning messages for this
+command path are controlled by the package warning registry, especially the
+`command_layer` key. For details, refer to the Package Options article.
 
 ```{r command-call-method, eval = FALSE}
 library(shiny)

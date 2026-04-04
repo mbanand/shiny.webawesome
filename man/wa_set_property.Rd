@@ -41,6 +41,16 @@ whether the requested property exists for the targeted component.
 This helper is complementary to generated component bindings and update
 helpers. It is not part of upstream component coverage and does not expand
 the generated per-component API surface.
+
+On the server side, \code{wa_set_property()} validates only its R helper inputs,
+such as the target \code{id}, property name, and session. It does not validate
+whether the requested property exists on the browser-side element.
+
+In the browser runtime, the command layer validates that the target DOM
+\code{id} resolves to an element and that a property name was supplied, then
+assigns the value directly. Command-layer warnings are controlled by the
+package warning registry, especially the \code{command_layer} key. For option
+details, see the Package Options article.
 }
 \examples{
 \dontrun{

@@ -30,6 +30,9 @@
 #' @param submenu Submenu items, typically `<wa-dropdown-item>` elements,
 #' to create a nested menu.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

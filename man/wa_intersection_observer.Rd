@@ -60,3 +60,8 @@ Generated wrapper for the Web Awesome \code{wa-intersection-observer}
 component.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+None.
+}
+

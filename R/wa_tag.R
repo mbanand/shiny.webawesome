@@ -26,6 +26,9 @@
 #' @param with_remove Boolean. Default: `FALSE`. Makes the tag removable
 #' and shows a remove button.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

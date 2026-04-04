@@ -61,6 +61,22 @@ testthat::test_that(
         fatal = TRUE,
         run = function(context) list(ok = TRUE, details = "clean")
       ),
+      coverage = list(
+        label = "Computing package test coverage",
+        fatal = FALSE,
+        run = function(context) {
+          list(
+            ok = TRUE,
+            details = "Package test coverage: 91.2%",
+            data = list(
+              package_coverage = list(
+                available = TRUE,
+                percent = 91.2
+              )
+            )
+          )
+        }
+      ),
       optional_check = list(
         label = "Optional check",
         fatal = function(context) isTRUE(context$strict),
@@ -110,6 +126,18 @@ testthat::test_that(
     testthat::expect_equal(handoff$mode, "default")
     testthat::expect_equal(handoff$git_head, "abc123")
     testthat::expect_equal(handoff$artifacts$website$path, "website")
+    testthat::expect_true(isTRUE(handoff$coverage$package$available))
+    testthat::expect_equal(handoff$coverage$package$percent, 91.2)
+
+    summary_lines <- readLines(
+      file.path(root, "reports", "finalize", "summary.md"),
+      warn = FALSE
+    )
+    testthat::expect_true(any(grepl(
+      "Advisory package test coverage: `91.2%`",
+      summary_lines,
+      fixed = TRUE
+    )))
   }
 )
 
@@ -254,6 +282,29 @@ testthat::test_that(
     )
   }
 )
+
+testthat::test_that("package coverage helper degrades to unavailable", {
+  failing_runner <- function(command,
+                             args = character(),
+                             wd = ".",
+                             env = character()) {
+    list(
+      status = 1L,
+      stdout = character(),
+      stderr = "coverage failed"
+    )
+  }
+
+  result <- .run_package_coverage_step(
+    root = ".",
+    runner = failing_runner
+  )
+
+  testthat::expect_true(result$ok)
+  testthat::expect_false(isTRUE(result$data$package_coverage$available))
+  testthat::expect_null(result$data$package_coverage$percent)
+  testthat::expect_match(result$details, "Package test coverage unavailable.")
+})
 
 testthat::test_that(
   "dependency audit reports missing imports and support deps",

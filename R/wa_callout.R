@@ -24,6 +24,9 @@
 #' @param icon An icon to show in the callout. Works best with
 #' `<wa-icon>`.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

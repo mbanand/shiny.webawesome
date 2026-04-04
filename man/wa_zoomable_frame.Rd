@@ -75,3 +75,8 @@ An HTML tag for the component.
 Generated wrapper for the Web Awesome \code{wa-zoomable-frame} component.
 Generated from Web Awesome metadata.
 }
+\section{Shiny Bindings}{
+
+None.
+}
+

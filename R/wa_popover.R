@@ -29,6 +29,9 @@
 #' @param without_arrow Boolean. Default: `FALSE`. Removes the arrow from
 #' the popover.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

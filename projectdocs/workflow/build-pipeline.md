@@ -691,13 +691,15 @@ The finalize stage should run the following steps in order:
 4. run dependency-audit checks without auto-editing `DESCRIPTION`
 5. regenerate package documentation with `devtools::document()`
 6. run `devtools::test()`
-7. build the local pkgdown website with `build_site.R`
-8. run `devtools::check()`
-9. in strict mode, require explicit maintainer confirmation flags for the
+7. compute advisory package test coverage and record the reported percentage
+   in the finalize artifacts without treating it as a release gate
+8. build the local pkgdown website with `build_site.R`
+9. run `devtools::check()`
+10. in strict mode, require explicit maintainer confirmation flags for the
    external pre-release checks and final visual review:
    `--confirmed-rhub-pass` and `--confirmed-visual-review`
-10. build the package tarball with `devtools::build()`
-11. write the finalize handoff artifacts
+11. build the package tarball with `devtools::build()`
+12. write the finalize handoff artifacts
 
 Default-mode finalize may continue past selected non-fatal validation findings
 and record them as warnings. Strict finalize should fail on any required gate.
@@ -712,6 +714,7 @@ deterministically from the repository itself. These include:
 - dependency audits
 - package documentation regeneration
 - package tests
+- advisory package test coverage reporting
 - site build validation
 - `devtools::check()`
 - package tarball creation
@@ -756,6 +759,7 @@ The handoff record should include, at minimum:
 - whether finalize ran in default or strict mode
 - the built package tarball path and checksum
 - the built `website/` tree path and checksum
+- the advisory package test coverage result, when available
 - a checksum for the tracked git tree at `HEAD`
 - a timestamp
 - a pass/warn/fail summary

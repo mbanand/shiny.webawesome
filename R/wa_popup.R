@@ -100,6 +100,9 @@
 #' anchor lives outside of the popup, you can use the `anchor` attribute
 #' or property instead.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

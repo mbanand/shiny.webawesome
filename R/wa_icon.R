@@ -47,6 +47,9 @@
 #' Awesome Pro subscription. Custom icon libraries may or may not use this
 #' property.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

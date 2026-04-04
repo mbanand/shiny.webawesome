@@ -19,6 +19,9 @@
 #' @param unit Enumerated string. Allowed values: `bit`, `byte`. Default:
 #' `byte`. The type of unit to display.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

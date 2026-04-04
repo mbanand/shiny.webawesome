@@ -98,6 +98,7 @@ This tool performs the documented finalize sequence, including:
 - dependency auditing
 - package documentation regeneration
 - package tests
+- advisory package test coverage reporting
 - site building
 - package checking
 - tarball creation

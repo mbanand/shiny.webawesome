@@ -27,6 +27,9 @@
 #' instead.
 #' @param start An element, such as `<wa-icon>`, placed before the label.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

@@ -32,6 +32,9 @@
 #' @param zoom_in_icon The slot that contains the zoom in icon.
 #' @param zoom_out_icon The slot that contains the zoom out icon.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export
