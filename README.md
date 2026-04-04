@@ -1,5 +1,9 @@
 # shiny.webawesome
 
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/shiny.webawesome)](https://CRAN.R-project.org/package=shiny.webawesome)
+<!-- badges: end -->
+
 `shiny.webawesome` provides an R and Shiny interface to the Web Awesome
 component library.
 
