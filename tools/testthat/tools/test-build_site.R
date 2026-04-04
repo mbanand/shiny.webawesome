@@ -57,6 +57,28 @@ source(file.path("..", "..", "build_site.R"))
     "Return a small greeting string.",
     "}"
   ))
+  dir.create(
+    file.path(root, "tools", "man"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
+  .write_file(
+    file.path(root, "tools", "man", "build_site.html"),
+    "<html><body>tool doc</body></html>"
+  )
+  .write_file(
+    file.path(root, "tools", "man", "build_site.txt"),
+    "build_site tool doc"
+  )
+  .write_file(
+    file.path(root, "tools", "man", "build_site.Rd"),
+    c(
+      "\\name{build_site}",
+      "\\alias{build_site}",
+      "\\title{Build site}",
+      "\\description{Test tool documentation.}"
+    )
+  )
 
   file.copy(
     normalizePath(file.path("..", "..", "build_site.R"), mustWork = TRUE),
@@ -126,7 +148,30 @@ testthat::test_that("build_site builds the configured pkgdown destination", {
     showWarnings = FALSE
   )
 
-  result <- build_site(root = root, install = TRUE, verbose = FALSE)
+  build_env <- environment(build_site)
+  old_build <- get(".run_pkgdown_site_build", envir = build_env)
+  assign(
+    ".run_pkgdown_site_build",
+    function(root, install, preview, verbose) {
+      dir.create(
+        file.path(root, "website"),
+        recursive = TRUE,
+        showWarnings = FALSE
+      )
+      .write_file(file.path(root, "website", "index.html"), "<html></html>")
+      .write_file(
+        file.path(root, "website", "pkgdown.yml"),
+        "destination: website"
+      )
+      invisible(NULL)
+    },
+    envir = build_env
+  )
+  withr::defer(
+    assign(".run_pkgdown_site_build", old_build, envir = build_env)
+  )
+
+  result <- build_site(root = root, install = FALSE, verbose = FALSE)
 
   testthat::expect_equal(result$destination, "website")
   testthat::expect_true(file.exists(file.path(root, "website", "index.html")))

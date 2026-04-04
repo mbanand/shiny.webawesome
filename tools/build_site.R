@@ -226,6 +226,15 @@ rm(.bootstrap_cli_ui)
   invisible(target_dir)
 }
 
+# Remove any pre-existing generated site destination before pkgdown rebuilds it.
+.reset_site_destination <- function(destination_dir) {
+  if (dir.exists(destination_dir)) {
+    unlink(destination_dir, recursive = TRUE, force = TRUE)
+  }
+
+  invisible(destination_dir)
+}
+
 # Discover immediate shinylive example app directories in deterministic order.
 .find_shinylive_example_dirs <- function(source_dir) {
   if (!dir.exists(source_dir)) {
@@ -541,6 +550,8 @@ build_site <- function(root = ".",
 
   tryCatch(
     {
+      .reset_site_destination(destination_dir)
+
       .run_pkgdown_site_build(
         root = root,
         install = install,

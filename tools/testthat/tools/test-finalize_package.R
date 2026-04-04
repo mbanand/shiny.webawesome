@@ -68,16 +68,20 @@ testthat::test_that("finalize_package rejects unknown arguments", {
   testthat::expect_match(result$stderr, "Unknown argument")
 })
 
-testthat::test_that("finalize_package strict mode enforces clean start state", {
-  root <- withr::local_tempdir()
-  .create_fake_repo(root)
-  dir.create(file.path(root, "vendor", "webawesome"), recursive = TRUE)
+testthat::test_that(
+  "finalize_package strict mode no longer enforces clean start state",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+    dir.create(file.path(root, "vendor", "webawesome"), recursive = TRUE)
 
-  result <- .run_finalize_script(root, "--strict")
+    result <- .run_finalize_script(root, "--strict")
 
-  testthat::expect_false(identical(result$status, 0L))
-  testthat::expect_match(
-    result$stderr,
-    "Strict finalize requires a clean release-build starting state"
-  )
-})
+    testthat::expect_false(identical(result$status, 0L))
+    testthat::expect_no_match(
+      result$stderr,
+      "Strict finalize requires a clean release-build starting state"
+    )
+    testthat::expect_match(result$stderr, "check_integrity\\.R")
+  }
+)

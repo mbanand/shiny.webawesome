@@ -206,6 +206,17 @@
   c("[   ]", "[.  ]", "[.. ]", "[...]", "[ ..]", "[  .]")
 }
 
+# Merge child-process environment overrides into the current environment.
+.cli_child_env <- function(env = character()) {
+  if (length(env) == 0L) {
+    return(NULL)
+  }
+
+  current <- Sys.getenv(names = TRUE, unset = NA_character_)
+  current[names(env)] <- unname(env)
+  current
+}
+
 # Run a child command and adapt output handling to the selected UI mode.
 .cli_run_command <- function(ui,
                              label,
@@ -228,7 +239,7 @@
         wd = wd,
         echo = FALSE,
         error_on_status = FALSE,
-        env = env
+        env = .cli_child_env(env)
       )
     )
   }
@@ -240,7 +251,7 @@
     stdout = "|",
     stderr = "|",
     cleanup_tree = TRUE,
-    env = env
+    env = .cli_child_env(env)
   )
 
   stdout_lines <- character()

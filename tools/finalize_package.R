@@ -219,75 +219,6 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
   all(file.exists(file.path(root, required_paths)))
 }
 
-# Return stage-owned surfaces that should not already exist before a strict run.
-.strict_release_start_surfaces <- function() {
-  c(
-    "vendor/webawesome",
-    "inst/extdata/webawesome",
-    "inst/www/wa",
-    "inst/bindings"
-  )
-}
-
-# Return generated R files that should not already exist before a strict run.
-.generated_r_files <- function(root) {
-  r_dir <- file.path(root, "R")
-  if (!dir.exists(r_dir)) {
-    return(character())
-  }
-
-  paths <- list.files(r_dir, pattern = "\\.[Rr]$", full.names = TRUE)
-  if (length(paths) == 0L) {
-    return(character())
-  }
-
-  owned <- vapply(
-    paths,
-    function(path) {
-      lines <- readLines(path, n = 1L, warn = FALSE)
-      length(lines) > 0L &&
-        identical(lines[[1]], .generated_file_marker())
-    },
-    logical(1)
-  )
-
-  sort(paths[owned])
-}
-
-# Fail early when strict finalize is requested from a non-clean release start.
-.assert_strict_start_state <- function(root = ".") {
-  stale_paths <- .strict_release_start_surfaces()
-  existing <- stale_paths[file.exists(file.path(root, stale_paths))]
-
-  generated_r <- .generated_r_files(root)
-  if (length(generated_r) > 0L) {
-    existing <- c(
-      existing,
-      .strip_root_prefix(
-        normalizePath(generated_r, winslash = "/", mustWork = TRUE),
-        root
-      )
-    )
-  }
-
-  existing <- sort(unique(existing))
-
-  if (length(existing) == 0L) {
-    return(invisible(TRUE))
-  }
-
-  stop(
-    paste(
-      "Strict finalize requires a clean release-build starting state.",
-      "Remove existing stage-owned artifacts first, for example by running",
-      "`clean_webawesome(level = \"distclean\")`.",
-      "Found:",
-      paste(existing, collapse = ", ")
-    ),
-    call. = FALSE
-  )
-}
-
 # Return the finalize manifest directory.
 .finalize_manifest_dir <- function(root) {
   file.path(root, "manifests", "finalize")
@@ -1250,10 +1181,6 @@ finalize_package <- function(root = ".",
 
   if (!.is_repo_root(root)) {
     stop("`root` does not appear to be the repository root.", call. = FALSE)
-  }
-
-  if (isTRUE(strict)) {
-    .assert_strict_start_state(root)
   }
 
   ui <- .cli_ui_new()

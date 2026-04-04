@@ -52,7 +52,12 @@
     "#!/usr/bin/env Rscript",
     "args <- commandArgs(trailingOnly = TRUE)",
     "strict <- if ('--strict' %in% args) 'yes' else 'no'",
-    "cat(paste0('finalize strict: ', strict, '\\n'))"
+    paste0(
+      "confirmed <- if ('--confirmed-rhub-pass' %in% args && ",
+      "'--confirmed-visual-review' %in% args) 'yes' else 'no'"
+    ),
+    "cat(paste0('finalize strict: ', strict, '\\n'))",
+    "cat(paste0('finalize confirmations: ', confirmed, '\\n'))"
   ))
 
   scripts <- c(
@@ -92,6 +97,8 @@ testthat::test_that("build_package prints help", {
   testthat::expect_match(result$stdout, "Usage: ./tools/build_package.R")
   testthat::expect_match(result$stdout, "--skip-tools")
   testthat::expect_match(result$stdout, "--finalize-strict")
+  testthat::expect_match(result$stdout, "--confirmed-rhub-pass")
+  testthat::expect_match(result$stdout, "--confirmed-visual-review")
 })
 
 testthat::test_that("build_package runs build_tools first when present", {
@@ -181,6 +188,24 @@ testthat::test_that("build_package passes strict mode only to finalize", {
 })
 
 testthat::test_that(
+  "build_package passes finalize confirmation flags through",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+
+    result <- .run_build_package_script(root, c(
+      "--finalize-strict",
+      "--confirmed-rhub-pass",
+      "--confirmed-visual-review"
+    ))
+
+    testthat::expect_equal(result$status, 0)
+    testthat::expect_match(result$stderr, "finalize strict: yes")
+    testthat::expect_match(result$stderr, "finalize confirmations: yes")
+  }
+)
+
+testthat::test_that(
   "build_package strict mode rejects pre-existing stage-owned artifacts",
   {
     root <- withr::local_tempdir()
@@ -192,7 +217,7 @@ testthat::test_that(
     testthat::expect_false(identical(result$status, 0L))
     testthat::expect_match(
       result$stderr,
-      "Strict finalize requires a clean release-build starting state"
+      "Strict build_package requires a clean release-build starting state"
     )
   }
 )
