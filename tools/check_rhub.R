@@ -64,7 +64,10 @@ rm(.bootstrap_cli_ui)
 .rhub_usage <- function() {
   paste(
     "Usage: ./tools/check_rhub.R",
-    "[--root <path>] [--allow-main] [--skip-doctor] [--help]"
+    paste(
+      "[--root <path>] [--platform <name>] [--allow-main]",
+      "[--skip-doctor] [--help]"
+    )
   )
 }
 
@@ -82,6 +85,10 @@ rm(.bootstrap_cli_ui)
     paste(
       "--root <path>   Repository root.",
       "Defaults to the current directory."
+    ),
+    paste(
+      "--platform <name>  Use one rhub platform name.",
+      "Supply multiple times to override the default r-release set."
     ),
     paste(
       "--allow-main    Permit running from `main`.",
@@ -110,6 +117,12 @@ rm(.bootstrap_cli_ui)
 .rhub_defaults <- function() {
   list(
     root = ".",
+    platforms = c(
+      "r-release-linux-x86_64",
+      "r-release-macos-arm64",
+      "r-release-macos-x86_64",
+      "r-release-windows-x86_64"
+    ),
     allow_main = FALSE,
     run_doctor = TRUE,
     help = FALSE
@@ -119,6 +132,7 @@ rm(.bootstrap_cli_ui)
 # Parse command-line arguments for the rhub helper tool.
 .parse_rhub_args <- function(args) {
   options <- .rhub_defaults()
+  platform_args <- character()
   skip_next <- FALSE
 
   for (i in seq_along(args)) {
@@ -136,6 +150,16 @@ rm(.bootstrap_cli_ui)
 
     if (arg == "--allow-main") {
       options$allow_main <- TRUE
+      next
+    }
+
+    if (arg == "--platform") {
+      if (i == length(args)) {
+        stop("Missing value for --platform.", call. = FALSE)
+      }
+
+      platform_args <- c(platform_args, args[[i + 1L]])
+      skip_next <- TRUE
       next
     }
 
@@ -159,11 +183,22 @@ rm(.bootstrap_cli_ui)
       next
     }
 
+    if (startsWith(arg, "--platform=")) {
+      platform_args <- c(platform_args, sub("^--platform=", "", arg))
+      next
+    }
+
     stop(
       paste0("Unknown argument: ", arg, "\n", .rhub_usage()),
       call. = FALSE
     )
   }
+
+  if (length(platform_args) > 0L) {
+    options$platforms <- platform_args
+  }
+
+  options$platforms <- unique(options$platforms[nzchar(options$platforms)])
 
   options
 }
@@ -316,10 +351,10 @@ rm(.bootstrap_cli_ui)
 }
 
 # Return the default rhub check function.
-.default_rhub_check <- function(branch) {
+.default_rhub_check <- function(branch, platforms) {
   rhub::rhub_check(
     gh_url = NULL,
-    platforms = NULL,
+    platforms = platforms,
     branch = branch
   )
 }
@@ -328,15 +363,24 @@ rm(.bootstrap_cli_ui)
 #'
 #' Verifies that the repository is on a clean, pushed git branch, optionally
 #' runs `rhub::rhub_doctor()`, and then launches `rhub::rhub_check()` for the
-#' current branch using rhub's interactive platform selection.
+#' current branch using an explicit `r-release` platform set by default.
 #'
 #' This helper intentionally does not create, push, or delete branches. Run it
 #' from the branch that should own the external release check.
+#'
+#' When `platforms` is left at its default, the helper runs
+#' `r-release-linux-x86_64`, `r-release-macos-arm64`,
+#' `r-release-macos-x86_64`, and `r-release-windows-x86_64`. For the current
+#' full list of available platform names, see CRAN check flavors:
+#' <https://cran.r-project.org/web/checks/check_flavors.html>.
 #'
 #' CLI entry point:
 #' `./tools/check_rhub.R --help`
 #'
 #' @param root Repository root directory.
+#' @param platforms Character vector of rhub platform names. Defaults to
+#'   `c("r-release-linux-x86_64", "r-release-macos-arm64",
+#'   "r-release-macos-x86_64", "r-release-windows-x86_64")`.
 #' @param allow_main Logical scalar. If `FALSE`, refuse to run from the
 #'   repository's default branch when it can be detected.
 #' @param run_doctor Logical scalar. If `TRUE`, call `rhub::rhub_doctor()`
@@ -354,10 +398,20 @@ rm(.bootstrap_cli_ui)
 #' @examples
 #' \dontrun{
 #' check_rhub()
+#' check_rhub(platforms = c(
+#'   "r-release-linux-x86_64",
+#'   "r-release-windows-x86_64"
+#' ))
 #' check_rhub(allow_main = TRUE)
 #' check_rhub(run_doctor = FALSE)
 #' }
 check_rhub <- function(root = ".",
+                       platforms = c(
+                         "r-release-linux-x86_64",
+                         "r-release-macos-arm64",
+                         "r-release-macos-x86_64",
+                         "r-release-windows-x86_64"
+                       ),
                        allow_main = FALSE,
                        run_doctor = TRUE,
                        verbose = interactive(),
@@ -368,6 +422,13 @@ check_rhub <- function(root = ".",
 
   if (!.is_repo_root(root)) {
     stop("`root` does not appear to be the repository root.", call. = FALSE)
+  }
+
+  if (length(platforms) == 0L || any(!nzchar(platforms))) {
+    stop(
+      "`platforms` must contain at least one non-empty platform.",
+      call. = FALSE
+    )
   }
 
   if (is.null(doctor_fun)) {
@@ -479,7 +540,7 @@ check_rhub <- function(root = ".",
   .cli_step_start(ui, "Starting rhub check")
   tryCatch(
     {
-      check_fun(branch)
+      check_fun(branch, platforms)
     },
     error = function(condition) {
       .cli_step_fail(ui, details = conditionMessage(condition))
@@ -502,6 +563,7 @@ check_rhub <- function(root = ".",
       branch = branch,
       upstream = upstream,
       workflow = .strip_root(workflow, root),
+      platforms = platforms,
       ran_doctor = isTRUE(run_doctor)
     )
   )
@@ -520,6 +582,7 @@ run_check_rhub <- function(args = commandArgs(trailingOnly = TRUE)) {
     invisible(
       check_rhub(
         root = options$root,
+        platforms = options$platforms,
         allow_main = options$allow_main,
         run_doctor = options$run_doctor
       )

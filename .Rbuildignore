@@ -1,6 +1,8 @@
 ^AGENTS\.md$
 ^\.git$
 ^\.git/
+^\.github$
+^\.github/
 ^\.gitignore$
 ^_pkgdown\.yml$
 ^\.Renviron$

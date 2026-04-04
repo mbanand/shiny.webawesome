@@ -107,6 +107,11 @@ This tool performs the documented finalize sequence, including:
 The finalize workflow supports iterative default mode and a stricter
 `--strict` release-preparation mode.
 
+Strict clean-start enforcement belongs to the full `build_package.R`
+orchestrator, not to `finalize_package.R` itself. Strict finalize is the
+late-stage gate that runs after the earlier build stages have already
+recreated the package-owned generated surfaces.
+
 The finalize workflow also checks handwritten JavaScript with ESLint. That
 means the developer environment should have ESLint, which in turn requires
 Node.js and npm, available before finalize is treated as ready-to-run. Use the
@@ -152,6 +157,11 @@ binding-candidate review, report, integrity checking, and finalize.
 `build_package.R` does not own publish. The release publication step remains
 separate so git tagging, pushing, and website deployment happen only when the
 maintainer explicitly decides the repository is ready to put out.
+
+When invoked with `--finalize-strict`, `build_package.R` is the entry point
+that should enforce a clean release-build starting state. It also passes the
+external strict-finalize confirmation flags through to `finalize_package.R`:
+`--confirmed-rhub-pass` and `--confirmed-visual-review`.
 
 # Website Tool
 

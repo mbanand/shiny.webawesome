@@ -47,6 +47,17 @@ source(file.path("..", "..", "document_tools.R"))
     file.path(root, "tools", "check_integrity.R")
   )
   file.copy(
+    normalizePath(
+      file.path("..", "..", "check_interactive.R"),
+      mustWork = TRUE
+    ),
+    file.path(root, "tools", "check_interactive.R")
+  )
+  file.copy(
+    normalizePath(file.path("..", "..", "check_rhub.R"), mustWork = TRUE),
+    file.path(root, "tools", "check_rhub.R")
+  )
+  file.copy(
     normalizePath(file.path("..", "..", "cli_ui.R"), mustWork = TRUE),
     file.path(root, "tools", "cli_ui.R")
   )
@@ -137,6 +148,8 @@ testthat::test_that(
     testthat::expect_true("fetch_webawesome.Rd" %in% result$generated)
     testthat::expect_true("finalize_package.Rd" %in% result$generated)
     testthat::expect_true("check_integrity.Rd" %in% result$generated)
+    testthat::expect_true("check_interactive.Rd" %in% result$generated)
+    testthat::expect_true("check_rhub.Rd" %in% result$generated)
     testthat::expect_true("prune_webawesome.Rd" %in% result$generated)
     testthat::expect_true("report_components.Rd" %in% result$generated)
     testthat::expect_true("review_binding_candidates.Rd" %in% result$generated)
@@ -151,6 +164,12 @@ testthat::test_that(
     )
     testthat::expect_true(
       file.exists(file.path(root, "tools", "man", "check_integrity.Rd"))
+    )
+    testthat::expect_true(
+      file.exists(file.path(root, "tools", "man", "check_interactive.Rd"))
+    )
+    testthat::expect_true(
+      file.exists(file.path(root, "tools", "man", "check_rhub.Rd"))
     )
     testthat::expect_true(
       file.exists(file.path(root, "tools", "man", "prune_webawesome.Rd"))

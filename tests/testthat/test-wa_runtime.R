@@ -40,6 +40,7 @@ test_that(
 )
 
 test_that("package dependency points at the shipped bootstrap assets", {
+  binding_dir <- system.file("bindings", package = "shiny.webawesome")
   dep <- shiny.webawesome:::.wa_dependency()
   script_src <- vapply(dep$script, `[[`, character(1), "src")
 

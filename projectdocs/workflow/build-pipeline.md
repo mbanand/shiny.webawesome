@@ -656,21 +656,28 @@ Finalize supports two operating modes:
 
 The top-level `build_package.R` orchestrator should expose a corresponding
 strict mode such as `--finalize-strict` when wiring this stage into the full
-package workflow.
+package workflow, and should pass through the external confirmation flags
+needed by `finalize --strict`.
 
-## Finalize Strict Preconditions
+## Strict Build Preconditions
 
-Strict finalize is intended to run from a release-build starting point.
+The top-level `build_package.R --finalize-strict` orchestration should own the
+clean release-build starting-state requirement.
 
-Before beginning its late-stage checks, strict finalize should fail early if
-the repository already contains stale or mismatched stage-owned build surfaces
-that indicate the release build is not starting from a trustworthy local
-state. In practice this means the strict run should not silently trust
-pre-existing vendor-owned, prune-owned, or generate-owned artifacts that do
-not match the current build chain.
+Before the full package-build pipeline begins, strict `build_package` should
+fail early if the repository already contains stale or mismatched stage-owned
+build surfaces that indicate the release build is not starting from a
+trustworthy local state. In practice this means the strict run should not
+silently trust pre-existing vendor-owned, prune-owned, or generate-owned
+artifacts that do not match the current build chain.
 
 The failure message should direct the developer to start from a cleaner state,
 typically by running `distclean` or otherwise rebuilding from a clean tree.
+
+`finalize --strict` itself should not repeat this clean-start assertion. It is
+the late-stage validation gate within the already-running strict
+`build_package` orchestration, and therefore should operate on the rebuilt
+surfaces produced by the earlier stages of that orchestrator.
 
 ## Finalize Sequence
 
@@ -868,7 +875,8 @@ When Web Awesome releases a new version, the update process is:
 4. Regenerate wrappers and bindings.
 5. Run the test suite.
 6. Generate manifests and reports.
-7. Run strict finalize from a release-build starting point.
+7. Run `build_package --finalize-strict` from a release-build starting point,
+   passing the external confirmation flags required by `finalize`.
 8. Publish only when the maintainer explicitly decides to create the release.
 
 Because the package is generator-driven, updating to new upstream versions is typically straightforward.

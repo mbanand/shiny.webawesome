@@ -292,20 +292,47 @@ testthat::test_that(
   }
 )
 
-testthat::test_that("strict finalize validates clean start state directly", {
+testthat::test_that("strict finalize no longer asserts a clean build start", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)
-
   dir.create(file.path(root, "vendor", "webawesome"), recursive = TRUE)
+  .write_file(file.path(root, "website", "index.html"), "<html></html>")
+  .write_file(file.path(root, "fake_0.1.0.tar.gz"), "tarball")
 
-  testthat::expect_error(
+  steps <- list(
+    cleanup = list(
+      label = "Cleaning finalize outputs",
+      fatal = TRUE,
+      run = function(context) list(ok = TRUE)
+    ),
+    confirmations = list(
+      label = "Checking external confirmations",
+      fatal = function(context) isTRUE(context$strict),
+      run = function(context) list(ok = TRUE)
+    ),
+    build = list(
+      label = "Building package tarball",
+      fatal = TRUE,
+      run = function(context) {
+        list(
+          ok = TRUE,
+          data = list(
+            tarball_path = file.path(context$root, "fake_0.1.0.tar.gz")
+          )
+        )
+      }
+    )
+  )
+
+  testthat::expect_no_error(
     finalize_package(
       root = root,
       strict = TRUE,
+      confirmed_rhub_pass = TRUE,
+      confirmed_visual_review = TRUE,
       verbose = FALSE,
       runner = .fake_git_runner,
-      steps = list()
-    ),
-    "Strict finalize requires a clean release-build starting state"
+      steps = steps
+    )
   )
 })

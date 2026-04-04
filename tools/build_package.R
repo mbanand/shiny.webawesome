@@ -46,7 +46,10 @@ rm(.bootstrap_cli_ui)
 .build_package_usage <- function() {
   paste(
     "Usage: ./tools/build_package.R",
-    "[--skip-tools] [--finalize-strict] [--help]"
+    paste(
+      "[--skip-tools] [--finalize-strict]",
+      "[--confirmed-rhub-pass] [--confirmed-visual-review] [--help]"
+    )
   )
 }
 
@@ -60,6 +63,14 @@ rm(.bootstrap_cli_ui)
   c(
     "--skip-tools  Skip the prerequisite tool build workflow.",
     "--finalize-strict  Run finalize_package.R in strict mode.",
+    paste(
+      "--confirmed-rhub-pass  Pass the rhub confirmation flag through to",
+      "finalize_package.R."
+    ),
+    paste(
+      "--confirmed-visual-review  Pass the manual visual review",
+      "confirmation flag through to finalize_package.R."
+    ),
     "--help, -h    Print this help text."
   )
 }
@@ -83,6 +94,8 @@ rm(.bootstrap_cli_ui)
   list(
     run_tools = TRUE,
     finalize_strict = FALSE,
+    confirmed_rhub_pass = FALSE,
+    confirmed_visual_review = FALSE,
     help = FALSE
   )
 }
@@ -99,6 +112,16 @@ rm(.bootstrap_cli_ui)
 
     if (arg == "--finalize-strict") {
       options$finalize_strict <- TRUE
+      next
+    }
+
+    if (arg == "--confirmed-rhub-pass") {
+      options$confirmed_rhub_pass <- TRUE
+      next
+    }
+
+    if (arg == "--confirmed-visual-review") {
+      options$confirmed_visual_review <- TRUE
       next
     }
 
@@ -143,14 +166,23 @@ rm(.bootstrap_cli_ui)
 }
 
 # Run one package build-stage script as a child CLI command.
-.run_package_build_step <- function(step_script, ui, finalize_strict = FALSE) {
-  args <- if (
-    isTRUE(finalize_strict) &&
-      identical(basename(step_script), "finalize_package.R")
-  ) {
-    "--strict"
-  } else {
-    character()
+.run_package_build_step <- function(step_script,
+                                    ui,
+                                    finalize_strict = FALSE,
+                                    confirmed_rhub_pass = FALSE,
+                                    confirmed_visual_review = FALSE) {
+  args <- character()
+
+  if (identical(basename(step_script), "finalize_package.R")) {
+    if (isTRUE(finalize_strict)) {
+      args <- c(args, "--strict")
+    }
+    if (isTRUE(confirmed_rhub_pass)) {
+      args <- c(args, "--confirmed-rhub-pass")
+    }
+    if (isTRUE(confirmed_visual_review)) {
+      args <- c(args, "--confirmed-visual-review")
+    }
   }
 
   .cli_run_command(
@@ -202,7 +234,8 @@ rm(.bootstrap_cli_ui)
   sort(paths[owned])
 }
 
-# Fail early when strict finalize is requested from a non-clean release start.
+# Fail early when strict build_package is requested from a non-clean release
+# start.
 .assert_strict_start_state <- function(root = ".") {
   stale_paths <- .strict_release_start_surfaces()
   existing <- stale_paths[file.exists(file.path(root, stale_paths))]
@@ -227,7 +260,7 @@ rm(.bootstrap_cli_ui)
 
   stop(
     paste(
-      "Strict finalize requires a clean release-build starting state.",
+      "Strict build_package requires a clean release-build starting state.",
       "Remove existing stage-owned artifacts first, for example by running",
       "`clean_webawesome(level = \"distclean\")`.",
       "Found:",
@@ -259,7 +292,10 @@ rm(.bootstrap_cli_ui)
 #' Run the package build orchestration workflow
 #'
 #' Runs the prerequisite tool build workflow and then executes whichever
-#' package-build step scripts are currently present in `tools/`.
+#' package-build step scripts are currently present in `tools/`. In strict
+#' mode, this orchestrator owns the clean release-build starting-state check
+#' before rebuilding the stage-owned package surfaces and invoking
+#' `finalize_package.R --strict`.
 #'
 #' CLI entry point:
 #' `./tools/build_package.R --help`
@@ -275,6 +311,11 @@ rm(.bootstrap_cli_ui)
 #' \dontrun{
 #' run_build_package()
 #' run_build_package("--skip-tools")
+#' run_build_package(c(
+#'   "--finalize-strict",
+#'   "--confirmed-rhub-pass",
+#'   "--confirmed-visual-review"
+#' ))
 #' run_build_package("--help")
 #' }
 run_build_package <- function(args = commandArgs(trailingOnly = TRUE)) {
@@ -322,7 +363,9 @@ run_build_package <- function(args = commandArgs(trailingOnly = TRUE)) {
     step_run <- .run_package_build_step(
       step,
       ui,
-      finalize_strict = options$finalize_strict
+      finalize_strict = options$finalize_strict,
+      confirmed_rhub_pass = options$confirmed_rhub_pass,
+      confirmed_visual_review = options$confirmed_visual_review
     )
     if (!identical(step_run$status, 0L)) {
       .cli_step_fail(
@@ -341,6 +384,8 @@ run_build_package <- function(args = commandArgs(trailingOnly = TRUE)) {
     list(
       ran_tools = options$run_tools,
       finalize_strict = options$finalize_strict,
+      confirmed_rhub_pass = options$confirmed_rhub_pass,
+      confirmed_visual_review = options$confirmed_visual_review,
       package_steps = steps
     )
   )

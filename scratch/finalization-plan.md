@@ -28,7 +28,7 @@ relevant workflow and release process decisions are finalized.
 - [x] Decide website hosting target and repo URL policy
 - [x] Decide single sources of truth for package version and upstream Web
       Awesome version
-- [ ] Review `.github/` needs for CI, release flow, and repo hygiene
+- [x] Review `.github/` needs for CI, release flow, and repo hygiene
 - [x] Decide baseline handwritten JS lint policy:
       use `eslint` for handwritten JS only; exclude vendored upstream assets;
       avoid ad hoc formatting of generated JS
@@ -227,10 +227,10 @@ relevant workflow and release process decisions are finalized.
 - [x] Run the representative Shiny app visual review via
       `./tools/check_interactive.R` for the strict finalize
       `--confirmed-visual-review` gate
-- [ ] Review and refine GitHub Actions coverage
-- [ ] Ensure Linux, macOS, and Windows validation coverage
-- [ ] Add or refine remote release-oriented checks
-- [ ] Run `rhub` or equivalent external pre-release checks when local finalize
+- [x] Review and refine GitHub Actions coverage
+- [x] Ensure Linux, macOS, and Windows validation coverage
+- [x] Add or refine remote release-oriented checks
+- [x] Run `rhub` or equivalent external pre-release checks when local finalize
       is clean
 
 ## L. Release Candidate Preparation
