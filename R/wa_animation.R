@@ -43,6 +43,9 @@
 #' animation. This value can be changed without causing the animation to
 #' restart.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

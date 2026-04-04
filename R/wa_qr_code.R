@@ -27,6 +27,9 @@
 #' Must be between 0 and 0.5.
 #' @param size Number. Default: `128`. The size of the QR code, in pixels.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

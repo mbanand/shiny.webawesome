@@ -609,6 +609,26 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
   }
 }
 
+# Return one advisory package-coverage record.
+.package_coverage_record <- function(available = FALSE,
+                                     percent = NULL,
+                                     details = character()) {
+  list(
+    available = isTRUE(available),
+    percent = if (is.null(percent)) NULL else round(as.numeric(percent), 3L),
+    details = details
+  )
+}
+
+# Return one formatted package-coverage label for summaries.
+.package_coverage_label <- function(record) {
+  if (!isTRUE(record$available) || is.null(record$percent)) {
+    return("Unavailable")
+  }
+
+  paste0(format(record$percent, trim = TRUE, nsmall = 1L), "%")
+}
+
 # Write the finalize handoff YAML file.
 .write_finalize_handoff <- function(root, handoff) {
   if (!requireNamespace("yaml", quietly = TRUE)) {
@@ -641,6 +661,7 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
 # Return the human-readable finalize summary lines.
 .finalize_summary_lines <- function(handoff) {
   warning_lines <- handoff$warnings
+  coverage <- handoff$coverage$package %||% .package_coverage_record()
 
   c(
     "# Finalize Summary",
@@ -674,6 +695,11 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
     paste0(
       "- Tracked git tree digest: `",
       handoff$artifacts$tracked_tree$tree_digest,
+      "`"
+    ),
+    paste0(
+      "- Advisory package test coverage: `",
+      .package_coverage_label(coverage),
       "`"
     ),
     "",
@@ -766,6 +792,74 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
     details = .process_output_lines(result),
     result = result
   )
+}
+
+# Compute advisory package test coverage for finalize reporting.
+.run_package_coverage_step <- function(root, runner = .run_process) {
+  expr <- paste(
+    "if (!requireNamespace('covr', quietly = TRUE))",
+    paste(
+      "stop('The `covr` package is required for finalize coverage",
+      "reporting.', call. = FALSE);"
+    ),
+    paste(
+      "value <- covr::percent_coverage(",
+      "  covr::package_coverage(path = '.', quiet = TRUE)",
+      ");"
+    ),
+    "cat(format(round(as.numeric(value), 3), trim = TRUE, nsmall = 3))"
+  )
+  cmd <- .rscript_command(expr)
+  step <- .run_command_step(
+    command = cmd$command,
+    args = cmd$args,
+    root = root,
+    runner = runner
+  )
+
+  if (!isTRUE(step$ok)) {
+    message <- paste(
+      "Package test coverage unavailable.",
+      paste(step$details %||% character(), collapse = " ")
+    )
+    step$ok <- TRUE
+    step$details <- message
+    step$data <- list(
+      package_coverage = .package_coverage_record(
+        available = FALSE,
+        details = message
+      )
+    )
+    return(step)
+  }
+
+  output <- trimws(paste(step$result$stdout %||% character(), collapse = "\n"))
+  percent <- suppressWarnings(as.numeric(output))
+
+  if (is.na(percent)) {
+    message <- "Package test coverage unavailable."
+    step$details <- message
+    step$data <- list(
+      package_coverage = .package_coverage_record(
+        available = FALSE,
+        details = message
+      )
+    )
+    return(step)
+  }
+
+  record <- .package_coverage_record(
+    available = TRUE,
+    percent = percent,
+    details = paste0(
+      "Package test coverage: ",
+      format(round(percent, 3), trim = TRUE, nsmall = 1L),
+      "%"
+    )
+  )
+  step$details <- record$details
+  step$data <- list(package_coverage = record)
+  step
 }
 
 # Return the step definitions for a real finalize run.
@@ -924,6 +1018,16 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
         )
       }
     ),
+    coverage = list(
+      label = "Computing package test coverage",
+      fatal = FALSE,
+      run = function(context) {
+        .run_package_coverage_step(
+          root = context$root,
+          runner = context$runner
+        )
+      }
+    ),
     site = list(
       label = "Building website",
       fatal = function(context) isTRUE(context$strict),
@@ -1061,8 +1165,14 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
   }
 
   if (
-    identical(name, "confirmations") &&
+    (identical(name, "confirmations") || identical(name, "coverage")) &&
       !isTRUE(context$strict) &&
+      length(result$details %||% character()) > 0L
+  ) {
+    .cli_step_finish(ui, status = "Done")
+    .emit_warning_details(ui, result$details)
+  } else if (
+    identical(name, "coverage") &&
       length(result$details %||% character()) > 0L
   ) {
     .cli_step_finish(ui, status = "Done")
@@ -1078,6 +1188,7 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
 .build_finalize_handoff <- function(root,
                                     strict,
                                     warnings,
+                                    package_coverage,
                                     tarball_path,
                                     runner) {
   tarball_digest <- if (
@@ -1102,6 +1213,9 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
     mode = if (isTRUE(strict)) "strict" else "default",
     package_version = .package_version(root),
     git_head = git_head,
+    coverage = list(
+      package = package_coverage %||% .package_coverage_record()
+    ),
     warnings = warnings,
     artifacts = list(
       tarball = list(
@@ -1212,10 +1326,13 @@ finalize_package <- function(root = ".",
   }
 
   tarball_path <- results$build$data$tarball_path %||% NULL
+  package_coverage <- results$coverage$data$package_coverage %||%
+    .package_coverage_record()
   handoff <- .build_finalize_handoff(
     root = root,
     strict = strict,
     warnings = warnings,
+    package_coverage = package_coverage,
     tarball_path = tarball_path,
     runner = runner
   )

@@ -1121,8 +1121,12 @@ testthat::test_that("generate writes wrapper, binding, and update outputs", {
     "Enumerated string\\.",
     card_wrapper
   )))
-  testthat::expect_false(any(grepl(
+  testthat::expect_true(any(grepl(
     "@section Shiny Bindings:",
+    card_wrapper
+  )))
+  testthat::expect_true(any(grepl(
+    "#' None\\.",
     card_wrapper
   )))
   testthat::expect_true(any(grepl(
@@ -1461,6 +1465,70 @@ testthat::test_that("wrapper global attrs avoid metadata duplicates", {
   testthat::expect_equal(length(globals), 1L)
   testthat::expect_equal(globals[[1]]$name, "class")
   testthat::expect_equal(globals[[1]]$argument_name, "class")
+})
+
+testthat::test_that("wrapper docs always include a Shiny Bindings section", {
+  unbound_component <- list(
+    tag_name = "wa-card",
+    component_name = "card",
+    r_function_name = "wa_card",
+    description = "Card component.",
+    classification = list(
+      binding = FALSE,
+      binding_mode = "none",
+      binding_value_field = NA_character_,
+      binding_doc_note = NA_character_,
+      binding_wrapper_warning = NA_character_
+    ),
+    attributes = list(),
+    properties = list(),
+    events = list(),
+    slots = list()
+  )
+
+  bound_component <- list(
+    tag_name = "wa-input",
+    component_name = "input",
+    r_function_name = "wa_input",
+    description = "Input component.",
+    classification = list(
+      binding = TRUE,
+      binding_mode = "value",
+      binding_value_field = "value",
+      binding_doc_note = NA_character_,
+      binding_wrapper_warning = NA_character_
+    ),
+    attributes = list(),
+    properties = list(
+      list(
+        name = "value",
+        argument_name = "value",
+        attribute_name = "value",
+        type = "string",
+        description = "Current value.",
+        is_boolean = FALSE,
+        enum_values = NULL
+      )
+    ),
+    events = list(),
+    slots = list()
+  )
+
+  unbound_lines <- .render_bind_section(unbound_component)
+  testthat::expect_match(
+    unbound_lines,
+    "@section Shiny Bindings:",
+    fixed = TRUE
+  )
+  testthat::expect_match(unbound_lines, "#' None.", fixed = TRUE)
+
+  bound_lines <- .render_bind_section(bound_component)
+  testthat::expect_match(
+    bound_lines,
+    "@section Shiny Bindings:",
+    fixed = TRUE
+  )
+  testthat::expect_false(grepl("#' None\\.", bound_lines))
 })
 
 testthat::test_that("generate asks for prune when vendor metadata exists", {

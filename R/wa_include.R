@@ -21,6 +21,9 @@
 #' you trust the content you are including as it will be executed as code
 #' and can result in XSS attacks.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

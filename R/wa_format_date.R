@@ -39,6 +39,9 @@
 #' @param year Enumerated string. Allowed values: `2-digit`, `numeric`.
 #' The format for displaying the year.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

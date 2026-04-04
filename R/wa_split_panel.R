@@ -36,6 +36,9 @@
 #' @param end Content to place in the end panel.
 #' @param start Content to place in the start panel.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

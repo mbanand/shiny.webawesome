@@ -25,6 +25,9 @@
 #' @param icon The default icon to use when no image or initials are
 #' present. Works best with `<wa-icon>`.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

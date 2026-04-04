@@ -17,6 +17,9 @@
 #' @param panel String. Default: `""`. The name of the tab panel this tab
 #' is associated with. The panel must be located in the same tab group.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

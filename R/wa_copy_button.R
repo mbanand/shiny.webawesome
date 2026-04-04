@@ -39,6 +39,9 @@
 #' @param success_icon The icon to show when the content is copied. Works
 #' best with `<wa-icon>`.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

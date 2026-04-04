@@ -26,6 +26,9 @@
 #' @param sync Boolean. Default: `FALSE`. Keep the displayed value up to
 #' date as time passes.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

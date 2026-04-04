@@ -18,6 +18,9 @@
 #' scrollbar.
 #' @param without_shadow Boolean. Default: `FALSE`. Removes the shadows.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

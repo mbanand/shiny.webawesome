@@ -1086,14 +1086,15 @@
 
 # Return any generated wrapper-specific Shiny binding section block.
 .render_bind_section <- function(component) {
+  paragraphs <- .render_bind_section_paras(component)
+  if (length(paragraphs) == 0L) {
+    paragraphs <- "None."
+  }
+
   lines <- .roxygen_section_lines(
     "Shiny Bindings",
-    .render_bind_section_paras(component)
+    paragraphs
   )
-
-  if (length(lines) == 0L) {
-    return("")
-  }
 
   paste(c(lines, ""), collapse = "\n")
 }

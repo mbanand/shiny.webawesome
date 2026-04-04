@@ -26,6 +26,9 @@
 #' @param dir String. Optional Web Awesome attribute.
 #' @param lang String. Optional Web Awesome attribute.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

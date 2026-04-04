@@ -67,6 +67,17 @@
 #' helpers. It is not part of upstream component coverage and does not expand
 #' the generated per-component API surface.
 #'
+#' @details
+#' On the server side, `wa_set_property()` validates only its R helper inputs,
+#' such as the target `id`, property name, and session. It does not validate
+#' whether the requested property exists on the browser-side element.
+#'
+#' In the browser runtime, the command layer validates that the target DOM
+#' `id` resolves to an element and that a property name was supplied, then
+#' assigns the value directly. Command-layer warnings are controlled by the
+#' package warning registry, especially the `command_layer` key. For option
+#' details, see the Package Options article.
+#'
 #' @param id DOM `id` of the target browser element.
 #' @param property Scalar property name to assign on the target element.
 #' @param value Value to assign. This should be serializable through Shiny's
@@ -122,6 +133,19 @@ wa_set_property <- function(id,
 #' This helper is complementary to generated component bindings and update
 #' helpers. It is not part of upstream component coverage and does not expand
 #' the generated per-component API surface.
+#'
+#' @details
+#' On the server side, `wa_call_method()` validates only its R helper inputs,
+#' such as the target `id`, method name, argument list, and session. It does
+#' not validate whether the requested method exists on the browser-side
+#' element.
+#'
+#' In the browser runtime, the command layer validates that the target DOM
+#' `id` resolves to an element, that a method name was supplied, and that the
+#' named member is callable on the target element before invoking it.
+#' Command-layer warnings are controlled by the package warning registry,
+#' especially the `command_layer` key. For option details, see the Package
+#' Options article.
 #'
 #' @param id DOM `id` of the target browser element.
 #' @param method Scalar method name to invoke on the target element.

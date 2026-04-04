@@ -19,6 +19,9 @@
 #' @param orientation Enumerated string. Allowed values: `horizontal`,
 #' `vertical`. Default: `horizontal`. The button group's orientation.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

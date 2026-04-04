@@ -26,6 +26,9 @@
 #' will be determined by the radio group's size, which will override this
 #' attribute.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

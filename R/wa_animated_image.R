@@ -22,6 +22,9 @@
 #' @param play_icon Optional play icon to use instead of the default.
 #' Works best with `<wa-icon>`.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

@@ -28,6 +28,9 @@
 #' values representing visibility percentages that trigger the observer
 #' callback.
 #'
+#' @section Shiny Bindings:
+#' None.
+#'
 #' @return An HTML tag for the component.
 #'
 #' @export

@@ -40,6 +40,18 @@ the requested method exists for the targeted component.
 This helper is complementary to generated component bindings and update
 helpers. It is not part of upstream component coverage and does not expand
 the generated per-component API surface.
+
+On the server side, \code{wa_call_method()} validates only its R helper inputs,
+such as the target \code{id}, method name, argument list, and session. It does
+not validate whether the requested method exists on the browser-side
+element.
+
+In the browser runtime, the command layer validates that the target DOM
+\code{id} resolves to an element, that a method name was supplied, and that the
+named member is callable on the target element before invoking it.
+Command-layer warnings are controlled by the package warning registry,
+especially the \code{command_layer} key. For option details, see the Package
+Options article.
 }
 \examples{
 \dontrun{
