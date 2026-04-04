@@ -1,8 +1,11 @@
 # shiny.webawesome
 
 <!-- badges: start -->
-[//]: # ([![CRAN status](https://www.r-pkg.org/badges/version/shiny.webawesome)](https://CRAN.R-project.org/package=shiny.webawesome))
+<!--
+[![CRAN status](https://www.r-pkg.org/badges/version/shiny.webawesome)](https://CRAN.R-project.org/package=shiny.webawesome)
+-->
 ![CRAN status](https://img.shields.io/badge/CRAN-not%20published-lightgrey)
+[![R-CMD-check](https://github.com/mbanand/shiny.webawesome/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mbanand/shiny.webawesome/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `shiny.webawesome` provides an R and Shiny interface to the Web Awesome
