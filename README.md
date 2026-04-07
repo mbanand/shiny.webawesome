@@ -1,4 +1,4 @@
-# shiny.webawesome
+# shiny.webawesome <a href="https://www.shiny-webawesome.org"><img src="man/figures/logo.svg" align="right" height="139" alt="shiny.webawesome website" /></a>
 
 <!-- badges: start -->
 <!--
