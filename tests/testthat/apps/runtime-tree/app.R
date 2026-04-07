@@ -13,7 +13,7 @@ sections <- list(
   )
 )
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Tree Runtime Harness",
   tags$script(HTML("
     (function() {

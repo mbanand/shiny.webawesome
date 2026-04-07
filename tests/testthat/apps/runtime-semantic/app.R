@@ -20,6 +20,37 @@ make_wa_radio <- function(value, label) {
   )
 }
 
+autocorrect_cases <- function(prefix, factory) {
+  tags$div(
+    class = "autocorrect-case-grid",
+    tags$div(
+      class = "autocorrect-case",
+      tags$strong("TRUE"),
+      factory(paste0(prefix, "_auto_true"), autocorrect = TRUE)
+    ),
+    tags$div(
+      class = "autocorrect-case",
+      tags$strong("FALSE"),
+      factory(paste0(prefix, "_auto_false"), autocorrect = FALSE)
+    ),
+    tags$div(
+      class = "autocorrect-case",
+      tags$strong("\"on\""),
+      factory(paste0(prefix, "_auto_on"), autocorrect = "on")
+    ),
+    tags$div(
+      class = "autocorrect-case",
+      tags$strong("\"off\""),
+      factory(paste0(prefix, "_auto_off"), autocorrect = "off")
+    ),
+    tags$div(
+      class = "autocorrect-case",
+      tags$strong("NULL"),
+      factory(paste0(prefix, "_auto_null"), autocorrect = NULL)
+    )
+  )
+}
+
 sections <- list(
   list(
     title = "wa_checkbox",
@@ -63,7 +94,7 @@ sections <- list(
   )
 )
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Semantic Runtime Harness",
   tags$style(HTML("
     .runtime-shell {
@@ -158,6 +189,22 @@ ui <- wa_page(
     .component-controls button {
       margin-right: 0.75rem;
     }
+
+    .autocorrect-case-grid {
+      display: grid;
+      gap: 0.75rem;
+      grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+      margin-top: 1rem;
+    }
+
+    .autocorrect-case {
+      align-items: start;
+      border: 1px solid #d7dee7;
+      border-radius: 0.75rem;
+      display: grid;
+      gap: 0.5rem;
+      padding: 0.75rem;
+    }
   ")),
   tags$main(
     id = "runtime-top",
@@ -206,14 +253,31 @@ ui <- wa_page(
         "Type a new string into the input or use the update button to observe",
         "the bound Shiny value and the browser-side label and hint updates."
       ),
-      component_tag = wa_input(
-        input_id = "text_input",
-        label = "Search term",
-        hint = "Start typing",
-        value = "alpha"
+      component_tag = tagList(
+        wa_input(
+          input_id = "text_input",
+          label = "Search term",
+          hint = "Start typing",
+          value = "alpha"
+        ),
+        autocorrect_cases(
+          "text_input",
+          function(id, autocorrect) {
+            wa_input(
+              input_id = id,
+              label = paste("Autocorrect", id),
+              autocorrect = autocorrect
+            )
+          }
+        )
       ),
       observed_output = "text_input_state",
-      controls = actionButton("update_text_input", "Update wa_input")
+      controls = actionButton("update_text_input", "Update wa_input"),
+      notes = paste(
+        "Additional cases render explicit constructor mappings for",
+        "`autocorrect` so browser runtime tests can assert attribute and",
+        "property behavior."
+      )
     ),
     component_section(
       section_id = "wa_number_input-section",
@@ -319,14 +383,31 @@ ui <- wa_page(
         "Type new text or use the update button to observe the durable Shiny",
         "value and the browser-side label and hint updates."
       ),
-      component_tag = wa_textarea(
-        input_id = "text_area",
-        label = "Textarea label",
-        hint = "Start typing",
-        value = "alpha"
+      component_tag = tagList(
+        wa_textarea(
+          input_id = "text_area",
+          label = "Textarea label",
+          hint = "Start typing",
+          value = "alpha"
+        ),
+        autocorrect_cases(
+          "text_area",
+          function(id, autocorrect) {
+            wa_textarea(
+              input_id = id,
+              label = paste("Autocorrect", id),
+              autocorrect = autocorrect
+            )
+          }
+        )
       ),
       observed_output = "text_area_state",
-      controls = actionButton("update_textarea", "Update wa_textarea")
+      controls = actionButton("update_textarea", "Update wa_textarea"),
+      notes = paste(
+        "Additional cases render explicit constructor mappings for",
+        "`autocorrect` so browser runtime tests can assert attribute and",
+        "property behavior."
+      )
     )
   )
 )

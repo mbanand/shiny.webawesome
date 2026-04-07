@@ -2,7 +2,7 @@
 import {
   registerTranslation
 } from "../chunks/chunk.HPOJN4W7.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 
 // src/translations/kk.ts
 var translation = {
@@ -11,6 +11,7 @@ var translation = {
   $dir: "ltr",
   carousel: "\u041A\u0430\u0440\u0443\u0441\u0435\u043B\u044C",
   clearEntry: "\u0416\u0430\u0437\u0431\u0430\u043D\u044B \u0436\u043E\u044E",
+  createOption: (value) => `"${value}" \u0436\u0430\u0441\u0430\u0443`,
   close: "\u0416\u0430\u0431\u0443",
   copied: "\u041A\u04E9\u0448\u0456\u0440\u0456\u043B\u0434\u0456",
   copy: "\u041A\u04E9\u0448\u0456\u0440\u0443",
@@ -24,6 +25,14 @@ var translation = {
   increment: "\u0410\u0440\u0442\u0442\u044B\u0440\u0443",
   loading: "\u0416\u04AF\u043A\u0442\u0435\u043B\u0443\u0434\u0435",
   nextSlide: "\u041A\u0435\u043B\u0435\u0441\u0456 \u0441\u043B\u0430\u0439\u0434",
+  numCharacters: (num) => {
+    if (num === 1) return "1 \u0442\u0430\u04A3\u0431\u0430";
+    return `${num} \u0442\u0430\u04A3\u0431\u0430`;
+  },
+  numCharactersRemaining: (num) => {
+    if (num === 1) return "1 \u0442\u0430\u04A3\u0431\u0430 \u049B\u0430\u043B\u0434\u044B";
+    return `${num} \u0442\u0430\u04A3\u0431\u0430 \u049B\u0430\u043B\u0434\u044B`;
+  },
   numOptionsSelected: (num) => {
     if (num === 0) return "\u0415\u0448\u0442\u0435\u04A3\u0435 \u0442\u0430\u04A3\u0434\u0430\u043B\u043C\u0430\u0434\u044B";
     if (num < 6 || num === 7) return `${num}-\u0435\u0443 \u0442\u0430\u04A3\u0434\u0430\u043B\u0434\u044B`;

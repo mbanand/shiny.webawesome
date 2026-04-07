@@ -26,6 +26,10 @@
 #' @param placement Enumerated string. Allowed values: `bottom`, `end`,
 #' `start`, `top`. Default: `end`. The direction from which the drawer
 #' will open.
+#' @param with_footer Boolean. Default: `FALSE`. Only required for SSR.
+#' Set to `TRUE` if you're slotting in a `footer` element so the
+#' server-rendered markup includes the footer before the component
+#' hydrates on the client.
 #' @param without_header Boolean. Default: `FALSE`. Disables the header.
 #' This will also remove the default close button.
 #' @param footer The drawer's footer, usually one or more buttons
@@ -53,6 +57,7 @@ wa_drawer <- function(
   light_dismiss = NULL,
   open = NULL,
   placement = NULL,
+  with_footer = NULL,
   without_header = NULL,
   footer = NULL,
   header_actions = NULL,
@@ -102,16 +107,19 @@ wa_drawer <- function(
       "light-dismiss" = light_dismiss,
       "open" = open,
       "placement" = placement,
+      "with-footer" = with_footer,
       "without-header" = without_header
     ),
     boolean_names = c(
       "light-dismiss",
       "open",
+      "with-footer",
       "without-header"
     ),
     boolean_arg_names = c(
       "light-dismiss" = "light_dismiss",
       "open" = "open",
+      "with-footer" = "with_footer",
       "without-header" = "without_header"
     )
   )

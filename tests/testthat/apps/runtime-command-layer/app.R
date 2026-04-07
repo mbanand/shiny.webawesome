@@ -4,7 +4,7 @@ library(shiny)
 # nolint next: object_usage_linter
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Command Layer Harness",
   tags$main(
     class = "wa-stack wa-gap-m",

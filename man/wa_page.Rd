@@ -2,39 +2,137 @@
 % Please edit documentation in R/wa_page.R
 \name{wa_page}
 \alias{wa_page}
-\title{Construct a shiny.webawesome page}
+\title{Create a \code{wa-page} component}
 \usage{
-wa_page(..., title = NULL, lang = NULL, body_class = NULL)
+wa_page(
+  ...,
+  id = NULL,
+  class = NULL,
+  style = NULL,
+  dir = NULL,
+  disable_navigation_toggle = NULL,
+  lang = NULL,
+  mobile_breakpoint = NULL,
+  nav_open = NULL,
+  navigation_placement = NULL,
+  view = NULL,
+  aside = NULL,
+  banner = NULL,
+  footer = NULL,
+  header = NULL,
+  main_footer = NULL,
+  main_header = NULL,
+  menu = NULL,
+  navigation = NULL,
+  navigation_footer = NULL,
+  navigation_header = NULL,
+  navigation_toggle = NULL,
+  navigation_toggle_icon = NULL,
+  skip_to_content = NULL,
+  subheader = NULL
+)
 }
 \arguments{
-\item{...}{UI content to place in the page body.}
+\item{...}{Child content for the component's default slot.}
 
-\item{title}{Optional page title.}
+\item{id}{Optional DOM id attribute for HTML, CSS, and JS targeting.}
 
-\item{lang}{Optional HTML \code{lang} attribute for the page.}
+\item{class}{Optional CSS class string.}
 
-\item{body_class}{Optional CSS class string for the page body.}
+\item{style}{Optional inline CSS style string.}
+
+\item{dir}{String. Optional Web Awesome attribute.}
+
+\item{disable_navigation_toggle}{Boolean. Default: \code{FALSE}. Determines
+whether or not to hide the default hamburger button. This will
+automatically flip to "TRUE" if you add an element with
+\code{data-toggle-nav} anywhere in the element light DOM. Generally this
+will be set for you and you don't need to do anything, unless you're
+using SSR, in which case you should set this manually for initial page
+loads.}
+
+\item{lang}{String. Optional Web Awesome attribute.}
+
+\item{mobile_breakpoint}{String. Default: \verb{768px}. At what page width
+to hide the "navigation" slot and collapse into a hamburger button.
+Accepts both numbers (interpreted as px) and CSS lengths (e.g. \verb{50em}),
+which are resolved based on the root element.}
+
+\item{nav_open}{Boolean. Default: \code{FALSE}. Whether or not the
+navigation drawer is open. Note, the navigation drawer is only "open"
+on mobile views.}
+
+\item{navigation_placement}{Enumerated string. Allowed values: \code{end},
+\code{start}. Default: \code{start}. Where to place the navigation when in the
+mobile viewport.}
+
+\item{view}{Enumerated string. Allowed values: \code{desktop}, \code{mobile}.
+Default: \code{desktop}. The view is a reflection of the "mobileBreakpoint",
+when the page is larger than the \code{mobile-breakpoint} (768px by
+default), it is considered to be a "desktop" view. The view is merely a
+way to distinguish when to show/hide the navigation. You can use
+additional media queries to make other adjustments to content as
+necessary. The default is "desktop" because the "mobile navigation
+drawer" isn't accessible via SSR due to drawer requiring JS.}
+
+\item{aside}{Content to be shown on the right side of the page.
+Typically contains a table of contents, ads, etc. This section "sticks"
+to the top as the page scrolls.}
+
+\item{banner}{The banner that gets display above the header. The banner
+will not be shown if no content is provided.}
+
+\item{footer}{The content to display in the footer. This is always
+displayed underneath the viewport so will always make the page
+"scrollable".}
+
+\item{header}{The header to display at the top of the page. If a banner
+is present, the header will appear below the banner. The header will
+not be shown if there is no content.}
+
+\item{main_footer}{Footer to display inline below the main content.}
+
+\item{main_header}{Header to display inline above the main content.}
+
+\item{menu}{The left side of the page. If you slot an element in here,
+you will override the default \code{navigation} slot and will be handling
+navigation on your own. This also will not disable the fallback
+behavior of the navigation button. This section "sticks" to the top as
+the page scrolls.}
+
+\item{navigation}{The main content to display in the navigation area.
+This is displayed on the left side of the page, if \code{menu} is not used.
+This section "sticks" to the top as the page scrolls.}
+
+\item{navigation_footer}{The footer for a navigation area. On mobile
+this will be the footer for \verb{<wa-drawer>}.}
+
+\item{navigation_header}{The header for a navigation area. On mobile
+this will be the header for \verb{<wa-drawer>}.}
+
+\item{navigation_toggle}{Use this slot to slot in your own button +
+icon for toggling the navigation drawer. By default it is a
+\verb{<wa-button>} + a 3 bars \verb{<wa-icon>}}
+
+\item{navigation_toggle_icon}{Use this to slot in your own icon for
+toggling the navigation drawer. By default it is 3 bars \verb{<wa-icon>}.}
+
+\item{skip_to_content}{The "skip to content" slot. You can override
+this If you would like to override the \verb{Skip to content} button and add
+additional "Skip to X", they can be inserted here.}
+
+\item{subheader}{A subheader to display below the \code{header}. This is a
+good place to put things like breadcrumbs.}
 }
 \value{
-An HTML page scaffold with the shiny.webawesome dependency attached.
+An HTML tag for the component.
 }
 \description{
-Creates a minimal full-page HTML scaffold for Shiny applications that use
-Web Awesome components. \code{wa_page()} attaches the package dependency once at
-page level and temporarily suppresses duplicate wrapper-level attachment
-while evaluating its children.
+Generated wrapper for the Web Awesome \code{wa-page} component.
+Generated from Web Awesome metadata.
 }
-\details{
-This is a package-level Shiny helper, NOT a wrapper for the upstream
-Web Awesome Pro \code{wa-page} component. It is an explicit exception to the
-usual upstream-mirroring rule because it follows Shiny's page-helper model
-(\code{fluidPage()}, etc.) for dependency attachment and full-page scaffolding.
+\section{Shiny Bindings}{
+
+None.
 }
-\examples{
-if (interactive()) {
-  wa_page(
-    title = "shiny.webawesome",
-    wa_card("Hello from Web Awesome")
-  )
-}
-}
+

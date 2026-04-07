@@ -17,6 +17,12 @@
 #' @param disabled Boolean. Default: `FALSE`. Disables the rating.
 #' @param label String. Default: `""`. A label that describes the rating
 #' to assistive devices.
+#' @param name String. Default: `null`. The name of the rating, submitted
+#' as a name/value pair with form data.
+#' @param custom_error String. Default: `null`. Optional Web Awesome
+#' attribute.
+#' @param default_value Number. Default: `0`. The default value of the
+#' form control. Used to reset the rating to its initial value.
 #' @param dir String. Optional Web Awesome attribute.
 #' @param get_symbol A function that customizes the symbol to be rendered.
 #' The first and only argument is the rating's current value. The function
@@ -28,6 +34,8 @@
 #' rating will increase and decrease. For example, to allow half-star
 #' ratings, set this attribute to `0.5`.
 #' @param readonly Boolean. Default: `FALSE`. Makes the rating readonly.
+#' @param required Boolean. Default: `FALSE`. Makes the rating a required
+#' field.
 #' @param size Enumerated string. Allowed values: `large`, `medium`,
 #' `small`. Default: `medium`. The component's size.
 #'
@@ -46,12 +54,16 @@ wa_rating <- function(
   value = NULL,
   disabled = NULL,
   label = NULL,
+  name = NULL,
+  custom_error = NULL,
+  default_value = NULL,
   dir = NULL,
   get_symbol = NULL,
   lang = NULL,
   max = NULL,
   precision = NULL,
   readonly = NULL,
+  required = NULL,
   size = NULL
 ) {
   children <- list(...)
@@ -76,18 +88,27 @@ wa_rating <- function(
       "value" = value,
       "disabled" = disabled,
       "label" = label,
+      "name" = name,
+      "custom-error" = custom_error,
+      "default-value" = default_value,
       "dir" = dir,
       "getSymbol" = get_symbol,
       "lang" = lang,
       "max" = max,
       "precision" = precision,
       "readonly" = readonly,
+      "required" = required,
       "size" = size
     ),
-    boolean_names = c("disabled", "readonly"),
+    boolean_names = c(
+      "disabled",
+      "readonly",
+      "required"
+    ),
     boolean_arg_names = c(
       "disabled" = "disabled",
-      "readonly" = "readonly"
+      "readonly" = "readonly",
+      "required" = "required"
     )
   )
 

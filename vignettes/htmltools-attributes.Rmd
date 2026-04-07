@@ -62,7 +62,7 @@ library(htmltools)
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Extra attributes",
   tagAppendAttributes(
     wa_button("save_button", "Save"),
@@ -86,7 +86,7 @@ library(htmltools)
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "More attributes",
   tagAppendAttributes(
     wa_card("Keyboard focus example"),

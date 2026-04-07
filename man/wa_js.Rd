@@ -37,7 +37,7 @@ standard Shiny asset patterns such as \verb{www/} files and \code{tags$script()}
 }
 \examples{
 if (interactive()) {
-  ui <- wa_page(
+  ui <- webawesomePage(
     wa_js("
       function publishDetailsOpen() {
         const details = document.getElementById('details');
@@ -112,7 +112,7 @@ if (interactive()) {
 
   js_code <- paste(readLines(js_file, warn = FALSE), collapse = "\n")
 
-  ui <- wa_page(
+  ui <- webawesomePage(
     wa_js(js_code),
     wa_details(
       input_id = "details",

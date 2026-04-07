@@ -2,7 +2,7 @@
 import {
   registerTranslation
 } from "../chunks/chunk.HPOJN4W7.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 
 // src/translations/it.ts
 var translation = {
@@ -11,6 +11,7 @@ var translation = {
   $dir: "ltr",
   carousel: "Carosello",
   clearEntry: "Cancella inserimento",
+  createOption: (value) => `Crea "${value}"`,
   close: "Chiudi",
   copied: "Copiato",
   copy: "Copia",
@@ -24,6 +25,14 @@ var translation = {
   increment: "Aumenta",
   loading: "In caricamento",
   nextSlide: "Prossima diapositiva",
+  numCharacters: (num) => {
+    if (num === 1) return "1 carattere";
+    return `${num} caratteri`;
+  },
+  numCharactersRemaining: (num) => {
+    if (num === 1) return "1 carattere rimanente";
+    return `${num} caratteri rimanenti`;
+  },
   numOptionsSelected: (num) => {
     if (num === 0) return "Nessuna opzione selezionata";
     if (num === 1) return "1 opzione selezionata";

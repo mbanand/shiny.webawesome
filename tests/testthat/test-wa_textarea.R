@@ -24,6 +24,7 @@ test_that("wa_textarea override render includes attrs and slots", {
         hint = "Help",
         appearance = "filled",
         autocapitalize = "sentences",
+        autocorrect = TRUE,
         autofocus = TRUE,
         enterkeyhint = "send",
         inputmode = "text",
@@ -44,7 +45,7 @@ test_that("wa_textarea override render includes attrs and slots", {
       paste0(
         '<wa-textarea id="text_area" value="beta" disabled label="Notes" ',
         'hint="Help" appearance="filled" autocapitalize="sentences" ',
-        'autofocus enterkeyhint="send" inputmode="text" ',
+        'autocorrect="on" autofocus enterkeyhint="send" inputmode="text" ',
         'placeholder="Write here" readonly required resize="horizontal" ',
         'rows="5" size="large" spellcheck with-hint with-label>'
       ),
@@ -114,6 +115,49 @@ test_that("wa_textarea boolean args validate and render correctly", {
     )
   }
 })
+
+test_that(
+  "wa_textarea autocorrect supports logical and string constructor values",
+  {
+    default_html <- render_html(shiny.webawesome:::wa_textarea("text_area"))
+
+    expect_exact_html(
+      render_html(
+        shiny.webawesome:::wa_textarea("text_area", autocorrect = TRUE)
+      ),
+      c('<wa-textarea id="text_area" autocorrect="on"></wa-textarea>')
+    )
+    expect_exact_html(
+      render_html(
+        shiny.webawesome:::wa_textarea("text_area", autocorrect = FALSE)
+      ),
+      c('<wa-textarea id="text_area" autocorrect="off"></wa-textarea>')
+    )
+    expect_exact_html(
+      render_html(
+        shiny.webawesome:::wa_textarea("text_area", autocorrect = "on")
+      ),
+      c('<wa-textarea id="text_area" autocorrect="on"></wa-textarea>')
+    )
+    expect_exact_html(
+      render_html(
+        shiny.webawesome:::wa_textarea("text_area", autocorrect = "off")
+      ),
+      c('<wa-textarea id="text_area" autocorrect="off"></wa-textarea>')
+    )
+    expect_equal(
+      render_html(
+        shiny.webawesome:::wa_textarea("text_area", autocorrect = NULL)
+      ),
+      default_html
+    )
+    expect_error(
+      shiny.webawesome:::wa_textarea("text_area", autocorrect = "auto"),
+      "`autocorrect` must be one of \"TRUE\", \"FALSE\", \"on\", \"off\".",
+      fixed = TRUE
+    )
+  }
+)
 
 test_that("wa_textarea enum args validate exactly", {
   enum_cases <- list(

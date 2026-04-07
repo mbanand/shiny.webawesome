@@ -123,13 +123,14 @@ implied, allowing any numeric value.}
 
 \item{title}{String. Default: \code{""}. Optional Web Awesome attribute.}
 
-\item{with_hint}{Boolean. Default: \code{FALSE}. Used for SSR. Will
-determine if the SSRed component will have the hint slot rendered on
-initial paint.}
+\item{with_hint}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{hint} element so the server-rendered
+markup includes the hint before the component hydrates on the client.}
 
-\item{with_label}{Boolean. Default: \code{FALSE}. Used for SSR. Will
-determine if the SSRed component will have the label slot rendered on
-initial paint.}
+\item{with_label}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{label} element so the
+server-rendered markup includes the label before the component hydrates
+on the client.}
 
 \item{without_steppers}{Boolean. Default: \code{FALSE}. Hides the
 increment/decrement stepper buttons.}

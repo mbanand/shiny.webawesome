@@ -21,7 +21,7 @@ sections <- list(
   list(title = "wa_tree_item", section_id = "wa_tree_item-section")
 )
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Presentational Runtime Harness",
   tags$style(HTML("
     .runtime-shell {

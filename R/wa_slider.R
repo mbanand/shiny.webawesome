@@ -44,8 +44,6 @@
 #' slider with two thumbs.
 #' @param readonly Boolean. Default: `FALSE`. Makes the slider a read-only
 #' field.
-#' @param required Boolean. Default: `FALSE`. Makes the slider a required
-#' field.
 #' @param size Enumerated string. Allowed values: `large`, `medium`,
 #' `small`. Default: `medium`. The slider's size.
 #' @param step Number. Default: `1`. The granularity the value must adhere
@@ -55,6 +53,13 @@
 #' @param tooltip_placement Enumerated string. Allowed values: `bottom`,
 #' `left`, `right`, `top`. Default: `top`. The placement of the tooltip in
 #' reference to the slider's thumb.
+#' @param with_hint Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `hint` element so the server-rendered
+#' markup includes the hint before the component hydrates on the client.
+#' @param with_label Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `label` element so the
+#' server-rendered markup includes the label before the component hydrates
+#' on the client.
 #' @param with_markers Boolean. Default: `FALSE`. Draws markers at each
 #' step along the slider.
 #' @param with_tooltip Boolean. Default: `FALSE`. Draws a tooltip above
@@ -95,11 +100,12 @@ wa_slider <- function(
   orientation = NULL,
   range = NULL,
   readonly = NULL,
-  required = NULL,
   size = NULL,
   step = NULL,
   tooltip_distance = NULL,
   tooltip_placement = NULL,
+  with_hint = NULL,
+  with_label = NULL,
   with_markers = NULL,
   with_tooltip = NULL,
   hint_slot = NULL,
@@ -184,11 +190,12 @@ wa_slider <- function(
       "orientation" = orientation,
       "range" = range,
       "readonly" = readonly,
-      "required" = required,
       "size" = size,
       "step" = step,
       "tooltip-distance" = tooltip_distance,
       "tooltip-placement" = tooltip_placement,
+      "with-hint" = with_hint,
+      "with-label" = with_label,
       "with-markers" = with_markers,
       "with-tooltip" = with_tooltip
     ),
@@ -197,7 +204,8 @@ wa_slider <- function(
       "autofocus",
       "range",
       "readonly",
-      "required",
+      "with-hint",
+      "with-label",
       "with-markers",
       "with-tooltip"
     ),
@@ -206,7 +214,8 @@ wa_slider <- function(
       "autofocus" = "autofocus",
       "range" = "range",
       "readonly" = "readonly",
-      "required" = "required",
+      "with-hint" = "with_hint",
+      "with-label" = "with_label",
       "with-markers" = "with_markers",
       "with-tooltip" = "with_tooltip"
     )

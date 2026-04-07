@@ -33,8 +33,14 @@
 #' @param autocomplete String. Specifies what permission the browser has
 #' to provide assistance in filling out form field values. Refer to this
 #' page on MDN for available values.
-#' @param autocorrect Enumerated string. Allowed values: `off`, `on`.
-#' Indicates whether the browser's autocorrect feature is on or off.
+#' @param autocorrect Boolean. Default: `FALSE`. Indicates whether the
+#' browser's autocorrect feature is on or off. When set as an attribute,
+#' use `"off"` or `"on"`. When set as a property, use `TRUE` or `FALSE`.
+#' Because the upstream implementation treats attributes and properties
+#' differently for this field, this argument accepts `TRUE`, `FALSE`,
+#' `"on"`, `"off"`, `NULL`. `TRUE` emits `autocorrect="on"` and `FALSE`
+#' emits `autocorrect="off"`. `NULL` omits the attribute. Accepted string
+#' values: `"on"` is emitted unchanged; `"off"` is emitted unchanged.
 #' @param autofocus Boolean. Default: `FALSE`. Indicates that the input
 #' should receive focus on page load.
 #' @param custom_error String. Default: `null`. Optional Web Awesome
@@ -85,12 +91,13 @@
 #' supported. Defaults to `text`.
 #' @param with_clear Boolean. Default: `FALSE`. Adds a clear button when
 #' the input is not empty.
-#' @param with_hint Boolean. Default: `FALSE`. Used for SSR. Will
-#' determine if the SSRed component will have the hint slot rendered on
-#' initial paint.
-#' @param with_label Boolean. Default: `FALSE`. Used for SSR. Will
-#' determine if the SSRed component will have the label slot rendered on
-#' initial paint.
+#' @param with_hint Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `hint` element so the server-rendered
+#' markup includes the hint before the component hydrates on the client.
+#' @param with_label Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `label` element so the
+#' server-rendered markup includes the label before the component hydrates
+#' on the client.
 #' @param without_spin_buttons Boolean. Default: `FALSE`. Hides the
 #' browser's built-in increment/decrement spin buttons for number inputs.
 #' @param clear_icon An icon to use in lieu of the default clear icon.
@@ -205,6 +212,17 @@ wa_input <- function(
     )
   )
 
+  autocorrect <- .wa_match_constructor_attr(
+    autocorrect,
+    "autocorrect",
+    true_value = "on",
+    false_value = "off",
+    string_map = c(
+      "on" = "on",
+      "off" = "off"
+    )
+  )
+
   if (!is.null(appearance)) {
     appearance <- .wa_match_arg(
       appearance,
@@ -228,17 +246,6 @@ wa_input <- function(
         "on",
         "sentences",
         "words"
-      )
-    )
-  }
-
-  if (!is.null(autocorrect)) {
-    autocorrect <- .wa_match_arg(
-      autocorrect,
-      "autocorrect",
-      c(
-        "off",
-        "on"
       )
     )
   }

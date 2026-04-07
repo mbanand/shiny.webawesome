@@ -4,7 +4,7 @@ import {
 } from "../../chunks/chunk.2UDUPMFW.js";
 import "../../chunks/chunk.7OBLIRXR.js";
 import "../../chunks/chunk.BKE5EYM3.js";
-import "../../chunks/chunk.AIIMJL75.js";
+import "../../chunks/chunk.JHZRD2LV.js";
 export {
   breadcrumb_styles_default as default
 };

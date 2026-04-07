@@ -27,11 +27,12 @@ wa_slider(
   orientation = NULL,
   range = NULL,
   readonly = NULL,
-  required = NULL,
   size = NULL,
   step = NULL,
   tooltip_distance = NULL,
   tooltip_placement = NULL,
+  with_hint = NULL,
+  with_label = NULL,
   with_markers = NULL,
   with_tooltip = NULL,
   hint_slot = NULL,
@@ -100,9 +101,6 @@ slider with two thumbs.}
 \item{readonly}{Boolean. Default: \code{FALSE}. Makes the slider a read-only
 field.}
 
-\item{required}{Boolean. Default: \code{FALSE}. Makes the slider a required
-field.}
-
 \item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
 \code{small}. Default: \code{medium}. The slider's size.}
 
@@ -115,6 +113,15 @@ tooltip from the slider's thumb.}
 \item{tooltip_placement}{Enumerated string. Allowed values: \code{bottom},
 \code{left}, \code{right}, \code{top}. Default: \code{top}. The placement of the tooltip in
 reference to the slider's thumb.}
+
+\item{with_hint}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{hint} element so the server-rendered
+markup includes the hint before the component hydrates on the client.}
+
+\item{with_label}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{label} element so the
+server-rendered markup includes the label before the component hydrates
+on the client.}
 
 \item{with_markers}{Boolean. Default: \code{FALSE}. Draws markers at each
 step along the slider.}

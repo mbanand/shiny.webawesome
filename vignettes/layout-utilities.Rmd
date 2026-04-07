@@ -15,7 +15,7 @@ scaffolding tasks.
 
 The two main layout helpers are:
 
-- `wa_page()`, which creates a minimal page scaffold for Shiny apps using the
+- `webawesomePage()`, which creates a minimal page scaffold for Shiny apps using the
   package
 - `wa_container()`, which creates a plain container element that is convenient
   for layouts and utility-class usage
@@ -24,9 +24,9 @@ Neither helper is a generated wrapper for an upstream Web Awesome component.
 They are package-level conveniences that make it easier to build Shiny apps
 that use Web Awesome components and utilities.
 
-# `wa_page()`
+# `webawesomePage()`
 
-`wa_page()` creates a minimal full-page HTML scaffold and attaches the
+`webawesomePage()` creates a minimal full-page HTML scaffold and attaches the
 `shiny.webawesome` dependency once at page level.
 
 This is useful because it keeps the page-level setup explicit and avoids
@@ -37,7 +37,7 @@ tree.
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Layout utilities",
   wa_card("Hello from Web Awesome")
 )
@@ -47,7 +47,7 @@ server <- function(input, output, session) {}
 shinyApp(ui, server)
 ```
 
-`wa_page()` is especially useful when you want a small, explicit page helper
+`webawesomePage()` is especially useful when you want a small, explicit page helper
 rather than composing your own `<html>`, `<head>`, and `<body>` scaffolding
 manually.
 
@@ -60,7 +60,7 @@ layout helpers together:
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Page example",
   wa_container(
     class = "wa-stack",
@@ -113,7 +113,7 @@ Typical uses include:
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Stacked layout",
   wa_container(
     class = "wa-stack",
@@ -134,7 +134,7 @@ shinyApp(ui, server)
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Mixed layout",
   wa_container(
     class = "wa-cluster",
@@ -155,7 +155,7 @@ shinyApp(ui, server)
 
 # Notes
 
-Use `wa_page()` when you want the package to own the full page scaffold.
+Use `webawesomePage()` when you want the package to own the full page scaffold.
 
 Use `wa_container()` when you need a plain layout wrapper inside a page or UI
 subtree.

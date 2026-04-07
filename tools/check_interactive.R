@@ -349,7 +349,7 @@ rm(.bootstrap_cli_ui)
 
 # Build the representative interactive review app.
 .build_interactive_review_app <- function() {
-  wa_page <- .wa_export("wa_page")
+  webawesome_page <- .wa_export("webawesomePage")
   wa_button <- .wa_export("wa_button")
   wa_card <- .wa_export("wa_card")
   wa_checkbox <- .wa_export("wa_checkbox")
@@ -367,11 +367,12 @@ rm(.bootstrap_cli_ui)
   wa_tree <- .wa_export("wa_tree")
   wa_tree_item <- .wa_export("wa_tree_item")
 
-  ui <- wa_page(
+  ui <- webawesome_page(
     title = "shiny.webawesome Interactive Review",
     wa_js(
       paste(
         "(function() {",
+        "  var copyEventCount = 0;",
         "  function publishCopyEvent(event) {",
         "    if (!window.Shiny ||",
         "        typeof window.Shiny.setInputValue !== 'function') {",
@@ -380,9 +381,14 @@ rm(.bootstrap_cli_ui)
         "    if (!event.target || event.target.id !== 'review_copy_button') {",
         "      return;",
         "    }",
+        "    copyEventCount += 1;",
         "    window.Shiny.setInputValue(",
         "      'copy_button_js_event',",
-        "      [event.type, 'target=' + event.target.id].join(' | '),",
+        "      [",
+        "        event.type,",
+        "        'target=' + event.target.id,",
+        "        'count=' + copyEventCount",
+        "      ].join(' | '),",
         "      { priority: 'event' }",
         "    );",
         "  }",

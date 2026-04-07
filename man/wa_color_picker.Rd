@@ -20,6 +20,7 @@ wa_color_picker(
   lang = NULL,
   opacity = NULL,
   open = NULL,
+  placement = NULL,
   required = NULL,
   size = NULL,
   swatches = NULL,
@@ -79,6 +80,13 @@ popup is open. You can toggle this attribute to show and hide the
 popup, or you can use the \code{show()} and \code{hide()} methods and this
 attribute will reflect the popup's open state.}
 
+\item{placement}{Enumerated string. Allowed values: \code{bottom},
+\code{bottom-end}, \code{bottom-start}, \code{left}, \code{left-end}, \code{left-start},
+\code{right}, \code{right-end}, \code{right-start}, \code{top}, \code{top-end}, \code{top-start}.
+Default: \code{bottom-start}. The preferred placement of the color picker's
+popup. Note that the actual placement will vary as configured to keep
+the panel inside of the viewport.}
+
 \item{required}{Boolean. Default: \code{FALSE}. Makes the color picker a
 required field.}
 
@@ -90,17 +98,21 @@ trigger}
 display as presets in the color picker. Can include any format the
 color picker can parse, including HEX(A), RGB(A), HSL(A), HSV(A), and
 CSS color names. Each color must be separated by a semicolon (\verb{;}).
-Alternatively, you can pass an array of color values to this property
-using JavaScript.}
+Alternatively, you can pass an array of color values or an array of \verb{\{ color, label \}} objects to this property using JavaScript. When using
+objects with labels, the label will be used for the swatch's accessible
+name instead of the raw color value.}
 
 \item{uppercase}{Boolean. Default: \code{FALSE}. By default, values are
 lowercase. With this attribute, values will be uppercase instead.}
 
-\item{with_hint}{Boolean. Default: \code{FALSE}. Optional Web Awesome
-attribute.}
+\item{with_hint}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{hint} element so the server-rendered
+markup includes the hint before the component hydrates on the client.}
 
-\item{with_label}{Boolean. Default: \code{FALSE}. Optional Web Awesome
-attribute.}
+\item{with_label}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{label} element so the
+server-rendered markup includes the label before the component hydrates
+on the client.}
 
 \item{without_format_toggle}{Boolean. Default: \code{FALSE}. Removes the
 button that lets users toggle between format.}

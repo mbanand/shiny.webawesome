@@ -2,7 +2,7 @@
 import {
   WaTabShowEvent
 } from "../chunks/chunk.SKLR37OM.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 export {
   WaTabShowEvent
 };

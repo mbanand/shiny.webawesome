@@ -2,7 +2,7 @@
 import {
   WaSelectEvent
 } from "../chunks/chunk.2LXKNNNE.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 export {
   WaSelectEvent
 };

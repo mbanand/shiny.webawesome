@@ -34,9 +34,9 @@
 #' @param size Enumerated string. Allowed values: `large`, `medium`,
 #' `small`. Default: `medium`. The switch's size.
 #' @param title String. Default: `""`. Optional Web Awesome attribute.
-#' @param with_hint Boolean. Default: `FALSE`. Used for SSR. If you slot
-#' in hint, make sure to add `with-hint` to your component to get it to
-#' properly render with SSR.
+#' @param with_hint Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `hint` element so the server-rendered
+#' markup includes the hint before the component hydrates on the client.
 #' @param hint_slot Text that describes how to use the switch.
 #' Alternatively, you can use the `hint` attribute.
 #'

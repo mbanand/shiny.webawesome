@@ -24,7 +24,7 @@ test_that("wa_input override render includes attrs and slots", {
         hint = "Help",
         appearance = "filled",
         autocapitalize = "words",
-        autocorrect = "on",
+        autocorrect = TRUE,
         autofocus = TRUE,
         enterkeyhint = "next",
         inputmode = "text",
@@ -130,6 +130,49 @@ test_that("wa_input boolean args validate and render correctly", {
   }
 })
 
+test_that(
+  "wa_input autocorrect supports logical and string constructor values",
+  {
+    default_html <- render_html(shiny.webawesome:::wa_input("text_input"))
+
+    expect_exact_html(
+      render_html(
+        shiny.webawesome:::wa_input("text_input", autocorrect = TRUE)
+      ),
+      c('<wa-input id="text_input" autocorrect="on"></wa-input>')
+    )
+    expect_exact_html(
+      render_html(
+        shiny.webawesome:::wa_input("text_input", autocorrect = FALSE)
+      ),
+      c('<wa-input id="text_input" autocorrect="off"></wa-input>')
+    )
+    expect_exact_html(
+      render_html(
+        shiny.webawesome:::wa_input("text_input", autocorrect = "on")
+      ),
+      c('<wa-input id="text_input" autocorrect="on"></wa-input>')
+    )
+    expect_exact_html(
+      render_html(
+        shiny.webawesome:::wa_input("text_input", autocorrect = "off")
+      ),
+      c('<wa-input id="text_input" autocorrect="off"></wa-input>')
+    )
+    expect_equal(
+      render_html(
+        shiny.webawesome:::wa_input("text_input", autocorrect = NULL)
+      ),
+      default_html
+    )
+    expect_error(
+      shiny.webawesome:::wa_input("text_input", autocorrect = "auto"),
+      "`autocorrect` must be one of \"TRUE\", \"FALSE\", \"on\", \"off\".",
+      fixed = TRUE
+    )
+  }
+)
+
 test_that("wa_input enum args validate exactly", {
   enum_cases <- list(
     list(
@@ -143,12 +186,6 @@ test_that("wa_input enum args validate exactly", {
       attr = "autocapitalize",
       valid = "sentences",
       invalid = "caps"
-    ),
-    list(
-      arg = "autocorrect",
-      attr = "autocorrect",
-      valid = "off",
-      invalid = "auto"
     ),
     list(
       arg = "enterkeyhint",

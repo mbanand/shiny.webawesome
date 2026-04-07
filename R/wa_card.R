@@ -17,6 +17,18 @@
 #' @param lang String. Optional Web Awesome attribute.
 #' @param orientation Enumerated string. Allowed values: `horizontal`,
 #' `vertical`. Default: `vertical`. Renders the card's orientation *
+#' @param with_footer Boolean. Default: `FALSE`. Only required for SSR.
+#' Set to `TRUE` if you're slotting in a `footer` element so the
+#' server-rendered markup includes the footer before the component
+#' hydrates on the client.
+#' @param with_header Boolean. Default: `FALSE`. Only required for SSR.
+#' Set to `TRUE` if you're slotting in a `header` element so the
+#' server-rendered markup includes the header before the component
+#' hydrates on the client.
+#' @param with_media Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `media` element so the
+#' server-rendered markup includes the media before the component hydrates
+#' on the client.
 #' @param actions An optional actions section to render at the end for the
 #' horizontal card.
 #' @param footer An optional footer for the card.
@@ -43,6 +55,9 @@ wa_card <- function(
   dir = NULL,
   lang = NULL,
   orientation = NULL,
+  with_footer = NULL,
+  with_header = NULL,
+  with_media = NULL,
   actions = NULL,
   footer = NULL,
   footer_actions = NULL,
@@ -121,10 +136,21 @@ wa_card <- function(
       "appearance" = appearance,
       "dir" = dir,
       "lang" = lang,
-      "orientation" = orientation
+      "orientation" = orientation,
+      "with-footer" = with_footer,
+      "with-header" = with_header,
+      "with-media" = with_media
     ),
-    boolean_names = character(),
-    boolean_arg_names = NULL
+    boolean_names = c(
+      "with-footer",
+      "with-header",
+      "with-media"
+    ),
+    boolean_arg_names = c(
+      "with-footer" = "with_footer",
+      "with-header" = "with_header",
+      "with-media" = "with_media"
+    )
   )
 
   do.call(

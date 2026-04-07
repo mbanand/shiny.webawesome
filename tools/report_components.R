@@ -1634,6 +1634,8 @@ rm(.bootstrap_integrity_helpers)
 #'   the repository root.
 #' @param binding_policy_file Path to the handwritten binding-override policy
 #'   file, relative to the repository root.
+#' @param attribute_policy_file Path to the handwritten attribute-override
+#'   policy file, relative to the repository root.
 #' @param coverage_policy_file Path to the handwritten component-coverage policy
 #'   file, relative to the repository root.
 #' @param verbose Logical scalar. If `TRUE`, emits a short summary.
@@ -1650,6 +1652,7 @@ report_components <- function(
   metadata_file = .default_metadata_file(),
   version_file = .default_metadata_version_file(),
   binding_policy_file = .default_binding_policy_file(),
+  attribute_policy_file = .default_attribute_policy_file(),
   coverage_policy_file = .default_cov_policy_file(),
   verbose = interactive()
 ) {
@@ -1669,6 +1672,10 @@ report_components <- function(
     root = root,
     policy_file = binding_policy_file
   )
+  attribute_policy <- .read_attribute_override_policy(
+    root = root,
+    policy_file = attribute_policy_file
+  )
   coverage_policy <- .read_cov_policy(
     root = root,
     policy_file = coverage_policy_file
@@ -1680,6 +1687,7 @@ report_components <- function(
     metadata_file = metadata_file,
     metadata_version = metadata_version,
     binding_policy = binding_policy,
+    attribute_policy = attribute_policy,
     filter = character(),
     exclude = character()
   )
@@ -1728,6 +1736,7 @@ report_components <- function(
     root = root,
     schema = schema,
     binding_policy = binding_policy,
+    attribute_policy = attribute_policy,
     coverage_policy = coverage_policy,
     generated_file_manifest = generated_file_manifest,
     component_coverage_manifest = component_coverage_manifest,

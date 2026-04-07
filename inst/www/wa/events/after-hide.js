@@ -2,7 +2,7 @@
 import {
   WaAfterHideEvent
 } from "../chunks/chunk.3NKIHICW.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 export {
   WaAfterHideEvent
 };

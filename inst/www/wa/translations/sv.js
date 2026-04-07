@@ -1,10 +1,10 @@
 /*! Copyright 2026 Fonticons, Inc. - https://webawesome.com/license */
-import "../chunks/chunk.I3SFSSFT.js";
-import "../chunks/chunk.2LCUCOAP.js";
+import "../chunks/chunk.G3ZVQTTB.js";
+import "../chunks/chunk.5OV4QM6R.js";
 import {
   registerTranslation
 } from "../chunks/chunk.HPOJN4W7.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 
 // src/translations/sv.ts
 var translation = {
@@ -13,6 +13,7 @@ var translation = {
   $dir: "ltr",
   carousel: "Karusell",
   clearEntry: "\xC5terst\xE4ll val",
+  createOption: (value) => `Skapa "${value}"`,
   close: "St\xE4ng",
   copied: "Kopierade",
   copy: "Kopiera",
@@ -26,6 +27,14 @@ var translation = {
   increment: "\xD6ka",
   loading: "L\xE4ser in",
   nextSlide: "N\xE4sta bild",
+  numCharacters: (num) => {
+    if (num === 1) return "1 tecken";
+    return `${num} tecken`;
+  },
+  numCharactersRemaining: (num) => {
+    if (num === 1) return "1 tecken kvar";
+    return `${num} tecken kvar`;
+  },
   numOptionsSelected: (num) => {
     if (num === 0) return "Inga alternativ har valts";
     if (num === 1) return "1 alternativ valt";

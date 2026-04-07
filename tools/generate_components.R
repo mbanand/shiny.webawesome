@@ -374,6 +374,8 @@ rm(.bootstrap_cli_ui, .bootstrap_generate_helpers, .bootstrap_integrity_helpers)
 #'   the repository root.
 #' @param binding_policy_file Path to the handwritten binding-override policy
 #'   file, relative to the repository root.
+#' @param attribute_policy_file Path to the handwritten attribute-override
+#'   policy file, relative to the repository root.
 #' @param filter Optional character vector of tags, component names, or
 #'   `wa_*` function names to include.
 #' @param exclude Optional character vector of tags, component names, or
@@ -397,6 +399,7 @@ generate_components <- function(
   metadata_file = .default_metadata_file(),
   version_file = .default_metadata_version_file(),
   binding_policy_file = .default_binding_policy_file(),
+  attribute_policy_file = .default_attribute_policy_file(),
   filter = character(),
   exclude = character(),
   emit = TRUE,
@@ -420,6 +423,10 @@ generate_components <- function(
     root = root,
     policy_file = binding_policy_file
   )
+  attribute_policy <- .read_attribute_override_policy(
+    root = root,
+    policy_file = attribute_policy_file
+  )
   schema <- .build_schema_payload(
     metadata = metadata,
     records = records,
@@ -427,6 +434,7 @@ generate_components <- function(
     metadata_file = metadata_file,
     metadata_version = metadata_version,
     binding_policy = binding_policy,
+    attribute_policy = attribute_policy,
     filter = filter,
     exclude = exclude
   )
@@ -436,6 +444,7 @@ generate_components <- function(
     metadata_path = .strip_root_prefix(metadata_path, root),
     metadata = schema$metadata,
     binding_policy = schema$binding_policy,
+    attribute_policy = schema$attribute_policy,
     schema = schema,
     filter = filter,
     exclude = exclude,

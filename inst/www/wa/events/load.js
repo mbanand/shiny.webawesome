@@ -2,7 +2,7 @@
 import {
   WaLoadEvent
 } from "../chunks/chunk.WDIIGUNP.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 export {
   WaLoadEvent
 };

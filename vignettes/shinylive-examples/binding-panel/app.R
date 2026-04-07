@@ -1,7 +1,7 @@
 library(shiny)
 library(shiny.webawesome) # nolint: object_usage_linter.
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Binding example",
   wa_container(
     class = "wa-stack",

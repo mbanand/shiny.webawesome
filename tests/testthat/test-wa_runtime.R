@@ -1,5 +1,5 @@
-test_that("wa_page attaches the package dependency once", {
-  page <- shiny.webawesome::wa_page(
+test_that("webawesomePage attaches the package dependency once", {
+  page <- shiny.webawesome::webawesomePage(
     shiny.webawesome:::.wa_component("wa-card", "Hello"),
     shiny.webawesome:::.wa_component("wa-checkbox")
   )
@@ -10,8 +10,8 @@ test_that("wa_page attaches the package dependency once", {
   expect_equal(sum(dep_names == "shiny.webawesome"), 1L)
 })
 
-test_that("wa_page returns an html page scaffold", {
-  page <- shiny.webawesome::wa_page(
+test_that("webawesomePage returns an html page scaffold", {
+  page <- shiny.webawesome::webawesomePage(
     title = "Runtime test",
     lang = "en",
     body_class = "app-shell",

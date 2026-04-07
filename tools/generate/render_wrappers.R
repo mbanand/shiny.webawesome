@@ -187,7 +187,74 @@
     )
   }
 
-  paste(c(details[nzchar(details)], description), collapse = " ")
+  override_note <- .wrapper_attr_constructor_doc(attr)
+
+  paste(
+    c(details[nzchar(details)], description, override_note),
+    collapse = " "
+  )
+}
+
+# Return one concise documentation note for constructor override behavior.
+.wrapper_attr_constructor_doc <- function(attr) {
+  constructor <- attr$constructor_override
+
+  if (is.null(constructor)) {
+    return("")
+  }
+
+  attr_name <- .scalar_string(attr$name, fallback = "attribute")
+  accepted_strings <- names(constructor$strings %||% character())
+  accepted_values <- c(
+    "`TRUE`",
+    "`FALSE`",
+    vapply(
+      accepted_strings,
+      function(value) paste0('`"', value, '"`'),
+      character(1)
+    ),
+    "`NULL`"
+  )
+
+  accepted_text <- paste(accepted_values, collapse = ", ")
+  true_attr <- paste0("`", attr_name, '="', constructor$true, '"`')
+  false_attr <- paste0("`", attr_name, '="', constructor$false, '"`')
+
+  string_note <- ""
+  if (length(accepted_strings) > 0L) {
+    string_pairs <- vapply(
+      accepted_strings,
+      function(value) {
+        serialized <- constructor$strings[[value]]
+        value_text <- paste0('`"', value, '"`')
+        if (identical(value, serialized)) {
+          paste0(value_text, " is emitted unchanged")
+        } else {
+          paste0(
+            value_text, " emits ",
+            paste0('`"', serialized, '"`')
+          )
+        }
+      },
+      character(1)
+    )
+
+    string_note <- paste(string_pairs, collapse = "; ")
+    string_note <- paste0(" Accepted string values: ", string_note, ".")
+  }
+
+  paste0(
+    "Because the upstream implementation treats attributes and properties",
+    " differently for this field, this argument accepts ",
+    accepted_text,
+    ".",
+    " `TRUE` emits ",
+    true_attr,
+    " and `FALSE` emits ",
+    false_attr,
+    ". `NULL` omits the attribute.",
+    string_note
+  )
 }
 
 # Return wrapped roxygen lines for one text fragment.
@@ -352,6 +419,11 @@
   attrs[order(rank, attr_names)]
 }
 
+# Return whether one wrapper attribute uses custom constructor serialization.
+.attr_has_ctor_override <- function(attr) {
+  !is.null(attr$constructor_override)
+}
+
 # Render one wrapper function signature.
 .render_wrapper_signature <- function(component) {
   args <- c("...")
@@ -454,7 +526,13 @@
 # Render the boolean attribute names for one wrapper.
 .render_wrapper_booleans <- function(component) {
   attrs <- .wrapper_attributes(component)
-  booleans <- attrs[vapply(attrs, `[[`, logical(1), "is_boolean")]
+  booleans <- attrs[vapply(
+    attrs,
+    function(attr) {
+      isTRUE(attr$is_boolean) && !.attr_has_ctor_override(attr)
+    },
+    logical(1)
+  )]
 
   if (length(booleans) == 0L) {
     return("character()")
@@ -475,7 +553,13 @@
 # Render the boolean HTML-attribute to wrapper-argument name map.
 .render_wrapper_bool_arg_names <- function(component) {
   attrs <- .wrapper_attributes(component)
-  booleans <- attrs[vapply(attrs, `[[`, logical(1), "is_boolean")]
+  booleans <- attrs[vapply(
+    attrs,
+    function(attr) {
+      isTRUE(attr$is_boolean) && !.attr_has_ctor_override(attr)
+    },
+    logical(1)
+  )]
 
   if (length(booleans) == 0L) {
     return("NULL")
@@ -1102,49 +1186,121 @@
 # Render enum validation lines for one wrapper.
 .render_wrapper_validations <- function(component) {
   attrs <- .wrapper_attributes(component)
+  custom_attrs <- attrs[vapply(
+    attrs,
+    .attr_has_ctor_override,
+    logical(1)
+  )]
   attrs <- attrs[vapply(
     attrs,
-    function(attr) length(attr$enum_values %||% character()) > 0L,
+    function(attr) {
+      length(attr$enum_values %||% character()) > 0L &&
+        !.attr_has_ctor_override(attr)
+    },
     logical(1)
   )]
 
-  if (length(attrs) == 0L) {
+  lines <- character()
+
+  if (length(custom_attrs) > 0L) {
+    custom_lines <- vapply(
+      custom_attrs,
+      function(attr) {
+        constructor <- attr$constructor_override
+        string_map <- constructor$strings %||% character()
+        string_map_text <- if (length(string_map) == 0L) {
+          "NULL"
+        } else if (length(string_map) == 1L) {
+          paste0(
+            "c(",
+            .r_string(names(string_map)[[1]]),
+            " = ",
+            .r_string(unname(string_map[[1]])),
+            ")"
+          )
+        } else {
+          paste0(
+            "c(\n      ",
+            paste(
+              vapply(
+                names(string_map),
+                function(name) {
+                  paste0(.r_string(name), " = ", .r_string(string_map[[name]]))
+                },
+                character(1)
+              ),
+              collapse = ",\n      "
+            ),
+            "\n    )"
+          )
+        }
+
+        paste0(
+          "  ",
+          .as_r_symbol(attr$argument_name),
+          " <- .wa_match_constructor_attr(\n",
+          "    ",
+          .as_r_symbol(attr$argument_name),
+          ",\n",
+          "    ",
+          .r_string(attr$argument_name),
+          ",\n",
+          "    true_value = ",
+          if (is.null(constructor$true)) "NULL" else .r_string(constructor$true),
+          ",\n",
+          "    false_value = ",
+          if (is.null(constructor$false)) "NULL" else .r_string(constructor$false),
+          ",\n",
+          "    string_map = ",
+          string_map_text,
+          "\n  )"
+        )
+      },
+      character(1)
+    )
+    lines <- c(lines, custom_lines)
+  }
+
+  if (length(attrs) == 0L && length(lines) == 0L) {
     return("")
   }
 
-  lines <- vapply(
-    attrs,
-    function(attr) {
-      choices <- paste0(
-        "c(\n",
-        paste0(
-          "        ",
-          sprintf('"%s"', attr$enum_values),
-          collapse = ",\n"
-        ),
-        "\n      )"
-      )
+  if (length(attrs) > 0L) {
+    enum_lines <- vapply(
+      attrs,
+      function(attr) {
+        choices <- paste0(
+          "c(\n",
+          paste0(
+            "        ",
+            sprintf('"%s"', attr$enum_values),
+            collapse = ",\n"
+          ),
+          "\n      )"
+        )
 
-      paste0(
-        "  if (!is.null(",
-        .as_r_symbol(attr$argument_name),
-        ")) {\n",
-        "    ",
-        .as_r_symbol(attr$argument_name),
-        " <- .wa_match_arg(\n",
-        "      ",
-        .as_r_symbol(attr$argument_name),
-        ",\n",
-        "      ",
-        .r_string(attr$argument_name),
-        ",\n      ",
-        choices,
-        "\n    )\n",
-        "  }"
-      )
-    },
-    character(1)
-  )
+        paste0(
+          "  if (!is.null(",
+          .as_r_symbol(attr$argument_name),
+          ")) {\n",
+          "    ",
+          .as_r_symbol(attr$argument_name),
+          " <- .wa_match_arg(\n",
+          "      ",
+          .as_r_symbol(attr$argument_name),
+          ",\n",
+          "      ",
+          .r_string(attr$argument_name),
+          ",\n      ",
+          choices,
+          "\n    )\n",
+          "  }"
+        )
+      },
+      character(1)
+    )
+    lines <- c(lines, enum_lines)
+  }
 
   paste(lines, collapse = "\n\n")
 }

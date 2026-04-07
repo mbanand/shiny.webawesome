@@ -2,7 +2,7 @@
 import {
   WaMutationEvent
 } from "../chunks/chunk.SUZGY3IK.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 export {
   WaMutationEvent
 };

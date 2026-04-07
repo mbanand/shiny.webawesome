@@ -26,7 +26,7 @@ commands, and app-local JavaScript.
 The package exposes several complementary surfaces:
 \itemize{
 \item generated component wrappers such as \code{wa_button()} and \code{wa_select()}
-\item layout helpers such as \code{wa_page()} and \code{wa_container()}
+\item layout helpers such as \code{webawesomePage()} and \code{wa_container()}
 \item generated Shiny bindings and update helpers for selected interactive
 components
 \item command-layer helpers such as \code{wa_set_property()} and \code{wa_call_method()}
@@ -55,8 +55,8 @@ Example:
 
 For an introductory guide, see
 \code{vignette("get-started", package = "shiny.webawesome")}. For
-function-specific details, use the package help pages such as \code{?wa_page},
-\code{?wa_set_property}, \code{?wa_call_method}, and \code{?wa_js}.
+function-specific details, use the package help pages such as
+\code{?webawesomePage}, \code{?wa_set_property}, \code{?wa_call_method}, and \code{?wa_js}.
 }
 }
 \seealso{

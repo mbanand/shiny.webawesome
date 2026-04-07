@@ -312,6 +312,24 @@ The component metadata is converted into an intermediate **component schema** th
 
 This schema normalizes the Web Component metadata into a format suitable for R code generation.
 
+Schema construction may also perform maintainer-facing validation when
+upstream metadata appears insufficient to describe constructor-time behavior
+reliably. In particular, attribute typing should be reviewed for potential
+metadata/runtime mismatches, especially when:
+
+* metadata heuristics suggest different attribute and property semantics
+* vendored runtime code indicates custom attribute/property conversion
+* constructor-time HTML emitted by the package may differ from runtime
+  property semantics
+
+Detection does not need to rely on a single signal. Multi-stage approaches are
+appropriate here, such as using metadata heuristics to flag suspicious fields
+and implementation-based inspection of vendored runtime code to confirm them.
+
+When a confirmed mismatch affects constructor-time wrapper emission, the
+generator should fail loudly rather than silently emit ambiguous or incorrect
+HTML.
+
 ---
 
 ## Manual Override Application
@@ -327,6 +345,9 @@ Typical override situations include:
 * compatibility fixes for upstream components
 * support-model overrides when upstream metadata does not fully expose the
   Shiny-relevant interaction contract of a component
+* attribute constructor-serialization overrides when upstream metadata and
+  runtime implementation disagree in ways that would otherwise make generated
+  wrapper HTML incorrect or ambiguous
 
 Overrides are intentionally limited and should remain small relative to the generated codebase.
 
@@ -337,6 +358,14 @@ inputs under `dev/` rather than as broad hard-coded exceptions scattered
 through generator code. For example, a binding override policy may explicitly
 mark a component as action-bound when the component semantically mirrors a
 native control but the relevant event is not declared in upstream metadata.
+Likewise, an attribute override policy may explicitly define how specified R
+wrapper values serialize into emitted HTML attributes when upstream runtime
+behavior cannot be represented safely by metadata typing alone.
+
+These override paths are intended to complement generator validation, not
+replace it. Detection should happen first; once a mismatch is confirmed, the
+generator should require an explicit policy entry before generation can
+proceed.
 
 The override mechanism and its locations are defined in:
 

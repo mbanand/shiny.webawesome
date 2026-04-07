@@ -2,7 +2,7 @@
 import {
   WaStartEvent
 } from "../chunks/chunk.BMO76VKZ.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 export {
   WaStartEvent
 };

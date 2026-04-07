@@ -20,6 +20,9 @@
 #' @param sandbox String. Security restrictions for the iframe.
 #' @param src String. The URL of the content to display.
 #' @param srcdoc String. Inline HTML to display.
+#' @param with_theme_sync Boolean. Default: `FALSE`. Enables automatic
+#' theme syncing (light/dark mode and theme selector classes) from the
+#' host document to the iframe.
 #' @param without_controls Boolean. Default: `FALSE`. Removes the zoom
 #' controls.
 #' @param without_interaction Boolean. Default: `FALSE`. Disables
@@ -51,6 +54,7 @@ wa_zoomable_frame <- function(
   sandbox = NULL,
   src = NULL,
   srcdoc = NULL,
+  with_theme_sync = NULL,
   without_controls = NULL,
   without_interaction = NULL,
   zoom = NULL,
@@ -96,6 +100,7 @@ wa_zoomable_frame <- function(
       "sandbox" = sandbox,
       "src" = src,
       "srcdoc" = srcdoc,
+      "with-theme-sync" = with_theme_sync,
       "without-controls" = without_controls,
       "without-interaction" = without_interaction,
       "zoom" = zoom,
@@ -103,11 +108,13 @@ wa_zoomable_frame <- function(
     ),
     boolean_names = c(
       "allowfullscreen",
+      "with-theme-sync",
       "without-controls",
       "without-interaction"
     ),
     boolean_arg_names = c(
       "allowfullscreen" = "allowfullscreen",
+      "with-theme-sync" = "with_theme_sync",
       "without-controls" = "without_controls",
       "without-interaction" = "without_interaction"
     )

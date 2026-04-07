@@ -1,10 +1,10 @@
 /*! Copyright 2026 Fonticons, Inc. - https://webawesome.com/license */
-import "../chunks/chunk.I3SFSSFT.js";
-import "../chunks/chunk.2LCUCOAP.js";
+import "../chunks/chunk.G3ZVQTTB.js";
+import "../chunks/chunk.5OV4QM6R.js";
 import {
   registerTranslation
 } from "../chunks/chunk.HPOJN4W7.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 
 // src/translations/da.ts
 var translation = {
@@ -13,6 +13,7 @@ var translation = {
   $dir: "ltr",
   carousel: "Karrusel",
   clearEntry: "Ryd indtastning",
+  createOption: (value) => `Opret "${value}"`,
   close: "Luk",
   copied: "Kopieret",
   copy: "Kopier",
@@ -26,6 +27,14 @@ var translation = {
   increment: "For\xF8g",
   loading: "Indl\xE6ser",
   nextSlide: "N\xE6ste slide",
+  numCharacters: (num) => {
+    if (num === 1) return "1 tegn";
+    return `${num} tegn`;
+  },
+  numCharactersRemaining: (num) => {
+    if (num === 1) return "1 tegn tilbage";
+    return `${num} tegn tilbage`;
+  },
   numOptionsSelected: (num) => {
     if (num === 0) return "Ingen valgt";
     if (num === 1) return "1 valgt";

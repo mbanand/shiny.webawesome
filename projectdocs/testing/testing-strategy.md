@@ -111,6 +111,10 @@ Unit tests typically verify:
 * enumeration arguments validate allowed values
 * dependency helpers attach Web Awesome runtime assets
 
+When a component uses an explicit constructor-serialization override for an
+attribute, unit tests should also verify the override contract directly. This
+includes accepted wrapper inputs and the exact emitted HTML attribute values.
+
 Example conceptual test:
 
 ```r
@@ -148,6 +152,11 @@ These tests validate:
 * Shiny input binding behavior
 * event propagation
 * server-side update behavior
+
+They are also the required place to validate any component that relies on an
+attribute constructor-serialization override, because those cases exist
+precisely when browser runtime behavior cannot be trusted to follow metadata
+typing alone.
 
 Functional tests are implemented using:
 
@@ -193,6 +202,12 @@ assertion layers**:
 2. **Shiny reactive-state assertions**
    These verify that the browser interaction is reflected correctly in
    Shiny `input`, `output`, or exported reactive values.
+
+For components with attribute constructor overrides, the browser/component
+assertion layer should always exercise the overridden attribute explicitly. At
+minimum, these tests should verify the emitted constructor case in a real
+browser runtime and confirm the resulting component or native-control state
+after hydration.
 
 This reactive-state layer should cover more than ordinary value inputs.
 When the generated support model is action-oriented or action-with-payload,

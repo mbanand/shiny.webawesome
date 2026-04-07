@@ -2,7 +2,7 @@
 import {
   WaAfterExpandEvent
 } from "../chunks/chunk.Q6XMGFWJ.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 export {
   WaAfterExpandEvent
 };

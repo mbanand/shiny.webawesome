@@ -2,7 +2,7 @@
 import {
   registerTranslation
 } from "../chunks/chunk.HPOJN4W7.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 
 // src/translations/sl.ts
 var translation = {
@@ -11,6 +11,7 @@ var translation = {
   $dir: "ltr",
   carousel: "Vrtiljak",
   clearEntry: "Po\u010Disti vnos",
+  createOption: (value) => `Ustvari "${value}"`,
   close: "Zapri",
   copied: "Kopirano",
   copy: "Kopiraj",
@@ -24,6 +25,20 @@ var translation = {
   increment: "Pove\u010Daj",
   loading: "Nalaganje",
   nextSlide: "Naslednji diapozitiv",
+  numCharacters: (num) => {
+    const mod100 = num % 100;
+    if (mod100 === 1) return `${num} znak`;
+    if (mod100 === 2) return `${num} znaka`;
+    if (mod100 === 3 || mod100 === 4) return `${num} znaki`;
+    return `${num} znakov`;
+  },
+  numCharactersRemaining: (num) => {
+    const mod100 = num % 100;
+    if (mod100 === 1) return `Preostane ${num} znak`;
+    if (mod100 === 2) return `Preostaneta ${num} znaka`;
+    if (mod100 === 3 || mod100 === 4) return `Preostanejo ${num} znaki`;
+    return `Preostane ${num} znakov`;
+  },
   numOptionsSelected: (num) => {
     if (num === 0) return "Nobena mo\u017Enost ni izbrana";
     if (num === 1) return "1 mo\u017Enost izbrana";

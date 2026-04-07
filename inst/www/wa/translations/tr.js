@@ -1,10 +1,10 @@
 /*! Copyright 2026 Fonticons, Inc. - https://webawesome.com/license */
-import "../chunks/chunk.I3SFSSFT.js";
-import "../chunks/chunk.2LCUCOAP.js";
+import "../chunks/chunk.G3ZVQTTB.js";
+import "../chunks/chunk.5OV4QM6R.js";
 import {
   registerTranslation
 } from "../chunks/chunk.HPOJN4W7.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 
 // src/translations/tr.ts
 var translation = {
@@ -13,6 +13,7 @@ var translation = {
   $dir: "ltr",
   carousel: "Atl\u0131kar\u0131nca",
   clearEntry: "Giri\u015Fi sil",
+  createOption: (value) => `"${value}" olu\u015Ftur`,
   close: "Kapat",
   copied: "Kopyaland\u0131",
   copy: "Kopya",
@@ -26,6 +27,14 @@ var translation = {
   increment: "Art\u0131r",
   loading: "Y\xFCkleme",
   nextSlide: "Sonraki slayt",
+  numCharacters: (num) => {
+    if (num === 1) return "1 karakter";
+    return `${num} karakter`;
+  },
+  numCharactersRemaining: (num) => {
+    if (num === 1) return "1 karakter kald\u0131";
+    return `${num} karakter kald\u0131`;
+  },
   numOptionsSelected: (num) => {
     if (num === 0) return "Hi\xE7bir se\xE7enek se\xE7ilmedi";
     if (num === 1) return "1 se\xE7enek se\xE7ildi";

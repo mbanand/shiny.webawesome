@@ -2,7 +2,7 @@
 import {
   WaHoverEvent
 } from "../chunks/chunk.XW6BKGGI.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 export {
   WaHoverEvent
 };

@@ -33,7 +33,7 @@ source(file.path("..", "..", "report_components.R"))
     c(
       "export(update_wa_select)",
       "export(wa_button)",
-      "export(wa_page)",
+      "export(webawesomePage)",
       "export(wa_select)"
     )
   )
@@ -50,11 +50,11 @@ source(file.path("..", "..", "report_components.R"))
     )
   )
   .write_file(
-    file.path(root, "R", "wa_page.R"),
+    file.path(root, "R", "webawesomePage.R"),
     c(
       "#' Manual helper.",
       "#' @export",
-      "wa_page <- function(...) NULL"
+      "webawesomePage <- function(...) NULL"
     )
   )
   .write_file(
@@ -351,7 +351,7 @@ testthat::test_that(
       file.path(root, "manifests", "report", "manual-api-inventory.yaml")
     )
     testthat::expect_equal(manual_inventory$summary$manual_exports, 1)
-    testthat::expect_equal(manual_inventory$exports[[1]]$name, "wa_page")
+    testthat::expect_equal(manual_inventory$exports[[1]]$name, "webawesomePage")
 
     generated_files_report <- readLines(
       file.path(root, "reports", "report", "generated-files.md"),

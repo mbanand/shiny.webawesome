@@ -96,7 +96,7 @@ command/helper layer.
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Semantic binding",
   wa_select(
     "favorite_letter",
@@ -129,7 +129,7 @@ form value.
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Semantic dialog state",
   actionButton("open_dialog", "Open dialog"),
   wa_dialog(
@@ -165,7 +165,7 @@ selection derived from selected descendant tree items.
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Semantic tree selection",
   wa_tree(
     "navigation_tree",
@@ -198,7 +198,7 @@ attributes.
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Action binding",
   wa_button("run_action", "Run"),
   verbatimTextOutput("click_count")
@@ -223,7 +223,7 @@ The input invalidates on each click in the same way a Shiny action input does.
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Action with payload",
   wa_dropdown(
     "menu",

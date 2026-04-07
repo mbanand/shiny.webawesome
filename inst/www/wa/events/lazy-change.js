@@ -2,7 +2,7 @@
 import {
   WaLazyChangeEvent
 } from "../chunks/chunk.ZSEFTQAO.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 export {
   WaLazyChangeEvent
 };

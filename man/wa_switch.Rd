@@ -66,9 +66,9 @@ field.}
 
 \item{title}{String. Default: \code{""}. Optional Web Awesome attribute.}
 
-\item{with_hint}{Boolean. Default: \code{FALSE}. Used for SSR. If you slot
-in hint, make sure to add \code{with-hint} to your component to get it to
-properly render with SSR.}
+\item{with_hint}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{hint} element so the server-rendered
+markup includes the hint before the component hydrates on the client.}
 
 \item{hint_slot}{Text that describes how to use the switch.
 Alternatively, you can use the \code{hint} attribute.}

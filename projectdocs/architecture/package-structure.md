@@ -51,7 +51,7 @@ Both handwritten and generated package source files live directly under `R/`.
 ```text
 R/
   wa_dependency.R
-  wa_page.R
+  webawesomePage.R
   wa_card.R
   wa_select.R
   package.R
@@ -78,7 +78,7 @@ Typical files:
 
 ```text
 wa_dependency.R
-wa_page.R
+webawesomePage.R
 wa_utils.R
 ```
 
@@ -148,7 +148,7 @@ design choices, not generated mirrors of upstream component metadata.
 
 Examples may include:
 
-- `wa_page()`
+- `webawesomePage()`
 - `wa_set_property()`
 - `wa_grid()`
 - future layout or utility helpers such as a lightweight container helper
@@ -187,6 +187,23 @@ whose Shiny interaction semantics are known, but whose upstream
 required for automatic classification. These policy files should remain
 focused on generator decisions such as binding mode selection, not broad
 component rewrites.
+
+Another concrete use is an **attribute constructor-serialization override
+policy** for components whose upstream metadata and runtime implementation do
+not agree cleanly on constructor-time attribute semantics. For example,
+metadata may classify an attribute as boolean while the vendored runtime uses
+a custom converter that expects string-valued HTML attributes at construction
+time.
+
+These cases should be handled through a narrow handwritten policy file such as:
+
+```text
+dev/generation/attribute-overrides.yaml
+```
+
+This policy should remain explicit and fully describe how specified wrapper
+values serialize into emitted HTML attributes. It should not be used as a
+general escape hatch for broad wrapper rewrites.
 
 ---
 

@@ -28,6 +28,8 @@ wa_select(
   required = NULL,
   size = NULL,
   with_clear = NULL,
+  with_hint = NULL,
+  with_label = NULL,
   clear_icon = NULL,
   end = NULL,
   expand_icon = NULL,
@@ -108,6 +110,15 @@ attribute.}
 
 \item{with_clear}{Boolean. Default: \code{FALSE}. Adds a clear button when
 the select is not empty.}
+
+\item{with_hint}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{hint} element so the server-rendered
+markup includes the hint before the component hydrates on the client.}
+
+\item{with_label}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{label} element so the
+server-rendered markup includes the label before the component hydrates
+on the client.}
 
 \item{clear_icon}{An icon to use in lieu of the default clear icon.}
 

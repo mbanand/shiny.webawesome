@@ -138,6 +138,147 @@
   )
 }
 
+# Return whether one attribute description suggests different attribute and
+# property serialization semantics.
+.attr_has_serialization_hint <- function(attr) {
+  description <- .scalar_string(attr$description, fallback = "")
+
+  nzchar(description) &&
+    grepl("When set as an attribute", description, fixed = TRUE) &&
+    grepl("When set as a property", description, fixed = TRUE)
+}
+
+# Return one attribute override entry for a component attribute when present.
+.attribute_override_for <- function(attribute_policy, tag_name, attr_name) {
+  components <- .or_default(attribute_policy$components, list())
+
+  if (length(components) == 0L || !tag_name %in% names(components)) {
+    return(NULL)
+  }
+
+  attrs <- .or_default(components[[tag_name]]$attributes, list())
+  if (length(attrs) == 0L || !attr_name %in% names(attrs)) {
+    return(NULL)
+  }
+
+  attrs[[attr_name]]
+}
+
+# Return chunk files imported by one vendored component module.
+.component_chunk_files <- function(runtime_root, source_module) {
+  if (is.na(source_module) || !nzchar(source_module)) {
+    return(character())
+  }
+
+  module_path <- file.path(runtime_root, source_module)
+  if (!file.exists(module_path)) {
+    return(character())
+  }
+
+  lines <- readLines(module_path, warn = FALSE, encoding = "UTF-8")
+  matches <- regmatches(
+    lines,
+    gregexpr("\\.\\./\\.\\./chunks/[^\"']+\\.js", lines, perl = TRUE)
+  )
+  imports <- unique(unlist(matches, use.names = FALSE))
+
+  if (length(imports) == 0L) {
+    return(character())
+  }
+
+  imports <- file.path(dirname(module_path), imports)
+  imports[file.exists(imports)]
+}
+
+# Return whether one component field uses a custom runtime converter.
+.field_has_custom_converter <- function(
+  runtime_root,
+  source_module,
+  class_name,
+  field_name
+) {
+  chunk_files <- .component_chunk_files(runtime_root, source_module)
+
+  if (length(chunk_files) == 0L) {
+    return(FALSE)
+  }
+
+  marker <- paste0("], ", class_name, '.prototype, "', field_name, '"')
+
+  for (path in chunk_files) {
+    lines <- readLines(path, warn = FALSE, encoding = "UTF-8")
+    hits <- grep(marker, lines, fixed = TRUE)
+
+    if (length(hits) == 0L) {
+      next
+    }
+
+    for (idx in hits) {
+      start <- max(1L, idx - 12L)
+      block <- paste(lines[start:idx], collapse = "\n")
+      if (grepl("converter\\s*:", block, perl = TRUE)) {
+        return(TRUE)
+      }
+    }
+  }
+
+  FALSE
+}
+
+# Apply attribute constructor overrides and fail on confirmed serialization
+# mismatches that lack explicit policy.
+.apply_attr_ctor_overrides <- function(
+  attributes,
+  tag_name,
+  class_name,
+  source_module,
+  runtime_root,
+  attribute_policy = list()
+) {
+  if (length(attributes) == 0L) {
+    return(attributes)
+  }
+
+  lapply(
+    attributes,
+    function(attr) {
+      override <- .attribute_override_for(attribute_policy, tag_name, attr$name)
+      attr$constructor_override <- if (is.null(override)) NULL else override$constructor
+
+      suspicious <- isTRUE(attr$is_boolean) &&
+        .attr_has_serialization_hint(attr)
+
+      if (!suspicious) {
+        return(attr)
+      }
+
+      confirmed <- .field_has_custom_converter(
+        runtime_root = runtime_root,
+        source_module = source_module,
+        class_name = class_name,
+        field_name = .scalar_string(attr$field_name, fallback = attr$name)
+      )
+
+      if (!confirmed || !is.null(attr$constructor_override)) {
+        return(attr)
+      }
+
+      stop(
+        paste(
+          "Attribute constructor serialization override required for",
+          paste0(tag_name, " / ", attr$name, "."),
+          "Metadata marks this attribute as boolean, but the vendored runtime",
+          "uses a custom attribute/property converter.",
+          "Add an explicit entry to",
+          .default_attribute_policy_file(),
+          "before generating wrappers."
+        ),
+        call. = FALSE
+      )
+    }
+  )
+}
+
 # Return one sorted normalized list for one declaration field.
 .normalize_sorted <- function(values, mapper, sort_key = "name") {
   values <- .or_default(values, list())
@@ -338,12 +479,16 @@
 
 # Build the intermediate component schema from declaration records.
 .build_component_schema <- function(records,
+                                    root,
+                                    metadata_file,
                                     binding_policy = list(),
+                                    attribute_policy = list(),
                                     filter = character(),
                                     exclude = character()) {
   filter <- .normalize_filter_tokens(filter)
   exclude <- .normalize_filter_tokens(exclude)
   components <- list()
+  runtime_root <- dirname(.resolve_metadata_path(root, metadata_file))
 
   for (record in records) {
     declaration <- record$declaration
@@ -370,6 +515,14 @@
       .normalize_attribute
     )
     attributes <- .enrich_attribute_types(attributes, public_members)
+    attributes <- .apply_attr_ctor_overrides(
+      attributes = attributes,
+      tag_name = tag_name,
+      class_name = .scalar_string(declaration$name, fallback = NA_character_),
+      source_module = .scalar_string(record$module_path, fallback = NA_character_),
+      runtime_root = runtime_root,
+      attribute_policy = attribute_policy
+    )
     attribute_names_by_field <- stats::setNames(
       vapply(attributes, `[[`, character(1), "name"),
       vapply(attributes, `[[`, character(1), "field_name")
@@ -431,11 +584,15 @@
                                   metadata_file,
                                   metadata_version = NA_character_,
                                   binding_policy = list(),
+                                  attribute_policy = list(),
                                   filter = character(),
                                   exclude = character()) {
   components <- .build_component_schema(
     records = records,
+    root = root,
+    metadata_file = metadata_file,
     binding_policy = binding_policy,
+    attribute_policy = attribute_policy,
     filter = filter,
     exclude = exclude
   )
@@ -465,6 +622,11 @@
       path = .scalar_string(binding_policy$path, fallback = NA_character_),
       exists = isTRUE(binding_policy$exists),
       component_count = length(.or_default(binding_policy$components, list()))
+    ),
+    attribute_policy = list(
+      path = .scalar_string(attribute_policy$path, fallback = NA_character_),
+      exists = isTRUE(attribute_policy$exists),
+      component_count = length(.or_default(attribute_policy$components, list()))
     ),
     filters = list(
       include = if (length(filter) == 0L) NULL else .normalize_filter_tokens(filter),

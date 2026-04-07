@@ -21,16 +21,21 @@ test_that("wa_rating override render includes attrs", {
         value = 3,
         disabled = TRUE,
         label = "Stars",
+        name = "score",
+        custom_error = "Pick a rating",
+        default_value = 2,
         max = 7,
         precision = 0.5,
         readonly = TRUE,
+        required = TRUE,
         size = "large"
       )
     ),
     c(
       paste0(
         '<wa-rating id="rating" value="3" disabled label="Stars" ',
-        'max="7" precision="0.5" readonly size="large"></wa-rating>'
+        'name="score" custom-error="Pick a rating" default-value="2" ',
+        'max="7" precision="0.5" readonly required size="large"></wa-rating>'
       )
     )
   )
@@ -45,6 +50,11 @@ test_that("wa_rating boolean and enum args validate exactly", {
   expect_error(
     shiny.webawesome:::wa_rating("rating", size = "tiny"),
     "`size` must be one of ",
+    fixed = TRUE
+  )
+  expect_error(
+    shiny.webawesome:::wa_rating("rating", required = "yes"),
+    "`required` must be TRUE, FALSE, or NULL.",
     fixed = TRUE
   )
 })

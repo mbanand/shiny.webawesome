@@ -72,7 +72,7 @@ the Package Options article.
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Set property",
   actionButton("open_dialog", "Open dialog"),
   wa_dialog(
@@ -113,7 +113,7 @@ command path are controlled by the package warning registry, especially the
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Call method",
   actionButton("show_details", "Show details"),
   actionButton("hide_details", "Hide details"),
@@ -158,7 +158,7 @@ Typical uses include:
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Browser glue",
   wa_js("
     function publishDialogState() {

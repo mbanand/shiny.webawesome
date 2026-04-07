@@ -28,4 +28,5 @@ testthat::test_that("interactive app source includes wa_js copy coverage", {
   testthat::expect_match(file_text, "wa_copy_button", fixed = TRUE)
   testthat::expect_match(file_text, "copy_button_js_event", fixed = TRUE)
   testthat::expect_match(file_text, "wa-copy", fixed = TRUE)
+  testthat::expect_match(file_text, "count=", fixed = TRUE)
 })

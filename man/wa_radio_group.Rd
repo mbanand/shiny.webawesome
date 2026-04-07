@@ -72,11 +72,14 @@ checked before allowing the containing form to submit.}
 \code{small}. The radio group's size. When present, this size will be
 applied to all \verb{<wa-radio>} items inside.}
 
-\item{with_hint}{Boolean. Default: \code{FALSE}. Used for SSR. if TRUE, will
-show slotted hint on initial render.}
+\item{with_hint}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{hint} element so the server-rendered
+markup includes the hint before the component hydrates on the client.}
 
-\item{with_label}{Boolean. Default: \code{FALSE}. Used for SSR. if TRUE,
-will show slotted label on initial render.}
+\item{with_label}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{label} element so the
+server-rendered markup includes the label before the component hydrates
+on the client.}
 
 \item{hint_slot}{Text that describes how to use the radio group.
 Alternatively, you can use the \code{hint} attribute.}

@@ -1,10 +1,10 @@
 /*! Copyright 2026 Fonticons, Inc. - https://webawesome.com/license */
-import "../chunks/chunk.I3SFSSFT.js";
-import "../chunks/chunk.2LCUCOAP.js";
+import "../chunks/chunk.G3ZVQTTB.js";
+import "../chunks/chunk.5OV4QM6R.js";
 import {
   registerTranslation
 } from "../chunks/chunk.HPOJN4W7.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 
 // src/translations/ja.ts
 var translation = {
@@ -13,6 +13,7 @@ var translation = {
   $dir: "ltr",
   carousel: "\u30AB\u30EB\u30FC\u30BB\u30EB",
   clearEntry: "\u30AF\u30EA\u30A2",
+  createOption: (value) => `\u300C${value}\u300D\u3092\u4F5C\u6210`,
   close: "\u9589\u3058\u308B",
   copied: "\u30B3\u30D4\u30FC\u3057\u307E\u3057\u305F",
   copy: "\u30B3\u30D4\u30FC",
@@ -26,6 +27,8 @@ var translation = {
   increment: "\u5897\u3084\u3059",
   loading: "\u8AAD\u307F\u8FBC\u307F\u4E2D",
   nextSlide: "\u6B21\u306E\u30B9\u30E9\u30A4\u30C9",
+  numCharacters: (num) => `${num}\u6587\u5B57`,
+  numCharactersRemaining: (num) => `\u6B8B\u308A${num}\u6587\u5B57`,
   numOptionsSelected: (num) => {
     if (num === 0) return "\u9805\u76EE\u304C\u9078\u629E\u3055\u308C\u3066\u3044\u307E\u305B\u3093";
     return `${num} \u500B\u306E\u9805\u76EE\u304C\u9078\u629E\u3055\u308C\u307E\u3057\u305F`;

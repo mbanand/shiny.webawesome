@@ -13,7 +13,7 @@ sections <- list(
   )
 )
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Action Runtime Harness",
   tags$style(HTML("
     .runtime-shell {

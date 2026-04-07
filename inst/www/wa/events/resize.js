@@ -2,7 +2,7 @@
 import {
   WaResizeEvent
 } from "../chunks/chunk.DP5YIFD7.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 export {
   WaResizeEvent
 };

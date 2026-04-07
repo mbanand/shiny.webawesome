@@ -322,7 +322,7 @@ fluidPage(
 The package also provides a helper function:
 
 ```
-wa_page()
+webawesomePage()
 ```
 
 This function constructs a full page using Web Awesome components.
@@ -332,7 +332,7 @@ helpers for common Shiny usage patterns. These helpers are package-level
 ergonomic affordances, not generated mirrors of upstream Web Awesome component
 metadata.
 
-When `wa_page()` is used, dependency attachment is handled once at the page level.
+When `webawesomePage()` is used, dependency attachment is handled once at the page level.
 
 Component wrappers temporarily disable their own dependency attachment during page construction to avoid redundant work.
 

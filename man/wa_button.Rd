@@ -32,6 +32,8 @@ wa_button(
   type = NULL,
   variant = NULL,
   with_caret = NULL,
+  with_end = NULL,
+  with_start = NULL,
   end = NULL,
   start = NULL
 )
@@ -129,6 +131,16 @@ variant.}
 \item{with_caret}{Boolean. Default: \code{FALSE}. Draws the button with a
 caret. Used to indicate that the button triggers a dropdown menu or
 similar behavior.}
+
+\item{with_end}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in an \code{end} element so the server-rendered
+markup includes the end slot before the component hydrates on the
+client.}
+
+\item{with_start}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{start} element so the
+server-rendered markup includes the start slot before the component
+hydrates on the client.}
 
 \item{end}{An element, such as \verb{<wa-icon>}, placed after the label.}
 

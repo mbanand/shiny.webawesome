@@ -452,12 +452,12 @@ Dependency attached automatically.
 Page-level usage:
 
 ```r
-wa_page(
+webawesomePage(
   wa_button("Click")
 )
 ```
 
-In this case `wa_page()` attaches the dependency once and disables wrapper-level attachment during page construction.
+In this case `webawesomePage()` attaches the dependency once and disables wrapper-level attachment during page construction.
 
 ---
 
@@ -468,7 +468,7 @@ In this case `wa_page()` attaches the dependency once and disables wrapper-level
 The package provides a page constructor:
 
 ```r
-wa_page()
+webawesomePage()
 ```
 
 ## Rationale
@@ -477,7 +477,7 @@ This allows developers to create full Web Awesome-based pages without mixing oth
 
 ## Implementation Rules
 
-`wa_page()`:
+`webawesomePage()`:
 
 * temporarily disables per-component dependency attachment
 * constructs the page content

@@ -54,6 +54,13 @@
 #' `small`. Default: `medium`. The select's size.
 #' @param with_clear Boolean. Default: `FALSE`. Adds a clear button when
 #' the select is not empty.
+#' @param with_hint Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `hint` element so the server-rendered
+#' markup includes the hint before the component hydrates on the client.
+#' @param with_label Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `label` element so the
+#' server-rendered markup includes the label before the component hydrates
+#' on the client.
 #' @param clear_icon An icon to use in lieu of the default clear icon.
 #' @param end An element, such as `<wa-icon>`, placed at the end of the
 #' combobox.
@@ -97,6 +104,8 @@ wa_select <- function(
   required = NULL,
   size = NULL,
   with_clear = NULL,
+  with_hint = NULL,
+  with_label = NULL,
   clear_icon = NULL,
   end = NULL,
   expand_icon = NULL,
@@ -199,7 +208,9 @@ wa_select <- function(
       "placement" = placement,
       "required" = required,
       "size" = size,
-      "with-clear" = with_clear
+      "with-clear" = with_clear,
+      "with-hint" = with_hint,
+      "with-label" = with_label
     ),
     boolean_names = c(
       "disabled",
@@ -207,7 +218,9 @@ wa_select <- function(
       "open",
       "pill",
       "required",
-      "with-clear"
+      "with-clear",
+      "with-hint",
+      "with-label"
     ),
     boolean_arg_names = c(
       "disabled" = "disabled",
@@ -215,7 +228,9 @@ wa_select <- function(
       "open" = "open",
       "pill" = "pill",
       "required" = "required",
-      "with-clear" = "with_clear"
+      "with-clear" = "with_clear",
+      "with-hint" = "with_hint",
+      "with-label" = "with_label"
     )
   )
 

@@ -57,7 +57,7 @@ remotes::install_github("mbanand/shiny.webawesome")
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "shiny.webawesome",
   wa_button(
     "example_button",

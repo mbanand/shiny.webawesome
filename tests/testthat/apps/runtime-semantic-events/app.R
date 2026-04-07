@@ -28,7 +28,7 @@ sections <- list(
   list(title = "wa_tab_group", section_id = "wa_tab_group-section")
 )
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Semantic Event Runtime Harness",
   tags$style(HTML("
     .runtime-shell {

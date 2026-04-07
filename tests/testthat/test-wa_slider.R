@@ -31,11 +31,12 @@ test_that("wa_slider override render includes attrs and slots", {
         orientation = "vertical",
         range = TRUE,
         readonly = TRUE,
-        required = TRUE,
         size = "large",
         step = 1,
         tooltip_distance = 12,
         tooltip_placement = "left",
+        with_hint = TRUE,
+        with_label = TRUE,
         with_markers = TRUE,
         with_tooltip = TRUE,
         hint_slot = "Hint slot",
@@ -48,9 +49,9 @@ test_that("wa_slider override render includes attrs and slots", {
         '<wa-slider id="slider" value="2" disabled label="Range" ',
         'hint="Slide" autofocus indicator-offset="1" max="10" ',
         'max-value="8" min="0" min-value="2" orientation="vertical" ',
-        'range readonly required size="large" step="1" ',
+        'range readonly size="large" step="1" ',
         'tooltip-distance="12" tooltip-placement="left" ',
-        "with-markers with-tooltip>"
+        "with-hint with-label with-markers with-tooltip>"
       ),
       '  <span slot="hint">Hint slot</span>',
       '  <span slot="label">Label slot</span>',
@@ -66,7 +67,8 @@ test_that("wa_slider boolean args validate and render correctly", {
     autofocus = "autofocus",
     range = "range",
     readonly = "readonly",
-    required = "required",
+    with_hint = "with-hint",
+    with_label = "with-label",
     with_markers = "with-markers",
     with_tooltip = "with-tooltip"
   )

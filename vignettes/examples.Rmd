@@ -20,7 +20,7 @@ helpers, and command/browser-glue tools fit together in practice.
 
 ## A simple dashboard-style page
 
-This example uses `wa_page()`, `wa_container()`, and a handful of generated
+This example uses `webawesomePage()`, `wa_container()`, and a handful of generated
 components to assemble a compact page with a little structure and visual
 hierarchy.
 
@@ -28,7 +28,7 @@ hierarchy.
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Project overview",
   wa_container(
     class = "wa-stack",
@@ -58,7 +58,7 @@ state directly.
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Binding example",
   wa_container(
     class = "wa-stack",
@@ -107,7 +107,7 @@ layer to drive browser-side behavior from the server.
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Command example",
   wa_container(
     class = "wa-stack",

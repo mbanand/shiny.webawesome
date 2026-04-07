@@ -1,10 +1,10 @@
 /*! Copyright 2026 Fonticons, Inc. - https://webawesome.com/license */
-import "../chunks/chunk.I3SFSSFT.js";
-import "../chunks/chunk.2LCUCOAP.js";
+import "../chunks/chunk.G3ZVQTTB.js";
+import "../chunks/chunk.5OV4QM6R.js";
 import {
   registerTranslation
 } from "../chunks/chunk.HPOJN4W7.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 
 // src/translations/fa.ts
 var translation = {
@@ -13,6 +13,7 @@ var translation = {
   $dir: "rtl",
   carousel: "\u0686\u0631\u062E\u200C\u0641\u0644\u06A9",
   clearEntry: "\u067E\u0627\u06A9 \u06A9\u0631\u062F\u0646 \u0648\u0631\u0648\u062F\u06CC",
+  createOption: (value) => `\u0627\u06CC\u062C\u0627\u062F "${value}"`,
   close: "\u0628\u0633\u062A\u0646",
   copied: "\u06A9\u067E\u06CC \u0634\u062F",
   copy: "\u06A9\u067E\u06CC",
@@ -26,6 +27,14 @@ var translation = {
   increment: "\u0627\u0641\u0632\u0627\u06CC\u0634",
   loading: "\u0628\u0627\u0631\u06AF\u0632\u0627\u0631\u06CC",
   nextSlide: "\u0627\u0633\u0644\u0627\u06CC\u062F \u0628\u0639\u062F\u06CC",
+  numCharacters: (num) => {
+    if (num === 1) return "1 \u0646\u0648\u06CC\u0633\u0647";
+    return `${num} \u0646\u0648\u06CC\u0633\u0647`;
+  },
+  numCharactersRemaining: (num) => {
+    if (num === 1) return "1 \u0646\u0648\u06CC\u0633\u0647 \u0628\u0627\u0642\u06CC\u0645\u0627\u0646\u062F\u0647";
+    return `${num} \u0646\u0648\u06CC\u0633\u0647 \u0628\u0627\u0642\u06CC\u0645\u0627\u0646\u062F\u0647`;
+  },
   numOptionsSelected: (num) => {
     if (num === 0) return "\u0647\u06CC\u0686 \u06AF\u0632\u06CC\u0646\u0647\u200C\u0627\u06CC \u0627\u0646\u062A\u062E\u0627\u0628 \u0646\u0634\u062F\u0647 \u0627\u0633\u062A";
     return `${num} \u06AF\u0632\u06CC\u0646\u0647 \u0627\u0646\u062A\u062E\u0627\u0628 \u0634\u062F\u0647 \u0627\u0633\u062A`;

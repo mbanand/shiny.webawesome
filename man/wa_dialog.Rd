@@ -14,6 +14,7 @@ wa_dialog(
   lang = NULL,
   light_dismiss = NULL,
   open = NULL,
+  with_footer = NULL,
   without_header = NULL,
   footer = NULL,
   header_actions = NULL,
@@ -44,6 +45,11 @@ dialog will be closed when the user clicks outside of it.}
 
 \item{open}{Boolean. Default: \code{FALSE}. Indicates whether or not the
 dialog is open. Toggle this attribute to show and hide the dialog.}
+
+\item{with_footer}{Boolean. Default: \code{FALSE}. Only required for SSR.
+Set to \code{TRUE} if you're slotting in a \code{footer} element so the
+server-rendered markup includes the footer before the component
+hydrates on the client.}
 
 \item{without_header}{Boolean. Default: \code{FALSE}. Disables the header.
 This will also remove the default close button.}

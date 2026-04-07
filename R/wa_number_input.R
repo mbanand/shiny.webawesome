@@ -58,12 +58,13 @@
 #' adhere to, or the special value `any` which means no stepping is
 #' implied, allowing any numeric value.
 #' @param title String. Default: `""`. Optional Web Awesome attribute.
-#' @param with_hint Boolean. Default: `FALSE`. Used for SSR. Will
-#' determine if the SSRed component will have the hint slot rendered on
-#' initial paint.
-#' @param with_label Boolean. Default: `FALSE`. Used for SSR. Will
-#' determine if the SSRed component will have the label slot rendered on
-#' initial paint.
+#' @param with_hint Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `hint` element so the server-rendered
+#' markup includes the hint before the component hydrates on the client.
+#' @param with_label Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `label` element so the
+#' server-rendered markup includes the label before the component hydrates
+#' on the client.
 #' @param without_steppers Boolean. Default: `FALSE`. Hides the
 #' increment/decrement stepper buttons.
 #' @param decrement_icon An icon to use in lieu of the default decrement

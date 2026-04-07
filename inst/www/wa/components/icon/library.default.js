@@ -1,9 +1,11 @@
 /*! Copyright 2026 Fonticons, Inc. - https://webawesome.com/license */
 import {
+  getIconFolder,
   library_default_default
-} from "../../chunks/chunk.JVTAGR5B.js";
-import "../../chunks/chunk.K6QMUIHP.js";
-import "../../chunks/chunk.AIIMJL75.js";
+} from "../../chunks/chunk.HCXBOJYW.js";
+import "../../chunks/chunk.HGBRCPUS.js";
+import "../../chunks/chunk.JHZRD2LV.js";
 export {
-  library_default_default as default
+  library_default_default as default,
+  getIconFolder
 };

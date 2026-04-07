@@ -76,6 +76,14 @@
 #' @param with_caret Boolean. Default: `FALSE`. Draws the button with a
 #' caret. Used to indicate that the button triggers a dropdown menu or
 #' similar behavior.
+#' @param with_end Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in an `end` element so the server-rendered
+#' markup includes the end slot before the component hydrates on the
+#' client.
+#' @param with_start Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `start` element so the
+#' server-rendered markup includes the start slot before the component
+#' hydrates on the client.
 #' @param end An element, such as `<wa-icon>`, placed after the label.
 #' @param start An element, such as `<wa-icon>`, placed before the label.
 #'
@@ -115,6 +123,8 @@ wa_button <- function(
   type = NULL,
   variant = NULL,
   with_caret = NULL,
+  with_end = NULL,
+  with_start = NULL,
   end = NULL,
   start = NULL
 ) {
@@ -247,21 +257,27 @@ wa_button <- function(
       "title" = title,
       "type" = type,
       "variant" = variant,
-      "with-caret" = with_caret
+      "with-caret" = with_caret,
+      "with-end" = with_end,
+      "with-start" = with_start
     ),
     boolean_names = c(
       "disabled",
       "formnovalidate",
       "loading",
       "pill",
-      "with-caret"
+      "with-caret",
+      "with-end",
+      "with-start"
     ),
     boolean_arg_names = c(
       "disabled" = "disabled",
       "formnovalidate" = "formnovalidate",
       "loading" = "loading",
       "pill" = "pill",
-      "with-caret" = "with_caret"
+      "with-caret" = "with_caret",
+      "with-end" = "with_end",
+      "with-start" = "with_start"
     )
   )
 

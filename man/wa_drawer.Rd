@@ -15,6 +15,7 @@ wa_drawer(
   light_dismiss = NULL,
   open = NULL,
   placement = NULL,
+  with_footer = NULL,
   without_header = NULL,
   footer = NULL,
   header_actions = NULL,
@@ -49,6 +50,11 @@ drawer is open. Toggle this attribute to show and hide the drawer.}
 \item{placement}{Enumerated string. Allowed values: \code{bottom}, \code{end},
 \code{start}, \code{top}. Default: \code{end}. The direction from which the drawer
 will open.}
+
+\item{with_footer}{Boolean. Default: \code{FALSE}. Only required for SSR.
+Set to \code{TRUE} if you're slotting in a \code{footer} element so the
+server-rendered markup includes the footer before the component
+hydrates on the client.}
 
 \item{without_header}{Boolean. Default: \code{FALSE}. Disables the header.
 This will also remove the default close button.}

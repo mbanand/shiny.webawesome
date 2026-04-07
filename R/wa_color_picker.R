@@ -40,6 +40,12 @@
 #' popup is open. You can toggle this attribute to show and hide the
 #' popup, or you can use the `show()` and `hide()` methods and this
 #' attribute will reflect the popup's open state.
+#' @param placement Enumerated string. Allowed values: `bottom`,
+#' `bottom-end`, `bottom-start`, `left`, `left-end`, `left-start`,
+#' `right`, `right-end`, `right-start`, `top`, `top-end`, `top-start`.
+#' Default: `bottom-start`. The preferred placement of the color picker's
+#' popup. Note that the actual placement will vary as configured to keep
+#' the panel inside of the viewport.
 #' @param required Boolean. Default: `FALSE`. Makes the color picker a
 #' required field.
 #' @param size Enumerated string. Allowed values: `large`, `medium`,
@@ -49,14 +55,19 @@
 #' display as presets in the color picker. Can include any format the
 #' color picker can parse, including HEX(A), RGB(A), HSL(A), HSV(A), and
 #' CSS color names. Each color must be separated by a semicolon (`;`).
-#' Alternatively, you can pass an array of color values to this property
-#' using JavaScript.
+#' Alternatively, you can pass an array of color values or an array of `{
+#' color, label }` objects to this property using JavaScript. When using
+#' objects with labels, the label will be used for the swatch's accessible
+#' name instead of the raw color value.
 #' @param uppercase Boolean. Default: `FALSE`. By default, values are
 #' lowercase. With this attribute, values will be uppercase instead.
-#' @param with_hint Boolean. Default: `FALSE`. Optional Web Awesome
-#' attribute.
-#' @param with_label Boolean. Default: `FALSE`. Optional Web Awesome
-#' attribute.
+#' @param with_hint Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `hint` element so the server-rendered
+#' markup includes the hint before the component hydrates on the client.
+#' @param with_label Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `label` element so the
+#' server-rendered markup includes the label before the component hydrates
+#' on the client.
 #' @param without_format_toggle Boolean. Default: `FALSE`. Removes the
 #' button that lets users toggle between format.
 #' @param hint_slot The color picker's form hint. Alternatively, you can
@@ -86,6 +97,7 @@ wa_color_picker <- function(
   lang = NULL,
   opacity = NULL,
   open = NULL,
+  placement = NULL,
   required = NULL,
   size = NULL,
   swatches = NULL,
@@ -123,6 +135,27 @@ wa_color_picker <- function(
     )
   }
 
+  if (!is.null(placement)) {
+    placement <- .wa_match_arg(
+      placement,
+      "placement",
+      c(
+        "bottom",
+        "bottom-end",
+        "bottom-start",
+        "left",
+        "left-end",
+        "left-start",
+        "right",
+        "right-end",
+        "right-start",
+        "top",
+        "top-end",
+        "top-start"
+      )
+    )
+  }
+
   if (!is.null(size)) {
     size <- .wa_match_arg(
       size,
@@ -151,6 +184,7 @@ wa_color_picker <- function(
       "lang" = lang,
       "opacity" = opacity,
       "open" = open,
+      "placement" = placement,
       "required" = required,
       "size" = size,
       "swatches" = swatches,

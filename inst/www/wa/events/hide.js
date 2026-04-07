@@ -2,7 +2,7 @@
 import {
   WaHideEvent
 } from "../chunks/chunk.MQODJ75V.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 export {
   WaHideEvent
 };

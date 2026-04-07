@@ -17,6 +17,7 @@ wa_zoomable_frame(
   sandbox = NULL,
   src = NULL,
   srcdoc = NULL,
+  with_theme_sync = NULL,
   without_controls = NULL,
   without_interaction = NULL,
   zoom = NULL,
@@ -51,6 +52,10 @@ Default: \code{eager}. Controls iframe loading behavior.}
 \item{src}{String. The URL of the content to display.}
 
 \item{srcdoc}{String. Inline HTML to display.}
+
+\item{with_theme_sync}{Boolean. Default: \code{FALSE}. Enables automatic
+theme syncing (light/dark mode and theme selector classes) from the
+host document to the iframe.}
 
 \item{without_controls}{Boolean. Default: \code{FALSE}. Removes the zoom
 controls.}

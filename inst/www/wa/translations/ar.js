@@ -2,7 +2,7 @@
 import {
   registerTranslation
 } from "../chunks/chunk.HPOJN4W7.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 
 // src/translations/ar.ts
 var translation = {
@@ -11,6 +11,7 @@ var translation = {
   $dir: "rtl",
   carousel: "\u0643\u0627\u0631\u0648\u0633\u064A\u0644",
   clearEntry: "\u062D\u0630\u0641 \u0627\u0644\u062E\u064A\u0627\u0631\u0627\u062A",
+  createOption: (value) => `\u0625\u0646\u0634\u0627\u0621 "${value}"`,
   close: "\u0627\u063A\u0644\u0627\u0642",
   copied: "\u062A\u0645 \u0627\u0644\u0646\u0633\u062E",
   copy: "\u0646\u0633\u062E",
@@ -24,6 +25,20 @@ var translation = {
   increment: "\u0632\u064A\u0627\u062F\u0629",
   loading: "\u062C\u0627\u0631\u064A \u0627\u0644\u062A\u062D\u0645\u064A\u0644",
   nextSlide: "\u0627\u0644\u0634\u0631\u064A\u062D\u0629 \u0627\u0644\u062A\u0627\u0644\u064A\u0629",
+  numCharacters: (num) => {
+    if (num === 0) return "0 \u0623\u062D\u0631\u0641";
+    if (num === 1) return "1 \u062D\u0631\u0641";
+    if (num === 2) return "2 \u062D\u0631\u0641\u0627\u0646";
+    if (num > 2 && num < 11) return `${num} \u0623\u062D\u0631\u0641`;
+    return `${num} \u062D\u0631\u0641\u064B\u0627`;
+  },
+  numCharactersRemaining: (num) => {
+    if (num === 0) return "0 \u0623\u062D\u0631\u0641 \u0645\u062A\u0628\u0642\u064A\u0629";
+    if (num === 1) return "1 \u062D\u0631\u0641 \u0645\u062A\u0628\u0642\u064D";
+    if (num === 2) return "2 \u062D\u0631\u0641\u0627\u0646 \u0645\u062A\u0628\u0642\u064A\u0627\u0646";
+    if (num > 2 && num < 11) return `${num} \u0623\u062D\u0631\u0641 \u0645\u062A\u0628\u0642\u064A\u0629`;
+    return `${num} \u062D\u0631\u0641\u064B\u0627 \u0645\u062A\u0628\u0642\u064A\u064B\u0627`;
+  },
   numOptionsSelected: (num) => {
     if (num === 0) return "\u0644\u0645 \u064A\u062A\u0645 \u062A\u062D\u062F\u064A\u062F \u0623\u064A \u062E\u064A\u0627\u0631\u0627\u062A";
     if (num === 1) return "\u062A\u0645 \u062A\u062D\u062F\u064A\u062F \u062E\u064A\u0627\u0631 \u0648\u0627\u062D\u062F";

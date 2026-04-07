@@ -6,6 +6,11 @@
   file.path("dev", "generation", "binding-overrides.yaml")
 }
 
+# Return the default attribute-override policy file relative to the repo root.
+.default_attribute_policy_file <- function() {
+  file.path("dev", "generation", "attribute-overrides.yaml")
+}
+
 # Return the runtime warning-registry file relative to the repo root.
 .warning_registry_file <- function() {
   file.path("R", "wa_warning_registry.R")
@@ -323,6 +328,156 @@
     path = policy_file,
     exists = TRUE,
     components = normalized[order(tags)]
+  )
+}
+
+# Return one normalized scalar attribute-constructor serialization value.
+.normalize_attribute_constructor_value <- function(value) {
+  if (is.null(value)) {
+    return(NULL)
+  }
+
+  value <- .scalar_string(value, fallback = NA_character_)
+  if (is.na(value) || !nzchar(value)) {
+    stop(
+      "Attribute constructor override values must be non-empty strings or NULL.",
+      call. = FALSE
+    )
+  }
+
+  value
+}
+
+# Return one normalized named mapping for accepted string constructor values.
+.normalize_attribute_constructor_string_map <- function(value) {
+  value <- .or_default(value, list())
+
+  if (length(value) == 0L) {
+    return(character())
+  }
+
+  if (is.null(names(value)) || any(!nzchar(names(value)))) {
+    stop(
+      "Attribute constructor string maps must be named.",
+      call. = FALSE
+    )
+  }
+
+  normalized <- vapply(
+    value,
+    .normalize_attribute_constructor_value,
+    character(1)
+  )
+
+  stats::setNames(normalized, names(value))
+}
+
+# Read one handwritten attribute-override policy file when present.
+.read_attribute_override_policy <- function(
+  root,
+  policy_file = .default_attribute_policy_file()
+) {
+  policy_path <- file.path(root, policy_file)
+
+  if (!file.exists(policy_path)) {
+    return(list(
+      path = policy_file,
+      exists = FALSE,
+      components = list()
+    ))
+  }
+
+  if (!requireNamespace("yaml", quietly = TRUE)) {
+    stop(
+      "The `yaml` package is required to read attribute override policy files.",
+      call. = FALSE
+    )
+  }
+
+  policy <- yaml::read_yaml(policy_path)
+  policy_components <- .or_default(policy$components, list())
+
+  if (length(policy_components) == 0L) {
+    return(list(
+      path = policy_file,
+      exists = TRUE,
+      components = list()
+    ))
+  }
+
+  normalized <- lapply(
+    policy_components,
+    function(component) {
+      tag <- .scalar_string(component$tag, fallback = NA_character_)
+      attributes <- .or_default(component$attributes, list())
+
+      if (is.na(tag) || !startsWith(tag, "wa-")) {
+        stop(
+          "Attribute override entries must include a `wa-` component tag.",
+          call. = FALSE
+        )
+      }
+
+      normalized_attrs <- lapply(
+        attributes,
+        function(attr) {
+          name <- .scalar_string(attr$name, fallback = NA_character_)
+          constructor <- .or_default(attr$constructor, list())
+          true_value <- .normalize_attribute_constructor_value(constructor$true)
+          false_value <- .normalize_attribute_constructor_value(constructor$false)
+          string_map <- .normalize_attribute_constructor_string_map(
+            constructor$strings
+          )
+
+          if (is.na(name) || !nzchar(name)) {
+            stop(
+              "Attribute override entries must include `name`.",
+              call. = FALSE
+            )
+          }
+
+          if (is.null(true_value) && is.null(false_value) && length(string_map) == 0L) {
+            stop(
+              "Attribute override entries must define at least one constructor mapping: ",
+              tag,
+              " / ",
+              name,
+              call. = FALSE
+            )
+          }
+
+          list(
+            name = name,
+            constructor = list(
+              true = true_value,
+              false = false_value,
+              strings = string_map
+            )
+          )
+        }
+      )
+
+      normalized_attrs <- stats::setNames(
+        normalized_attrs,
+        vapply(normalized_attrs, `[[`, character(1), "name")
+      )
+
+      list(
+        tag = tag,
+        attributes = normalized_attrs
+      )
+    }
+  )
+
+  components <- stats::setNames(
+    normalized,
+    vapply(normalized, `[[`, character(1), "tag")
+  )
+
+  list(
+    path = policy_file,
+    exists = TRUE,
+    components = components
   )
 }
 # nolint end

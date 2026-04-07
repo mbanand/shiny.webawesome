@@ -1,10 +1,10 @@
 /*! Copyright 2026 Fonticons, Inc. - https://webawesome.com/license */
-import "../chunks/chunk.I3SFSSFT.js";
-import "../chunks/chunk.2LCUCOAP.js";
+import "../chunks/chunk.G3ZVQTTB.js";
+import "../chunks/chunk.5OV4QM6R.js";
 import {
   registerTranslation
 } from "../chunks/chunk.HPOJN4W7.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 
 // src/translations/fr.ts
 var translation = {
@@ -13,6 +13,7 @@ var translation = {
   $dir: "ltr",
   carousel: "Carrousel",
   clearEntry: `Effacer l'entr\xE9e`,
+  createOption: (value) => `Cr\xE9er \xAB ${value} \xBB`,
   close: "Fermer",
   copied: "Copi\xE9",
   copy: "Copier",
@@ -26,6 +27,14 @@ var translation = {
   increment: "Augmenter",
   loading: "Chargement",
   nextSlide: "Diapositive suivante",
+  numCharacters: (num) => {
+    if (num === 1) return "1 caract\xE8re";
+    return `${num} caract\xE8res`;
+  },
+  numCharactersRemaining: (num) => {
+    if (num === 1) return "1 caract\xE8re restant";
+    return `${num} caract\xE8res restants`;
+  },
   numOptionsSelected: (num) => {
     if (num === 0) return "Aucune option s\xE9lectionn\xE9e";
     if (num === 1) return "1 option s\xE9lectionn\xE9e";

@@ -33,8 +33,14 @@
 #' @param autocomplete String. Specifies what permission the browser has
 #' to provide assistance in filling out form field values. Refer to this
 #' page on MDN for available values.
-#' @param autocorrect String. Indicates whether the browser's autocorrect
-#' feature is on or off.
+#' @param autocorrect Boolean. Default: `FALSE`. Indicates whether the
+#' browser's autocorrect feature is on or off. When set as an attribute,
+#' use `"off"` or `"on"`. When set as a property, use `TRUE` or `FALSE`.
+#' Because the upstream implementation treats attributes and properties
+#' differently for this field, this argument accepts `TRUE`, `FALSE`,
+#' `"on"`, `"off"`, `NULL`. `TRUE` emits `autocorrect="on"` and `FALSE`
+#' emits `autocorrect="off"`. `NULL` omits the attribute. Accepted string
+#' values: `"on"` is emitted unchanged; `"off"` is emitted unchanged.
 #' @param autofocus Boolean. Default: `FALSE`. Indicates that the input
 #' should receive focus on page load.
 #' @param custom_error String. Default: `null`. Optional Web Awesome
@@ -67,10 +73,16 @@
 #' @param spellcheck Boolean. Default: `TRUE`. Enables spell checking on
 #' the textarea.
 #' @param title String. Default: `""`. Optional Web Awesome attribute.
-#' @param with_hint Boolean. Default: `FALSE`. Used for SSR. If you're
-#' slotting in a `hint` element, make sure to set this to `TRUE`.
-#' @param with_label Boolean. Default: `FALSE`. Used for SSR. If you're
-#' slotting in a `label` element, make sure to set this to `TRUE`.
+#' @param with_count Boolean. Default: `FALSE`. Shows a character count
+#' below the textarea. When `maxlength` is set, shows remaining characters
+#' instead.
+#' @param with_hint Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `hint` element so the server-rendered
+#' markup includes the hint before the component hydrates on the client.
+#' @param with_label Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `label` element so the
+#' server-rendered markup includes the label before the component hydrates
+#' on the client.
 #' @param hint_slot Text that describes how to use the input.
 #' Alternatively, you can use the `hint` attribute.
 #' @param label_slot The textarea's label. Alternatively, you can use the
@@ -112,6 +124,7 @@ wa_textarea <- function(
   size = NULL,
   spellcheck = NULL,
   title = NULL,
+  with_count = NULL,
   with_hint = NULL,
   with_label = NULL,
   hint_slot = NULL,
@@ -128,6 +141,17 @@ wa_textarea <- function(
     children,
     list(
       .wa_slot(label_slot, "label")
+    )
+  )
+
+  autocorrect <- .wa_match_constructor_attr(
+    autocorrect,
+    "autocorrect",
+    true_value = "on",
+    false_value = "off",
+    string_map = c(
+      "on" = "on",
+      "off" = "off"
     )
   )
 
@@ -247,6 +271,7 @@ wa_textarea <- function(
       "size" = size,
       "spellcheck" = spellcheck,
       "title" = title,
+      "with-count" = with_count,
       "with-hint" = with_hint,
       "with-label" = with_label
     ),
@@ -256,6 +281,7 @@ wa_textarea <- function(
       "readonly",
       "required",
       "spellcheck",
+      "with-count",
       "with-hint",
       "with-label"
     ),
@@ -265,6 +291,7 @@ wa_textarea <- function(
       "readonly" = "readonly",
       "required" = "required",
       "spellcheck" = "spellcheck",
+      "with-count" = "with_count",
       "with-hint" = "with_hint",
       "with-label" = "with_label"
     )

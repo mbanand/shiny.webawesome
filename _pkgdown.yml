@@ -104,7 +104,7 @@ reference:
     desc: Helpers for page scaffolding and layout convenience.
     contents:
       - wa_container
-      - wa_page
+      - webawesomePage
 
   - title: Include and Icon Helpers
     desc: Helpers for browser-side includes and icon components.

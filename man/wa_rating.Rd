@@ -12,12 +12,16 @@ wa_rating(
   value = NULL,
   disabled = NULL,
   label = NULL,
+  name = NULL,
+  custom_error = NULL,
+  default_value = NULL,
   dir = NULL,
   get_symbol = NULL,
   lang = NULL,
   max = NULL,
   precision = NULL,
   readonly = NULL,
+  required = NULL,
   size = NULL
 )
 }
@@ -38,6 +42,15 @@ the rendered DOM \code{id} attribute.}
 \item{label}{String. Default: \code{""}. A label that describes the rating
 to assistive devices.}
 
+\item{name}{String. Default: \code{null}. The name of the rating, submitted
+as a name/value pair with form data.}
+
+\item{custom_error}{String. Default: \code{null}. Optional Web Awesome
+attribute.}
+
+\item{default_value}{Number. Default: \code{0}. The default value of the
+form control. Used to reset the rating to its initial value.}
+
 \item{dir}{String. Optional Web Awesome attribute.}
 
 \item{get_symbol}{A function that customizes the symbol to be rendered.
@@ -54,6 +67,9 @@ rating will increase and decrease. For example, to allow half-star
 ratings, set this attribute to \code{0.5}.}
 
 \item{readonly}{Boolean. Default: \code{FALSE}. Makes the rating readonly.}
+
+\item{required}{Boolean. Default: \code{FALSE}. Makes the rating a required
+field.}
 
 \item{size}{Enumerated string. Allowed values: \code{large}, \code{medium},
 \code{small}. Default: \code{medium}. The component's size.}

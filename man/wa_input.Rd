@@ -95,8 +95,13 @@ text input is automatically capitalized as it is entered by the user.}
 to provide assistance in filling out form field values. Refer to this
 page on MDN for available values.}
 
-\item{autocorrect}{Enumerated string. Allowed values: \code{off}, \code{on}.
-Indicates whether the browser's autocorrect feature is on or off.}
+\item{autocorrect}{Boolean. Default: \code{FALSE}. Indicates whether the
+browser's autocorrect feature is on or off. When set as an attribute,
+use \code{"off"} or \code{"on"}. When set as a property, use \code{TRUE} or \code{FALSE}.
+This wrapper accepts \code{TRUE}, \code{FALSE}, \code{"on"}, \code{"off"}, \code{NULL} for this
+argument. \code{TRUE} emits \code{autocorrect="on"} and \code{FALSE} emits
+\code{autocorrect="off"}. \code{NULL} omits the attribute. Accepted string
+values: \code{"on"} is emitted unchanged; \code{"off"} is emitted unchanged.}
 
 \item{autofocus}{Boolean. Default: \code{FALSE}. Indicates that the input
 should receive focus on page load.}
@@ -171,13 +176,14 @@ supported. Defaults to \code{text}.}
 \item{with_clear}{Boolean. Default: \code{FALSE}. Adds a clear button when
 the input is not empty.}
 
-\item{with_hint}{Boolean. Default: \code{FALSE}. Used for SSR. Will
-determine if the SSRed component will have the hint slot rendered on
-initial paint.}
+\item{with_hint}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{hint} element so the server-rendered
+markup includes the hint before the component hydrates on the client.}
 
-\item{with_label}{Boolean. Default: \code{FALSE}. Used for SSR. Will
-determine if the SSRed component will have the label slot rendered on
-initial paint.}
+\item{with_label}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{label} element so the
+server-rendered markup includes the label before the component hydrates
+on the client.}
 
 \item{without_spin_buttons}{Boolean. Default: \code{FALSE}. Hides the
 browser's built-in increment/decrement spin buttons for number inputs.}

@@ -38,10 +38,13 @@
 #' @param size Enumerated string. Allowed values: `large`, `medium`,
 #' `small`. The radio group's size. When present, this size will be
 #' applied to all `<wa-radio>` items inside.
-#' @param with_hint Boolean. Default: `FALSE`. Used for SSR. if TRUE, will
-#' show slotted hint on initial render.
-#' @param with_label Boolean. Default: `FALSE`. Used for SSR. if TRUE,
-#' will show slotted label on initial render.
+#' @param with_hint Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `hint` element so the server-rendered
+#' markup includes the hint before the component hydrates on the client.
+#' @param with_label Boolean. Default: `FALSE`. Only required for SSR. Set
+#' to `TRUE` if you're slotting in a `label` element so the
+#' server-rendered markup includes the label before the component hydrates
+#' on the client.
 #' @param hint_slot Text that describes how to use the radio group.
 #' Alternatively, you can use the `hint` attribute.
 #' @param label_slot The radio group's label. Required for proper

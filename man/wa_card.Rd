@@ -13,6 +13,9 @@ wa_card(
   dir = NULL,
   lang = NULL,
   orientation = NULL,
+  with_footer = NULL,
+  with_header = NULL,
+  with_media = NULL,
   actions = NULL,
   footer = NULL,
   footer_actions = NULL,
@@ -40,6 +43,21 @@ The card's visual appearance.}
 
 \item{orientation}{Enumerated string. Allowed values: \code{horizontal},
 \code{vertical}. Default: \code{vertical}. Renders the card's orientation *}
+
+\item{with_footer}{Boolean. Default: \code{FALSE}. Only required for SSR.
+Set to \code{TRUE} if you're slotting in a \code{footer} element so the
+server-rendered markup includes the footer before the component
+hydrates on the client.}
+
+\item{with_header}{Boolean. Default: \code{FALSE}. Only required for SSR.
+Set to \code{TRUE} if you're slotting in a \code{header} element so the
+server-rendered markup includes the header before the component
+hydrates on the client.}
+
+\item{with_media}{Boolean. Default: \code{FALSE}. Only required for SSR. Set
+to \code{TRUE} if you're slotting in a \code{media} element so the
+server-rendered markup includes the media before the component hydrates
+on the client.}
 
 \item{actions}{An optional actions section to render at the end for the
 horizontal card.}

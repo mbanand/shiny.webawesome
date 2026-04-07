@@ -150,6 +150,63 @@
   )
 }
 
+# Validate and serialize one custom constructor-time attribute value.
+.wa_match_constructor_attr <- function(
+  value,
+  name,
+  true_value = NULL,
+  false_value = NULL,
+  string_map = NULL
+) {
+  if (is.null(value)) {
+    return(NULL)
+  }
+
+  if (is.logical(value) && length(value) == 1L && !is.na(value)) {
+    return(if (isTRUE(value)) true_value else false_value)
+  }
+
+  if (is.character(value) && length(value) == 1L && !is.na(value)) {
+    if (!is.null(string_map) && value %in% names(string_map)) {
+      return(unname(string_map[[value]]))
+    }
+
+    string_keys <- if (is.null(string_map)) character() else names(string_map)
+    allowed <- c(
+      if (!is.null(true_value)) "TRUE" else character(),
+      if (!is.null(false_value)) "FALSE" else character(),
+      string_keys
+    )
+    allowed <- unique(allowed[nzchar(allowed)])
+
+    stop(
+      sprintf(
+        "`%s` must be one of %s.",
+        name,
+        paste(sprintf('"%s"', allowed), collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+
+  string_keys <- if (is.null(string_map)) character() else names(string_map)
+  allowed <- c(
+    if (!is.null(true_value)) "TRUE" else character(),
+    if (!is.null(false_value)) "FALSE" else character(),
+    string_keys
+  )
+  allowed <- unique(allowed[nzchar(allowed)])
+
+  stop(
+    sprintf(
+      "`%s` must be TRUE, FALSE, NULL, or one of %s.",
+      name,
+      paste(sprintf('"%s"', allowed), collapse = ", ")
+    ),
+    call. = FALSE
+  )
+}
+
 # Normalize component attributes for deterministic HTML emission.
 .wa_normalize_attrs <- function(
   attrs,

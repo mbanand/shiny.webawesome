@@ -2,7 +2,7 @@
 import {
   registerTranslation
 } from "../chunks/chunk.HPOJN4W7.js";
-import "../chunks/chunk.AIIMJL75.js";
+import "../chunks/chunk.JHZRD2LV.js";
 
 // src/translations/fi.ts
 var translation = {
@@ -11,6 +11,7 @@ var translation = {
   $dir: "ltr",
   carousel: "Karuselli",
   clearEntry: "Poista merkint\xE4",
+  createOption: (value) => `Luo "${value}"`,
   close: "Sulje",
   copied: "Kopioitu",
   copy: "Kopioi",
@@ -24,6 +25,14 @@ var translation = {
   increment: "Lis\xE4\xE4",
   loading: "Ladataan",
   nextSlide: "Seuraava dia",
+  numCharacters: (num) => {
+    if (num === 1) return "1 merkki";
+    return `${num} merkki\xE4`;
+  },
+  numCharactersRemaining: (num) => {
+    if (num === 1) return "1 merkki j\xE4ljell\xE4";
+    return `${num} merkki\xE4 j\xE4ljell\xE4`;
+  },
   numOptionsSelected: (num) => {
     if (num === 0) return "Ei valittuja vaihtoehtoja";
     if (num === 1) return "Yksi vaihtoehto valittu";

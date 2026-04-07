@@ -1,0 +1,43 @@
+# Handwritten constructor-serialization overrides for generated wrapper attrs.
+#
+# Use this file only when upstream metadata and runtime implementation differ
+# in a way that makes constructor-time HTML emission ambiguous or incorrect.
+#
+# Each entry should remain narrow and fully specify the constructor-time
+# serialization for explicitly supplied wrapper values. Omitted wrapper values
+# (`NULL`) continue to omit the HTML attribute entirely.
+#
+# Schema:
+# schema_version: 1
+# components:
+#   - tag: wa-component
+#     attributes:
+#       - name: attr-name
+#         constructor:
+#           "true": "serialized-true"
+#           "false": "serialized-false"
+#           strings:
+#             accepted-input: "serialized-output"
+
+schema_version: 1
+
+components:
+  - tag: wa-input
+    attributes:
+      - name: autocorrect
+        constructor:
+          "true": "on"
+          "false": "off"
+          strings:
+            "on": "on"
+            "off": "off"
+
+  - tag: wa-textarea
+    attributes:
+      - name: autocorrect
+        constructor:
+          "true": "on"
+          "false": "off"
+          strings:
+            "on": "on"
+            "off": "off"

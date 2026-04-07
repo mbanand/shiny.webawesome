@@ -48,7 +48,7 @@ functions. Wrapper names follow the Web Awesome component names with the
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Basic wrappers",
   wa_container(
     class = "wa-stack",
@@ -68,7 +68,7 @@ shinyApp(ui, server)
 
 Two package-level helpers appear here:
 
-- `wa_page()` creates a minimal full-page scaffold and attaches the package
+- `webawesomePage()` creates a minimal full-page scaffold and attaches the package
   dependency once at page level
 - `wa_container()` creates a plain container element that is convenient for
   layout patterns and utility-class usage
@@ -88,7 +88,7 @@ flows:
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Bindings",
   wa_select(
     "favorite_letter",
@@ -123,7 +123,7 @@ For those cases, the package provides a narrow command/helper layer.
 library(shiny)
 library(shiny.webawesome)
 
-ui <- wa_page(
+ui <- webawesomePage(
   title = "Command API",
   actionButton("open_dialog", "Open dialog"),
   wa_dialog(
