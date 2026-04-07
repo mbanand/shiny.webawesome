@@ -353,11 +353,13 @@ rm(.bootstrap_cli_ui)
   wa_button <- .wa_export("wa_button")
   wa_card <- .wa_export("wa_card")
   wa_checkbox <- .wa_export("wa_checkbox")
+  wa_copy_button <- .wa_export("wa_copy_button")
   wa_details <- .wa_export("wa_details")
   wa_dialog <- .wa_export("wa_dialog")
   wa_dropdown <- .wa_export("wa_dropdown")
   wa_dropdown_item <- .wa_export("wa_dropdown_item")
   wa_input <- .wa_export("wa_input")
+  wa_js <- .wa_export("wa_js")
   wa_option <- .wa_export("wa_option")
   wa_select <- .wa_export("wa_select")
   wa_set_property <- .wa_export("wa_set_property")
@@ -367,6 +369,29 @@ rm(.bootstrap_cli_ui)
 
   ui <- wa_page(
     title = "shiny.webawesome Interactive Review",
+    wa_js(
+      paste(
+        "(function() {",
+        "  function publishCopyEvent(event) {",
+        "    if (!window.Shiny ||",
+        "        typeof window.Shiny.setInputValue !== 'function') {",
+        "      return;",
+        "    }",
+        "    if (!event.target || event.target.id !== 'review_copy_button') {",
+        "      return;",
+        "    }",
+        "    window.Shiny.setInputValue(",
+        "      'copy_button_js_event',",
+        "      [event.type, 'target=' + event.target.id].join(' | '),",
+        "      { priority: 'event' }",
+        "    );",
+        "  }",
+        "  document.addEventListener('wa-copy', publishCopyEvent);",
+        "  document.addEventListener('wa-error', publishCopyEvent);",
+        "})();",
+        sep = "\n"
+      )
+    ),
     htmltools::tags$style(htmltools::HTML("
       body {
         background: #f5f7fb;
@@ -471,6 +496,7 @@ rm(.bootstrap_cli_ui)
             htmltools::tags$li("Durable-value input binding"),
             htmltools::tags$li("Semantic event-driven binding"),
             htmltools::tags$li("Action and payload binding"),
+            htmltools::tags$li("App-local wa_js() browser glue"),
             htmltools::tags$li("Command-layer debug and warning paths"),
             htmltools::tags$li("Tree selected-id and warning contract")
           )
@@ -548,6 +574,30 @@ rm(.bootstrap_cli_ui)
         ),
         observed_output = "action_dropdown_state",
         notes = "Representative category: runtime-action."
+      ),
+      .review_section(
+        title = "App-local JS Category",
+        description = paste(
+          "Click the copy button and confirm that the unbound browser event",
+          "is bridged back to Shiny through a small `wa_js()` snippet."
+        ),
+        component_tag = htmltools::tagList(
+          htmltools::tags$p(
+            "This button copies a fixed value and publishes its browser event",
+            "to Shiny with `Shiny.setInputValue()`."
+          ),
+          wa_copy_button(
+            id = "review_copy_button",
+            value = "copied-from-wa-js",
+            "Copy sample value"
+          )
+        ),
+        observed_output = "copy_button_js_state",
+        notes = paste(
+          "Representative category: app-local browser glue.",
+          "`wa_js()` listens for `wa-copy` and `wa-error` on an otherwise",
+          "unbound component and publishes a small event payload to Shiny."
+        )
       ),
       .review_section(
         title = "Command Layer Category",
@@ -694,6 +744,22 @@ rm(.bootstrap_cli_ui)
       )
     })
 
+    output$copy_button_js_state <- shiny::renderText({
+      if (is.null(input$copy_button_js_event)) {
+        return(
+          paste(
+            "Click the copy button to observe the app-local wa_js()",
+            "event payload."
+          )
+        )
+      }
+
+      .format_runtime_state(
+        "input$copy_button_js_event",
+        input$copy_button_js_event
+      )
+    })
+
     output$command_layer_state <- shiny::renderText({
       paste(
         .format_runtime_state(
@@ -756,6 +822,16 @@ rm(.bootstrap_cli_ui)
         )
       }
     )
+
+    shiny::observeEvent(input$copy_button_js_event, ignoreInit = TRUE, {
+      .log_review_state(
+        "copy_button_js",
+        .format_runtime_state(
+          "input$copy_button_js_event",
+          input$copy_button_js_event
+        )
+      )
+    })
 
     shiny::observeEvent(
       list(
