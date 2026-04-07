@@ -60,6 +60,18 @@ jobs:
         with:
           token: ${{ secrets.RHUB_TOKEN }}
           job-config: ${{ matrix.config.job-config }}
+      - name: Reinstall rlang from source on ubuntu-next
+        if: contains(matrix.config.label, 'ubuntu-next')
+        shell: Rscript {0}
+        run: |
+          lib <- .libPaths()[1]
+          unlink(file.path(lib, "rlang"), recursive = TRUE, force = TRUE)
+          options(pkgType = "source")
+          install.packages(
+            "rlang",
+            repos = c(CRAN = "https://cloud.r-project.org"),
+            type = "source"
+          )
       - uses: r-hub/actions/run-check@v1
         with:
           token: ${{ secrets.RHUB_TOKEN }}
