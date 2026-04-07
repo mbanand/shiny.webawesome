@@ -30,6 +30,7 @@ journals/
 scratch/
 scripts/
 website/
+pkgdown/favicon/
 
 # Downloaded upstream files
 vendor/webawesome/
