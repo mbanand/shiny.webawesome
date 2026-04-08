@@ -201,6 +201,7 @@ rm(.bootstrap_cli_ui)
   c(
     "vendor/webawesome",
     "inst/extdata/webawesome",
+    "inst/SHINY.WEBAWESOME_VERSION",
     "inst/www/wa",
     "inst/bindings"
   )

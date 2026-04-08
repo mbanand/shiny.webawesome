@@ -2,7 +2,7 @@ Package: shiny.webawesome
 Title: Shiny Bindings for Web Awesome Components
 Version: 1.0.0
 Authors@R: 
-    person("M. B.", "Anand", , "anand@owlcyberlabs.com", role = c("aut", "cre"))
+    person("M. B.", "Anand", , "privateanand@gmail.com", role = c("aut", "cre"))
 Description: Provides an R and Shiny interface to the Web Awesome component
     library. The package is generator-driven, exposing Web Awesome web
     components as R functions that produce HTML tags and integrate with

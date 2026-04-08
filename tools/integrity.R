@@ -101,6 +101,11 @@
       root,
       file.path("inst", "extdata", "webawesome")
     ),
+    if (file.exists(file.path(root, "inst", "SHINY.WEBAWESOME_VERSION"))) {
+      "inst/SHINY.WEBAWESOME_VERSION"
+    } else {
+      character()
+    },
     .integrity_list_relative_files(root, file.path("inst", "www", "wa"))
   ))
 }
@@ -263,7 +268,11 @@
     root = root,
     stage = "prune",
     surface_name = "prune_output",
-    surface_roots = c("inst/extdata/webawesome", "inst/www/wa"),
+    surface_roots = c(
+      "inst/extdata/webawesome",
+      "inst/SHINY.WEBAWESOME_VERSION",
+      "inst/www/wa"
+    ),
     relative_files = .prune_integrity_surface_files(root)
   )
 }

@@ -27,6 +27,7 @@ testthat::test_that(
       file.path(root, "inst", "extdata", "webawesome"),
       recursive = TRUE
     )
+    dir.create(file.path(root, "inst"), recursive = TRUE, showWarnings = FALSE)
     dir.create(file.path(root, "inst", "www", "wa"), recursive = TRUE)
     dir.create(file.path(root, "manifests"), recursive = TRUE)
     dir.create(file.path(root, "reports"), recursive = TRUE)
@@ -44,6 +45,7 @@ testthat::test_that(
     .write_file(
       file.path(root, "inst", "extdata", "webawesome", "custom-elements.json")
     )
+    .write_file(file.path(root, "inst", "SHINY.WEBAWESOME_VERSION"), "3.5.0")
     .write_file(file.path(root, "inst", "www", "wa", "loader.js"))
     .write_file(file.path(
       root, "manifests", "report", "component-coverage.yaml"
@@ -59,6 +61,9 @@ testthat::test_that(
       dir.exists(file.path(root, "inst", "extdata", "webawesome"))
     )
     testthat::expect_false(
+      file.exists(file.path(root, "inst", "SHINY.WEBAWESOME_VERSION"))
+    )
+    testthat::expect_false(
       dir.exists(file.path(root, "inst", "www", "wa"))
     )
     testthat::expect_false(dir.exists(file.path(root, "manifests")))
@@ -72,6 +77,7 @@ testthat::test_that(
         "R/wa_select.R",
         "inst/bindings",
         "inst/extdata/webawesome",
+        "inst/SHINY.WEBAWESOME_VERSION",
         "inst/www/wa",
         "manifests",
         "reports",

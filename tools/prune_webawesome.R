@@ -288,6 +288,11 @@ rm(.bootstrap_integrity_helpers)
   file.path(root, "inst", "extdata", "webawesome")
 }
 
+# Build the shipped package version-file output path.
+.prune_package_version_file <- function(root) {
+  file.path(root, "inst", "SHINY.WEBAWESOME_VERSION")
+}
+
 # Build the version-specific prune report directory path.
 .prune_report_dir <- function(root, version) {
   file.path(root, "reports", "prune", version)
@@ -354,29 +359,30 @@ rm(.bootstrap_integrity_helpers)
   tools::file_ext(relative_path) %in% c("css", "js", "json")
 }
 
-# Return whether a path currently exists and contains any entries.
-.path_is_non_empty <- function(path) {
-  if (!dir.exists(path)) {
-    return(FALSE)
+# Return whether one prune-owned path already contains content.
+.path_has_content <- function(path) {
+  if (dir.exists(path)) {
+    return(length(list.files(path, all.files = TRUE, no.. = TRUE)) > 0L)
   }
 
-  length(list.files(path, all.files = TRUE, no.. = TRUE)) > 0L
+  file.exists(path)
 }
 
-# Fail if prune-owned output directories already contain content.
+# Fail if prune-owned output locations already contain content.
 .ensure_prune_outputs_empty <- function(root, version) {
   targets <- c(
     .prune_runtime_dir(root),
     .prune_extdata_dir(root),
+    .prune_package_version_file(root),
     .prune_report_dir(root, version)
   )
 
-  non_empty <- targets[vapply(targets, .path_is_non_empty, logical(1))]
+  non_empty <- targets[vapply(targets, .path_has_content, logical(1))]
 
   if (length(non_empty) > 0L) {
     stop(
       paste(
-        "Prune output directories already contain content:",
+        "Prune output locations already contain content:",
         paste(.strip_root_prefix(non_empty, root), collapse = ", "),
         "Run clean_webawesome() before pruning."
       ),
@@ -636,6 +642,13 @@ rm(.bootstrap_integrity_helpers)
   invisible(target)
 }
 
+# Write the shipped package-owned Web Awesome version file.
+.write_package_version_file <- function(target, version) {
+  dir.create(dirname(target), recursive = TRUE, showWarnings = FALSE)
+  writeLines(version, target, useBytes = TRUE)
+  invisible(target)
+}
+
 # Write a deterministic Markdown file.
 .write_markdown <- function(path, lines) {
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
@@ -663,6 +676,7 @@ rm(.bootstrap_integrity_helpers)
     paste0("- Source dist: `", result$source_dist_dir, "`"),
     paste0("- Runtime output: `", result$runtime_dir, "`"),
     paste0("- Metadata output: `", result$extdata_dir, "`"),
+    paste0("- Shipped version file: `", result$package_version_file, "`"),
     paste0("- Reachability report: `", result$reachability_report, "`"),
     "",
     "## Counts",
@@ -742,8 +756,9 @@ rm(.bootstrap_integrity_helpers)
 #' `vendor/webawesome/<version>/dist-cdn/`, validates that the expected runtime
 #' inputs are present, copies the pruned browser runtime bundle into
 #' `inst/www/wa/`, copies `custom-elements.json` and `VERSION` into
-#' `inst/extdata/webawesome/`, and writes deterministic prune reports under
-#' `reports/prune/<version>/`.
+#' `inst/extdata/webawesome/`, writes the shipped bundled-version file to
+#' `inst/SHINY.WEBAWESOME_VERSION`, and writes deterministic prune reports
+#' under `reports/prune/<version>/`.
 #'
 #' If `version` is `NULL`, the version pinned in `dev/webawesome-version.txt`
 #' is used.
@@ -785,6 +800,7 @@ prune_webawesome <- function(version = NULL,
   dist_dir <- .fetch_runtime_dir(root, version)
   runtime_dir <- .prune_runtime_dir(root)
   extdata_dir <- .prune_extdata_dir(root)
+  package_version_file <- .prune_package_version_file(root)
   report_dir <- .prune_report_dir(root, version)
 
   .validate_prune_inputs(root = root, version = version, dist_dir = dist_dir)
@@ -863,6 +879,8 @@ prune_webawesome <- function(version = NULL,
     character(1)
   ))
 
+  .write_package_version_file(package_version_file, version)
+
   generated_at <- format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
   summary_path <- file.path(report_dir, "summary.md")
   reachability_path <- file.path(report_dir, "reachability.md")
@@ -874,6 +892,7 @@ prune_webawesome <- function(version = NULL,
     source_dist_dir = .strip_root_prefix(dist_dir, root),
     runtime_dir = .strip_root_prefix(runtime_dir, root),
     extdata_dir = .strip_root_prefix(extdata_dir, root),
+    package_version_file = .strip_root_prefix(package_version_file, root),
     report_dir = .strip_root_prefix(report_dir, root),
     runtime_files = sort(runtime_files),
     metadata_files = sort(metadata_files),

@@ -125,6 +125,9 @@ testthat::test_that("prune uses the pinned version by default", {
     )
   )
   testthat::expect_true(
+    file.exists(file.path(root, "inst", "SHINY.WEBAWESOME_VERSION"))
+  )
+  testthat::expect_true(
     file.exists(file.path(root, "reports", "prune", "3.3.1", "summary.md"))
   )
   testthat::expect_true(
@@ -169,6 +172,16 @@ testthat::test_that("prune copies reached runtime files and metadata only", {
     file.exists(file.path(extdata_root, "custom-elements.json"))
   )
   testthat::expect_true(file.exists(file.path(extdata_root, "VERSION")))
+  testthat::expect_true(
+    file.exists(file.path(root, "inst", "SHINY.WEBAWESOME_VERSION"))
+  )
+  testthat::expect_equal(
+    readLines(
+      file.path(root, "inst", "SHINY.WEBAWESOME_VERSION"),
+      warn = FALSE
+    ),
+    "3.3.1"
+  )
   testthat::expect_equal(
     sort(result$metadata_files),
     c("VERSION", "custom-elements.json")
@@ -245,7 +258,19 @@ testthat::test_that("prune rejects non-empty prune outputs", {
 
   testthat::expect_error(
     prune_webawesome(root = root, verbose = FALSE),
-    "Prune output directories already contain content"
+    "Prune output locations already contain content"
+  )
+})
+
+testthat::test_that("prune rejects an existing shipped version file", {
+  root <- withr::local_tempdir()
+  .create_fake_repo(root)
+  .create_fake_dist(root)
+  .write_file(file.path(root, "inst", "SHINY.WEBAWESOME_VERSION"), "stale")
+
+  testthat::expect_error(
+    prune_webawesome(root = root, verbose = FALSE),
+    "Prune output locations already contain content"
   )
 })
 

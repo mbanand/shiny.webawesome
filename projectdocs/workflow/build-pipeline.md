@@ -210,6 +210,15 @@ The resulting runtime bundle is written to:
 inst/www/wa/
 ```
 
+Prune also writes a small shipped package metadata file to:
+
+```text
+inst/SHINY.WEBAWESOME_VERSION
+```
+
+That file records the bundled upstream Web Awesome version for installed
+package helpers and other package-level runtime introspection.
+
 Example structure:
 
 ```text
@@ -232,6 +241,7 @@ manifests/integrity/prune-output.yaml
 That record covers the prune-owned output surface:
 
 - `inst/extdata/webawesome/`
+- `inst/SHINY.WEBAWESOME_VERSION`
 - `inst/www/wa/`
 
 The handwritten package bootstrap file `inst/www/webawesome-init.js` is not

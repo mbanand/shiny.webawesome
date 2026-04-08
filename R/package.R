@@ -1,6 +1,7 @@
 #' shiny.webawesome: Shiny Bindings for Web Awesome Components
 #'
-#' Provides an R and Shiny interface to the Web Awesome component library.
+#' Provides an R and [Shiny](https://shiny.posit.co) interface to the
+#' [Web Awesome](https://webawesome.com) component library.
 #'
 #' `shiny.webawesome` is a generator-driven package that exposes Web Awesome
 #' components as R functions for use in Shiny applications. Most component
@@ -25,6 +26,8 @@
 #'   components
 #' - command-layer helpers such as `wa_set_property()` and `wa_call_method()`
 #' - the narrow browser-glue helper `wa_js()`
+#' - the package helper `wa_version()` for reporting the bundled Web Awesome
+#'   version
 #'
 #' ## Package options
 #'
@@ -46,7 +49,8 @@
 #' For an introductory guide, see
 #' `vignette("get-started", package = "shiny.webawesome")`. For
 #' function-specific details, use the package help pages such as
-#' `?webawesomePage`, `?wa_set_property`, `?wa_call_method`, and `?wa_js`.
+#' `?webawesomePage`, `?wa_set_property`, `?wa_call_method`, `?wa_js`, and
+#' `?wa_version`.
 #'
 #' @keywords internal
 "_PACKAGE"

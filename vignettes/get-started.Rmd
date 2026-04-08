@@ -24,7 +24,8 @@ file `custom-elements.json`. The package aims to stay close to upstream Web
 Awesome names and component APIs while adopting normal R conventions such as
 snake_case argument names. The package also bundles the Web Awesome runtime it
 needs, so you do not need to install Web Awesome assets separately in your
-app.
+app. To report the bundled Web Awesome version in your current installation,
+use `wa_version()`.
 
 Because Web Awesome lives in the browser and Shiny spans both server and
 client, the package includes more than generated wrappers alone. In practice,
@@ -145,8 +146,9 @@ When you need app-local browser glue that is easier to express in JavaScript,
 `wa_js()` lets you inject a small inline snippet and pair it with ordinary
 Shiny inputs via `Shiny.setInputValue()`.
 
-The deeper guidance for choosing between generated bindings, update helpers,
-command helpers, and `wa_js()` lives in the `Command API` article.
+For more detailed guidance for choosing between generated bindings, update
+helpers, command helpers, and `wa_js()`, please see the `Command API`
+article.
 
 # Package Options
 

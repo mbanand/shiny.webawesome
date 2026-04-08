@@ -24,6 +24,7 @@ testthat::test_that("check_integrity passes for matching recorded surfaces", {
     file.path(root, "inst", "extdata", "webawesome", "VERSION"),
     "3.3.1"
   )
+  .write_file(file.path(root, "inst", "SHINY.WEBAWESOME_VERSION"), "3.3.1")
   .write_file(
     file.path(root, "inst", "www", "wa", "webawesome.loader.js"),
     "export const loader = true;"
@@ -71,6 +72,7 @@ testthat::test_that("check_integrity fails for drifted generated surfaces", {
     file.path(root, "inst", "extdata", "webawesome", "VERSION"),
     "3.3.1"
   )
+  .write_file(file.path(root, "inst", "SHINY.WEBAWESOME_VERSION"), "3.3.1")
   .write_file(
     file.path(root, "inst", "www", "wa", "webawesome.loader.js"),
     "export const loader = true;"

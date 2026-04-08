@@ -237,6 +237,17 @@ These files are copied and pruned from the upstream Web Awesome distribution dur
 
 The `inst/www` directory is served automatically by Shiny when the package is loaded.
 
+The package also ships one small package-owned runtime metadata file at:
+
+```text
+inst/SHINY.WEBAWESOME_VERSION
+```
+
+This file records the bundled upstream Web Awesome version for package-level
+runtime helpers and installed-package introspection. It is produced by the
+prune stage and is distinct from the browser-served runtime asset tree under
+`inst/www/wa/`.
+
 ---
 
 # Web Awesome Component Metadata

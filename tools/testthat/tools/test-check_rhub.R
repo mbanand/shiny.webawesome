@@ -5,6 +5,21 @@ source(file.path("..", "..", "check_rhub.R"))
   writeLines(lines, path)
 }
 
+.capture_stderr <- function(expr) {
+  path <- tempfile(fileext = ".log")
+  con <- file(path, open = "wt")
+  sink(con, type = "message")
+  on.exit(
+    {
+      sink(type = "message")
+      close(con)
+    },
+    add = TRUE
+  )
+
+  force(expr)
+}
+
 .create_fake_repo <- function(root, with_workflow = TRUE) {
   dir.create(
     file.path(root, "projectdocs"),
@@ -115,16 +130,21 @@ testthat::test_that("check_rhub refuses to run from main by default", {
   check_called <- FALSE
 
   testthat::expect_error(
-    check_rhub(
-      root = root,
-      verbose = FALSE,
-      git_runner = .make_git_runner(branch = "main", upstream = "origin/main"),
-      doctor_fun = function() {
-        doctor_called <<- TRUE
-      },
-      check_fun = function(branch, platforms) {
-        check_called <<- TRUE
-      }
+    .capture_stderr(
+      check_rhub(
+        root = root,
+        verbose = FALSE,
+        git_runner = .make_git_runner(
+          branch = "main",
+          upstream = "origin/main"
+        ),
+        doctor_fun = function() {
+          doctor_called <<- TRUE
+        },
+        check_fun = function(branch, platforms) {
+          check_called <<- TRUE
+        }
+      )
     ),
     "Main-branch rhub runs require explicit override"
   )
@@ -138,16 +158,18 @@ testthat::test_that("check_rhub also guards master when it is default", {
   .create_fake_repo(root)
 
   testthat::expect_error(
-    check_rhub(
-      root = root,
-      verbose = FALSE,
-      git_runner = .make_git_runner(
-        branch = "master",
-        upstream = "origin/master",
-        default_branch = "master"
-      ),
-      doctor_fun = function() NULL,
-      check_fun = function(branch, platforms) NULL
+    .capture_stderr(
+      check_rhub(
+        root = root,
+        verbose = FALSE,
+        git_runner = .make_git_runner(
+          branch = "master",
+          upstream = "origin/master",
+          default_branch = "master"
+        ),
+        doctor_fun = function() NULL,
+        check_fun = function(branch, platforms) NULL
+      )
     ),
     "Main-branch rhub runs require explicit override"
   )
@@ -158,12 +180,14 @@ testthat::test_that("check_rhub requires a pushed upstream branch", {
   .create_fake_repo(root)
 
   testthat::expect_error(
-    check_rhub(
-      root = root,
-      verbose = FALSE,
-      git_runner = .make_git_runner(upstream = NULL),
-      doctor_fun = function() NULL,
-      check_fun = function(branch, platforms) NULL
+    .capture_stderr(
+      check_rhub(
+        root = root,
+        verbose = FALSE,
+        git_runner = .make_git_runner(upstream = NULL),
+        doctor_fun = function() NULL,
+        check_fun = function(branch, platforms) NULL
+      )
     ),
     "Rhub checks require a pushed branch"
   )
@@ -177,22 +201,24 @@ testthat::test_that(
 
     calls <- list()
 
-    result <- check_rhub(
-      root = root,
-      verbose = FALSE,
-      git_runner = .make_git_runner(),
-      doctor_fun = function() {
-        calls[[length(calls) + 1L]] <<- "doctor"
-        invisible(NULL)
-      },
-      check_fun = function(branch, platforms) {
-        calls[[length(calls) + 1L]] <<- list(
-          type = "check",
-          branch = branch,
-          platforms = platforms
-        )
-        invisible(NULL)
-      }
+    result <- .capture_stderr(
+      check_rhub(
+        root = root,
+        verbose = FALSE,
+        git_runner = .make_git_runner(),
+        doctor_fun = function() {
+          calls[[length(calls) + 1L]] <<- "doctor"
+          invisible(NULL)
+        },
+        check_fun = function(branch, platforms) {
+          calls[[length(calls) + 1L]] <<- list(
+            type = "check",
+            branch = branch,
+            platforms = platforms
+          )
+          invisible(NULL)
+        }
+      )
     )
 
     testthat::expect_identical(
@@ -231,12 +257,14 @@ testthat::test_that("check_rhub requires the rhub workflow file", {
   .create_fake_repo(root, with_workflow = FALSE)
 
   testthat::expect_error(
-    check_rhub(
-      root = root,
-      verbose = FALSE,
-      git_runner = .make_git_runner(),
-      doctor_fun = function() NULL,
-      check_fun = function(branch, platforms) NULL
+    .capture_stderr(
+      check_rhub(
+        root = root,
+        verbose = FALSE,
+        git_runner = .make_git_runner(),
+        doctor_fun = function() NULL,
+        check_fun = function(branch, platforms) NULL
+      )
     ),
     "Rhub workflow file is not present in the repository"
   )

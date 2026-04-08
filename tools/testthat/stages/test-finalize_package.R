@@ -5,6 +5,21 @@ source(file.path("..", "..", "finalize_package.R"))
   writeLines(lines, path)
 }
 
+.capture_stderr <- function(expr) {
+  path <- tempfile(fileext = ".log")
+  con <- file(path, open = "wt")
+  sink(con, type = "message")
+  on.exit(
+    {
+      sink(type = "message")
+      close(con)
+    },
+    add = TRUE
+  )
+
+  force(expr)
+}
+
 .create_fake_repo <- function(root) {
   dir.create(
     file.path(root, "projectdocs"),
@@ -19,12 +34,16 @@ source(file.path("..", "..", "finalize_package.R"))
     "Imports: shiny",
     "Suggests: testthat"
   ))
-  .write_file(file.path(root, "NEWS.md"), "# fake 0.1.0")
+  .write_file(file.path(root, "NEWS.md"), "# Version 0.1.0")
   .write_file(file.path(root, "dev", "webawesome-version.txt"), "3.5.0")
+  .write_file(file.path(root, "inst", "SHINY.WEBAWESOME_VERSION"), "3.5.0")
   .write_file(file.path(root, "_pkgdown.yml"), c(
     "home:",
     "  description: >-",
-    "    Fake package. Package version 0.1.0; bundled upstream Web Awesome version 3.5.0.",
+    paste(
+      "    Fake package. Package version 0.1.0;",
+      "bundled upstream Web Awesome version 3.5.0."
+    ),
     "  strip:",
     "    subtitle: >-",
     "      Fake package. Package 0.1.0 with bundled Web Awesome 3.5.0.",
@@ -112,12 +131,14 @@ testthat::test_that(
       )
     )
 
-    result <- finalize_package(
-      root = root,
-      strict = FALSE,
-      verbose = FALSE,
-      runner = .fake_git_runner,
-      steps = steps
+    result <- .capture_stderr(
+      finalize_package(
+        root = root,
+        strict = FALSE,
+        verbose = FALSE,
+        runner = .fake_git_runner,
+        steps = steps
+      )
     )
 
     testthat::expect_true(
@@ -199,12 +220,14 @@ testthat::test_that("strict finalize failures stop the run", {
   )
 
   testthat::expect_error(
-    finalize_package(
-      root = root,
-      strict = TRUE,
-      verbose = FALSE,
-      runner = .fake_git_runner,
-      steps = steps
+    .capture_stderr(
+      finalize_package(
+        root = root,
+        strict = TRUE,
+        verbose = FALSE,
+        runner = .fake_git_runner,
+        steps = steps
+      )
     ),
     "Strict finalize requires confirmations."
   )
@@ -252,12 +275,14 @@ testthat::test_that(
       )
     )
 
-    result <- finalize_package(
-      root = root,
-      strict = FALSE,
-      verbose = FALSE,
-      runner = .fake_git_runner,
-      steps = steps
+    result <- .capture_stderr(
+      finalize_package(
+        root = root,
+        strict = FALSE,
+        verbose = FALSE,
+        runner = .fake_git_runner,
+        steps = steps
+      )
     )
 
     testthat::expect_equal(sort(names(result$warnings)), c("lint", "style"))
@@ -279,7 +304,10 @@ testthat::test_that(
     .write_file(file.path(root, "_pkgdown.yml"), c(
       "home:",
       "  description: >-",
-      "    Fake package. Package version 0.0.8; bundled upstream Web Awesome version 3.3.1.",
+      paste(
+        "    Fake package. Package version 0.0.8;",
+        "bundled upstream Web Awesome version 3.3.1."
+      ),
       "  strip:",
       "    subtitle: >-",
       "      Fake package. Package 0.0.8 with bundled Web Awesome 3.3.1.",
@@ -310,12 +338,14 @@ testthat::test_that(
       )
     )
 
-    result <- finalize_package(
-      root = root,
-      strict = FALSE,
-      verbose = FALSE,
-      runner = .fake_git_runner,
-      steps = steps
+    result <- .capture_stderr(
+      finalize_package(
+        root = root,
+        strict = FALSE,
+        verbose = FALSE,
+        runner = .fake_git_runner,
+        steps = steps
+      )
     )
 
     testthat::expect_equal(result$handoff$status, "warn")
@@ -331,12 +361,14 @@ testthat::test_that(
       perl = TRUE
     )))
     testthat::expect_error(
-      finalize_package(
-        root = root,
-        strict = TRUE,
-        verbose = FALSE,
-        runner = .fake_git_runner,
-        steps = steps
+      .capture_stderr(
+        finalize_package(
+          root = root,
+          strict = TRUE,
+          verbose = FALSE,
+          runner = .fake_git_runner,
+          steps = steps
+        )
       ),
       "does not match"
     )
@@ -476,14 +508,16 @@ testthat::test_that("strict finalize no longer asserts a clean build start", {
   )
 
   testthat::expect_no_error(
-    finalize_package(
-      root = root,
-      strict = TRUE,
-      confirmed_rhub_pass = TRUE,
-      confirmed_visual_review = TRUE,
-      verbose = FALSE,
-      runner = .fake_git_runner,
-      steps = steps
+    .capture_stderr(
+      finalize_package(
+        root = root,
+        strict = TRUE,
+        confirmed_rhub_pass = TRUE,
+        confirmed_visual_review = TRUE,
+        verbose = FALSE,
+        runner = .fake_git_runner,
+        steps = steps
+      )
     )
   )
 })

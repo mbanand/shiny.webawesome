@@ -3,7 +3,8 @@
 #' Creates a minimal full-page HTML scaffold for Shiny applications that use
 #' Web Awesome components. `webawesomePage()` attaches the package dependency
 #' once at page level and temporarily suppresses duplicate wrapper-level
-#' attachment while evaluating its children.
+#' attachment while evaluating its children. This function serves an entirely
+#' different role from the upstream component `wa_page()`.
 #'
 #' This is a package-level Shiny helper that follows Shiny's page-helper model
 #' (`fluidPage()`, etc.) for dependency attachment and full-page scaffolding.

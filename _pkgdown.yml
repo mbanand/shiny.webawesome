@@ -10,12 +10,12 @@ development:
 home:
   title: shiny.webawesome
   description: >-
-    Shiny bindings for Web Awesome components. Package version 0.1.0; bundled
+    Shiny bindings for Web Awesome components. Package version 1.0.0; bundled
     upstream Web Awesome version 3.5.0.
   strip:
     title: shiny.webawesome
     subtitle: >-
-      Shiny bindings for Web Awesome components. Package 0.1.0 with bundled
+      Shiny bindings for Web Awesome components. Package 1.0.0 with bundled
       Web Awesome 3.5.0.
   links:
     - text: GitHub repository
@@ -99,6 +99,7 @@ reference:
     desc: Entry points for package-level orientation.
     contents:
       - shiny.webawesome-package
+      - wa_version
 
   - title: Layout and Page Helpers
     desc: Helpers for page scaffolding and layout convenience.

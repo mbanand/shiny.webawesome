@@ -622,6 +622,19 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
   lines[[1]]
 }
 
+# Return the shipped bundled Web Awesome version from inst/.
+.shipped_upstream_version <- function(root) {
+  path <- file.path(root, "inst", "SHINY.WEBAWESOME_VERSION")
+  lines <- .read_trimmed_lines(path)
+  lines <- lines[nzchar(lines)]
+
+  if (length(lines) == 0L) {
+    return(NA_character_)
+  }
+
+  lines[[1]]
+}
+
 # Return the latest NEWS heading version when present.
 .news_version <- function(root) {
   path <- file.path(root, "NEWS.md")
@@ -631,28 +644,32 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
     return(NA_character_)
   }
 
-  headings <- regmatches(
-    lines,
-    regexec("^#\\s+shiny\\.webawesome\\s+([0-9][0-9A-Za-z.\\-]*)\\s*$", lines)
+  patterns <- c(
+    "^#\\s+Version\\s+([0-9][0-9A-Za-z.\\-]*)\\s*$",
+    "^#\\s+[A-Za-z][A-Za-z0-9._\\-]*\\s+([0-9][0-9A-Za-z.\\-]*)\\s*$"
   )
-  versions <- vapply(
-    headings,
-    function(match) {
-      if (length(match) >= 2L) {
-        match[[2]]
-      } else {
-        NA_character_
-      }
-    },
-    character(1)
-  )
-  versions <- versions[!is.na(versions) & nzchar(versions)]
 
-  if (length(versions) == 0L) {
-    return(NA_character_)
+  for (pattern in patterns) {
+    headings <- regmatches(lines, regexec(pattern, lines, perl = TRUE))
+    versions <- vapply(
+      headings,
+      function(match) {
+        if (length(match) >= 2L) {
+          match[[2]]
+        } else {
+          NA_character_
+        }
+      },
+      character(1)
+    )
+    versions <- versions[!is.na(versions) & nzchar(versions)]
+
+    if (length(versions) > 0L) {
+      return(versions[[1]])
+    }
   }
 
-  versions[[1]]
+  NA_character_
 }
 
 # Return declared package/upstream versions embedded in _pkgdown.yml text.
@@ -693,8 +710,16 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
   )
 
   list(
-    package = if (length(package_values) == 0L) NA_character_ else package_values[[1]],
-    upstream = if (length(upstream_values) == 0L) NA_character_ else upstream_values[[1]]
+    package = if (length(package_values) == 0L) {
+      NA_character_
+    } else {
+      package_values[[1]]
+    },
+    upstream = if (length(upstream_values) == 0L) {
+      NA_character_
+    } else {
+      upstream_values[[1]]
+    }
   )
 }
 
@@ -703,6 +728,7 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
   package_version <- .package_version(root)
   news_version <- .news_version(root)
   upstream_version <- .upstream_version(root)
+  shipped_upstream_version <- .shipped_upstream_version(root)
   pkgdown_versions <- .pkgdown_versions(root)
 
   details <- character()
@@ -744,7 +770,33 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
   if (is.na(upstream_version)) {
     details <- c(
       details,
-      "Could not determine the bundled upstream version from `dev/webawesome-version.txt`."
+      paste(
+        "Could not determine the bundled upstream version from",
+        "`dev/webawesome-version.txt`."
+      )
+    )
+  }
+
+  if (is.na(shipped_upstream_version)) {
+    details <- c(
+      details,
+      paste(
+        "Could not determine the shipped bundled upstream version from",
+        "`inst/SHINY.WEBAWESOME_VERSION`."
+      )
+    )
+  } else if (
+    !is.na(upstream_version) &&
+      !identical(shipped_upstream_version, upstream_version)
+  ) {
+    details <- c(
+      details,
+      paste(
+        "`inst/SHINY.WEBAWESOME_VERSION`",
+        paste0("(`", shipped_upstream_version, "`)"),
+        "does not match `dev/webawesome-version.txt`",
+        paste0("(`", upstream_version, "`).")
+      )
     )
   }
 
@@ -753,8 +805,10 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
       details,
       "Could not determine the Web Awesome version text from `_pkgdown.yml`."
     )
-  } else if (!is.na(upstream_version) &&
-    !identical(pkgdown_versions$upstream, upstream_version)) {
+  } else if (
+    !is.na(upstream_version) &&
+      !identical(pkgdown_versions$upstream, upstream_version)
+  ) {
     details <- c(
       details,
       paste(
@@ -1107,7 +1161,8 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
           "all_results <- unlist(results, recursive = FALSE);",
           "if (length(all_results) > 0L) {",
           "  print(all_results);",
-          "  stop('Lint issues detected.', call. = FALSE)",
+          "  message('Lint issues detected.');",
+          "  quit(save = 'no', status = 1L)",
           "}"
         )
         cmd <- .rscript_command(expr)

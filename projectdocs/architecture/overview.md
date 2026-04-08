@@ -180,6 +180,16 @@ The resulting runtime bundle is stored in:
 inst/www/wa/
 ```
 
+The prune stage also writes a small package-owned metadata file to:
+
+```text
+inst/SHINY.WEBAWESOME_VERSION
+```
+
+That file records the bundled upstream Web Awesome version for installed
+package helpers and runtime introspection. It is not part of the browser
+runtime tree itself.
+
 The component metadata file `custom-elements.json` is copied to:
 
 ```

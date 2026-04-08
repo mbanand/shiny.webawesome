@@ -6,7 +6,7 @@ Please do not report security vulnerabilities through public GitHub issues.
 
 Instead, report them privately to the project maintainer:
 
-- M. B. Anand <anand@owlcyberlabs.com>
+- M. B. Anand <privateanand@gmail.com>
 
 When possible, include:
 

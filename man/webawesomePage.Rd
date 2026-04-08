@@ -22,7 +22,8 @@ An HTML page scaffold with the shiny.webawesome dependency attached.
 Creates a minimal full-page HTML scaffold for Shiny applications that use
 Web Awesome components. \code{webawesomePage()} attaches the package dependency
 once at page level and temporarily suppresses duplicate wrapper-level
-attachment while evaluating its children.
+attachment while evaluating its children. This function serves an entirely
+different role from the upstream component \code{wa_page()}.
 }
 \details{
 This is a package-level Shiny helper that follows Shiny's page-helper model

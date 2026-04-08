@@ -174,6 +174,7 @@ rm(.bootstrap_cli_ui)
       remove = c(
         "inst/bindings",
         "inst/extdata/webawesome",
+        "inst/SHINY.WEBAWESOME_VERSION",
         "inst/www/wa",
         "manifests",
         "reports",
@@ -184,6 +185,7 @@ rm(.bootstrap_cli_ui)
       remove = c(
         "inst/bindings",
         "inst/extdata/webawesome",
+        "inst/SHINY.WEBAWESOME_VERSION",
         "inst/www/wa",
         "manifests",
         "reports",

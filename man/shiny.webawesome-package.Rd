@@ -6,7 +6,8 @@
 \alias{shiny.webawesome-package}
 \title{shiny.webawesome: Shiny Bindings for Web Awesome Components}
 \description{
-Provides an R and Shiny interface to the Web Awesome component library.
+Provides an R and \href{https://shiny.posit.co}{Shiny} interface to the
+\href{https://webawesome.com}{Web Awesome} component library.
 }
 \details{
 \code{shiny.webawesome} is a generator-driven package that exposes Web Awesome
@@ -31,6 +32,8 @@ The package exposes several complementary surfaces:
 components
 \item command-layer helpers such as \code{wa_set_property()} and \code{wa_call_method()}
 \item the narrow browser-glue helper \code{wa_js()}
+\item the package helper \code{wa_version()} for reporting the bundled Web Awesome
+version
 }
 }
 
@@ -56,7 +59,8 @@ Example:
 For an introductory guide, see
 \code{vignette("get-started", package = "shiny.webawesome")}. For
 function-specific details, use the package help pages such as
-\code{?webawesomePage}, \code{?wa_set_property}, \code{?wa_call_method}, and \code{?wa_js}.
+\code{?webawesomePage}, \code{?wa_set_property}, \code{?wa_call_method}, \code{?wa_js}, and
+\code{?wa_version}.
 }
 }
 \seealso{
@@ -69,7 +73,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: M. B. Anand \email{anand@owlcyberlabs.com}
+\strong{Maintainer}: M. B. Anand \email{privateanand@gmail.com}
 
 }
 \keyword{internal}

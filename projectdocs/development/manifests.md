@@ -188,7 +188,8 @@ They use a common schema and record:
 The current integrity surfaces are:
 
 - prune output:
-  `inst/extdata/webawesome/` and `inst/www/wa/`
+  `inst/extdata/webawesome/`, `inst/SHINY.WEBAWESOME_VERSION`, and
+  `inst/www/wa/`
 - generate output:
   generator-owned top-level `R/*.R` files and `inst/bindings/*.js`
 

@@ -9,14 +9,15 @@
 [![Codecov test coverage](https://codecov.io/gh/mbanand/shiny.webawesome/graph/badge.svg)](https://app.codecov.io/gh/mbanand/shiny.webawesome)
 <!-- badges: end -->
 
-`shiny.webawesome` provides an R and Shiny interface to the Web Awesome
-component library.
+`shiny.webawesome` provides an R and [Shiny](https://shiny.posit.co)
+interface to the [Web Awesome](https://webawesome.com) component library.
 
 The package is largely generated from the upstream Web Awesome metadata file
 `custom-elements.json`, which the package treats as the primary source of
 truth for component wrappers and related generated surface. It also bundles
 the Web Awesome runtime it needs, so package users do not need to install Web
-Awesome assets separately in their Shiny apps.
+Awesome assets separately in their Shiny apps. To report the bundled Web
+Awesome version in your current installation, use `wa_version()`.
 
 The package design aims to stay as close as practical to upstream Web Awesome
 names, conventions, and component APIs, while adopting normal R naming
@@ -30,8 +31,7 @@ surface, Shiny bindings, and advanced browser-glue helpers.
 
 ## Installation
 
-CRAN submission is in progress. Once the package is available on CRAN, install
-it with either of the following:
+To install from CRAN, use either of the following:
 
 ```r
 install.packages("shiny.webawesome")
@@ -41,7 +41,7 @@ install.packages("shiny.webawesome")
 pak::pak("shiny.webawesome")
 ```
 
-To install the development version from GitHub:
+To install the development version from GitHub, use either of the following:
 
 ```r
 pak::pak("mbanand/shiny.webawesome")
@@ -82,9 +82,8 @@ shinyApp(ui, server)
 
 ## Contributing
 
-Feedback from package users is welcome, both on the package API and on rough
-edges in the documentation or places where the package could be easier to
-learn.
+Feedback from package users is welcome, both on the package API and on
+improvements to documentation for accuracy, clarity, or ease of learning.
 
 Contributions are also welcome, especially from front-end developers and Web
 Awesome users who can help improve package ergonomics, examples, and API

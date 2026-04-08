@@ -166,7 +166,7 @@ testthat::test_that("prune tool fails cleanly when outputs already exist", {
   testthat::expect_match(result$stderr, "Pruning Web Awesome \\.{2,} Fail")
   testthat::expect_match(
     result$stderr,
-    "Prune output directories already contain content"
+    "Prune output locations already contain content"
   )
   testthat::expect_no_match(result$stderr, "^Error:", perl = TRUE)
 })
