@@ -59,25 +59,35 @@ test_that(
     wait_for_custom_elements(app, "wa-textarea")
 
     cases <- list(
-      list(id = "text_area_auto_true", attr = "on", prop = TRUE, native = "on"),
+      list(
+        id = "text_area_auto_true",
+        attr = "on",
+        prop = TRUE,
+        native = "true"
+      ),
       list(
         id = "text_area_auto_false",
         attr = "off",
         prop = FALSE,
-        native = "off"
+        native = "false"
       ),
-      list(id = "text_area_auto_on", attr = "on", prop = TRUE, native = "on"),
+      list(
+        id = "text_area_auto_on",
+        attr = "on",
+        prop = TRUE,
+        native = "true"
+      ),
       list(
         id = "text_area_auto_off",
         attr = "off",
         prop = FALSE,
-        native = "off"
+        native = "false"
       ),
       list(
         id = "text_area_auto_null",
         attr = NULL,
-        prop = FALSE,
-        native = "off"
+        prop = NULL,
+        native = NULL
       )
     )
 

@@ -11,12 +11,12 @@ home:
   title: shiny.webawesome
   description: >-
     Shiny bindings for Web Awesome components. Package version 0.1.0; bundled
-    upstream Web Awesome version 3.3.1.
+    upstream Web Awesome version 3.5.0.
   strip:
     title: shiny.webawesome
     subtitle: >-
       Shiny bindings for Web Awesome components. Package 0.1.0 with bundled
-      Web Awesome 3.3.1.
+      Web Awesome 3.5.0.
   links:
     - text: GitHub repository
       href: https://github.com/mbanand/shiny.webawesome
@@ -72,7 +72,7 @@ navbar:
         - text: Build Tools
           href: articles/build-tools.html
     upstream:
-      text: Web Awesome 3.3.1
+      text: Web Awesome 3.5.0
       href: https://webawesome.com/
 
 articles:
@@ -169,8 +169,10 @@ reference:
       - wa_dropdown
       - wa_dropdown_item
       - wa_input
+      - wa_markdown
       - wa_number_input
       - wa_option
+      - wa_page
       - wa_popover
       - wa_popup
       - wa_progress_bar

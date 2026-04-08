@@ -98,9 +98,10 @@ page on MDN for available values.}
 \item{autocorrect}{Boolean. Default: \code{FALSE}. Indicates whether the
 browser's autocorrect feature is on or off. When set as an attribute,
 use \code{"off"} or \code{"on"}. When set as a property, use \code{TRUE} or \code{FALSE}.
-This wrapper accepts \code{TRUE}, \code{FALSE}, \code{"on"}, \code{"off"}, \code{NULL} for this
-argument. \code{TRUE} emits \code{autocorrect="on"} and \code{FALSE} emits
-\code{autocorrect="off"}. \code{NULL} omits the attribute. Accepted string
+Because the upstream implementation treats attributes and properties
+differently for this field, this argument accepts \code{TRUE}, \code{FALSE},
+\code{"on"}, \code{"off"}, \code{NULL}. \code{TRUE} emits \code{autocorrect="on"} and \code{FALSE}
+emits \code{autocorrect="off"}. \code{NULL} omits the attribute. Accepted string
 values: \code{"on"} is emitted unchanged; \code{"off"} is emitted unchanged.}
 
 \item{autofocus}{Boolean. Default: \code{FALSE}. Indicates that the input

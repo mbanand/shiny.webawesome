@@ -19,6 +19,20 @@ source(file.path("..", "..", "finalize_package.R"))
     "Imports: shiny",
     "Suggests: testthat"
   ))
+  .write_file(file.path(root, "NEWS.md"), "# fake 0.1.0")
+  .write_file(file.path(root, "dev", "webawesome-version.txt"), "3.5.0")
+  .write_file(file.path(root, "_pkgdown.yml"), c(
+    "home:",
+    "  description: >-",
+    "    Fake package. Package version 0.1.0; bundled upstream Web Awesome version 3.5.0.",
+    "  strip:",
+    "    subtitle: >-",
+    "      Fake package. Package 0.1.0 with bundled Web Awesome 3.5.0.",
+    "navbar:",
+    "  components:",
+    "    upstream:",
+    "      text: Web Awesome 3.5.0"
+  ))
   .write_file(file.path(root, "projectdocs", "README.md"), "docs")
   .write_file(file.path(root, "tools", "placeholder.R"), "x <- 1")
   .write_file(file.path(root, "tools", "finalize_package.R"), "x <- 1")
@@ -248,6 +262,84 @@ testthat::test_that(
 
     testthat::expect_equal(sort(names(result$warnings)), c("lint", "style"))
     testthat::expect_equal(result$handoff$status, "warn")
+  }
+)
+
+testthat::test_that(
+  "finalize_package warns on handwritten version metadata mismatch",
+  {
+    testthat::skip_if_not_installed("digest")
+    testthat::skip_if_not_installed("yaml")
+
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+    .write_file(file.path(root, "website", "index.html"), "<html></html>")
+    .write_file(file.path(root, "fake_0.1.0.tar.gz"), "tarball")
+    .write_file(file.path(root, "NEWS.md"), "# shiny.webawesome 0.0.9")
+    .write_file(file.path(root, "_pkgdown.yml"), c(
+      "home:",
+      "  description: >-",
+      "    Fake package. Package version 0.0.8; bundled upstream Web Awesome version 3.3.1.",
+      "  strip:",
+      "    subtitle: >-",
+      "      Fake package. Package 0.0.8 with bundled Web Awesome 3.3.1.",
+      "navbar:",
+      "  components:",
+      "    upstream:",
+      "      text: Web Awesome 3.3.1"
+    ))
+
+    steps <- list(
+      cleanup = list(
+        label = "Cleaning finalize outputs",
+        fatal = TRUE,
+        run = function(context) list(ok = TRUE)
+      ),
+      version_consistency = .finalize_steps()$version_consistency,
+      build = list(
+        label = "Building package tarball",
+        fatal = TRUE,
+        run = function(context) {
+          list(
+            ok = TRUE,
+            data = list(
+              tarball_path = file.path(context$root, "fake_0.1.0.tar.gz")
+            )
+          )
+        }
+      )
+    )
+
+    result <- finalize_package(
+      root = root,
+      strict = FALSE,
+      verbose = FALSE,
+      runner = .fake_git_runner,
+      steps = steps
+    )
+
+    testthat::expect_equal(result$handoff$status, "warn")
+    testthat::expect_true("version_consistency" %in% names(result$warnings))
+    testthat::expect_true(any(grepl(
+      "_pkgdown\\.yml",
+      result$warnings$version_consistency,
+      perl = TRUE
+    )))
+    testthat::expect_true(any(grepl(
+      "NEWS\\.md",
+      result$warnings$version_consistency,
+      perl = TRUE
+    )))
+    testthat::expect_error(
+      finalize_package(
+        root = root,
+        strict = TRUE,
+        verbose = FALSE,
+        runner = .fake_git_runner,
+        steps = steps
+      ),
+      "does not match"
+    )
   }
 )
 

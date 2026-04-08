@@ -81,7 +81,7 @@ test_that(
       list(
         id = "text_input_auto_null",
         attr = NULL,
-        prop = FALSE,
+        prop = NULL,
         native = "off"
       )
     )

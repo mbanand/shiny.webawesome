@@ -600,6 +600,175 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
   read.dcf(file.path(root, "DESCRIPTION"))[[1, "Version"]]
 }
 
+# Return trimmed file lines when one file exists, otherwise an empty vector.
+.read_trimmed_lines <- function(path) {
+  if (!file.exists(path)) {
+    return(character())
+  }
+
+  trimws(readLines(path, warn = FALSE, encoding = "UTF-8"))
+}
+
+# Return the bundled upstream Web Awesome version from the dev default file.
+.upstream_version <- function(root) {
+  path <- file.path(root, "dev", "webawesome-version.txt")
+  lines <- .read_trimmed_lines(path)
+  lines <- lines[nzchar(lines)]
+
+  if (length(lines) == 0L) {
+    return(NA_character_)
+  }
+
+  lines[[1]]
+}
+
+# Return the latest NEWS heading version when present.
+.news_version <- function(root) {
+  path <- file.path(root, "NEWS.md")
+  lines <- .read_trimmed_lines(path)
+
+  if (length(lines) == 0L) {
+    return(NA_character_)
+  }
+
+  headings <- regmatches(
+    lines,
+    regexec("^#\\s+shiny\\.webawesome\\s+([0-9][0-9A-Za-z.\\-]*)\\s*$", lines)
+  )
+  versions <- vapply(
+    headings,
+    function(match) {
+      if (length(match) >= 2L) {
+        match[[2]]
+      } else {
+        NA_character_
+      }
+    },
+    character(1)
+  )
+  versions <- versions[!is.na(versions) & nzchar(versions)]
+
+  if (length(versions) == 0L) {
+    return(NA_character_)
+  }
+
+  versions[[1]]
+}
+
+# Return declared package/upstream versions embedded in _pkgdown.yml text.
+.pkgdown_versions <- function(root) {
+  path <- file.path(root, "_pkgdown.yml")
+  lines <- .read_trimmed_lines(path)
+
+  if (length(lines) == 0L) {
+    return(list(package = NA_character_, upstream = NA_character_))
+  }
+
+  text <- paste(lines, collapse = "\n")
+
+  package_matches <- gregexpr(
+    "Package(?: version)?\\s+([0-9][0-9A-Za-z.\\-]*)",
+    text,
+    perl = TRUE
+  )
+  package_values <- regmatches(text, package_matches)[[1]]
+  package_values <- sub(
+    "^.*Package(?: version)?\\s+([0-9][0-9A-Za-z.\\-]*).*$",
+    "\\1",
+    package_values,
+    perl = TRUE
+  )
+
+  upstream_matches <- gregexpr(
+    "Web Awesome\\s+([0-9][0-9A-Za-z.\\-]*[0-9A-Za-z])",
+    text,
+    perl = TRUE
+  )
+  upstream_values <- regmatches(text, upstream_matches)[[1]]
+  upstream_values <- sub(
+    "^.*Web Awesome\\s+([0-9][0-9A-Za-z.\\-]*).*$",
+    "\\1",
+    upstream_values,
+    perl = TRUE
+  )
+
+  list(
+    package = if (length(package_values) == 0L) NA_character_ else package_values[[1]],
+    upstream = if (length(upstream_values) == 0L) NA_character_ else upstream_values[[1]]
+  )
+}
+
+# Check consistency of handwritten release/version metadata.
+.check_version_consistency <- function(root) {
+  package_version <- .package_version(root)
+  news_version <- .news_version(root)
+  upstream_version <- .upstream_version(root)
+  pkgdown_versions <- .pkgdown_versions(root)
+
+  details <- character()
+
+  if (is.na(news_version)) {
+    details <- c(
+      details,
+      "Could not determine the latest package version heading from `NEWS.md`."
+    )
+  } else if (!identical(news_version, package_version)) {
+    details <- c(
+      details,
+      paste(
+        "`NEWS.md` latest heading version",
+        paste0("(`", news_version, "`)"),
+        "does not match DESCRIPTION version",
+        paste0("(`", package_version, "`).")
+      )
+    )
+  }
+
+  if (is.na(pkgdown_versions$package)) {
+    details <- c(
+      details,
+      "Could not determine the package version text from `_pkgdown.yml`."
+    )
+  } else if (!identical(pkgdown_versions$package, package_version)) {
+    details <- c(
+      details,
+      paste(
+        "`_pkgdown.yml` package version",
+        paste0("(`", pkgdown_versions$package, "`)"),
+        "does not match DESCRIPTION version",
+        paste0("(`", package_version, "`).")
+      )
+    )
+  }
+
+  if (is.na(upstream_version)) {
+    details <- c(
+      details,
+      "Could not determine the bundled upstream version from `dev/webawesome-version.txt`."
+    )
+  }
+
+  if (is.na(pkgdown_versions$upstream)) {
+    details <- c(
+      details,
+      "Could not determine the Web Awesome version text from `_pkgdown.yml`."
+    )
+  } else if (!is.na(upstream_version) &&
+    !identical(pkgdown_versions$upstream, upstream_version)) {
+    details <- c(
+      details,
+      paste(
+        "`_pkgdown.yml` Web Awesome version",
+        paste0("(`", pkgdown_versions$upstream, "`)"),
+        "does not match `dev/webawesome-version.txt`",
+        paste0("(`", upstream_version, "`).")
+      )
+    )
+  }
+
+  list(ok = length(details) == 0L, details = details)
+}
+
 # Return the status label for one finalize run.
 .finalize_status <- function(warnings) {
   if (length(warnings) == 0L) {
@@ -1062,6 +1231,11 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
           runner = context$runner
         )
       }
+    ),
+    version_consistency = list(
+      label = "Checking version consistency",
+      fatal = function(context) isTRUE(context$strict),
+      run = function(context) .check_version_consistency(context$root)
     ),
     confirmations = list(
       label = "Checking external confirmations",
