@@ -12,6 +12,14 @@ test_that("internal version reader validates the shipped version file", {
     shiny.webawesome:::.wa_read_version_file(path),
     "must contain exactly one version"
   )
+
+  expect_error(
+    shiny.webawesome:::.wa_read_version_file(
+      file.path(tempdir(), "missing-version-file.txt")
+    ),
+    "Could not find the bundled Web Awesome version file.",
+    fixed = TRUE
+  )
 })
 
 test_that("wa_version reports the bundled Web Awesome version in-source", {
@@ -21,6 +29,13 @@ test_that("wa_version reports the bundled Web Awesome version in-source", {
     shiny.webawesome:::.wa_read_version_file(version_path),
     readLines(version_path, warn = FALSE)[[1]]
   )
+})
+
+test_that("wa_version_path resolves to an existing shipped version file", {
+  version_path <- shiny.webawesome:::.wa_version_path()
+
+  expect_true(file.exists(version_path))
+  expect_match(basename(version_path), "^SHINY\\.WEBAWESOME_VERSION$")
 })
 
 test_that(

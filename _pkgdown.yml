@@ -28,10 +28,10 @@ home:
       links:
         title: Quick Links
         text: |
-          <a href="articles/get-started.html">Getting Started</a><br>
-          <a href="reference/index.html">Function Reference</a><br>
+          <a href="https://CRAN.R-project.org/package=shiny.webawesome">CRAN</a><br>
+          <a href="https://github.com/mbanand/shiny.webawesome">Source Repository</a><br>
+          <a href="https://github.com/mbanand/shiny.webawesome/issues">Feedback &amp; Bugs</a><br>
           <a href="news/index.html">News</a><br>
-          <a href="https://github.com/mbanand/shiny.webawesome">GitHub</a><br>
           <a href="llms.txt">llms.txt</a>
       community:
         title: Project Docs

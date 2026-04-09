@@ -672,54 +672,65 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
   NA_character_
 }
 
-# Return declared package/upstream versions embedded in _pkgdown.yml text.
+# Return the first captured version for one pkgdown line pattern.
+.pkgdown_line_version <- function(lines, pattern) {
+  matches <- regmatches(lines, regexec(pattern, lines, perl = TRUE))
+  values <- vapply(
+    matches,
+    function(match) {
+      if (length(match) >= 2L) {
+        match[[2]]
+      } else {
+        NA_character_
+      }
+    },
+    character(1)
+  )
+  values <- values[!is.na(values) & nzchar(values)]
+
+  if (length(values) == 0L) {
+    return(NA_character_)
+  }
+
+  values[[1]]
+}
+
+# Return explicit mirrored version records embedded in _pkgdown.yml.
 .pkgdown_versions <- function(root) {
   path <- file.path(root, "_pkgdown.yml")
   lines <- .read_trimmed_lines(path)
 
   if (length(lines) == 0L) {
-    return(list(package = NA_character_, upstream = NA_character_))
+    return(list(
+      package_description = NA_character_,
+      package_subtitle = NA_character_,
+      upstream_description = NA_character_,
+      upstream_subtitle = NA_character_,
+      upstream_navbar = NA_character_
+    ))
   }
 
-  text <- paste(lines, collapse = "\n")
-
-  package_matches <- gregexpr(
-    "Package(?: version)?\\s+([0-9][0-9A-Za-z.\\-]*)",
-    text,
-    perl = TRUE
-  )
-  package_values <- regmatches(text, package_matches)[[1]]
-  package_values <- sub(
-    "^.*Package(?: version)?\\s+([0-9][0-9A-Za-z.\\-]*).*$",
-    "\\1",
-    package_values,
-    perl = TRUE
-  )
-
-  upstream_matches <- gregexpr(
-    "Web Awesome\\s+([0-9][0-9A-Za-z.\\-]*[0-9A-Za-z])",
-    text,
-    perl = TRUE
-  )
-  upstream_values <- regmatches(text, upstream_matches)[[1]]
-  upstream_values <- sub(
-    "^.*Web Awesome\\s+([0-9][0-9A-Za-z.\\-]*).*$",
-    "\\1",
-    upstream_values,
-    perl = TRUE
-  )
-
   list(
-    package = if (length(package_values) == 0L) {
-      NA_character_
-    } else {
-      package_values[[1]]
-    },
-    upstream = if (length(upstream_values) == 0L) {
-      NA_character_
-    } else {
-      upstream_values[[1]]
-    }
+    package_description = .pkgdown_line_version(
+      lines,
+      "Package version\\s+([0-9][0-9A-Za-z.\\-]*[0-9A-Za-z])"
+    ),
+    package_subtitle = .pkgdown_line_version(
+      lines,
+      "Package\\s+([0-9][0-9A-Za-z.\\-]*[0-9A-Za-z])\\s+with bundled"
+    ),
+    upstream_description = .pkgdown_line_version(
+      lines,
+      "Web Awesome version\\s+([0-9][0-9A-Za-z.\\-]*[0-9A-Za-z])"
+    ),
+    upstream_subtitle = .pkgdown_line_version(
+      lines,
+      "Web Awesome\\s+([0-9][0-9A-Za-z.\\-]*[0-9A-Za-z])"
+    ),
+    upstream_navbar = .pkgdown_line_version(
+      lines,
+      "^text:\\s*Web Awesome\\s+([0-9][0-9A-Za-z.\\-]*[0-9A-Za-z])\\s*$"
+    )
   )
 }
 
@@ -750,21 +761,38 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
     )
   }
 
-  if (is.na(pkgdown_versions$package)) {
-    details <- c(
-      details,
-      "Could not determine the package version text from `_pkgdown.yml`."
-    )
-  } else if (!identical(pkgdown_versions$package, package_version)) {
-    details <- c(
-      details,
-      paste(
-        "`_pkgdown.yml` package version",
-        paste0("(`", pkgdown_versions$package, "`)"),
-        "does not match DESCRIPTION version",
-        paste0("(`", package_version, "`).")
+  pkgdown_package_fields <- c(
+    "home.description" = pkgdown_versions$package_description,
+    "home.strip.subtitle" = pkgdown_versions$package_subtitle
+  )
+
+  for (field in names(pkgdown_package_fields)) {
+    value <- pkgdown_package_fields[[field]]
+
+    if (is.na(value)) {
+      details <- c(
+        details,
+        paste(
+          "Could not determine the package version text from `_pkgdown.yml`",
+          paste0("field `", field, "`."),
+          sep = " "
+        )
       )
-    )
+      next
+    }
+
+    if (!identical(value, package_version)) {
+      details <- c(
+        details,
+        paste(
+          "`_pkgdown.yml`",
+          paste0("field `", field, "` package version"),
+          paste0("(`", value, "`)"),
+          "does not match DESCRIPTION version",
+          paste0("(`", package_version, "`).")
+        )
+      )
+    }
   }
 
   if (is.na(upstream_version)) {
@@ -800,24 +828,42 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
     )
   }
 
-  if (is.na(pkgdown_versions$upstream)) {
-    details <- c(
-      details,
-      "Could not determine the Web Awesome version text from `_pkgdown.yml`."
-    )
-  } else if (
-    !is.na(upstream_version) &&
-      !identical(pkgdown_versions$upstream, upstream_version)
-  ) {
-    details <- c(
-      details,
-      paste(
-        "`_pkgdown.yml` Web Awesome version",
-        paste0("(`", pkgdown_versions$upstream, "`)"),
-        "does not match `dev/webawesome-version.txt`",
-        paste0("(`", upstream_version, "`).")
+  pkgdown_upstream_fields <- c(
+    "home.description" = pkgdown_versions$upstream_description,
+    "home.strip.subtitle" = pkgdown_versions$upstream_subtitle,
+    "navbar.components.upstream.text" = pkgdown_versions$upstream_navbar
+  )
+
+  for (field in names(pkgdown_upstream_fields)) {
+    value <- pkgdown_upstream_fields[[field]]
+
+    if (is.na(value)) {
+      details <- c(
+        details,
+        paste(
+          paste(
+            "Could not determine the Web Awesome version text from",
+            "`_pkgdown.yml`"
+          ),
+          paste0("field `", field, "`."),
+          sep = " "
+        )
       )
-    )
+      next
+    }
+
+    if (!is.na(upstream_version) && !identical(value, upstream_version)) {
+      details <- c(
+        details,
+        paste(
+          "`_pkgdown.yml`",
+          paste0("field `", field, "` Web Awesome version"),
+          paste0("(`", value, "`)"),
+          "does not match `dev/webawesome-version.txt`",
+          paste0("(`", upstream_version, "`).")
+        )
+      )
+    }
   }
 
   list(ok = length(details) == 0L, details = details)

@@ -91,6 +91,93 @@ test_that("warning registry respects explicit option overrides", {
   expect_true(isTRUE(warnings$command_layer_debug))
 })
 
+test_that("warning registry falls back to defaults on invalid option values", {
+  withr::local_options(shiny.webawesome.warnings = list(
+    missing_tree_item_id = NA,
+    command_layer = "yes",
+    command_layer_debug = TRUE
+  ))
+
+  warnings <- shiny.webawesome:::.wa_warning_registry()
+
+  expect_true(isTRUE(warnings$missing_tree_item_id))
+  expect_true(isTRUE(warnings$command_layer))
+  expect_true(isTRUE(warnings$command_layer_debug))
+})
+
+test_that("binding script helper returns sorted installed binding scripts", {
+  scripts <- shiny.webawesome:::.wa_binding_scripts()
+
+  expect_true(length(scripts) > 0L)
+  expect_identical(scripts, sort(scripts))
+  expect_true("bindings/wa_button.js" %in% scripts)
+  expect_true("bindings/wa_tree.js" %in% scripts)
+})
+
+test_that("constructor attribute helper validates and serializes values", {
+  expect_null(
+    shiny.webawesome:::.wa_match_constructor_attr(
+      NULL,
+      "appearance",
+      true_value = "solid",
+      false_value = "ghost",
+      string_map = c(outline = "outline")
+    )
+  )
+
+  expect_identical(
+    shiny.webawesome:::.wa_match_constructor_attr(
+      TRUE,
+      "appearance",
+      true_value = "solid",
+      false_value = "ghost"
+    ),
+    "solid"
+  )
+
+  expect_identical(
+    shiny.webawesome:::.wa_match_constructor_attr(
+      FALSE,
+      "appearance",
+      true_value = "solid",
+      false_value = "ghost"
+    ),
+    "ghost"
+  )
+
+  expect_identical(
+    shiny.webawesome:::.wa_match_constructor_attr(
+      "outline",
+      "appearance",
+      string_map = c(outline = "outline")
+    ),
+    "outline"
+  )
+
+  expect_error(
+    shiny.webawesome:::.wa_match_constructor_attr(
+      "invalid",
+      "appearance",
+      true_value = "solid",
+      false_value = "ghost",
+      string_map = c(outline = "outline")
+    ),
+    '`appearance` must be one of "TRUE", "FALSE", "outline".',
+    fixed = TRUE
+  )
+
+  expect_error(
+    shiny.webawesome:::.wa_match_constructor_attr(
+      1,
+      "appearance",
+      true_value = "solid",
+      false_value = "ghost"
+    ),
+    '`appearance` must be TRUE, FALSE, NULL, or one of "TRUE", "FALSE".',
+    fixed = TRUE
+  )
+})
+
 test_that("tree-item warning helper counts nested missing ids", {
   tree_children <- list(
     shiny.webawesome:::wa_tree_item(

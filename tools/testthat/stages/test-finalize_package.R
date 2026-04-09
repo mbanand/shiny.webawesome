@@ -376,6 +376,49 @@ testthat::test_that(
 )
 
 testthat::test_that(
+  "finalize_package checks each mirrored _pkgdown.yml version field explicitly",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+
+    .write_file(file.path(root, "_pkgdown.yml"), c(
+      "home:",
+      "  description: >-",
+      paste(
+        "    Fake package. Package version 0.1.0;",
+        "bundled upstream Web Awesome version 3.5.0."
+      ),
+      "  strip:",
+      "    subtitle: >-",
+      "      Fake package. Package 0.0.8 with bundled Web Awesome 3.5.0.",
+      "navbar:",
+      "  components:",
+      "    upstream:",
+      "      text: Web Awesome 3.5.0"
+    ))
+
+    result <- .check_version_consistency(root)
+
+    testthat::expect_false(result$ok)
+    testthat::expect_true(any(grepl(
+      "home\\.strip\\.subtitle",
+      result$details,
+      perl = TRUE
+    )))
+    testthat::expect_false(any(grepl(
+      "home\\.description",
+      result$details,
+      perl = TRUE
+    )))
+    testthat::expect_false(any(grepl(
+      "navbar\\.components\\.upstream\\.text",
+      result$details,
+      perl = TRUE
+    )))
+  }
+)
+
+testthat::test_that(
   paste(
     "finalize confirmations are advisory in default mode and",
     "strict in strict mode"
