@@ -20,21 +20,21 @@ package-lock.json
 # Build artifacts
 R/generated/
 R/generated_updates/
-inst/SHINY.WEBAWESOME_VERSION
-inst/extdata/webawesome/
-manifests/
-reports/
-tools/man/
+/inst/SHINY.WEBAWESOME_VERSION
+/inst/extdata/webawesome/
+/manifests/
+/reports/
+/tools/man/
 
 # Local working areas
-journals/
-scratch/
-scripts/
-website/
-pkgdown/favicon/
+/journals/
+/scratch/
+/scripts/
+/website/
+/pkgdown/favicon/
 
 # Downloaded upstream files
-vendor/webawesome/
+/vendor/webawesome/
 
 # OS / editor noise
 .DS_Store
