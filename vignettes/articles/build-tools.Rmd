@@ -202,22 +202,85 @@ This tool is intentionally separate from `build_package.R`. The docs-site
 workflow is maintainership-facing and may evolve on a different cadence from
 the core package-build stages.
 
-# Publish Boundary
+# Publish Tool
 
-The documented pipeline now ends with a separate `publish` stage after
-`finalize`, but that publish tooling remains intentionally distinct from the
-current package-build orchestrators.
+## `publish.R`
 
-The publish contract is:
+Runs the explicit maintainer-invoked `publish` stage after `finalize`.
 
-- consume the recorded strict finalize handoff
-- verify the repo state still matches it
-- create and push the release tag
-- push the current branch
-- deploy the already-built `website/` output
+This tool is intentionally separate from `build_package.R`. That separation is
+deliberate: `build_package.R` is the recurring local package-build
+orchestrator, while publish is the explicit maintainer release action.
+Keeping publish outside the package-build orchestrator ensures that git
+tagging, pushing, and website deployment happen only when the maintainer
+decides the repository is ready to put out.
 
-This separation is deliberate. `build_package.R` is the recurring local
-package-build orchestrator; publish is the explicit maintainer release action.
+The publish tool verifies the recorded finalize handoff against the current
+repo state and then performs only the action groups explicitly requested at
+the CLI. Its core checks include:
+
+- release version consistency against `DESCRIPTION` and `NEWS.md`
+- finalize handoff presence and status
+- clean git working tree
+- current `HEAD` and tracked-tree checksum matching the handoff
+- tarball and built `website/` artifact checksum matching the handoff
+- branch and tag readiness checks
+- website deployment readiness checks when site deployment is requested
+
+The publish tool currently supports:
+
+- `--dry-run` for verification-only readiness checks
+- `--do-tag` to create and push the release tag and current branch
+- `--deploy-site` to deploy the already-built `website/` artifact
+
+`--dry-run` is verification-only even when `--do-tag` or `--deploy-site` are
+also supplied. In that mode, publish records the requested actions as planned
+but does not execute them.
+
+The publish tool writes machine-readable and human-readable outputs under:
+
+- `manifests/publish/`
+- `reports/publish/`
+
+## `deploy_site_netlify.R`
+
+The publish tool delegates site deployment to the dedicated Netlify wrapper:
+
+`./tools/deploy_site_netlify.R`
+
+This wrapper keeps site deployment explicit and narrow. In `--dry-run` mode,
+it verifies local website output, checks Netlify authentication, and confirms
+that the configured site id is visible to the authenticated account. In a real
+run, it then deploys the already-built `website/` artifact with the Netlify
+CLI.
+
+This tool requires the Netlify CLI. Install it manually with:
+
+`sudo npm install -g netlify-cli`
+
+The Netlify wrapper currently expects these environment variables:
+
+- `NETLIFY_AUTH_TOKEN`
+- `NETLIFY_SITE_ID`
+
+Place those exports somewhere your maintainer shell session loads before you
+run publish or the deploy helper. A login-shell startup file such as
+`~/.profile` is usually a better fit than placing them late in an interactive
+`~/.bashrc`.
+
+Typical setup:
+
+```bash
+export NETLIFY_AUTH_TOKEN=...
+export NETLIFY_SITE_ID=...
+```
+
+Typical dry-run checks:
+
+```bash
+./tools/deploy_site_netlify.R --dry-run
+./tools/publish.R --release-version 1.0.0 --dry-run --deploy-site
+```
 
 # Tool Documentation
 
@@ -236,8 +299,10 @@ Useful entry points include:
 - [`check_rhub`](../tool-docs/check_rhub.html)
 - [`clean_webawesome`](../tool-docs/clean_webawesome.html)
 - [`document_tools`](../tool-docs/document_tools.html)
+- [`deploy_site_netlify`](../tool-docs/deploy_site_netlify.html)
 - [`fetch_webawesome`](../tool-docs/fetch_webawesome.html)
 - [`finalize_package`](../tool-docs/finalize_package.html)
+- [`publish_package`](../tool-docs/publish_package.html)
 - [`prune_webawesome`](../tool-docs/prune_webawesome.html)
 - [`report_components`](../tool-docs/report_components.html)
 - [`review_binding_candidates`](../tool-docs/review_binding_candidates.html)
