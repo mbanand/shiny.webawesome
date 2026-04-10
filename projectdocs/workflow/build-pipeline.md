@@ -823,50 +823,90 @@ It should remain distinct from `build_package.R` because publishing changes
 external release state and should happen only when the maintainer explicitly
 decides the repository is ready to put out.
 
-Publish is strict-only. It should never run in a warn-and-continue mode, and
-it should not modify package source inputs. Its job is to verify the finalize
-handoff and then carry out the final release actions.
+Publish should be exposed as a dedicated CLI tool with explicit action flags.
+At minimum, it should support:
+
+- `--release-version <version>` as a required maintainer-supplied input
+- `--dry-run` for verification-only readiness checks
+- `--do-tag` to create and push the release tag and current branch
+- `--deploy-site` to deploy the already-built `website/` tree
+
+Publish should not modify package source inputs or rebuild package artifacts.
+Its job is to verify the finalize handoff and then, when explicitly requested
+by the maintainer, carry out one or both external release action groups.
 
 ## Publish Inputs and Preconditions
 
 Publish should require:
 
 - a `--release-version` CLI argument supplied by the maintainer
-- an existing strict finalize handoff record
+- at least one explicit action selection:
+  `--dry-run`, `--do-tag`, or `--deploy-site`
+- an existing finalize handoff record
 - a clean git working tree
 - the current `HEAD` commit matching the handoff record
 - no drift in the tracked git tree, built `website/` tree, or built tarball
   relative to the recorded handoff checksums
 
+For real publish actions, publish should additionally require:
+
+- a strict finalize handoff record
+- a passing finalize handoff status
+- the current branch to be `main`
+
+For `--dry-run`, publish may accept a non-strict finalize handoff or a
+handoff with warnings, but it should surface those conditions clearly as
+warnings rather than executing any external release actions.
+
 Publish should validate that the requested release version:
 
 - matches the package version recorded in `DESCRIPTION`
 - matches the release version recorded in `NEWS.md`
+- matches the git tag name exactly when tag creation is requested
 - does not already exist as a git tag locally
-- does not already exist in the remote repository
+- does not already exist in the remote `origin` repository
 
 ## Publish Sequence
 
 The publish stage should run the following steps in order:
 
-1. validate the supplied `--release-version`
-2. verify the recorded finalize handoff and current repo state still match
-3. create the release git tag
-4. push the current branch
-5. push the release tag
-6. deploy the already-built `website/` directory using a dedicated repo
-   wrapper script around the Netlify CLI
-7. print a final completion message stating that the package is ready for
-   maintainer-controlled CRAN submission
+1. remove any stale publish-stage report artifacts so the current run writes a
+   fresh summary
+2. validate the supplied CLI arguments and requested action set
+3. validate the supplied `--release-version`
+4. load the finalize handoff and verify the recorded handoff and current repo
+   state still match
+5. verify branch expectations and release-tag readiness
+6. verify website deployment readiness when `--deploy-site` is requested,
+   including any available wrapper-level credential or configuration checks
+7. if `--dry-run` is set, stop after writing publish diagnostics and report
+   readiness or blockers without executing external release actions
+8. if `--do-tag` is set, create the release git tag
+9. if `--do-tag` is set, push the current branch to `origin`
+10. if `--do-tag` is set, push the release tag to `origin`
+11. if `--deploy-site` is set, deploy the already-built `website/` directory
+    using a dedicated repo wrapper script around the Netlify CLI
+12. write machine-readable and human-readable publish-stage outputs
+13. print a final completion message stating which release actions were
+    executed and whether the package is now ready for maintainer-controlled
+    CRAN submission
 
 Publish should not rebuild the site itself. It should deploy the `website/`
 artifact already produced and verified by finalize.
+
+`--dry-run` should be verification-only even when `--do-tag` or
+`--deploy-site` are also supplied. In that mode, publish should report the
+requested actions as planned but not executed.
 
 ## Main Branch Expectation
 
 The repository should treat the GitHub `main` branch as a branch that should
 not be left in a broken state. Local development may pass through intermediate
 broken states, but published remote history should not.
+
+Accordingly, real publish actions should require the current branch to be
+`main`. A dry run may warn when the branch differs so maintainers can inspect
+readiness before switching branches.
 
 ---
 

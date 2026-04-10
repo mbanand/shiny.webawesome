@@ -189,7 +189,7 @@ Top-level orchestration should remain explicit:
   available package-build step scripts, including the recurring `finalize`
   stage once that stage is implemented
 - the separate `publish` stage remains outside `build_package.R` so that
-  release tagging, pushing, and website deployment stay explicit
+  release verification, tagging, pushing, and website deployment stay explicit
 - the current package-build orchestration includes an advisory
   `review_binding_candidates.R` step between generate and report
 
@@ -208,8 +208,9 @@ declared derived artifacts such as package documentation, the built website,
 release tarballs, and release handoff records, but it should not be treated
 as a license to edit handwritten source inputs opportunistically. A stricter
 mode should be available for release preparation, while external release
-actions such as tagging, pushing, and website deployment should remain in the
-separate `publish` stage.
+actions such as publish verification, tagging, pushing, and website
+deployment should remain in the separate `publish` stage with explicit
+maintainer-selected action flags.
 
 For the documentation site, treat ordinary pkgdown/vignette rendering as the
 baseline. User-facing long-form documentation should be maintained as

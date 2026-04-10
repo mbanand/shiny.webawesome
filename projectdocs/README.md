@@ -117,8 +117,9 @@ Where:
   declared derived artifacts such as package docs, the pkgdown site, and the
   release tarball, and writes a machine-readable release handoff record
 * **publish** is a separate explicit maintainer-invoked release stage that
-  verifies the finalize handoff, creates release state in git, and deploys
-  the already-built website; it does not cover CRAN submission
+  verifies the finalize handoff, may perform selected external release
+  actions such as creating release state in git and deploying the already-built
+  website, and does not cover CRAN submission
 
 Details of this workflow are documented in:
 
@@ -139,5 +140,4 @@ It assumes familiarity with:
 * R package development
 * Shiny applications
 * modern JavaScript component libraries
-
 

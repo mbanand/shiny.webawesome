@@ -58,6 +58,13 @@ source(file.path("..", "..", "document_tools.R"))
     file.path(root, "tools", "check_rhub.R")
   )
   file.copy(
+    normalizePath(
+      file.path("..", "..", "deploy_site_netlify.R"),
+      mustWork = TRUE
+    ),
+    file.path(root, "tools", "deploy_site_netlify.R")
+  )
+  file.copy(
     normalizePath(file.path("..", "..", "cli_ui.R"), mustWork = TRUE),
     file.path(root, "tools", "cli_ui.R")
   )
@@ -76,6 +83,10 @@ source(file.path("..", "..", "document_tools.R"))
   file.copy(
     normalizePath(file.path("..", "..", "finalize_package.R"), mustWork = TRUE),
     file.path(root, "tools", "finalize_package.R")
+  )
+  file.copy(
+    normalizePath(file.path("..", "..", "publish.R"), mustWork = TRUE),
+    file.path(root, "tools", "publish.R")
   )
   file.copy(
     normalizePath(file.path("..", "..", "prune_webawesome.R"), mustWork = TRUE),
@@ -146,7 +157,9 @@ testthat::test_that(
 
     testthat::expect_true("build_site.Rd" %in% result$generated)
     testthat::expect_true("fetch_webawesome.Rd" %in% result$generated)
+    testthat::expect_true("deploy_site_netlify.Rd" %in% result$generated)
     testthat::expect_true("finalize_package.Rd" %in% result$generated)
+    testthat::expect_true("publish_package.Rd" %in% result$generated)
     testthat::expect_true("check_integrity.Rd" %in% result$generated)
     testthat::expect_true("check_interactive.Rd" %in% result$generated)
     testthat::expect_true("check_rhub.Rd" %in% result$generated)
@@ -160,7 +173,13 @@ testthat::test_that(
       file.exists(file.path(root, "tools", "man", "fetch_webawesome.Rd"))
     )
     testthat::expect_true(
+      file.exists(file.path(root, "tools", "man", "deploy_site_netlify.Rd"))
+    )
+    testthat::expect_true(
       file.exists(file.path(root, "tools", "man", "finalize_package.Rd"))
+    )
+    testthat::expect_true(
+      file.exists(file.path(root, "tools", "man", "publish_package.Rd"))
     )
     testthat::expect_true(
       file.exists(file.path(root, "tools", "man", "check_integrity.Rd"))

@@ -86,6 +86,17 @@
   )
 }
 
+# Return the dependency-head HTML for the runtime warning bootstrap.
+.wa_warning_registry_head_html <- function() {
+  htmltools::HTML(
+    paste0(
+      "<script>\n",
+      .wa_warning_registry_script(),
+      "\n</script>"
+    )
+  )
+}
+
 # Build the package dependency object for the shipped Web Awesome runtime.
 .wa_dependency <- function() {
   scripts <- c("www/webawesome-init.js", .wa_binding_scripts())
@@ -101,9 +112,7 @@
     src = c(file = "."),
     stylesheet = "www/wa/styles/webawesome.css",
     script = scripts,
-    head = htmltools::tags$script(
-      htmltools::HTML(.wa_warning_registry_script())
-    )
+    head = .wa_warning_registry_head_html()
   )
 }
 

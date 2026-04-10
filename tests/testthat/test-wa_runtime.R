@@ -131,6 +131,20 @@ test_that("package dependency points at the shipped bootstrap assets", {
   )
 })
 
+test_that("package dependency renders warning bootstrap as a script tag", {
+  dep_html <- htmltools::renderDependencies(
+    htmltools::resolveDependencies(list(shiny.webawesome:::.wa_dependency())),
+    srcType = "file"
+  )
+
+  expect_match(
+    dep_html,
+    "<script>\\s*window\\.shinyWebawesomeWarnings = Object\\.assign\\(",
+    perl = TRUE
+  )
+  expect_no_match(dep_html, "script\\s*list\\(\\)\\s*list\\(", perl = TRUE)
+})
+
 test_that("warning registry defaults to enabled known warnings", {
   warnings <- shiny.webawesome:::.wa_warning_registry()
 

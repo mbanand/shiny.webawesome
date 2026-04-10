@@ -22,8 +22,8 @@ upstream Web Awesome docs for the broader styling system.
 
 # Page-Level Themes and Palettes
 
-Web Awesome's theme system is page-oriented. Apply theme,
-palette, and brand classes to the `<html>` element, for example:
+Web Awesome's theme system is page-oriented, with theme, palette, and brand
+classes applied to the `<html>` element. For example:
 
 - `wa-palette-default`
 - `wa-theme-default wa-palette-default wa-brand-blue`
@@ -49,9 +49,6 @@ server <- function(input, output, session) {}
 
 shinyApp(ui, server)
 ```
-
-`webawesomePage()` is the best place for this because it owns the full page
-scaffold, including the root `<html>` tag.
 
 For the bundled non-default themes, `webawesomePage()` also recognizes the
 root classes `wa-theme-awesome` and `wa-theme-shoelace` and loads the
