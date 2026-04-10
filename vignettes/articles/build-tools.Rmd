@@ -96,10 +96,12 @@ This tool performs the documented finalize sequence, including:
 - integrity checking via `check_integrity()`
 - dry-run style and lint checks
 - dependency auditing
-- package documentation regeneration
 - package tests
 - advisory package test coverage reporting
-- site building
+- package documentation regeneration
+- site building plus local website link auditing with `lychee`
+- package URL auditing without auto-updating links, with package-owned
+  website URLs validated against the built local site artifact
 - package checking
 - tarball creation
 - finalize handoff reporting under `manifests/finalize/` and
@@ -119,6 +121,18 @@ Node.js and npm, available before finalize is treated as ready-to-run. Use the
 manual setup command:
 
 `npm install --save-dev eslint@latest @eslint/js@latest`
+
+Strict finalize also expects the website link checker `lychee` to be
+available so the built local `website/` tree can be audited before release.
+Do not use the snap package for this repository. Its filesystem confinement
+prevents `lychee` from auditing the repo's built site reliably. Instead,
+download a pre-built `lychee` binary from:
+
+<https://github.com/lycheeverse/lychee/releases>
+
+and, if it is not already on `PATH`, point the workflow at it explicitly:
+
+`export SHINY_WEBAWESOME_LYCHEE=/path/to/lychee`
 
 External pre-release checks such as `rhub` and the final manual visual review
 remain outside the automatic finalize execution path. In strict mode,
@@ -178,6 +192,11 @@ When generated tool docs are present, this step also copies them into
 targets under `website/live-examples/` when invoked with
 `--with-live-examples`. If `shinylive` export emits warnings, the site build
 writes a placeholder page instead of publishing a likely-broken demo shell.
+It also audits the built local site links with `lychee`; missing `lychee`
+produces a warning in ordinary runs and a hard failure when
+`--strict-link-audit` is requested. Do not use the snap package here; use a
+pre-built release binary instead, and set `SHINY_WEBAWESOME_LYCHEE` if that
+binary is not already on `PATH`.
 
 This tool is intentionally separate from `build_package.R`. The docs-site
 workflow is maintainership-facing and may evolve on a different cadence from

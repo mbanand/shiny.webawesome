@@ -68,7 +68,7 @@ rm(.bootstrap_cli_ui)
     "Usage: ./tools/build_site.R",
     paste(
       "[--root <path>] [--no-install] [--with-live-examples]",
-      "[--preview] [--quiet] [--help]"
+      "[--preview] [--strict-link-audit] [--quiet] [--help]"
     )
   )
 }
@@ -91,6 +91,10 @@ rm(.bootstrap_cli_ui)
       "Export standalone shinylive examples into the site."
     ),
     "--preview           Preview the site after the build completes.",
+    paste(
+      "--strict-link-audit Fail if lychee is missing or reports broken",
+      "website links."
+    ),
     "--quiet             Suppress tool-level progress messages.",
     "--help, -h          Print this help text."
   )
@@ -117,6 +121,7 @@ rm(.bootstrap_cli_ui)
     install = TRUE,
     live_examples = FALSE,
     preview = FALSE,
+    strict_link_audit = FALSE,
     verbose = TRUE,
     help = FALSE
   )
@@ -147,6 +152,11 @@ rm(.bootstrap_cli_ui)
 
     if (arg == "--preview") {
       options$preview <- TRUE
+      next
+    }
+
+    if (arg == "--strict-link-audit") {
+      options$strict_link_audit <- TRUE
       next
     }
 
@@ -445,6 +455,213 @@ rm(.bootstrap_cli_ui)
   invisible(target_dir)
 }
 
+# Parse one top-level scalar key from _pkgdown.yml.
+.pkgdown_top_level_scalar <- function(root, key) {
+  path <- file.path(root, "_pkgdown.yml")
+  if (!file.exists(path)) {
+    return(NA_character_)
+  }
+
+  lines <- trimws(readLines(path, warn = FALSE, encoding = "UTF-8"))
+  pattern <- paste0("^", key, ":\\s*(.+?)\\s*$")
+  matches <- regmatches(lines, regexec(pattern, lines, perl = TRUE))
+  values <- vapply(
+    matches,
+    function(match) {
+      if (length(match) >= 2L) {
+        match[[2]]
+      } else {
+        NA_character_
+      }
+    },
+    character(1)
+  )
+  values <- values[!is.na(values) & nzchar(values)]
+
+  if (length(values) == 0L) {
+    return(NA_character_)
+  }
+
+  values[[1]]
+}
+
+# Return the configured site URL from _pkgdown.yml when present.
+.site_url <- function(root) {
+  value <- .pkgdown_top_level_scalar(root, "url")
+
+  if (is.na(value)) {
+    return(NA_character_)
+  }
+
+  sub("/+$", "", value)
+}
+
+# Escape regular-expression metacharacters in one literal string.
+.regex_escape <- function(value) {
+  gsub("([][{}()+*^$|\\\\?.])", "\\\\\\1", value, perl = TRUE)
+}
+
+# Return lychee URL patterns that should be ignored for generated site output.
+.lychee_exclude_patterns <- function(root) {
+  repo_url <- "https://github.com/mbanand/shiny.webawesome"
+
+  c(
+    paste0("^", .regex_escape(repo_url), "/blob/HEAD/")
+  )
+}
+
+# Run one child command using processx.
+.run_process <- function(command,
+                         args = character(),
+                         wd = ".",
+                         env = character()) {
+  if (!requireNamespace("processx", quietly = TRUE)) {
+    stop(
+      "The `processx` package is required to run site-audit commands.",
+      call. = FALSE
+    )
+  }
+
+  child_env <- if (length(env) == 0L) {
+    NULL
+  } else {
+    current <- Sys.getenv(names = TRUE, unset = NA_character_)
+    current[names(env)] <- unname(env)
+    current
+  }
+
+  processx::run(
+    command = command,
+    args = args,
+    wd = wd,
+    echo = FALSE,
+    error_on_status = FALSE,
+    env = child_env
+  )
+}
+
+# Collapse child command output into deterministic non-empty lines.
+.process_output_lines <- function(result) {
+  combined <- c(result$stdout, result$stderr)
+  lines <- unlist(
+    strsplit(paste(combined, collapse = "\n"), "\n", fixed = TRUE)
+  )
+  unique(lines[nzchar(trimws(lines))])
+}
+
+# Return the preferred lychee executable path, allowing an explicit override.
+.lychee_command <- function() {
+  override <- Sys.getenv("SHINY_WEBAWESOME_LYCHEE", unset = "")
+  if (nzchar(override)) {
+    if (!file.exists(override)) {
+      stop(
+        paste(
+          "`SHINY_WEBAWESOME_LYCHEE` does not exist:",
+          override
+        ),
+        call. = FALSE
+      )
+    }
+
+    return(normalizePath(override, winslash = "/", mustWork = TRUE))
+  }
+
+  Sys.which("lychee")
+}
+
+# Audit built website links with lychee.
+.audit_website_links <- function(root,
+                                 destination_dir,
+                                 strict = FALSE,
+                                 runner = .run_process) {
+  lychee <- .lychee_command()
+  if (!nzchar(lychee)) {
+    return(list(
+      ok = FALSE,
+      details = paste(
+        "Could not find `lychee` on PATH for website link auditing.",
+        "Install a standalone `lychee` binary or set",
+        "`SHINY_WEBAWESOME_LYCHEE=/path/to/lychee`."
+      ),
+      fatal = isTRUE(strict)
+    ))
+  }
+
+  if (grepl("(^|/)(snap/bin|snapd?/)", lychee)) {
+    return(list(
+      ok = FALSE,
+      details = paste(
+        "Detected a snap-packaged `lychee` at",
+        paste0("`", lychee, "`."),
+        "Its filesystem confinement cannot audit the repository reliably.",
+        "Install a standalone `lychee` binary and either put it earlier on",
+        "PATH or set `SHINY_WEBAWESOME_LYCHEE=/path/to/lychee`."
+      ),
+      fatal = isTRUE(strict)
+    ))
+  }
+
+  site_url <- .site_url(root)
+
+  args <- c(
+    "--no-progress",
+    "--root-dir",
+    destination_dir,
+    "--fallback-extensions",
+    "html",
+    "--index-files",
+    "index.html,."
+  )
+
+  exclude_patterns <- .lychee_exclude_patterns(root)
+  if (length(exclude_patterns) > 0L) {
+    for (pattern in exclude_patterns) {
+      args <- c(args, "--exclude", pattern)
+    }
+  }
+
+  if (!is.na(site_url)) {
+    args <- c(
+      args,
+      "--remap",
+      paste(
+        paste0("^", .regex_escape(site_url), "([?#/]|$)"),
+        paste0("file://", destination_dir, "\\$1")
+      )
+    )
+  }
+
+  args <- c(args, destination_dir)
+
+  result <- runner(
+    command = lychee,
+    args = args,
+    wd = root
+  )
+
+  ok <- identical(result$status, 0L)
+  details <- .process_output_lines(result)
+
+  if (ok) {
+    return(list(
+      ok = TRUE,
+      details = if (length(details) == 0L) NULL else details,
+      data = list(command = lychee, args = args, output = details)
+    ))
+  }
+
+  if (length(details) == 0L) {
+    details <- "lychee reported broken website links."
+  }
+
+  list(
+    ok = FALSE,
+    details = details,
+    fatal = isTRUE(strict),
+    data = list(command = lychee, args = args, output = details)
+  )
+}
+
 # Build the pkgdown site with optional output suppression.
 .run_pkgdown_site_build <- function(root, install, preview, verbose) {
   result <- NULL
@@ -490,7 +707,8 @@ rm(.bootstrap_cli_ui)
 #' copies them into the built site under `tool-docs/`. When app sources are
 #' present under `vignettes/shinylive-examples/`, this tool can also publish
 #' matching standalone live-example targets under `live-examples/` when
-#' `live_examples = TRUE`.
+#' `live_examples = TRUE`. It also audits the built local site links with
+#' `lychee`.
 #'
 #' @param root Repository root directory.
 #' @param install Logical scalar. If `TRUE`, installs the package into a
@@ -500,6 +718,8 @@ rm(.bootstrap_cli_ui)
 #'   site.
 #' @param preview Logical scalar. If `TRUE`, asks `pkgdown` to preview the site
 #'   after the build completes.
+#' @param strict_link_audit Logical scalar. If `TRUE`, fail when `lychee` is
+#'   missing or reports broken website links after the site build.
 #' @param verbose Logical scalar. If `TRUE`, emits tool-level progress output.
 #'
 #' @return A list describing the site build, including the normalized root
@@ -515,6 +735,7 @@ build_site <- function(root = ".",
                        install = TRUE,
                        live_examples = FALSE,
                        preview = FALSE,
+                       strict_link_audit = FALSE,
                        verbose = interactive()) {
   root <- normalizePath(root, winslash = "/", mustWork = TRUE)
 
@@ -579,11 +800,40 @@ build_site <- function(root = ".",
         .remove_live_examples(destination_dir)
       }
 
-      .cli_step_finish(
-        ui,
-        status = "Done",
-        comment = .strip_root_prefix(destination_dir, root)
+      audit <- .audit_website_links(
+        root = root,
+        destination_dir = destination_dir,
+        strict = strict_link_audit
       )
+
+      if (!isTRUE(audit$ok)) {
+        if (isTRUE(strict_link_audit) || isTRUE(audit$fatal)) {
+          .cli_step_fail(ui, details = audit$details)
+          .cli_abort_handled(paste(audit$details, collapse = "\n"))
+        }
+
+        .cli_step_finish(ui, status = "Warn")
+        cat(
+          paste(audit$details, collapse = "\n"),
+          "\n",
+          file = stderr(),
+          sep = ""
+        )
+      } else {
+        .cli_step_finish(
+          ui,
+          status = "Done",
+          comment = .strip_root_prefix(destination_dir, root)
+        )
+        if (length(audit$details %||% character()) > 0L) {
+          cat(
+            paste(audit$details, collapse = "\n"),
+            "\n",
+            file = stderr(),
+            sep = ""
+          )
+        }
+      }
     },
     error = function(condition) {
       .cli_step_fail(ui, details = conditionMessage(condition))
@@ -596,7 +846,8 @@ build_site <- function(root = ".",
     destination = .strip_root_prefix(destination_dir, root),
     install = install,
     live_examples = live_examples,
-    preview = preview
+    preview = preview,
+    strict_link_audit = strict_link_audit
   ))
 }
 
@@ -614,6 +865,7 @@ run_build_site <- function(args = commandArgs(trailingOnly = TRUE)) {
     install = options$install,
     live_examples = options$live_examples,
     preview = options$preview,
+    strict_link_audit = options$strict_link_audit,
     verbose = options$verbose
   )
 }

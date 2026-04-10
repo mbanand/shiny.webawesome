@@ -28,7 +28,7 @@ home:
       links:
         title: Quick Links
         text: |
-          <a href="https://CRAN.R-project.org/package=shiny.webawesome">CRAN</a><br>
+          CRAN<br>
           <a href="https://github.com/mbanand/shiny.webawesome">Source Repository</a><br>
           <a href="https://github.com/mbanand/shiny.webawesome/issues">Feedback &amp; Bugs</a><br>
           <a href="news/index.html">News</a><br>

@@ -7,7 +7,8 @@
 #' different role from the upstream component `wa_page()`.
 #'
 #' This is a package-level Shiny helper that follows Shiny's page-helper model
-#' (`fluidPage()`, etc.) for dependency attachment and full-page scaffolding.
+#' ([`fluidPage()`](https://rdrr.io/cran/shiny/man/fluidPage.html), etc.) for
+#' dependency attachment and full-page scaffolding.
 #' It is intentionally separate from the upstream `wa-page` component wrapper.
 #'
 #' @param ... UI content to place in the page body.

@@ -732,13 +732,17 @@ The finalize stage should run the following steps in order:
 6. run `devtools::test()`
 7. compute advisory package test coverage and record the reported percentage
    in the finalize artifacts without treating it as a release gate
-8. build the local pkgdown website with `build_site.R`
-9. run `devtools::check()`
-10. in strict mode, require explicit maintainer confirmation flags for the
+8. build the local pkgdown website with `build_site.R`, including local
+   website link auditing via `lychee`
+9. audit package-source URLs without auto-updating them; package-owned
+   website URLs should be validated against the built local `website/`
+   artifact rather than the live domain
+10. run `devtools::check()`
+11. in strict mode, require explicit maintainer confirmation flags for the
    external pre-release checks and final visual review:
    `--confirmed-rhub-pass` and `--confirmed-visual-review`
-11. build the package tarball with `devtools::build()`
-12. write the finalize handoff artifacts
+12. build the package tarball with `devtools::build()`
+13. write the finalize handoff artifacts
 
 Default-mode finalize may continue past selected non-fatal validation findings
 and record them as warnings. Strict finalize should fail on any required gate.
@@ -752,6 +756,8 @@ deterministically from the repository itself. These include:
 - dry-run style and lint checks
 - dependency audits
 - package documentation regeneration
+- local website link auditing during site build
+- package-source URL audits
 - package tests
 - advisory package test coverage reporting
 - site build validation

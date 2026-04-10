@@ -338,6 +338,256 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
   cat(paste(details, collapse = "\n"), "\n", file = stderr(), sep = "")
 }
 
+# Parse one top-level scalar key from _pkgdown.yml.
+.pkgdown_top_level_scalar <- function(root, key) {
+  path <- file.path(root, "_pkgdown.yml")
+  if (!file.exists(path)) {
+    return(NA_character_)
+  }
+
+  lines <- trimws(readLines(path, warn = FALSE, encoding = "UTF-8"))
+  pattern <- paste0("^", key, ":\\s*(.+?)\\s*$")
+  matches <- regmatches(lines, regexec(pattern, lines, perl = TRUE))
+  values <- vapply(
+    matches,
+    function(match) {
+      if (length(match) >= 2L) {
+        match[[2]]
+      } else {
+        NA_character_
+      }
+    },
+    character(1)
+  )
+  values <- values[!is.na(values) & nzchar(values)]
+
+  if (length(values) == 0L) {
+    return(NA_character_)
+  }
+
+  values[[1]]
+}
+
+# Return the configured pkgdown site URL from _pkgdown.yml when present.
+.pkgdown_site_url <- function(root) {
+  value <- .pkgdown_top_level_scalar(root, "url")
+
+  if (is.na(value)) {
+    return(NA_character_)
+  }
+
+  sub("/+$", "", value)
+}
+
+# Return the configured pkgdown destination directory.
+.pkgdown_destination_dir <- function(root) {
+  destination <- .pkgdown_top_level_scalar(root, "destination")
+
+  if (is.na(destination) || !nzchar(destination)) {
+    destination <- "website"
+  }
+
+  file.path(root, destination)
+}
+
+# Format one urlchecker-style problem data frame as detail lines.
+.format_url_problems <- function(problems) {
+  if (nrow(problems) == 0L) {
+    return(character())
+  }
+
+  vapply(
+    seq_len(nrow(problems)),
+    function(i) {
+      from <- problems$From[[i]]
+      if (length(from) == 0L || !any(nzchar(from))) {
+        from <- "<unknown source>"
+      }
+
+      paste(
+        paste(from, collapse = "; "),
+        paste0(problems$Status[[i]], ":"),
+        problems$Message[[i]],
+        problems$URL[[i]]
+      )
+    },
+    character(1)
+  )
+}
+
+# Return whether one URL belongs to the configured package website.
+.is_pkgdown_site_url <- function(url, site_url) {
+  if (is.na(site_url) || !nzchar(site_url) || is.na(url) || !nzchar(url)) {
+    return(FALSE)
+  }
+
+  identical(url, site_url) || startsWith(url, paste0(site_url, "/")) ||
+    startsWith(url, paste0(site_url, "?")) ||
+    startsWith(url, paste0(site_url, "#"))
+}
+
+# Map one package-owned website URL to candidate local site artifact paths.
+.pkgdown_site_url_candidates <- function(root, url) {
+  site_url <- .pkgdown_site_url(root)
+  destination_dir <- .pkgdown_destination_dir(root)
+
+  if (!.is_pkgdown_site_url(url, site_url)) {
+    return(character())
+  }
+
+  path <- sub(paste0("^", site_url), "", url)
+  path <- sub("[?#].*$", "", path)
+  path <- sub("^/+", "", path)
+  path <- utils::URLdecode(path)
+
+  relative_candidates <- if (!nzchar(path)) {
+    "index.html"
+  } else if (grepl("/$", path)) {
+    file.path(path, "index.html")
+  } else {
+    ext <- tools::file_ext(path)
+    unique(c(
+      path,
+      if (!nzchar(ext)) paste0(path, ".html"),
+      file.path(path, "index.html")
+    ))
+  }
+
+  normalizePath(
+    file.path(destination_dir, relative_candidates),
+    winslash = "/",
+    mustWork = FALSE
+  )
+}
+
+# Validate package-owned website URLs against the built local site artifact.
+.audit_pkgdown_site_urls <- function(root, problems) {
+  site_url <- .pkgdown_site_url(root)
+  destination_dir <- .pkgdown_destination_dir(root)
+
+  if (nrow(problems) == 0L || is.na(site_url) || !nzchar(site_url)) {
+    return(list(
+      external = problems,
+      local = data.frame(stringsAsFactors = FALSE),
+      details = character()
+    ))
+  }
+
+  keep_external <- logical(nrow(problems))
+  local_records <- vector("list", nrow(problems))
+  local_details <- character()
+  local_count <- 0L
+
+  for (i in seq_len(nrow(problems))) {
+    url <- problems$URL[[i]]
+    if (!.is_pkgdown_site_url(url, site_url)) {
+      keep_external[[i]] <- TRUE
+      next
+    }
+
+    candidates <- .pkgdown_site_url_candidates(root, url)
+    existing <- candidates[file.exists(candidates) | dir.exists(candidates)]
+
+    if (length(existing) > 0L) {
+      next
+    }
+
+    local_count <- local_count + 1L
+    from <- problems$From[[i]]
+    if (length(from) == 0L || !any(nzchar(from))) {
+      from <- "<unknown source>"
+    }
+
+    relative_candidates <- sub(
+      paste0(
+        "^",
+        normalizePath(destination_dir, winslash = "/", mustWork = FALSE),
+        "/?"
+      ),
+      "",
+      candidates
+    )
+
+    local_records[[local_count]] <- data.frame(
+      URL = url,
+      From = I(list(from)),
+      Expected = I(list(relative_candidates)),
+      stringsAsFactors = FALSE
+    )
+    local_details[[local_count]] <- paste(
+      paste(from, collapse = "; "),
+      "missing from built website artifact:",
+      url,
+      "expected one of",
+      paste(sprintf("`%s`", relative_candidates), collapse = ", ")
+    )
+  }
+
+  local_records <- local_records[seq_len(local_count)]
+  local_problems <- if (length(local_records) == 0L) {
+    data.frame(stringsAsFactors = FALSE)
+  } else {
+    do.call(rbind, local_records)
+  }
+
+  list(
+    external = problems[keep_external, , drop = FALSE],
+    local = local_problems,
+    details = local_details
+  )
+}
+
+# Run a package-source URL audit without mutating any package files.
+.audit_package_urls <- function(root, checker = NULL) {
+  if (is.null(checker)) {
+    if (!requireNamespace("urlchecker", quietly = TRUE)) {
+      stop(
+        paste(
+          "The `urlchecker` package is required for finalize package URL",
+          "audits."
+        ),
+        call. = FALSE
+      )
+    }
+
+    checker <- function(path) {
+      urlchecker::url_check(path = path, progress = FALSE)
+    }
+  }
+
+  result <- checker(root)
+  problems <- as.data.frame(result, stringsAsFactors = FALSE)
+
+  if (nrow(problems) == 0L) {
+    return(list(ok = TRUE))
+  }
+
+  split <- .audit_pkgdown_site_urls(root, problems)
+  details <- c(
+    .format_url_problems(split$external),
+    split$details
+  )
+
+  if (length(details) == 0L) {
+    return(list(
+      ok = TRUE,
+      data = list(
+        url_problems = split$external,
+        local_site_url_problems = split$local
+      )
+    ))
+  }
+
+  list(
+    ok = FALSE,
+    details = details,
+    data = list(
+      url_problems = split$external,
+      local_site_url_problems = split$local
+    )
+  )
+}
+
 # Return the non-empty R and R Markdown files under one directory.
 .collect_code_files <- function(root, rel_dir) {
   abs_dir <- file.path(root, rel_dir)
@@ -1303,14 +1553,24 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
       label = "Building website",
       fatal = function(context) isTRUE(context$strict),
       run = function(context) {
+        args <- "--quiet"
+        if (isTRUE(context$strict)) {
+          args <- c(args, "--strict-link-audit")
+        }
+
         .run_command_step(
           command = "./tools/build_site.R",
-          args = "--quiet",
+          args = args,
           root = context$root,
           runner = context$runner,
           env = c(SHINY_WEBAWESOME_CLI_MODE = "plain")
         )
       }
+    ),
+    url_audit = list(
+      label = "Auditing package URLs",
+      fatal = function(context) isTRUE(context$strict),
+      run = function(context) .audit_package_urls(context$root)
     ),
     check = list(
       label = "Checking package",
@@ -1348,6 +1608,11 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
             details = c(
               "Next steps:",
               "- Run external pre-release checks such as rhub separately.",
+              paste(
+                "  (consider running checks also on WinBuilder via",
+                "`devtools::check_win_release()` - this has additional",
+                "CRAN-type URL checks)"
+              ),
               paste(
                 "- Run `./tools/check_interactive.R`, review the printed local",
                 "URL in a browser, and complete the manual visual review",
@@ -1523,7 +1788,8 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
 #'
 #' Executes the recurring late-stage local release-preparation workflow,
 #' including integrity checks, non-mutating validation gates, package
-#' documentation and tarball generation, and finalize handoff recording.
+#' documentation, local website auditing, package URL auditing, tarball
+#' generation, and finalize handoff recording.
 #'
 #' The finalize workflow expects ESLint to be available for handwritten
 #' JavaScript linting. The current official bootstrap command for repository

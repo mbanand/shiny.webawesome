@@ -43,4 +43,4 @@ Reports will be reviewed as promptly and fairly as possible.
 ## Attribution
 
 This Code of Conduct is based on the Contributor Covenant, version 1.0.0:
-<https://www.contributor-covenant.org/version/1/0/0/code-of-conduct.html>
+<https://www.contributor-covenant.org/version/1/0/0/code-of-conduct/>

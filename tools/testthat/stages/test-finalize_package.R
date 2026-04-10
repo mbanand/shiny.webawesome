@@ -76,6 +76,26 @@ source(file.path("..", "..", "finalize_package.R"))
   list(status = 0L, stdout = character(), stderr = character())
 }
 
+.fake_urlchecker_db <- function(problems = NULL) {
+  if (is.null(problems)) {
+    problems <- data.frame(
+      URL = character(),
+      From = I(list()),
+      Status = character(),
+      Message = character(),
+      New = character(),
+      CRAN = character(),
+      Spaces = character(),
+      R = character(),
+      root = character(),
+      stringsAsFactors = FALSE
+    )
+  }
+
+  class(problems) <- c("urlchecker_db", "check_url_db", "data.frame")
+  problems
+}
+
 testthat::test_that(
   "finalize_package writes handoff artifacts and records non-strict warnings",
   {
@@ -181,6 +201,120 @@ testthat::test_that(
       summary_lines,
       fixed = TRUE
     )))
+  }
+)
+
+testthat::test_that("audit_package_urls passes clean package URL results", {
+  result <- .audit_package_urls(
+    ".",
+    checker = function(path) .fake_urlchecker_db()
+  )
+
+  testthat::expect_true(result$ok)
+  testthat::expect_null(result$details)
+})
+
+testthat::test_that("audit_package_urls reports URL problems", {
+  problems <- .fake_urlchecker_db(data.frame(
+    URL = "https://example.com/llms.txt",
+    From = I(list("README.md:99:47")),
+    Status = "404",
+    Message = "Not Found",
+    New = "",
+    CRAN = "",
+    Spaces = "",
+    R = "",
+    root = "/tmp/fake",
+    stringsAsFactors = FALSE
+  ))
+
+  result <- .audit_package_urls(
+    ".",
+    checker = function(path) problems
+  )
+
+  testthat::expect_false(result$ok)
+  testthat::expect_true(length(result$details) > 0L)
+  testthat::expect_match(
+    paste(result$details, collapse = "\n"),
+    "README\\.md|example\\.com/llms\\.txt"
+  )
+  testthat::expect_equal(result$data$url_problems$Status[[1]], "404")
+})
+
+testthat::test_that(
+  paste(
+    "audit_package_urls accepts package-owned site URLs",
+    "present in website output"
+  ),
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+    .write_file(file.path(root, "website", "llms.txt"), "ok")
+    .write_file(file.path(root, "_pkgdown.yml"), c(
+      "url: https://www.shiny-webawesome.org",
+      "destination: website"
+    ))
+
+    problems <- .fake_urlchecker_db(data.frame(
+      URL = "https://www.shiny-webawesome.org/llms.txt",
+      From = I(list("README.md:99:47")),
+      Status = "404",
+      Message = "Not Found",
+      New = "",
+      CRAN = "",
+      Spaces = "",
+      R = "",
+      root = root,
+      stringsAsFactors = FALSE
+    ))
+
+    result <- .audit_package_urls(
+      root,
+      checker = function(path) problems
+    )
+
+    testthat::expect_true(result$ok)
+    testthat::expect_equal(nrow(result$data$url_problems), 0L)
+    testthat::expect_equal(nrow(result$data$local_site_url_problems), 0L)
+  }
+)
+
+testthat::test_that(
+  "audit_package_urls reports missing package-owned site artifact paths",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+    .write_file(file.path(root, "_pkgdown.yml"), c(
+      "url: https://www.shiny-webawesome.org",
+      "destination: website"
+    ))
+
+    problems <- .fake_urlchecker_db(data.frame(
+      URL = "https://www.shiny-webawesome.org/llms.txt",
+      From = I(list("README.md:99:47")),
+      Status = "404",
+      Message = "Not Found",
+      New = "",
+      CRAN = "",
+      Spaces = "",
+      R = "",
+      root = root,
+      stringsAsFactors = FALSE
+    ))
+
+    result <- .audit_package_urls(
+      root,
+      checker = function(path) problems
+    )
+
+    testthat::expect_false(result$ok)
+    testthat::expect_match(
+      paste(result$details, collapse = "\n"),
+      "missing from built website artifact"
+    )
+    testthat::expect_equal(nrow(result$data$url_problems), 0L)
+    testthat::expect_equal(nrow(result$data$local_site_url_problems), 1L)
   }
 )
 
