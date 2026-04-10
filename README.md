@@ -72,6 +72,42 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
+You can use `shiny.webawesome` in two ways:
+
+- use individual Web Awesome components inside an ordinary Shiny page such as
+  `fluidPage()`
+- build the whole app page with `webawesomePage()`
+
+If you only need a few components inside an otherwise ordinary Shiny app,
+using them inside `fluidPage()` is fine. The package attaches its runtime
+dependencies automatically in that case.
+
+```r
+library(shiny)
+library(shiny.webawesome)
+
+ui <- fluidPage(
+  h2("Mixed app"),
+  wa_card(
+    wa_badge("Beta", appearance = "filled"),
+    "This app uses a few Web Awesome components inside fluidPage()."
+  )
+)
+
+server <- function(input, output, session) {}
+
+shinyApp(ui, server)
+```
+
+If Web Awesome is the main UI system for the app, prefer `webawesomePage()`.
+It attaches the package dependency once at page level and gives you a cleaner
+full-page Web Awesome setup.
+
+When you mix Web Awesome components into `fluidPage()` or another Bootstrap
+layout, check the result in the browser. The components will work, but your
+app may still need light CSS review for spacing, typography, or theme/style
+mismatches between Bootstrap and Web Awesome.
+
 ## Documentation
 
 - Package website: <https://www.shiny-webawesome.org>

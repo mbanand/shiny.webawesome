@@ -14,7 +14,16 @@
 #' @param ... UI content to place in the page body.
 #' @param title Optional page title.
 #' @param lang Optional HTML `lang` attribute for the page.
-#' @param body_class Optional CSS class string for the page body.
+#' @param class Optional CSS class string for the root HTML element. This is
+#'   useful for page-level Web Awesome theme, palette, and brand classes such
+#'   as `"wa-theme-default wa-palette-default wa-brand-blue"` or
+#'   `"wa-palette-default"`. When `class` includes a recognized non-default
+#'   theme class such as `"wa-theme-awesome"` or `"wa-theme-shoelace"`,
+#'   `webawesomePage()` also loads the matching bundled theme stylesheet
+#'   automatically.
+#' @param body_class Optional CSS class string for the page body. This is
+#'   useful for app-shell layout or body-level styling hooks that should stay
+#'   separate from root HTML theme classes.
 #'
 #' @return An HTML page scaffold with the shiny.webawesome dependency attached.
 #'
@@ -24,6 +33,7 @@
 #' if (interactive()) {
 #'   webawesomePage(
 #'     title = "shiny.webawesome",
+#'     class = "wa-theme-default wa-palette-default wa-brand-blue",
 #'     wa_card("Hello from Web Awesome")
 #'   )
 #' }
@@ -32,6 +42,7 @@
 webawesomePage <- function(...,
                            title = NULL,
                            lang = NULL,
+                           class = NULL,
                            body_class = NULL) {
   content <- .wa_without_dependency(htmltools::tagList(...))
 
@@ -44,6 +55,7 @@ webawesomePage <- function(...,
 
   page <- htmltools::tags$html(
     lang = lang,
+    class = class,
     head_tag,
     htmltools::tags$body(
       class = body_class,
@@ -51,7 +63,7 @@ webawesomePage <- function(...,
     )
   )
 
-  htmltools::attachDependencies(page, .wa_dependency())
+  htmltools::attachDependencies(page, .wa_page_dependencies(class = class))
 }
 # nolint end: object_name_linter.
 # nolint end

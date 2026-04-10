@@ -107,6 +107,90 @@
   )
 }
 
+# Return the known root HTML theme classes and bundled stylesheet mapping.
+.wa_theme_class_map <- function() {
+  c(
+    "wa-theme-default" = "default",
+    "wa-theme-awesome" = "awesome",
+    "wa-theme-shoelace" = "shoelace"
+  )
+}
+
+# Return class tokens parsed from one HTML class attribute value.
+.wa_class_tokens <- function(class) {
+  if (is.null(class)) {
+    return(character())
+  }
+
+  if (!is.character(class)) {
+    return(character())
+  }
+
+  class <- class[!is.na(class) & nzchar(class)]
+  if (length(class) == 0L) {
+    return(character())
+  }
+
+  tokens <- unlist(strsplit(paste(class, collapse = " "), "\\s+"))
+  unique(tokens[nzchar(tokens)])
+}
+
+# Return one recognized root theme name implied by the HTML class attribute.
+.wa_theme_name_from_class <- function(class) {
+  tokens <- .wa_class_tokens(class)
+  theme_map <- .wa_theme_class_map()
+  matched_classes <- intersect(tokens, names(theme_map))
+
+  if (length(matched_classes) == 0L) {
+    return(NULL)
+  }
+
+  matched_themes <- unname(theme_map[matched_classes])
+  matched_themes <- unique(matched_themes)
+
+  if (length(matched_themes) > 1L) {
+    stop(
+      paste0(
+        "`class` must not include more than one Web Awesome theme class. ",
+        "Found: ",
+        paste(sprintf('"%s"', matched_classes), collapse = ", "),
+        "."
+      ),
+      call. = FALSE
+    )
+  }
+
+  matched_themes[[1]]
+}
+
+# Return one optional extra dependency for a recognized non-default theme.
+.wa_theme_dependency <- function(theme_name) {
+  if (is.null(theme_name) || identical(theme_name, "default")) {
+    return(NULL)
+  }
+
+  htmltools::htmlDependency(
+    name = paste0("shiny.webawesome-theme-", theme_name),
+    version = as.character(utils::packageVersion("shiny.webawesome")),
+    package = "shiny.webawesome",
+    src = c(file = "."),
+    stylesheet = paste0("www/wa/styles/themes/", theme_name, ".css")
+  )
+}
+
+# Return page-level dependencies for the base runtime plus one optional theme.
+.wa_page_dependencies <- function(class = NULL) {
+  theme_name <- .wa_theme_name_from_class(class)
+  dependencies <- list(.wa_dependency())
+
+  theme_dependency <- .wa_theme_dependency(theme_name)
+  if (!is.null(theme_dependency)) {
+    dependencies <- c(dependencies, list(theme_dependency))
+  }
+
+  dependencies
+}
+
 # Return whether wrapper-level dependency attachment is currently enabled.
 .wa_dependency_enabled <- function() {
   isTRUE(getOption("shiny.webawesome.attach_dependency", TRUE))

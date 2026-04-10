@@ -56,6 +56,8 @@ navbar:
       menu:
         - text: Layout Utilities
           href: articles/layout-utilities.html
+        - text: Styling and Theming
+          href: articles/styling-and-theming.html
         - text: Shiny Bindings
           href: articles/shiny-bindings.html
         - text: Extra Attributes via htmltools
@@ -84,6 +86,7 @@ articles:
     navbar: Articles
     contents:
       - layout-utilities
+      - styling-and-theming
       - shiny-bindings
       - htmltools-attributes
       - command-api

@@ -10,17 +10,79 @@ test_that("webawesomePage attaches the package dependency once", {
   expect_equal(sum(dep_names == "shiny.webawesome"), 1L)
 })
 
+test_that("webawesomePage attaches the Awesome theme stylesheet", {
+  page <- shiny.webawesome::webawesomePage(
+    class = "wa-theme-awesome wa-palette-bright wa-brand-blue",
+    shiny.webawesome:::.wa_component("wa-card", "Hello")
+  )
+
+  deps <- htmltools::findDependencies(page)
+  dep_names <- vapply(deps, `[[`, character(1), "name")
+  dep_stylesheets <- vapply(
+    deps,
+    `[[`,
+    character(1),
+    "stylesheet"
+  )
+
+  expect_true("shiny.webawesome" %in% dep_names)
+  expect_true("shiny.webawesome-theme-awesome" %in% dep_names)
+  expect_true("www/wa/styles/themes/awesome.css" %in% dep_stylesheets)
+})
+
+test_that("webawesomePage attaches the Shoelace theme stylesheet", {
+  page <- shiny.webawesome::webawesomePage(
+    class = "wa-theme-shoelace wa-palette-shoelace wa-brand-blue",
+    shiny.webawesome:::.wa_component("wa-card", "Hello")
+  )
+
+  deps <- htmltools::findDependencies(page)
+  dep_names <- vapply(deps, `[[`, character(1), "name")
+  dep_stylesheets <- vapply(
+    deps,
+    `[[`,
+    character(1),
+    "stylesheet"
+  )
+
+  expect_true("shiny.webawesome" %in% dep_names)
+  expect_true("shiny.webawesome-theme-shoelace" %in% dep_names)
+  expect_true("www/wa/styles/themes/shoelace.css" %in% dep_stylesheets)
+})
+
+test_that("webawesomePage rejects multiple recognized theme classes", {
+  expect_error(
+    shiny.webawesome::webawesomePage(
+      class = "wa-theme-awesome wa-theme-shoelace",
+      shiny.webawesome:::.wa_component("wa-card", "Hello")
+    ),
+    paste0(
+      "`class` must not include more than one Web Awesome theme class. ",
+      'Found: "wa-theme-awesome", "wa-theme-shoelace".'
+    ),
+    fixed = TRUE
+  )
+})
+
 test_that("webawesomePage returns an html page scaffold", {
   page <- shiny.webawesome::webawesomePage(
     title = "Runtime test",
     lang = "en",
+    class = "wa-theme-default wa-palette-default wa-brand-blue",
     body_class = "app-shell",
     shiny.webawesome:::.wa_component("wa-card", "Hello")
   )
 
   rendered <- htmltools::renderTags(page)
 
-  expect_match(rendered$html, "<html[^>]*lang=\"en\"", perl = TRUE)
+  expect_match(
+    rendered$html,
+    paste0(
+      "<html[^>]*lang=\"en\"[^>]*class=\"",
+      "wa-theme-default wa-palette-default wa-brand-blue\""
+    ),
+    perl = TRUE
+  )
   expect_match(rendered$head, "<title>Runtime test</title>", perl = TRUE)
   expect_match(rendered$html, "<body[^>]*class=\"app-shell\"", perl = TRUE)
 })

@@ -18,6 +18,7 @@ test_that(
         "wa-card",
         "wa-copy-button",
         "wa-divider",
+        "wa-markdown",
         "wa-popover",
         "wa-popup",
         "wa-tag",
@@ -33,6 +34,8 @@ test_that(
     testthat::expect_match(app$get_html("#card"), "Card body")
     testthat::expect_match(app$get_html("#card"), "Card header")
     testthat::expect_match(app$get_html("#copy_button"), "Copy")
+    testthat::expect_match(app$get_html("#markdown"), "Markdown heading")
+    testthat::expect_match(app$get_html("#markdown"), "First item")
     testthat::expect_match(app$get_html("#popover"), "Popover body")
     testthat::expect_match(app$get_html("#tag"), "Tag")
     testthat::expect_match(app$get_html("#tooltip"), "Tooltip body")
@@ -41,6 +44,10 @@ test_that(
     testthat::expect_equal(
       app$get_text("#avatar_state"),
       'component = "#avatar"'
+    )
+    testthat::expect_equal(
+      app$get_text("#markdown_state"),
+      'component = "#markdown"'
     )
     testthat::expect_equal(
       app$get_js("document.getElementById('popover').getAttribute('for')"),

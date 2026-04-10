@@ -4,7 +4,7 @@
 \alias{webawesomePage}
 \title{Construct a shiny.webawesome page}
 \usage{
-webawesomePage(..., title = NULL, lang = NULL, body_class = NULL)
+webawesomePage(..., title = NULL, lang = NULL, class = NULL, body_class = NULL)
 }
 \arguments{
 \item{...}{UI content to place in the page body.}
@@ -13,7 +13,17 @@ webawesomePage(..., title = NULL, lang = NULL, body_class = NULL)
 
 \item{lang}{Optional HTML \code{lang} attribute for the page.}
 
-\item{body_class}{Optional CSS class string for the page body.}
+\item{class}{Optional CSS class string for the root HTML element. This is
+useful for page-level Web Awesome theme, palette, and brand classes such
+as \code{"wa-theme-default wa-palette-default wa-brand-blue"} or
+\code{"wa-palette-default"}. When \code{class} includes a recognized non-default
+theme class such as \code{"wa-theme-awesome"} or \code{"wa-theme-shoelace"},
+\code{webawesomePage()} also loads the matching bundled theme stylesheet
+automatically.}
+
+\item{body_class}{Optional CSS class string for the page body. This is
+useful for app-shell layout or body-level styling hooks that should stay
+separate from root HTML theme classes.}
 }
 \value{
 An HTML page scaffold with the shiny.webawesome dependency attached.
@@ -35,6 +45,7 @@ It is intentionally separate from the upstream \code{wa-page} component wrapper.
 if (interactive()) {
   webawesomePage(
     title = "shiny.webawesome",
+    class = "wa-theme-default wa-palette-default wa-brand-blue",
     wa_card("Hello from Web Awesome")
   )
 }

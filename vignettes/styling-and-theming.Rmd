@@ -1,0 +1,130 @@
+---
+title: "Styling and Theming"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Styling and Theming}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Overview
+
+`shiny.webawesome` follows upstream Web Awesome styling patterns closely.
+
+In practice, there are two main levels to know:
+
+- page-level theming, palettes, and brand selection
+- component-level styling through ordinary HTML hooks and Web Awesome design
+  tokens
+
+This article gives a short package-specific map and points you back to the
+upstream Web Awesome docs for the broader styling system.
+
+# Page-Level Themes and Palettes
+
+Web Awesome's theme system is page-oriented. Apply theme,
+palette, and brand classes to the `<html>` element, for example:
+
+- `wa-palette-default`
+- `wa-theme-default wa-palette-default wa-brand-blue`
+
+In `shiny.webawesome`, the corresponding place to do that is
+`webawesomePage(class = ...)`.
+
+```{r theming-default, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- webawesomePage(
+  title = "Themed page",
+  class = "wa-theme-default wa-palette-default wa-brand-blue",
+  wa_container(
+    class = "wa-stack",
+    wa_badge("Beta", appearance = "filled"),
+    wa_card("This page applies Web Awesome classes at the html root.")
+  )
+)
+
+server <- function(input, output, session) {}
+
+shinyApp(ui, server)
+```
+
+`webawesomePage()` is the best place for this because it owns the full page
+scaffold, including the root `<html>` tag.
+
+For the bundled non-default themes, `webawesomePage()` also recognizes the
+root classes `wa-theme-awesome` and `wa-theme-shoelace` and loads the
+matching bundled theme stylesheet automatically.
+
+```{r theming-nondefault, eval = FALSE}
+ui <- webawesomePage(
+  title = "Awesome theme",
+  class = "wa-theme-awesome wa-palette-bright wa-brand-blue",
+  wa_card("The matching Awesome theme stylesheet is attached automatically.")
+)
+```
+
+For broader upstream theme and palette guidance, consult the upstream Web
+Awesome theming documentation. The package keeps the control surface
+upstream-first by treating page-root classes as the main theming hook.
+
+# Styling Individual Components
+
+For individual components, the first styling hooks are the standard wrapper
+arguments `class` and `style`.
+
+```{r component-class-style, eval = FALSE}
+wa_card(
+  "Styled card",
+  class = "my-card",
+  style = "max-width: 32rem;"
+)
+```
+
+That works well for:
+
+- ordinary CSS class hooks
+- small app-local layout adjustments
+- utility-class usage
+
+When you need additional standard HTML attributes, append them with
+`htmltools::tagAppendAttributes()`. See the `Extra Attributes via htmltools`
+article for that pattern.
+
+## Design tokens
+
+Web Awesome also documents a larger design-token system for colors, spacing,
+typography, shadows, and related styling primitives.
+
+In `shiny.webawesome`, the intended approach is still upstream-first:
+
+- apply page-level classes with `webawesomePage(class = ...)`
+- style component instances with normal `class` and `style` hooks
+- use Web Awesome design tokens in your app CSS when you need more control
+
+For example, you can target a custom class and rely on Web Awesome token
+variables in your own stylesheet:
+
+```css
+.my-card {
+  border-color: var(--wa-color-brand-border-normal);
+  box-shadow: var(--wa-shadow-l);
+  padding: var(--wa-space-l);
+}
+```
+
+This package does not try to wrap the full design-token catalog as a separate
+R API. The goal is to stay close to upstream so that the Web Awesome styling
+docs remain directly useful.
+
+# Related Guidance
+
+- Use `webawesomePage(class = ...)` for page-level theme, palette, and brand
+  classes.
+- Use wrapper `class` and `style` arguments for ordinary component-level
+  styling hooks.
+- Use `htmltools` when you need extra HTML attributes beyond the wrapper
+  surface.
+- Consult the upstream Web Awesome docs for the full theming and design-token
+  system.

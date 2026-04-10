@@ -45,6 +45,44 @@ At the simplest level, you use generated wrappers as ordinary Shiny UI
 functions. Wrapper names follow the Web Awesome component names with the
 `wa_` prefix, and kebab-case attributes become snake_case arguments.
 
+There are two common ways to do that in an app:
+
+- use individual Web Awesome components inside an ordinary Shiny page helper
+  such as `fluidPage()`
+- use `webawesomePage()` when Web Awesome is the main page environment
+
+If you are adding a few Web Awesome components to an otherwise ordinary Shiny
+app, using them inside `fluidPage()` is supported and the package will attach
+its runtime dependency automatically.
+
+```{r fluid-page-mixed, eval = FALSE}
+library(shiny)
+library(shiny.webawesome)
+
+ui <- fluidPage(
+  h2("Mixed Shiny page"),
+  wa_card(
+    header = "Status",
+    wa_badge("Beta", appearance = "filled"),
+    "This card is rendered inside fluidPage()."
+  )
+)
+
+server <- function(input, output, session) {}
+
+shinyApp(ui, server)
+```
+
+That mixed approach is useful when you want to adopt Web Awesome gradually or
+only need a small number of components in an existing Bootstrap-based app.
+The components will work, but you should still check the rendered page for
+spacing, typography, color, or theme/style mismatches between the surrounding
+Bootstrap layout and the Web Awesome components.
+
+If Web Awesome is the main UI system for the app, prefer `webawesomePage()`.
+It builds a minimal full-page scaffold and attaches the package dependency
+once at page level.
+
 ```{r basic-wrapper, eval = FALSE}
 library(shiny)
 library(shiny.webawesome)
@@ -180,6 +218,7 @@ summarized in the package help page `?shiny.webawesome`.
 After this guide, the most relevant longer-form docs are:
 
 - Layout Utilities
+- Styling and Theming
 - Shiny Bindings
 - Command API
 - Package Options

@@ -257,6 +257,72 @@ rm(.bootstrap_cli_ui)
   invisible(NULL)
 }
 
+# Return the supported visual-review themes and their root HTML classes.
+.interactive_theme_specs <- function() {
+  list(
+    default = list(
+      label = "Default",
+      class = "wa-theme-default wa-palette-default wa-brand-blue"
+    ),
+    awesome = list(
+      label = "Awesome",
+      class = "wa-theme-awesome wa-palette-bright wa-brand-blue"
+    ),
+    shoelace = list(
+      label = "Shoelace",
+      class = "wa-theme-shoelace wa-palette-shoelace wa-brand-blue"
+    )
+  )
+}
+
+# Return the requested visual-review theme name with fallback to default.
+.interactive_theme_name <- function(request = NULL) {
+  specs <- .interactive_theme_specs()
+  default_theme <- "default"
+
+  if (is.null(request) || is.null(request$QUERY_STRING)) {
+    return(default_theme)
+  }
+
+  query <- shiny::parseQueryString(request$QUERY_STRING)
+  theme <- query[["theme"]]
+
+  if (!is.character(theme) || length(theme) != 1L || !nzchar(theme)) {
+    return(default_theme)
+  }
+
+  if (!(theme %in% names(specs))) {
+    return(default_theme)
+  }
+
+  theme
+}
+
+# Build the theme-switch links for the interactive review header.
+.interactive_theme_links <- function(current_theme) {
+  specs <- .interactive_theme_specs()
+
+  htmltools::tags$nav(
+    class = "interactive-review-themes",
+    htmltools::tags$span("Review themes:"),
+    htmltools::HTML("&nbsp;"),
+    htmltools::tagList(lapply(
+      names(specs),
+      function(theme_name) {
+        label <- specs[[theme_name]]$label
+        if (identical(theme_name, current_theme)) {
+          return(htmltools::tags$strong(label))
+        }
+
+        htmltools::tags$a(
+          href = paste0("?theme=", theme_name),
+          label
+        )
+      }
+    ))
+  )
+}
+
 # Build one simple review-app section.
 .review_section <- function(title,
                             description,
@@ -367,334 +433,389 @@ rm(.bootstrap_cli_ui)
   wa_tree <- .wa_export("wa_tree")
   wa_tree_item <- .wa_export("wa_tree_item")
 
-  ui <- webawesome_page(
-    title = "shiny.webawesome Interactive Review",
-    wa_js(
-      paste(
-        "(function() {",
-        "  var copyEventCount = 0;",
-        "  function publishCopyEvent(event) {",
-        "    if (!window.Shiny ||",
-        "        typeof window.Shiny.setInputValue !== 'function') {",
-        "      return;",
-        "    }",
-        "    if (!event.target || event.target.id !== 'review_copy_button') {",
-        "      return;",
-        "    }",
-        "    copyEventCount += 1;",
-        "    window.Shiny.setInputValue(",
-        "      'copy_button_js_event',",
-        "      [",
-        "        event.type,",
-        "        'target=' + event.target.id,",
-        "        'count=' + copyEventCount",
-        "      ].join(' | '),",
-        "      { priority: 'event' }",
-        "    );",
-        "  }",
-        "  document.addEventListener('wa-copy', publishCopyEvent);",
-        "  document.addEventListener('wa-error', publishCopyEvent);",
-        "})();",
-        sep = "\n"
-      )
-    ),
-    htmltools::tags$style(htmltools::HTML("
-      body {
-        background: #f5f7fb;
-        color: #0f172a;
-        font-family: Georgia, 'Times New Roman', serif;
-        margin: 0;
-      }
+  ui <- function(request) {
+    theme_name <- .interactive_theme_name(request)
+    theme_specs <- .interactive_theme_specs()
+    theme_class <- theme_specs[[theme_name]]$class
+    theme_label <- theme_specs[[theme_name]]$label
 
-      .interactive-review-shell {
-        margin: 0 auto;
-        max-width: 1100px;
-        padding: 2rem 1.25rem 3rem;
-      }
-
-      .interactive-review-header {
-        margin-bottom: 1.5rem;
-      }
-
-      .interactive-review-header h1 {
-        margin-bottom: 0.5rem;
-      }
-
-      .interactive-review-grid {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-      }
-
-      .interactive-review-section {
-        border-top: 1px solid #d7dee7;
-        padding: 1.75rem 0;
-      }
-
-      .interactive-review-panel,
-      .interactive-review-summary {
-        background: #ffffff;
-        border: 1px solid #d7dee7;
-        border-radius: 1rem;
-        padding: 1rem;
-      }
-
-      .interactive-review-panel pre,
-      .interactive-review-summary pre {
-        overflow-wrap: anywhere;
-        white-space: pre-wrap;
-        word-break: break-word;
-      }
-
-      .interactive-review-controls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        margin-top: 1rem;
-      }
-
-      .interactive-review-notes,
-      .interactive-review-description {
-        max-width: 60rem;
-      }
-
-      .tree-review-grid {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-      }
-
-      .tree-review-block {
-        border: 1px dashed #cbd5e1;
-        border-radius: 0.75rem;
-        padding: 0.9rem;
-      }
-
-      .tree-review-block h4 {
-        margin-top: 0;
-      }
-    ")),
-    htmltools::tags$script(htmltools::HTML(.interactive_console_bridge())),
-    htmltools::tags$main(
-      class = "interactive-review-shell",
-      htmltools::tags$header(
-        class = "interactive-review-header",
-        htmltools::tags$h1("Interactive Finalize Review"),
-        htmltools::tags$p(
+    webawesome_page(
+      title = "shiny.webawesome Interactive Review",
+      class = theme_class,
+      wa_js(
+        paste(
+          "(function() {",
+          "  var copyEventCount = 0;",
+          "  function publishCopyEvent(event) {",
+          "    if (!window.Shiny ||",
+          "        typeof window.Shiny.setInputValue !== 'function') {",
+          "      return;",
+          "    }",
           paste(
-            "Use this app for the manual visual review before a strict",
-            "finalize run. Open the local URL printed by Shiny,",
-            "exercise each category once, inspect the rendered component",
-            "state in the browser, and confirm that browser diagnostics and",
-            "server-side logs look sane."
-          )
-        )
-      ),
-      htmltools::tags$div(
-        class = "interactive-review-grid",
-        htmltools::tags$section(
-          class = "interactive-review-summary",
-          htmltools::tags$h2("Review Checklist"),
-          htmltools::tags$ul(
-            htmltools::tags$li(
-              "Presentational rendering and upgraded elements"
-            ),
-            htmltools::tags$li("Durable-value input binding"),
-            htmltools::tags$li("Semantic event-driven binding"),
-            htmltools::tags$li("Action and payload binding"),
-            htmltools::tags$li("App-local wa_js() browser glue"),
-            htmltools::tags$li("Command-layer debug and warning paths"),
-            htmltools::tags$li("Tree selected-id and warning contract")
-          )
-        ),
-        htmltools::tags$section(
-          class = "interactive-review-summary",
-          htmltools::tags$h2("Browser Diagnostics"),
-          shiny::verbatimTextOutput("browser_diagnostics")
-        )
-      ),
-      .review_section(
-        title = "Presentational Category",
-        description = paste(
-          "Confirm that a representative non-input component renders cleanly",
-          "and upgrades in the browser without console noise."
-        ),
-        component_tag = htmltools::tagAppendAttributes(
-          wa_card(
-            "Inspect this card for basic presentational rendering.",
-            header = "Presentational sample"
+            "    if (!event.target ||",
+            "event.target.id !== 'review_copy_button') {"
           ),
-          id = "presentational_card"
-        ),
-        observed_output = "presentational_state",
-        notes = "Representative category: runtime-presentational."
+          "      return;",
+          "    }",
+          "    copyEventCount += 1;",
+          "    window.Shiny.setInputValue(",
+          "      'copy_button_js_event',",
+          "      [",
+          "        event.type,",
+          "        'target=' + event.target.id,",
+          "        'count=' + copyEventCount",
+          "      ].join(' | '),",
+          "      { priority: 'event' }",
+          "    );",
+          "  }",
+          "  document.addEventListener('wa-copy', publishCopyEvent);",
+          "  document.addEventListener('wa-error', publishCopyEvent);",
+          "})();",
+          sep = "\n"
+        )
       ),
-      .review_section(
-        title = "Semantic Durable-Value Category",
-        description = paste(
-          "Choose a different option and verify that the Shiny input reflects",
-          "the durable selected value."
-        ),
-        component_tag = wa_select(
-          input_id = "semantic_select",
-          wa_option("Alpha", value = "alpha"),
-          wa_option("Beta", value = "beta"),
-          wa_option("Gamma", value = "gamma"),
-          label = "Favorite value",
-          hint = "Choose one"
-        ),
-        observed_output = "semantic_select_state",
-        notes = "Representative category: runtime-semantic."
-      ),
-      .review_section(
-        title = "Semantic Event Category",
-        description = paste(
-          "Open and close the disclosure directly in the browser and verify",
-          "that the committed semantic state reaches Shiny."
-        ),
-        component_tag = wa_details(
-          input_id = "semantic_details",
-          "Semantic event body",
-          summary = "Toggle details"
-        ),
-        observed_output = "semantic_details_state",
-        notes = "Representative category: runtime-semantic-events."
-      ),
-      .review_section(
-        title = "Action Category",
-        description = paste(
-          "Pick menu items and confirm that the main input behaves like an",
-          "action counter while the companion payload input tracks the latest",
-          "selected value."
-        ),
-        component_tag = wa_dropdown(
-          input_id = "action_dropdown",
-          wa_dropdown_item("Alpha", id = "action_item_alpha", value = "alpha"),
-          wa_dropdown_item("No value", id = "action_item_missing"),
-          wa_dropdown_item("Empty value", id = "action_item_empty", value = ""),
-          trigger = wa_button(
-            "action_dropdown_trigger",
-            "Action menu",
-            with_caret = TRUE
-          )
-        ),
-        observed_output = "action_dropdown_state",
-        notes = "Representative category: runtime-action."
-      ),
-      .review_section(
-        title = "App-local JS Category",
-        description = paste(
-          "Click the copy button and confirm that the unbound browser event",
-          "is bridged back to Shiny through a small `wa_js()` snippet."
-        ),
-        component_tag = htmltools::tagList(
+      htmltools::tags$style(htmltools::HTML("
+        body {
+          background: #f5f7fb;
+          color: #0f172a;
+          font-family: Georgia, 'Times New Roman', serif;
+          margin: 0;
+        }
+
+        .interactive-review-shell {
+          margin: 0 auto;
+          max-width: 1100px;
+          padding: 2rem 1.25rem 3rem;
+        }
+
+        .interactive-review-header {
+          margin-bottom: 1.5rem;
+        }
+
+        .interactive-review-header h1 {
+          margin-bottom: 0.5rem;
+        }
+
+        .interactive-review-theme-state,
+        .interactive-review-themes {
+          margin-top: 0.75rem;
+        }
+
+        .interactive-review-themes a {
+          margin-right: 0.75rem;
+        }
+
+        .interactive-review-grid {
+          display: grid;
+          gap: 1rem;
+          grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+        }
+
+        .interactive-review-section {
+          border-top: 1px solid #d7dee7;
+          padding: 1.75rem 0;
+        }
+
+        .interactive-review-panel,
+        .interactive-review-summary {
+          background: #ffffff;
+          border: 1px solid #d7dee7;
+          border-radius: 1rem;
+          padding: 1rem;
+        }
+
+        .interactive-review-panel pre,
+        .interactive-review-summary pre {
+          overflow-wrap: anywhere;
+          white-space: pre-wrap;
+          word-break: break-word;
+        }
+
+        .interactive-review-controls {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+          margin-top: 1rem;
+        }
+
+        .interactive-review-notes,
+        .interactive-review-description {
+          max-width: 60rem;
+        }
+
+        .tree-review-grid {
+          display: grid;
+          gap: 1rem;
+          grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+        }
+
+        .tree-review-block {
+          border: 1px dashed #cbd5e1;
+          border-radius: 0.75rem;
+          padding: 0.9rem;
+        }
+
+        .tree-review-block h4 {
+          margin-top: 0;
+        }
+      ")),
+      htmltools::tags$script(htmltools::HTML(.interactive_console_bridge())),
+      htmltools::tags$main(
+        class = "interactive-review-shell",
+        htmltools::tags$header(
+          class = "interactive-review-header",
+          htmltools::tags$h1("Interactive Finalize Review"),
           htmltools::tags$p(
-            "This button copies a fixed value and publishes its browser event",
-            "to Shiny with `Shiny.setInputValue()`."
-          ),
-          wa_copy_button(
-            id = "review_copy_button",
-            value = "copied-from-wa-js",
-            "Copy sample value"
-          )
-        ),
-        observed_output = "copy_button_js_state",
-        notes = paste(
-          "Representative category: app-local browser glue.",
-          "`wa_js()` listens for `wa-copy` and `wa-error` on an otherwise",
-          "unbound component and publishes a small event payload to Shiny."
-        )
-      ),
-      .review_section(
-        title = "Command Layer Category",
-        description = paste(
-          "Type in the text input and toggle the checkbox to confirm their",
-          "ordinary bound Shiny state. Then use the command buttons to",
-          "trigger debug logs, visible component changes, and warning paths."
-        ),
-        component_tag = htmltools::tagList(
-          wa_dialog(
-            input_id = "review_dialog",
-            "Dialog body",
-            label = "Interactive review dialog",
-            footer = shiny::actionButton(
-              "close_review_dialog_inside",
-              "Close dialog from inside"
+            paste(
+              "Use this app for the manual visual review before a strict",
+              "finalize run. Open the local URL printed by Shiny,",
+              "exercise each category once, inspect the rendered component",
+              "state in the browser, and confirm that browser diagnostics and",
+              "server-side logs look sane."
             )
           ),
-          wa_input(
-            input_id = "review_text_input",
-            label = "Before",
-            value = "alpha"
+          htmltools::tags$p(
+            class = "interactive-review-theme-state",
+            htmltools::tags$strong("Current theme: "),
+            theme_label
           ),
-          wa_details(
-            input_id = "review_details",
-            "Command review details",
-            summary = "Command review details"
+          htmltools::tags$p(
+            "Switch themes with the links below. Each selection reloads the",
+            "page so the root HTML classes and bundled theme stylesheet are",
+            "rebuilt normally."
           ),
-          wa_checkbox(
-            input_id = "review_checkbox",
-            value = "accepted",
-            "Accept terms"
-          )
+          .interactive_theme_links(theme_name)
         ),
-        controls = htmltools::tagList(
-          shiny::actionButton("open_review_dialog", "Open dialog"),
-          shiny::actionButton("update_review_label", "Update input label"),
-          shiny::actionButton("show_review_details", "Show details"),
-          shiny::actionButton("set_review_validity", "Set checkbox validity"),
-          shiny::actionButton(
-            "clear_review_validity",
-            "Clear checkbox validity"
-          ),
-          shiny::actionButton("missing_target_warning", "Warn: missing target"),
-          shiny::actionButton("missing_method_warning", "Warn: missing method")
-        ),
-        observed_output = "command_layer_state",
-        notes = paste(
-          "Representative category: runtime-command-layer.",
-          "The validity buttons set or clear a custom browser validation",
-          "message on the checkbox and then call `reportValidity()` so the",
-          "browser-side validity state becomes visible."
-        )
-      ),
-      .review_section(
-        title = "Tree Warning Category",
-        description = paste(
-          "Select items in both trees. The stable tree should report selected",
-          "ids. The warning tree should omit the missing-id item from the",
-          "Shiny value and emit one browser warning."
-        ),
-        component_tag = htmltools::tags$div(
-          class = "tree-review-grid",
-          htmltools::tags$div(
-            class = "tree-review-block",
-            htmltools::tags$h4("Stable selected-id contract"),
-            wa_tree(
-              input_id = "stable_tree",
-              selection = "multiple",
-              wa_tree_item("Node A", id = "tree_item_a"),
-              wa_tree_item("Node B", id = "tree_item_b")
-            )
-          ),
-          htmltools::tags$div(
-            class = "tree-review-block",
-            htmltools::tags$h4("Missing-id warning contract"),
-            suppressWarnings(
-              wa_tree(
-                input_id = "warning_tree",
-                selection = "multiple",
-                wa_tree_item("Missing id"),
-                wa_tree_item("Present id", id = "tree_warning_present")
+        htmltools::tags$div(
+          class = "interactive-review-grid",
+          htmltools::tags$section(
+            class = "interactive-review-summary",
+            htmltools::tags$h2("Review Checklist"),
+            htmltools::tags$ul(
+              htmltools::tags$li(
+                "Presentational rendering and upgraded elements"
+              ),
+              htmltools::tags$li("Durable-value input binding"),
+              htmltools::tags$li("Semantic event-driven binding"),
+              htmltools::tags$li("Action and payload binding"),
+              htmltools::tags$li("App-local wa_js() browser glue"),
+              htmltools::tags$li("Command-layer debug and warning paths"),
+              htmltools::tags$li("Tree selected-id and warning contract"),
+              htmltools::tags$li(
+                "Repeat a quick visual pass for Default, Awesome, and Shoelace"
               )
             )
+          ),
+          htmltools::tags$section(
+            class = "interactive-review-summary",
+            htmltools::tags$h2("Browser Diagnostics"),
+            shiny::verbatimTextOutput("browser_diagnostics")
           )
         ),
-        observed_output = "tree_state",
-        notes = "Representative category: runtime-tree."
+        .review_section(
+          title = "Presentational Category",
+          description = paste(
+            "Confirm that a representative non-input component renders",
+            "cleanly and upgrades in the browser without console noise."
+          ),
+          component_tag = htmltools::tagAppendAttributes(
+            wa_card(
+              "Inspect this card for basic presentational rendering.",
+              header = "Presentational sample"
+            ),
+            id = "presentational_card"
+          ),
+          observed_output = "presentational_state",
+          notes = "Representative category: runtime-presentational."
+        ),
+        .review_section(
+          title = "Semantic Durable-Value Category",
+          description = paste(
+            "Choose a different option and verify that the Shiny input",
+            "reflects the durable selected value."
+          ),
+          component_tag = wa_select(
+            input_id = "semantic_select",
+            wa_option("Alpha", value = "alpha"),
+            wa_option("Beta", value = "beta"),
+            wa_option("Gamma", value = "gamma"),
+            label = "Favorite value",
+            hint = "Choose one"
+          ),
+          observed_output = "semantic_select_state",
+          notes = "Representative category: runtime-semantic."
+        ),
+        .review_section(
+          title = "Semantic Event Category",
+          description = paste(
+            "Open and close the disclosure directly in the browser and",
+            "verify that the committed semantic state reaches Shiny."
+          ),
+          component_tag = wa_details(
+            input_id = "semantic_details",
+            "Semantic event body",
+            summary = "Toggle details"
+          ),
+          observed_output = "semantic_details_state",
+          notes = "Representative category: runtime-semantic-events."
+        ),
+        .review_section(
+          title = "Action Category",
+          description = paste(
+            "Pick menu items and confirm that the main input behaves like",
+            "an action counter while the companion payload input tracks",
+            "the latest selected value."
+          ),
+          component_tag = wa_dropdown(
+            input_id = "action_dropdown",
+            wa_dropdown_item(
+              "Alpha",
+              id = "action_item_alpha",
+              value = "alpha"
+            ),
+            wa_dropdown_item("No value", id = "action_item_missing"),
+            wa_dropdown_item(
+              "Empty value",
+              id = "action_item_empty",
+              value = ""
+            ),
+            trigger = wa_button(
+              "action_dropdown_trigger",
+              "Action menu",
+              with_caret = TRUE
+            )
+          ),
+          observed_output = "action_dropdown_state",
+          notes = "Representative category: runtime-action."
+        ),
+        .review_section(
+          title = "App-local JS Category",
+          description = paste(
+            "Click the copy button and confirm that the unbound browser",
+            "event is bridged back to Shiny through a small `wa_js()`",
+            "snippet."
+          ),
+          component_tag = htmltools::tagList(
+            htmltools::tags$p(
+              "This button copies a fixed value and publishes its browser",
+              "event to Shiny with `Shiny.setInputValue()`."
+            ),
+            wa_copy_button(
+              id = "review_copy_button",
+              value = "copied-from-wa-js",
+              "Copy sample value"
+            )
+          ),
+          observed_output = "copy_button_js_state",
+          notes = paste(
+            "Representative category: app-local browser glue.",
+            "`wa_js()` listens for `wa-copy` and `wa-error` on an",
+            "otherwise unbound component and publishes a small event",
+            "payload to Shiny."
+          )
+        ),
+        .review_section(
+          title = "Command Layer Category",
+          description = paste(
+            "Type in the text input and toggle the checkbox to confirm",
+            "their ordinary bound Shiny state. Then use the command",
+            "buttons to trigger debug logs, visible component changes,",
+            "and warning paths."
+          ),
+          component_tag = htmltools::tagList(
+            wa_dialog(
+              input_id = "review_dialog",
+              "Dialog body",
+              label = "Interactive review dialog",
+              footer = shiny::actionButton(
+                "close_review_dialog_inside",
+                "Close dialog from inside"
+              )
+            ),
+            wa_input(
+              input_id = "review_text_input",
+              label = "Before",
+              value = "alpha"
+            ),
+            wa_details(
+              input_id = "review_details",
+              "Command review details",
+              summary = "Command review details"
+            ),
+            wa_checkbox(
+              input_id = "review_checkbox",
+              value = "accepted",
+              "Accept terms"
+            )
+          ),
+          controls = htmltools::tagList(
+            shiny::actionButton("open_review_dialog", "Open dialog"),
+            shiny::actionButton("update_review_label", "Update input label"),
+            shiny::actionButton("show_review_details", "Show details"),
+            shiny::actionButton(
+              "set_review_validity",
+              "Set checkbox validity"
+            ),
+            shiny::actionButton(
+              "clear_review_validity",
+              "Clear checkbox validity"
+            ),
+            shiny::actionButton(
+              "missing_target_warning",
+              "Warn: missing target"
+            ),
+            shiny::actionButton(
+              "missing_method_warning",
+              "Warn: missing method"
+            )
+          ),
+          observed_output = "command_layer_state",
+          notes = paste(
+            "Representative category: runtime-command-layer.",
+            "The validity buttons set or clear a custom browser",
+            "validation message on the checkbox and then call",
+            "`reportValidity()` so the browser-side validity state",
+            "becomes visible."
+          )
+        ),
+        .review_section(
+          title = "Tree Warning Category",
+          description = paste(
+            "Select items in both trees. The stable tree should report",
+            "selected ids. The warning tree should omit the missing-id",
+            "item from the Shiny value and emit one browser warning."
+          ),
+          component_tag = htmltools::tags$div(
+            class = "tree-review-grid",
+            htmltools::tags$div(
+              class = "tree-review-block",
+              htmltools::tags$h4("Stable selected-id contract"),
+              wa_tree(
+                input_id = "stable_tree",
+                selection = "multiple",
+                wa_tree_item("Node A", id = "tree_item_a"),
+                wa_tree_item("Node B", id = "tree_item_b")
+              )
+            ),
+            htmltools::tags$div(
+              class = "tree-review-block",
+              htmltools::tags$h4("Missing-id warning contract"),
+              suppressWarnings(
+                wa_tree(
+                  input_id = "warning_tree",
+                  selection = "multiple",
+                  wa_tree_item("Missing id"),
+                  wa_tree_item("Present id", id = "tree_warning_present")
+                )
+              )
+            )
+          ),
+          observed_output = "tree_state",
+          notes = "Representative category: runtime-tree."
+        )
       )
     )
-  )
+  }
 
   server <- function(input, output, session) {
     browser_diagnostics <- shiny::reactiveVal(character())

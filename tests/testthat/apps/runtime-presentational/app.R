@@ -14,6 +14,7 @@ sections <- list(
   list(title = "wa_card", section_id = "wa_card-section"),
   list(title = "wa_copy_button", section_id = "wa_copy_button-section"),
   list(title = "wa_divider", section_id = "wa_divider-section"),
+  list(title = "wa_markdown", section_id = "wa_markdown-section"),
   list(title = "wa_popover", section_id = "wa_popover-section"),
   list(title = "wa_popup", section_id = "wa_popup-section"),
   list(title = "wa_tag", section_id = "wa_tag-section"),
@@ -205,6 +206,19 @@ ui <- webawesomePage(
       notes = "No default Shiny input contract."
     ),
     component_section(
+      section_id = "wa_markdown-section",
+      title = "wa_markdown",
+      description = paste(
+        "Inspect the rendered markdown output and upgraded custom element."
+      ),
+      component_tag = wa_markdown(
+        id = "markdown",
+        "## Markdown heading\n\n- First item\n- Second item"
+      ),
+      observed_output = "markdown_state",
+      notes = "No default Shiny input contract."
+    ),
+    component_section(
       section_id = "wa_popover-section",
       title = "wa_popover",
       description = paste(
@@ -298,6 +312,7 @@ server <- function(input, output, session) {
   bind_presentational_state("card_state", "component", "card")
   bind_presentational_state("copy_button_state", "component", "copy_button")
   bind_presentational_state("divider_state", "component", "divider")
+  bind_presentational_state("markdown_state", "component", "markdown")
   bind_presentational_state("popover_state", "component", "popover")
   bind_presentational_state("popup_state", "component", "popup")
   bind_presentational_state("tag_state", "component", "tag")
