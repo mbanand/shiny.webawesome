@@ -125,7 +125,8 @@ Contributions are also welcome, especially from front-end developers and Web
 Awesome users who can help improve package ergonomics, examples, and API
 coverage.
 
-Please see contributing guidance in [CONTRIBUTING.md](CONTRIBUTING.md).
+Please see contributing guidance in
+[CONTRIBUTING.md](https://github.com/mbanand/shiny.webawesome/blob/main/CONTRIBUTING.md).
 
 Repository project and workflow documentation is in the repo's
 `projectdocs/` directory.
@@ -137,4 +138,5 @@ file provides a machine-readable overview of the package API for coding
 agents and other LLM-based tools.
 
 For repository development guidance, including coding-agent workflow and repo
-rules, see [CONTRIBUTING.md](CONTRIBUTING.md).
+rules, see
+[CONTRIBUTING.md](https://github.com/mbanand/shiny.webawesome/blob/main/CONTRIBUTING.md).

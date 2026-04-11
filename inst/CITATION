@@ -3,15 +3,12 @@ bibentry(
   title = "shiny.webawesome: Shiny Bindings for Web Awesome Components",
   author = person("M. B.", "Anand"),
   year = "2026",
-  note = "R package version 0.1.0",
-  url = c(
-    "https://www.shiny-webawesome.org",
-    "https://github.com/mbanand/shiny.webawesome"
-  ),
+  note = "R package version 1.0.0",
+  url = "https://www.shiny-webawesome.org",
   textVersion = paste(
     "M. B. Anand (2026).",
     "shiny.webawesome: Shiny Bindings for Web Awesome Components.",
-    "R package version 0.1.0,",
+    "R package version 1.0.0,",
     "https://www.shiny-webawesome.org,",
     "https://github.com/mbanand/shiny.webawesome."
   )
