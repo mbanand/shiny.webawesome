@@ -702,8 +702,7 @@ rm(.bootstrap_cli_ui)
             ),
             wa_copy_button(
               id = "review_copy_button",
-              value = "copied-from-wa-js",
-              "Copy sample value"
+              value = "copied-from-wa-js"
             )
           ),
           observed_output = "copy_button_js_state",
