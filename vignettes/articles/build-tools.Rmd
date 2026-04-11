@@ -46,7 +46,7 @@ Fetches the pinned upstream Web Awesome npm package, extracts the browser-ready
 `dist-cdn/` tree, and stores it under `vendor/webawesome/<version>/`.
 
 This tool uses `npm` by default. If the desired executable is not already on
-`PATH`, set `SHINY_WEBAWESOME_NPM` to the command or path that should be used.
+`PATH`, set `SHINY_WEBAWESOME_NPM` to the executable that should be run.
 
 By default, the version comes from `dev/webawesome-version.txt`.
 
@@ -198,8 +198,8 @@ writes a placeholder page instead of publishing a likely-broken demo shell.
 It also audits the built local site links with `lychee`; missing `lychee`
 produces a warning in ordinary runs and a hard failure when
 `--strict-link-audit` is requested. Do not use the snap package here; use a
-pre-built release binary instead, and set `SHINY_WEBAWESOME_LYCHEE` if that
-binary is not already on `PATH`.
+pre-built release binary instead, and set `SHINY_WEBAWESOME_LYCHEE` to the
+executable that should be run if that binary is not already on `PATH`.
 
 This tool is intentionally separate from `build_package.R`. The docs-site
 workflow is maintainership-facing and may evolve on a different cadence from
