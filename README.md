@@ -59,10 +59,16 @@ library(shiny.webawesome)
 
 ui <- webawesomePage(
   title = "shiny.webawesome",
-  wa_button(
-    "example_button",
-    "Click me",
-    appearance = "filled"
+  wa_container(
+    class = "wa-stack",
+    style = "max-width: 32rem; margin: 2rem auto;",
+    wa_button(
+      "example_button",
+      "Click me",
+      appearance = "filled",
+      style = "width: 10rem;"
+    ),
+    wa_card("A simple card body")
   )
 )
 

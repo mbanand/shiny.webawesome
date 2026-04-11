@@ -39,7 +39,10 @@ library(shiny.webawesome)
 
 ui <- webawesomePage(
   title = "Layout utilities",
-  wa_card("Hello from Web Awesome")
+  wa_container(
+    style = "max-width: 32rem; margin: 2rem auto;",
+    wa_card("Hello from Web Awesome")
+  )
 )
 
 server <- function(input, output, session) {}
@@ -64,8 +67,14 @@ ui <- webawesomePage(
   title = "Page example",
   wa_container(
     class = "wa-stack",
+    style = "max-width: 32rem; margin: 2rem auto;",
     wa_card("Top card"),
-    wa_button("primary_action", "Continue", appearance = "filled"),
+    wa_button(
+      "primary_action",
+      "Continue",
+      appearance = "filled",
+      style = "width: 10rem;"
+    ),
     wa_card("Bottom card")
   )
 )
@@ -117,9 +126,15 @@ ui <- webawesomePage(
   title = "Stacked layout",
   wa_container(
     class = "wa-stack",
+    style = "max-width: 32rem; margin: 2rem auto;",
     wa_card("Profile"),
     wa_card("Recent activity"),
-    wa_button("refresh", "Refresh", appearance = "outlined")
+    wa_button(
+      "refresh",
+      "Refresh",
+      appearance = "outlined",
+      style = "width: 10rem;"
+    )
   )
 )
 
@@ -143,6 +158,7 @@ ui <- webawesomePage(
   ),
   wa_container(
     class = "wa-stack",
+    style = "max-width: 32rem; margin: 2rem auto;",
     wa_card("Main content"),
     wa_card("Secondary content")
   )

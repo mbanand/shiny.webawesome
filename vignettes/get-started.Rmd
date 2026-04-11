@@ -91,10 +91,12 @@ ui <- webawesomePage(
   title = "Basic wrappers",
   wa_container(
     class = "wa-stack",
+    style = "max-width: 32rem; margin: 2rem auto;",
     wa_button(
       "save_button",
       "Save",
-      appearance = "filled"
+      appearance = "filled",
+      style = "width: 10rem;"
     ),
     wa_card("A simple card body")
   )

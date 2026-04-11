@@ -32,9 +32,15 @@ ui <- webawesomePage(
   title = "Project overview",
   wa_container(
     class = "wa-stack",
+    style = "max-width: 32rem; margin: 2rem auto;",
     wa_badge("Preview"),
     wa_card("Status: active"),
-    wa_button("refresh", "Refresh", appearance = "outlined"),
+    wa_button(
+      "refresh",
+      "Refresh",
+      appearance = "outlined",
+      style = "width: 10rem;"
+    ),
     wa_card("Recent activity")
   )
 )
@@ -62,6 +68,7 @@ ui <- webawesomePage(
   title = "Binding example",
   wa_container(
     class = "wa-stack",
+    style = "max-width: 36rem; margin: 2rem auto;",
     wa_select(
       "favorite_letter",
       wa_option("A", value = "a"),
@@ -111,6 +118,7 @@ ui <- webawesomePage(
   title = "Command example",
   wa_container(
     class = "wa-stack",
+    style = "max-width: 36rem; margin: 2rem auto;",
     actionButton("open_dialog", "Open dialog"),
     actionButton("show_details", "Show details"),
     wa_dialog(

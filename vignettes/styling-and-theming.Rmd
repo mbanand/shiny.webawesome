@@ -40,6 +40,7 @@ ui <- webawesomePage(
   class = "wa-theme-default wa-palette-default wa-brand-blue",
   wa_container(
     class = "wa-stack",
+    style = "max-width: 32rem; margin: 2rem auto;",
     wa_badge("Beta", appearance = "filled"),
     wa_card("This page applies Web Awesome classes at the html root.")
   )
@@ -58,7 +59,10 @@ matching bundled theme stylesheet automatically.
 ui <- webawesomePage(
   title = "Awesome theme",
   class = "wa-theme-awesome wa-palette-bright wa-brand-blue",
-  wa_card("The matching Awesome theme stylesheet is attached automatically.")
+  wa_container(
+    style = "max-width: 32rem; margin: 2rem auto;",
+    wa_card("The matching Awesome theme stylesheet is attached automatically.")
+  )
 )
 ```
 
