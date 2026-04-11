@@ -119,6 +119,18 @@ source(file.path("..", "..", "generate_components.R"))
   )
 }
 
+testthat::test_that("doc_text treats raw custom-element placeholders as empty", {
+  expect_identical(
+    .doc_text("<wa-slider>", fallback = "Fallback description."),
+    "Fallback description."
+  )
+
+  expect_identical(
+    .doc_text("<wa-slider>"),
+    ""
+  )
+})
+
 .fake_custom_elements <- function() {
   list(
     schemaVersion = "1.0.0",

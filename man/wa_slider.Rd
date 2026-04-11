@@ -146,9 +146,9 @@ An HTML tag for the component.
 Invisibly returns \code{NULL}.
 }
 \description{
-\if{html}{\out{<wa-slider>}} When used as a Shiny input, \verb{input$<input_id>} reflects the
-component's current \code{value} value. The Shiny value is returned as a
-numeric value.
+Generated wrapper for the Web Awesome \code{wa-slider} component. When used
+as a Shiny input, \verb{input$<input_id>} reflects the component's current
+\code{value} value. The Shiny value is returned as a numeric value.
 Generated from Web Awesome metadata.
 
 Generated update helper for the Web Awesome \code{wa-slider} component.

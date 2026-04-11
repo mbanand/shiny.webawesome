@@ -35,7 +35,13 @@
   text <- gsub("\\[([^]]+)\\]", "\\1", text, perl = TRUE)
   text <- gsub("(?i)\\btrue\\b", "TRUE", text, perl = TRUE)
   text <- gsub("(?i)\\bfalse\\b", "FALSE", text, perl = TRUE)
-  trimws(gsub("[[:space:]]+", " ", text))
+  text <- trimws(gsub("[[:space:]]+", " ", text))
+
+  if (grepl("^<wa-[[:alnum:]-]+>$", text)) {
+    return(trimws(fallback))
+  }
+
+  text
 }
 
 # Return one concise doc label for a wrapper attribute type.
