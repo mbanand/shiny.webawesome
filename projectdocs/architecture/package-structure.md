@@ -357,6 +357,12 @@ The clean tool supports two levels of cleanup:
 
 Tools listed above are examples and not intended to be exhaustive. Other tools may be implemented as needed, for example: build manifest generation and reporting.
 
+Top-level orchestrators under `tools/` should keep child-tool contracts
+explicit. Generic subprocesses may be handled by exit status alone, but
+repo-owned child tools that can surface advisory warning states should expose
+structured wrappers to their parent orchestrators so warning propagation does
+not depend on parsing human-facing stderr output.
+
 These scripts are used during development but are **not part of the runtime package**.
 
 ---

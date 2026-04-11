@@ -747,6 +747,18 @@ The finalize stage should run the following steps in order:
 Default-mode finalize may continue past selected non-fatal validation findings
 and record them as warnings. Strict finalize should fail on any required gate.
 
+When `finalize` or another repo-owned orchestrator invokes lower-level
+repo-owned tools, it should preserve their semantic status model rather than
+reducing everything to raw subprocess exit status. In practice:
+
+- plain subprocess handling is appropriate for generic commands whose contract
+  is only success or failure
+- repo-owned stage tools that can represent non-fatal advisory outcomes should
+  expose a structured wrapper consumed by the parent orchestrator
+
+This keeps warning propagation deterministic and avoids coupling parent-stage
+logic to human-facing stderr text.
+
 ## Release-Audit Checks in Finalize
 
 The finalize stage owns the local release-audit checks that can be run
@@ -893,6 +905,15 @@ The publish stage should run the following steps in order:
 
 Publish should not rebuild the site itself. It should deploy the `website/`
 artifact already produced and verified by finalize.
+
+As with `finalize`, publish should distinguish between:
+
+- generic child commands that can be handled as plain subprocesses
+- repo-owned child tools or wrappers that have richer pass/warn/fail semantics
+
+When a repo-owned child tool can report advisory conditions without failing,
+publish should consume that state through a structured wrapper rather than
+depending on stderr text or exit status alone.
 
 `--dry-run` should be verification-only even when `--do-tag` or
 `--deploy-site` are also supplied. In that mode, publish should report the

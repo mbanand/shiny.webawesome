@@ -616,6 +616,132 @@ testthat::test_that("package coverage helper degrades to unavailable", {
 })
 
 testthat::test_that(
+  "run_site_step promotes non-strict site warnings into finalize warnings",
+  {
+    context <- list(
+      root = normalizePath(".", winslash = "/", mustWork = TRUE),
+      strict = FALSE
+    )
+
+    result <- .run_site_step(
+      context,
+      stage_runner = function(root,
+                              install,
+                              live_examples,
+                              preview,
+                              strict_link_audit,
+                              verbose) {
+        list(
+          ok = FALSE,
+          warning = TRUE,
+          details = "Could not find `lychee` on PATH.",
+          destination = file.path(root, "website"),
+          audit = list(
+            ok = FALSE,
+            fatal = FALSE
+          )
+        )
+      }
+    )
+
+    testthat::expect_false(result$ok)
+    testthat::expect_equal(result$details, "Could not find `lychee` on PATH.")
+    testthat::expect_equal(result$data$destination, "website")
+    testthat::expect_false(isTRUE(result$data$audit$ok))
+  }
+)
+
+testthat::test_that(
+  paste(
+    "finalize_package records non-strict site warnings",
+    "from structured stage tools"
+  ),
+  {
+    testthat::skip_if_not_installed("digest")
+    testthat::skip_if_not_installed("yaml")
+
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+
+    .write_file(file.path(root, "website", "index.html"), "<html></html>")
+    .write_file(file.path(root, "fake_0.1.0.tar.gz"), "tarball")
+
+    steps <- list(
+      cleanup = list(
+        label = "Cleaning finalize outputs",
+        fatal = TRUE,
+        run = function(context) list(ok = TRUE)
+      ),
+      site = list(
+        label = "Building website",
+        fatal = function(context) isTRUE(context$strict),
+        run = function(context) {
+          .run_site_step(
+            context,
+            stage_runner = function(root,
+                                    install,
+                                    live_examples,
+                                    preview,
+                                    strict_link_audit,
+                                    verbose) {
+              list(
+                ok = FALSE,
+                warning = TRUE,
+                details = paste(
+                  "Could not find `lychee` on PATH for website link auditing.",
+                  "Install a standalone `lychee` binary or set",
+                  "`SHINY_WEBAWESOME_LYCHEE=/path/to/lychee`."
+                ),
+                destination = file.path(root, "website"),
+                audit = list(
+                  ok = FALSE,
+                  fatal = FALSE
+                )
+              )
+            }
+          )
+        }
+      ),
+      build = list(
+        label = "Building package tarball",
+        fatal = TRUE,
+        run = function(context) {
+          list(
+            ok = TRUE,
+            data = list(
+              tarball_path = file.path(context$root, "fake_0.1.0.tar.gz")
+            )
+          )
+        }
+      )
+    )
+
+    result <- .capture_stderr(
+      finalize_package(
+        root = root,
+        strict = FALSE,
+        verbose = FALSE,
+        runner = .fake_git_runner,
+        steps = steps
+      )
+    )
+
+    testthat::expect_equal(result$handoff$status, "warn")
+    testthat::expect_true("site" %in% names(result$warnings))
+    testthat::expect_match(
+      paste(result$warnings$site, collapse = "\n"),
+      "Could not find `lychee` on PATH"
+    )
+
+    handoff <- yaml::read_yaml(
+      file.path(root, "manifests", "finalize", "release-handoff.yaml")
+    )
+    testthat::expect_equal(handoff$status, "warn")
+    testthat::expect_true("site" %in% names(handoff$warnings))
+  }
+)
+
+testthat::test_that(
   "dependency audit reports missing imports and support deps",
   {
     root <- withr::local_tempdir()

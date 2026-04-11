@@ -38,7 +38,13 @@
   ))
   .write_file(file.path(root, "tools", "review_binding_candidates.R"), c(
     "#!/usr/bin/env Rscript",
-    "cat('review invoked\\n')"
+    "review_binding_candidates <- function(root = '.', verbose = FALSE) {",
+    "  list(",
+    "    candidates = list(),",
+    "    watch_list = list(),",
+    "    report_path = 'reports/review/binding-candidates.md'",
+    "  )",
+    "}"
   ))
   .write_file(file.path(root, "tools", "report_components.R"), c(
     "#!/usr/bin/env Rscript",
@@ -50,14 +56,17 @@
   ))
   .write_file(file.path(root, "tools", "finalize_package.R"), c(
     "#!/usr/bin/env Rscript",
-    "args <- commandArgs(trailingOnly = TRUE)",
-    "strict <- if ('--strict' %in% args) 'yes' else 'no'",
-    paste0(
-      "confirmed <- if ('--confirmed-rhub-pass' %in% args && ",
-      "'--confirmed-visual-review' %in% args) 'yes' else 'no'"
-    ),
-    "cat(paste0('finalize strict: ', strict, '\\n'))",
-    "cat(paste0('finalize confirmations: ', confirmed, '\\n'))"
+    "finalize_package <- function(root = '.', strict = FALSE,",
+    "                             confirmed_rhub_pass = FALSE,",
+    "                             confirmed_visual_review = FALSE,",
+    "                             verbose = FALSE) {",
+    "  list(",
+    "    warnings = list(),",
+    "    handoff = list(",
+    "      status = 'pass'",
+    "    )",
+    "  )",
+    "}"
   ))
 
   scripts <- c(
@@ -127,6 +136,10 @@ testthat::test_that("build_package runs build_tools first when present", {
   )
   testthat::expect_match(
     result$stderr,
+    "Review report: reports/review/binding-candidates\\.md"
+  )
+  testthat::expect_match(
+    result$stderr,
     "Running report_components\\.R \\.{2,} Done"
   )
   testthat::expect_match(
@@ -137,6 +150,7 @@ testthat::test_that("build_package runs build_tools first when present", {
     result$stderr,
     "Running finalize_package\\.R \\.{2,} Done"
   )
+  testthat::expect_match(result$stderr, "Finalize status: pass")
 })
 
 testthat::test_that("build_package supports skipping the tool workflow", {
@@ -165,6 +179,10 @@ testthat::test_that("build_package supports skipping the tool workflow", {
   )
   testthat::expect_match(
     result$stderr,
+    "Review report: reports/review/binding-candidates\\.md"
+  )
+  testthat::expect_match(
+    result$stderr,
     "Running report_components\\.R \\.{2,} Done"
   )
   testthat::expect_match(
@@ -175,6 +193,7 @@ testthat::test_that("build_package supports skipping the tool workflow", {
     result$stderr,
     "Running finalize_package\\.R \\.{2,} Done"
   )
+  testthat::expect_match(result$stderr, "Finalize status: pass")
 })
 
 testthat::test_that("build_package passes strict mode only to finalize", {
@@ -184,7 +203,7 @@ testthat::test_that("build_package passes strict mode only to finalize", {
   result <- .run_build_package_script(root, "--finalize-strict")
 
   testthat::expect_equal(result$status, 0)
-  testthat::expect_match(result$stderr, "finalize strict: yes")
+  testthat::expect_match(result$stderr, "Finalize status: pass")
 })
 
 testthat::test_that(
@@ -200,8 +219,80 @@ testthat::test_that(
     ))
 
     testthat::expect_equal(result$status, 0)
-    testthat::expect_match(result$stderr, "finalize strict: yes")
-    testthat::expect_match(result$stderr, "finalize confirmations: yes")
+    testthat::expect_match(result$stderr, "Finalize status: pass")
+  }
+)
+
+testthat::test_that(
+  "build_package marks advisory review candidates as warnings",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+    .write_file(file.path(root, "tools", "review_binding_candidates.R"), c(
+      "#!/usr/bin/env Rscript",
+      "review_binding_candidates <- function(root = '.', verbose = FALSE) {",
+      "  list(",
+      "    candidates = list(list(tag = 'wa-trigger')),",
+      "    watch_list = list(),",
+      "    report_path = 'reports/review/binding-candidates.md'",
+      "  )",
+      "}"
+    ))
+    Sys.chmod(
+      file.path(root, "tools", "review_binding_candidates.R"),
+      mode = "0755"
+    )
+
+    result <- .run_build_package_script(root)
+
+    testthat::expect_equal(result$status, 0)
+    testthat::expect_match(
+      result$stderr,
+      "Running review_binding_candidates\\.R \\.{2,} Warn"
+    )
+    testthat::expect_match(
+      result$stderr,
+      "High-confidence binding review candidates: 1"
+    )
+  }
+)
+
+testthat::test_that(
+  "build_package marks non-strict finalize warnings as warnings",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+    .write_file(file.path(root, "tools", "finalize_package.R"), c(
+      "#!/usr/bin/env Rscript",
+      "finalize_package <- function(root = '.', strict = FALSE,",
+      "                             confirmed_rhub_pass = FALSE,",
+      "                             confirmed_visual_review = FALSE,",
+      "                             verbose = FALSE) {",
+      "  list(",
+      "    warnings = list(site = 'Could not find `lychee` on PATH.'),",
+      "    handoff = list(",
+      "      status = 'warn'",
+      "    )",
+      "  )",
+      "}"
+    ))
+    Sys.chmod(
+      file.path(root, "tools", "finalize_package.R"),
+      mode = "0755"
+    )
+
+    result <- .run_build_package_script(root)
+
+    testthat::expect_equal(result$status, 0)
+    testthat::expect_match(
+      result$stderr,
+      "Running finalize_package\\.R \\.{2,} Warn"
+    )
+    testthat::expect_match(result$stderr, "Finalize status: warn")
+    testthat::expect_match(
+      result$stderr,
+      "Could not find `lychee` on PATH"
+    )
   }
 )
 

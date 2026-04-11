@@ -249,6 +249,54 @@ testthat::test_that("build_site warns on non-strict lychee audit failures", {
   )
 })
 
+testthat::test_that(
+  "build_site_stage reports non-strict lychee audit failures structurally",
+  {
+    testthat::skip_if_not_installed("pkgdown")
+
+    root <- normalizePath(file.path("..", "..", ".."), mustWork = TRUE)
+    build_env <- environment(build_site)
+    old_build <- get(".run_pkgdown_site_build", envir = build_env)
+    old_audit <- get(".audit_website_links", envir = build_env)
+
+    assign(
+      ".run_pkgdown_site_build",
+      function(root, install, preview, verbose) {
+        dir.create(
+          file.path(root, "website"),
+          recursive = TRUE,
+          showWarnings = FALSE
+        )
+        .write_file(file.path(root, "website", "index.html"), "<html></html>")
+        invisible(NULL)
+      },
+      envir = build_env
+    )
+    assign(
+      ".audit_website_links",
+      function(root, destination_dir, strict, runner = NULL) {
+        list(ok = FALSE, details = "lychee warning", fatal = FALSE)
+      },
+      envir = build_env
+    )
+    withr::defer({
+      assign(".run_pkgdown_site_build", old_build, envir = build_env)
+      assign(".audit_website_links", old_audit, envir = build_env)
+    })
+
+    result <- .build_site_stage(
+      root = root,
+      install = FALSE,
+      strict_link_audit = FALSE,
+      verbose = FALSE
+    )
+
+    testthat::expect_false(result$ok)
+    testthat::expect_true(result$warning)
+    testthat::expect_equal(result$details, "lychee warning")
+  }
+)
+
 testthat::test_that("build_site fails on strict lychee audit failures", {
   testthat::skip_if_not_installed("pkgdown")
 

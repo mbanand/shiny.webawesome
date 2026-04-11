@@ -383,6 +383,12 @@ rm(.bootstrap_cli_ui)
 #' validates Netlify authentication, and confirms that the configured site id is
 #' available to the authenticated account without deploying.
 #'
+#' @details
+#' This tool depends on the Netlify CLI plus `NETLIFY_AUTH_TOKEN` for
+#' authentication and `NETLIFY_SITE_ID` for the target site id. When
+#' `NETLIFY_SITE_ID` is unset, the wrapper also accepts a linked local
+#' `.netlify/state.json`.
+#'
 #' CLI entry point:
 #' `./tools/deploy_site_netlify.R --help`
 #'

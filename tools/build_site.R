@@ -694,6 +694,67 @@ rm(.bootstrap_cli_ui)
   result
 }
 
+# Build the site and return a structured stage result.
+.build_site_stage <- function(root,
+                              install = TRUE,
+                              live_examples = FALSE,
+                              preview = FALSE,
+                              strict_link_audit = FALSE,
+                              verbose = interactive()) {
+  pkg <- pkgdown::as_pkgdown(root)
+  destination_dir <- normalizePath(
+    pkg$dst_path,
+    winslash = "/",
+    mustWork = FALSE
+  )
+
+  .reset_site_destination(destination_dir)
+
+  .run_pkgdown_site_build(
+    root = root,
+    install = install,
+    preview = preview,
+    verbose = verbose
+  )
+
+  if (!dir.exists(destination_dir)) {
+    return(list(
+      ok = FALSE,
+      warning = FALSE,
+      details = paste(
+        "pkgdown did not create the configured destination directory:",
+        .strip_root_prefix(destination_dir, root)
+      ),
+      destination = destination_dir
+    ))
+  }
+
+  .copy_tool_docs_to_site(root = root, destination_dir = destination_dir)
+  if (isTRUE(live_examples)) {
+    .publish_live_examples(
+      root = root,
+      destination_dir = destination_dir
+    )
+  } else {
+    .remove_live_examples(destination_dir)
+  }
+
+  audit <- .audit_website_links(
+    root = root,
+    destination_dir = destination_dir,
+    strict = strict_link_audit
+  )
+
+  list(
+    ok = isTRUE(audit$ok),
+    warning = !isTRUE(audit$ok) && !isTRUE(strict_link_audit) &&
+      !isTRUE(audit$fatal),
+    details = audit$details %||% character(),
+    destination = destination_dir,
+    audit = audit
+  )
+}
+
 #' Build the pkgdown documentation site
 #'
 #' Builds the repository documentation website using the checked-in
@@ -709,6 +770,10 @@ rm(.bootstrap_cli_ui)
 #' matching standalone live-example targets under `live-examples/` when
 #' `live_examples = TRUE`. It also audits the built local site links with
 #' `lychee`.
+#'
+#' @details
+#' If `lychee` is not on `PATH`, set
+#' `SHINY_WEBAWESOME_LYCHEE=/path/to/lychee`.
 #'
 #' @param root Repository root directory.
 #' @param install Logical scalar. If `TRUE`, installs the package into a
@@ -756,13 +821,6 @@ build_site <- function(root = ".",
     )
   }
 
-  pkg <- pkgdown::as_pkgdown(root)
-  destination_dir <- normalizePath(
-    pkg$dst_path,
-    winslash = "/",
-    mustWork = FALSE
-  )
-
   ui <- .cli_ui_new()
   if (!isTRUE(verbose)) {
     ui$quiet <- TRUE
@@ -771,50 +829,26 @@ build_site <- function(root = ".",
 
   tryCatch(
     {
-      .reset_site_destination(destination_dir)
-
-      .run_pkgdown_site_build(
+      stage <- .build_site_stage(
         root = root,
         install = install,
+        live_examples = live_examples,
         preview = preview,
+        strict_link_audit = strict_link_audit,
         verbose = verbose
       )
 
-      if (!dir.exists(destination_dir)) {
-        stop(
-          paste(
-            "pkgdown did not create the configured destination directory:",
-            .strip_root_prefix(destination_dir, root)
-          ),
-          call. = FALSE
-        )
-      }
+      destination_dir <- stage$destination
 
-      .copy_tool_docs_to_site(root = root, destination_dir = destination_dir)
-      if (isTRUE(live_examples)) {
-        .publish_live_examples(
-          root = root,
-          destination_dir = destination_dir
-        )
-      } else {
-        .remove_live_examples(destination_dir)
-      }
-
-      audit <- .audit_website_links(
-        root = root,
-        destination_dir = destination_dir,
-        strict = strict_link_audit
-      )
-
-      if (!isTRUE(audit$ok)) {
-        if (isTRUE(strict_link_audit) || isTRUE(audit$fatal)) {
-          .cli_step_fail(ui, details = audit$details)
-          .cli_abort_handled(paste(audit$details, collapse = "\n"))
+      if (!isTRUE(stage$ok)) {
+        if (!isTRUE(stage$warning)) {
+          .cli_step_fail(ui, details = stage$details)
+          .cli_abort_handled(paste(stage$details, collapse = "\n"))
         }
 
         .cli_step_finish(ui, status = "Warn")
         cat(
-          paste(audit$details, collapse = "\n"),
+          paste(stage$details, collapse = "\n"),
           "\n",
           file = stderr(),
           sep = ""
@@ -825,9 +859,9 @@ build_site <- function(root = ".",
           status = "Done",
           comment = .strip_root_prefix(destination_dir, root)
         )
-        if (length(audit$details %||% character()) > 0L) {
+        if (length(stage$details %||% character()) > 0L) {
           cat(
-            paste(audit$details, collapse = "\n"),
+            paste(stage$details, collapse = "\n"),
             "\n",
             file = stderr(),
             sep = ""

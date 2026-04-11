@@ -45,6 +45,9 @@ generated site output under `website/`.
 Fetches the pinned upstream Web Awesome npm package, extracts the browser-ready
 `dist-cdn/` tree, and stores it under `vendor/webawesome/<version>/`.
 
+This tool uses `npm` by default. If the desired executable is not already on
+`PATH`, set `SHINY_WEBAWESOME_NPM` to the command or path that should be used.
+
 By default, the version comes from `dev/webawesome-version.txt`.
 
 ## `prune_webawesome()`
@@ -263,8 +266,8 @@ The Netlify wrapper currently expects these environment variables:
 - `NETLIFY_AUTH_TOKEN`
 - `NETLIFY_SITE_ID`
 
-Place those exports somewhere your maintainer shell session loads before you
-run publish or the deploy helper. A login-shell startup file such as
+Place those exports somewhere your shell session loads before you run publish
+or the deploy helper. A login-shell startup file such as
 `~/.profile` is usually a better fit than placing them late in an interactive
 `~/.bashrc`.
 
@@ -302,7 +305,7 @@ Useful entry points include:
 - [`deploy_site_netlify`](../tool-docs/deploy_site_netlify.html)
 - [`fetch_webawesome`](../tool-docs/fetch_webawesome.html)
 - [`finalize_package`](../tool-docs/finalize_package.html)
-- [`publish_package`](../tool-docs/publish_package.html)
+- [`publish`](../tool-docs/publish.html)
 - [`prune_webawesome`](../tool-docs/prune_webawesome.html)
 - [`report_components`](../tool-docs/report_components.html)
 - [`review_binding_candidates`](../tool-docs/review_binding_candidates.html)

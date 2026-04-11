@@ -80,9 +80,50 @@
   }
 }
 
+.bootstrap_build_site_helpers <- function() {
+  base_dirs <- .finalize_tool_base_dirs
+  candidates <- c(
+    unlist(lapply(base_dirs, function(dir) file.path(dir, "build_site.R"))),
+    unlist(
+      lapply(base_dirs, function(dir) file.path(dir, "tools", "build_site.R"))
+    ),
+    unlist(
+      lapply(base_dirs, function(dir) file.path(dir, "..", "build_site.R"))
+    ),
+    file.path("tools", "build_site.R"),
+    "build_site.R"
+  )
+  existing <- unique(candidates[file.exists(candidates)])
+
+  if (length(existing) > 0L) {
+    build_site_env <- new.env(parent = globalenv())
+    source(existing[[1]], local = build_site_env)
+
+    if (
+      !exists(".build_site_stage", envir = build_site_env, inherits = FALSE)
+    ) {
+      stop(
+        "The `build_site` tool did not provide `.build_site_stage()`.",
+        call. = FALSE
+      )
+    }
+
+    assign(
+      ".build_site_stage",
+      get(".build_site_stage", envir = build_site_env, inherits = FALSE),
+      envir = parent.frame()
+    )
+  }
+}
+
 .bootstrap_cli_ui()
 .bootstrap_integrity_helpers()
-rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
+.bootstrap_build_site_helpers()
+rm(
+  .bootstrap_cli_ui,
+  .bootstrap_integrity_helpers,
+  .bootstrap_build_site_helpers
+)
 
 # Return the CLI usage string for the finalize stage.
 .finalize_package_usage <- function() {
@@ -1314,6 +1355,46 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
   )
 }
 
+# Run the website stage with structured warning semantics.
+.run_site_step <- function(context,
+                           stage_runner = .build_site_stage) {
+  if (!exists(".build_site_stage", mode = "function")) {
+    stop(
+      "The `build_site` stage helpers are required for finalize site builds.",
+      call. = FALSE
+    )
+  }
+
+  stage <- stage_runner(
+    root = context$root,
+    install = TRUE,
+    live_examples = FALSE,
+    preview = FALSE,
+    strict_link_audit = isTRUE(context$strict),
+    verbose = FALSE
+  )
+
+  if (isTRUE(stage$ok) && !isTRUE(stage$warning)) {
+    return(list(
+      ok = TRUE,
+      details = stage$details %||% character(),
+      data = list(
+        destination = .strip_root_prefix(stage$destination, context$root),
+        audit = stage$audit %||% NULL
+      )
+    ))
+  }
+
+  list(
+    ok = FALSE,
+    details = stage$details %||% "Website build failed.",
+    data = list(
+      destination = .strip_root_prefix(stage$destination, context$root),
+      audit = stage$audit %||% NULL
+    )
+  )
+}
+
 # Compute advisory package test coverage for finalize reporting.
 .run_package_coverage_step <- function(root, runner = .run_process) {
   expr <- paste(
@@ -1553,18 +1634,7 @@ rm(.bootstrap_cli_ui, .bootstrap_integrity_helpers)
       label = "Building website",
       fatal = function(context) isTRUE(context$strict),
       run = function(context) {
-        args <- "--quiet"
-        if (isTRUE(context$strict)) {
-          args <- c(args, "--strict-link-audit")
-        }
-
-        .run_command_step(
-          command = "./tools/build_site.R",
-          args = args,
-          root = context$root,
-          runner = context$runner,
-          env = c(SHINY_WEBAWESOME_CLI_MODE = "plain")
-        )
+        .run_site_step(context)
       }
     ),
     url_audit = list(

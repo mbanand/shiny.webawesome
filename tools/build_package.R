@@ -42,6 +42,27 @@
 .bootstrap_cli_ui()
 rm(.bootstrap_cli_ui)
 
+# Source one named helper function from another tool in isolation.
+.load_tool_function <- function(path, name) {
+  env <- new.env(parent = globalenv())
+  source(path, local = env)
+
+  if (!exists(name, envir = env, inherits = FALSE)) {
+    stop(
+      paste0(
+        "Tool `",
+        path,
+        "` did not provide `",
+        name,
+        "()`."
+      ),
+      call. = FALSE
+    )
+  }
+
+  get(name, envir = env, inherits = FALSE)
+}
+
 # Return the CLI usage string for the package build orchestrator.
 .build_package_usage <- function() {
   paste(
@@ -193,6 +214,153 @@ rm(.bootstrap_cli_ui)
     wd = ".",
     env = c(SHINY_WEBAWESOME_CLI_MODE = "plain")
   )
+}
+
+# Run review_binding_candidates with structured warning propagation.
+.run_binding_review_step <- function(step_script) {
+  review_binding_candidates <- .load_tool_function(
+    step_script,
+    "review_binding_candidates"
+  )
+
+  result <- review_binding_candidates(root = ".", verbose = FALSE)
+  candidate_count <- length(result$candidates %||% list())
+
+  list(
+    ok = TRUE,
+    warning = candidate_count > 0L,
+    details = if (candidate_count > 0L) {
+      c(
+        paste0(
+          "High-confidence binding review candidates: ",
+          candidate_count
+        ),
+        paste0("Review report: ", result$report_path %||% "unknown")
+      )
+    } else {
+      paste0("Review report: ", result$report_path %||% "unknown")
+    }
+  )
+}
+
+# Run finalize_package with structured warning propagation.
+.run_finalize_build_step <- function(step_script,
+                                     finalize_strict = FALSE,
+                                     confirmed_rhub_pass = FALSE,
+                                     confirmed_visual_review = FALSE) {
+  finalize_package <- .load_tool_function(step_script, "finalize_package")
+
+  result <- finalize_package(
+    root = ".",
+    strict = finalize_strict,
+    confirmed_rhub_pass = confirmed_rhub_pass,
+    confirmed_visual_review = confirmed_visual_review,
+    verbose = FALSE
+  )
+
+  warning_lines <- unlist(result$warnings %||% list(), use.names = FALSE)
+  handoff_status <- result$handoff$status %||% "pass"
+
+  list(
+    ok = TRUE,
+    warning = identical(handoff_status, "warn"),
+    details = c(
+      paste0("Finalize status: ", handoff_status),
+      warning_lines
+    )
+  )
+}
+
+# Run one package build step using either structured or subprocess handling.
+.execute_package_build_step <- function(step_script,
+                                        ui,
+                                        finalize_strict = FALSE,
+                                        confirmed_rhub_pass = FALSE,
+                                        confirmed_visual_review = FALSE) {
+  basename_step <- basename(step_script)
+
+  if (identical(basename_step, "review_binding_candidates.R")) {
+    result <- tryCatch(
+      .run_binding_review_step(step_script),
+      error = function(condition) {
+        list(
+          ok = FALSE,
+          warning = FALSE,
+          details = conditionMessage(condition)
+        )
+      }
+    )
+
+    if (!isTRUE(result$ok)) {
+      .cli_step_fail(ui, details = result$details)
+      .cli_abort_handled(paste0("Package build step failed: ", step_script))
+    }
+
+    .cli_step_finish(
+      ui,
+      status = if (isTRUE(result$warning)) "Warn" else "Done"
+    )
+    if (length(result$details %||% character()) > 0L) {
+      .emit_child_output(list(stdout = character(), stderr = result$details))
+    }
+
+    return(invisible(result))
+  }
+
+  if (identical(basename_step, "finalize_package.R")) {
+    result <- tryCatch(
+      .run_finalize_build_step(
+        step_script = step_script,
+        finalize_strict = finalize_strict,
+        confirmed_rhub_pass = confirmed_rhub_pass,
+        confirmed_visual_review = confirmed_visual_review
+      ),
+      error = function(condition) {
+        list(
+          ok = FALSE,
+          warning = FALSE,
+          details = conditionMessage(condition)
+        )
+      }
+    )
+
+    if (!isTRUE(result$ok)) {
+      .cli_step_fail(ui, details = result$details)
+      .cli_abort_handled(paste0("Package build step failed: ", step_script))
+    }
+
+    .cli_step_finish(
+      ui,
+      status = if (isTRUE(result$warning)) "Warn" else "Done"
+    )
+    if (length(result$details %||% character()) > 0L) {
+      .emit_child_output(list(stdout = character(), stderr = result$details))
+    }
+
+    return(invisible(result))
+  }
+
+  step_run <- .run_package_build_step(
+    step_script,
+    ui,
+    finalize_strict = finalize_strict,
+    confirmed_rhub_pass = confirmed_rhub_pass,
+    confirmed_visual_review = confirmed_visual_review
+  )
+
+  if (!identical(step_run$status, 0L)) {
+    .cli_step_fail(
+      ui,
+      details = c(step_run$stdout, step_run$stderr)
+    )
+    .cli_abort_handled(paste0("Package build step failed: ", step_script))
+  }
+  if (!isTRUE(ui$fancy)) {
+    .emit_child_output(step_run)
+  }
+  .cli_step_finish(ui, status = "Done")
+
+  invisible(step_run)
 }
 
 # Return generated and stage-owned surfaces that must be absent before a
@@ -361,24 +529,13 @@ run_build_package <- function(args = commandArgs(trailingOnly = TRUE)) {
 
   for (step in steps) {
     .cli_step_start(ui, paste0("Running ", basename(step)))
-    step_run <- .run_package_build_step(
-      step,
-      ui,
+    .execute_package_build_step(
+      step_script = step,
+      ui = ui,
       finalize_strict = options$finalize_strict,
       confirmed_rhub_pass = options$confirmed_rhub_pass,
       confirmed_visual_review = options$confirmed_visual_review
     )
-    if (!identical(step_run$status, 0L)) {
-      .cli_step_fail(
-        ui,
-        details = c(step_run$stdout, step_run$stderr)
-      )
-      .cli_abort_handled(paste0("Package build step failed: ", step))
-    }
-    if (!isTRUE(ui$fancy)) {
-      .emit_child_output(step_run)
-    }
-    .cli_step_finish(ui, status = "Done")
   }
 
   invisible(

@@ -388,6 +388,11 @@ rm(.bootstrap_cli_ui)
 #' If `version` is `NULL`, the version pinned in `dev/webawesome-version.txt`
 #' is used.
 #'
+#' @details
+#' This tool uses `npm` by default. If the desired executable is not already on
+#' `PATH`, set `SHINY_WEBAWESOME_NPM` to the command or path that should be
+#' used for `npm pack`.
+#'
 #' CLI entry point:
 #' `./tools/fetch_webawesome.R --help`
 #'

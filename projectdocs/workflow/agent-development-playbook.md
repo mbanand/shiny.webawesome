@@ -193,6 +193,20 @@ Top-level orchestration should remain explicit:
 - the current package-build orchestration includes an advisory
   `review_binding_candidates.R` step between generate and report
 
+For repo-owned orchestrators, child-command handling should follow a small
+contract split:
+
+- use ordinary subprocess execution for generic commands whose contract is
+  plain success or failure
+- use a repo-owned structured wrapper when the child tool has richer semantic
+  outcomes such as pass, warn, and fail
+
+This rule exists so higher-level orchestrators do not need to infer warning
+state from human-facing stderr text. If a repo-owned child tool can complete
+successfully while still surfacing an advisory condition, that warning state
+should be returned structurally to the parent orchestrator rather than being
+collapsed to exit status alone.
+
 Do not wire package-level `devtools::document()`, `devtools::test()`, or
 `devtools::check()` into `build_package.R` before the generate stage exists and
 produces a real package surface to validate.
