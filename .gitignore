@@ -20,7 +20,6 @@ package-lock.json
 # Build artifacts
 R/generated/
 R/generated_updates/
-/inst/SHINY.WEBAWESOME_VERSION
 /inst/extdata/webawesome/
 /manifests/
 /reports/
