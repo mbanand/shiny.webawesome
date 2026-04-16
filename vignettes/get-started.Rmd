@@ -39,6 +39,16 @@ there are four core areas to know:
 This guide introduces each one briefly and points to the longer-form
 documentation for deeper coverage.
 
+```{r get-started-version}
+library(shiny.webawesome)
+
+wa_version()
+```
+
+```{r get-started-preview}
+wa_button("preview_button", "Preview")
+```
+
 # Basic Wrapper Usage
 
 At the simplest level, you use generated wrappers as ordinary Shiny UI

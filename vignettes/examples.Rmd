@@ -16,6 +16,19 @@ The goal is not to present production-ready applications. Instead, these
 examples show how the generated wrappers, curated Shiny bindings, layout
 helpers, and command/browser-glue tools fit together in practice.
 
+```{r examples-executed}
+library(shiny.webawesome)
+
+webawesomePage(
+  title = "Example preview",
+  wa_container(
+    class = "wa-stack",
+    wa_badge("Preview"),
+    wa_card("Small executable example")
+  )
+)
+```
+
 # Example 1
 
 ## A simple dashboard-style page

@@ -53,11 +53,21 @@ package warning registry, especially the \code{command_layer} key. For option
 details, see the Package Options article.
 }
 \examples{
-\dontrun{
+\donttest{
+library(shiny)
+library(shiny.webawesome)
+
+ui <- webawesomePage(
+  wa_button("Open dialog", id = "open_dialog"),
+  wa_dialog("Dialog body", id = "dialog")
+)
+
 server <- function(input, output, session) {
   observeEvent(input$open_dialog, {
     wa_set_property("dialog", "open", TRUE, session = session)
   })
 }
+
+shinyApp(ui, server)
 }
 }

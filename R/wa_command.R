@@ -93,12 +93,22 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' library(shiny)
+#' library(shiny.webawesome)
+#'
+#' ui <- webawesomePage(
+#'   wa_button("Open dialog", id = "open_dialog"),
+#'   wa_dialog("Dialog body", id = "dialog")
+#' )
+#'
 #' server <- function(input, output, session) {
 #'   observeEvent(input$open_dialog, {
 #'     wa_set_property("dialog", "open", TRUE, session = session)
 #'   })
 #' }
+#'
+#' shinyApp(ui, server)
 #' }
 wa_set_property <- function(id,
                             property,
@@ -161,12 +171,22 @@ wa_set_property <- function(id,
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' library(shiny)
+#' library(shiny.webawesome)
+#'
+#' ui <- webawesomePage(
+#'   wa_button("Show dialog", id = "show_dialog"),
+#'   wa_dialog("Dialog body", id = "dialog")
+#' )
+#'
 #' server <- function(input, output, session) {
 #'   observeEvent(input$show_dialog, {
 #'     wa_call_method("dialog", "show", session = session)
 #'   })
 #' }
+#'
+#' shinyApp(ui, server)
 #' }
 wa_call_method <- function(id,
                            method,

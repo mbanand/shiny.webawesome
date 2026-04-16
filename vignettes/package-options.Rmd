@@ -23,6 +23,19 @@ Each known key is a boolean toggle and should be set to `TRUE` or `FALSE`.
 The package does not currently expose a broad option surface beyond this
 warning registry.
 
+```{r package-options-executed}
+old <- getOption("shiny.webawesome.warnings")
+on.exit(options(shiny.webawesome.warnings = old), add = TRUE)
+
+options(
+  shiny.webawesome.warnings = list(
+    command_layer_debug = TRUE
+  )
+)
+
+getOption("shiny.webawesome.warnings")
+```
+
 # Warning Registry
 
 The `shiny.webawesome.warnings` option is merged with the package's defaults at

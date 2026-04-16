@@ -34,6 +34,10 @@
 ^scratch/
 ^website$
 ^website/
+^vignettes/articles$
+^vignettes/articles/
+^vignettes/shinylive-examples$
+^vignettes/shinylive-examples/
 ^scripts$
 ^scripts/
 ^\.codex$

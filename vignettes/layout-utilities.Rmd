@@ -33,6 +33,16 @@ This is useful because it keeps the page-level setup explicit and avoids
 relying on dependency attachment from an individual component deeper in the UI
 tree.
 
+```{r layout-utilities-executed}
+library(shiny.webawesome)
+
+wa_container(
+  class = "wa-stack",
+  wa_card("First card"),
+  wa_card("Second card")
+)
+```
+
 ```{r wa-page-basic, eval = FALSE}
 library(shiny)
 library(shiny.webawesome)

@@ -54,11 +54,21 @@ especially the \code{command_layer} key. For option details, see the Package
 Options article.
 }
 \examples{
-\dontrun{
+\donttest{
+library(shiny)
+library(shiny.webawesome)
+
+ui <- webawesomePage(
+  wa_button("Show dialog", id = "show_dialog"),
+  wa_dialog("Dialog body", id = "dialog")
+)
+
 server <- function(input, output, session) {
   observeEvent(input$show_dialog, {
     wa_call_method("dialog", "show", session = session)
   })
 }
+
+shinyApp(ui, server)
 }
 }

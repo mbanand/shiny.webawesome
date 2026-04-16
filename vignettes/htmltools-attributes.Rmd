@@ -57,6 +57,17 @@ This works because the generated wrappers return normal HTML tag objects.
 
 ## Example: accessibility and tooltip attributes
 
+```{r htmltools-attrs-executed}
+library(htmltools)
+library(shiny.webawesome)
+
+tagAppendAttributes(
+  wa_button("save_button", "Save"),
+  `aria-label` = "Save current form",
+  title = "Save"
+)
+```
+
 ```{r htmltools-attrs-basic, eval = FALSE}
 library(htmltools)
 library(shiny)
