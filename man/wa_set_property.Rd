@@ -68,6 +68,9 @@ server <- function(input, output, session) {
   })
 }
 
-shinyApp(ui, server)
+app <- shinyApp(ui, server)
+stopifnot(inherits(app, "shiny.appobj"))
+
+# Run `app` interactively to launch this example application.
 }
 }

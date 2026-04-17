@@ -108,7 +108,10 @@
 #'   })
 #' }
 #'
-#' shinyApp(ui, server)
+#' app <- shinyApp(ui, server)
+#' stopifnot(inherits(app, "shiny.appobj"))
+#'
+#' # Run `app` interactively to launch this example application.
 #' }
 wa_set_property <- function(id,
                             property,
@@ -186,7 +189,10 @@ wa_set_property <- function(id,
 #'   })
 #' }
 #'
-#' shinyApp(ui, server)
+#' app <- shinyApp(ui, server)
+#' stopifnot(inherits(app, "shiny.appobj"))
+#'
+#' # Run `app` interactively to launch this example application.
 #' }
 wa_call_method <- function(id,
                            method,
