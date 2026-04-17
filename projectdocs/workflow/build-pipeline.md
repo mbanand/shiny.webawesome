@@ -123,6 +123,26 @@ inst/extdata/webawesome/
 
 Distclean is useful when rebuilding the package from a fresh upstream download.
 
+Because this repository intentionally tracks several generated package and
+prune-owned source-tree surfaces, `clean` and `distclean` can produce a large
+amount of temporary git deletion noise. This is an expected consequence of the
+tracked-generated-surface policy, not a sign that those files should be added
+to `.gitignore`.
+
+In particular, the project intentionally tracks generated or prune-owned
+surfaces such as:
+
+- generated package files under top-level `R/`
+- generated bindings under `inst/bindings/`
+- prune-owned metadata under `inst/extdata/webawesome/`
+- prune-owned runtime assets under `inst/www/wa/`
+- the shipped bundled-version file `inst/SHINY.WEBAWESOME_VERSION`
+
+Developers should therefore treat post-clean dirty states as **transient local
+workflow states**. If work pauses after `clean` or `distclean` and the next
+step is not an immediate rebuild, restore the tracked generated surfaces from
+`HEAD` before committing or handing the branch off.
+
 ---
 
 # Step 2: Fetch
@@ -924,6 +944,11 @@ requested actions as planned but not executed.
 The repository should treat the GitHub `main` branch as a branch that should
 not be left in a broken state. Local development may pass through intermediate
 broken states, but published remote history should not.
+
+This expectation also applies to transient clean/distclean states where tracked
+generated surfaces have been removed locally. Those deletion-heavy states may
+be useful intermediate local workflow states, but they should not be treated
+as desirable long-lived states on `main`.
 
 Accordingly, real publish actions should require the current branch to be
 `main`. A dry run may warn when the branch differs so maintainers can inspect

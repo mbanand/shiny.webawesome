@@ -24,6 +24,7 @@ The following package source areas contain generated files:
 
 - generated component files under `R/` such as `R/wa_select.R`
 - `inst/bindings/`
+- `inst/extdata/webawesome/`
 - `manifests/`
 - `reports/`
 
@@ -36,6 +37,48 @@ exist under:
 
 Runtime assets should not be manually edited unless the intended change is to
 the pruning or bundling logic.
+
+## Tracked generated surfaces
+
+Not all generated files in this repository are disposable local artifacts.
+
+Several generated or prune-owned source-tree surfaces are intentionally
+**tracked in git** because source-tree package builds, remote checks, or later
+pipeline stages rely on them being present without requiring a fresh local
+rebuild first.
+
+Important tracked generated surfaces include:
+
+- generated package files under top-level `R/`
+- generated bindings under `inst/bindings/`
+- prune-owned runtime assets under `inst/www/wa/`
+- the shipped prune-owned version file `inst/SHINY.WEBAWESOME_VERSION`
+- prune-owned generation metadata under `inst/extdata/webawesome/`
+
+The fact that these files are generated does **not** mean they should be
+ignored by `.gitignore`.
+
+Instead, the repository distinguishes:
+
+- tracked generated package/runtime surfaces that are part of the source tree
+- ignored local or diagnostic build outputs such as fetched caches, manifests,
+  reports, and generated website output
+
+This distinction is architectural and should not be blurred by trying to infer
+ownership from whether a file is handwritten.
+
+## Clean-state consequences
+
+Because tracked generated surfaces are part of the repository, running
+`clean` or `distclean` can leave the worktree in a temporarily noisy state
+with many tracked files shown as deleted.
+
+This is expected and does not imply that those files belong in `.gitignore`.
+
+Treat these states as **transient workflow states**, not as desired commit
+states. If work stops after `clean` or `distclean` and you are not about to
+rebuild or intentionally commit regenerated outputs, restore the tracked
+generated surfaces from `HEAD` before committing or switching context.
 
 ---
 

@@ -99,6 +99,22 @@ Regeneration ensures that generated files reflect the current generator logic.
 
 Generated files should not be manually edited.
 
+In this repository, several generated package and prune-owned source-tree
+surfaces are intentionally tracked in git. Examples include generated files
+under top-level `R/`, generated bindings under `inst/bindings/`, prune-owned
+metadata under `inst/extdata/webawesome/`, prune-owned runtime assets under
+`inst/www/wa/`, and `inst/SHINY.WEBAWESOME_VERSION`.
+
+As a result, `clean` or `distclean` can leave the worktree in a temporarily
+noisy state with many tracked files shown as deleted. Treat that as a normal
+transient workflow state, not as evidence that those files should be ignored.
+
+If work pauses after `clean` or `distclean` and you are not about to rebuild
+or intentionally commit regenerated outputs, restore the tracked generated
+surfaces from `HEAD` before committing or leaving the branch in that state.
+Keep the long-lived `main` branch green and buildable rather than preserving
+those transient deletion-heavy states there.
+
 ---
 
 # Updating Web Awesome Versions

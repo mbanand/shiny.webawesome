@@ -271,8 +271,9 @@ inst/extdata/webawesome/
 This metadata is used by the code generator.
 
 It is **not served to browsers** and is only used during code generation.
-It is kept in the repository as build input and excluded from the built
-package via `.Rbuildignore`.
+It is kept in the repository as build input, tracked in git as part of the
+prune-owned source-tree surface, and excluded from the built package via
+`.Rbuildignore`.
 
 ---
 
@@ -356,6 +357,27 @@ The clean tool supports two levels of cleanup:
 * **clean** — removes generated files, pruned runtime assets, and generated
   website output
 * **distclean** — also removes the fetched upstream Web Awesome cache stored under `vendor/`
+
+Because several generated and prune-owned package surfaces are intentionally
+tracked in git, these clean stages can leave the repository in a temporarily
+dirty state with many tracked files shown as deleted. This is expected.
+
+Examples include tracked generated or prune-owned surfaces under:
+
+* top-level `R/`
+* `inst/bindings/`
+* `inst/extdata/webawesome/`
+* `inst/www/wa/`
+* `inst/SHINY.WEBAWESOME_VERSION`
+
+These tracked generated surfaces should not be moved behind new ignored
+subdirectories such as `R/generated/` in order to avoid git noise. The
+package-source layout intentionally keeps handwritten and generated package
+files together in their standard package locations.
+
+When a session ends after `clean` or `distclean` and the developer is not
+about to regenerate or intentionally commit rebuilt outputs, the normal reset
+action is to restore tracked generated surfaces from `HEAD`.
 
 Tools listed above are examples and not intended to be exhaustive. Other tools may be implemented as needed, for example: build manifest generation and reporting.
 

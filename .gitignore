@@ -18,9 +18,6 @@ package-lock.json
 .codex/
 
 # Build artifacts
-R/generated/
-R/generated_updates/
-/inst/extdata/webawesome/
 /manifests/
 /reports/
 /tools/man/
@@ -30,7 +27,7 @@ R/generated_updates/
 /scratch/
 /scripts/
 /website/
-/pkgdown/favicon/
+/.netlify/
 
 # Downloaded upstream files
 /vendor/webawesome/
