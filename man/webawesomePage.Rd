@@ -37,7 +37,7 @@ different role from the upstream component \code{wa_page()}.
 }
 \details{
 This is a package-level Shiny helper that follows Shiny's page-helper model
-(\href{https://rdrr.io/cran/shiny/man/fluidPage.html}{\code{fluidPage()}}, etc.) for
+(\href{https://shiny.posit.co/r/reference/shiny/1.8.0/fluidpage.html}{\code{fluidPage()}}, etc.) for
 dependency attachment and full-page scaffolding.
 It is intentionally separate from the upstream \code{wa-page} component wrapper.
 }
