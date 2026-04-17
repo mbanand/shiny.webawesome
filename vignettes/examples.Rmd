@@ -16,10 +16,13 @@ The goal is not to present production-ready applications. Instead, these
 examples show how the generated wrappers, curated Shiny bindings, layout
 helpers, and command/browser-glue tools fit together in practice.
 
+This small executed example prints the page scaffold emitted by a compact
+`webawesomePage()` composition:
+
 ```{r examples-executed}
 library(shiny.webawesome)
 
-webawesomePage(
+example_page <- webawesomePage(
   title = "Example preview",
   wa_container(
     class = "wa-stack",
@@ -27,6 +30,8 @@ webawesomePage(
     wa_card("Small executable example")
   )
 )
+
+cat(as.character(example_page), sep = "\n")
 ```
 
 # Example 1

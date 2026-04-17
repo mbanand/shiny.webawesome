@@ -36,12 +36,16 @@ tree.
 ```{r layout-utilities-executed}
 library(shiny.webawesome)
 
-wa_container(
+layout_preview <- wa_container(
   class = "wa-stack",
   wa_card("First card"),
   wa_card("Second card")
 )
+
+cat(as.character(layout_preview), sep = "\n")
 ```
+
+Here is the same idea in a minimal full Shiny page scaffold:
 
 ```{r wa-page-basic, eval = FALSE}
 library(shiny)

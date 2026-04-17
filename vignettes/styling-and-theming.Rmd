@@ -31,15 +31,22 @@ classes applied to the `<html>` element. For example:
 In `shiny.webawesome`, the corresponding place to do that is
 `webawesomePage(class = ...)`.
 
+This executed example prints the HTML scaffold emitted by a themed
+`webawesomePage()` call:
+
 ```{r styling-and-theming-executed}
 library(shiny.webawesome)
 
-webawesomePage(
+themed_page <- webawesomePage(
   title = "Themed preview",
   class = "wa-theme-default wa-palette-default wa-brand-blue",
   wa_card("Styled preview")
 )
+
+cat(as.character(themed_page), sep = "\n")
 ```
+
+Here is the corresponding full Shiny page pattern:
 
 ```{r theming-default, eval = FALSE}
 library(shiny)

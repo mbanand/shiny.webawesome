@@ -91,12 +91,14 @@ command/helper layer.
 ```{r shiny-bindings-executed}
 library(shiny.webawesome)
 
-wa_select(
+binding_preview <- wa_select(
   "favorite_letter",
   wa_option("A", value = "a"),
   wa_option("B", value = "b"),
   wa_option("C", value = "c")
 )
+
+cat(as.character(binding_preview), sep = "\n")
 ```
 
 ## Example: durable semantic value

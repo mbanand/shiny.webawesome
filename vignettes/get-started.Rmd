@@ -9,7 +9,6 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
   comment = "#>"
 )
 ```
@@ -46,7 +45,8 @@ wa_version()
 ```
 
 ```{r get-started-preview}
-shiny.webawesome::wa_button("preview_button", "Preview")
+button <- shiny.webawesome::wa_button("preview_button", "Preview")
+cat(as.character(button), sep = "\n")
 ```
 
 # Basic Wrapper Usage

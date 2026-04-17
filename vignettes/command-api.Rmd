@@ -22,10 +22,14 @@ This layer is useful for cases where you need to:
 These helpers are intentionally narrow. They are not meant to grow into a
 second per-component API alongside the generated wrapper surface.
 
+This small executed example prints the emitted `<script>` tag used for inline
+browser glue:
+
 ```{r command-api-executed}
 library(shiny.webawesome)
 
-wa_js("console.log('shiny.webawesome command api vignette');")
+js_helper <- wa_js("console.log('shiny.webawesome command api vignette');")
+cat(as.character(js_helper), sep = "\n")
 ```
 
 # Design Philosophy

@@ -61,12 +61,16 @@ This works because the generated wrappers return normal HTML tag objects.
 library(htmltools)
 library(shiny.webawesome)
 
-tagAppendAttributes(
+button_with_attrs <- tagAppendAttributes(
   wa_button("save_button", "Save"),
   `aria-label` = "Save current form",
   title = "Save"
 )
+
+cat(as.character(button_with_attrs), sep = "\n")
 ```
+
+Here is the same attribute pattern in a minimal Shiny app:
 
 ```{r htmltools-attrs-basic, eval = FALSE}
 library(htmltools)
