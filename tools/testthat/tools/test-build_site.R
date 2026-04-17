@@ -155,6 +155,26 @@ testthat::test_that("build_site validates the repository root", {
   )
 })
 
+testthat::test_that(
+  "lychee excludes generated article package-support help trees",
+  {
+    patterns <- .lychee_exclude_patterns(".")
+    path_patterns <- .lychee_exclude_paths(".")
+
+    testthat::expect_true(any(grepl("/blob/HEAD/", patterns, fixed = TRUE)))
+    testthat::expect_true(
+      any(grepl("articles/.+_files/shiny\\\\.webawesome-", patterns))
+    )
+    testthat::expect_true(any(grepl("NEWS", patterns, fixed = TRUE)))
+    testthat::expect_true(any(grepl("html", patterns, fixed = TRUE)))
+    testthat::expect_true(
+      any(grepl("articles/.+_files/shiny\\\\.webawesome-", path_patterns))
+    )
+    testthat::expect_true(any(grepl("NEWS", path_patterns, fixed = TRUE)))
+    testthat::expect_true(any(grepl("html", path_patterns, fixed = TRUE)))
+  }
+)
+
 testthat::test_that("build_site builds the configured pkgdown destination", {
   testthat::skip_if_not_installed("pkgdown")
   withr::local_envvar(c(SHINY_WEBAWESOME_CLI_MODE = "quiet"))

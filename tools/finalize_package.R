@@ -770,12 +770,29 @@ rm(
   sort(unique(values[nzchar(values)]))
 }
 
+# Read the package name from DESCRIPTION.
+.description_package_name <- function(root) {
+  desc <- read.dcf(file.path(root, "DESCRIPTION"))
+
+  if (!"Package" %in% colnames(desc)) {
+    return(NA_character_)
+  }
+
+  pkg <- trimws(desc[[1, "Package"]])
+  if (!nzchar(pkg)) {
+    return(NA_character_)
+  }
+
+  pkg
+}
+
 # Audit the currently declared package dependencies.
 .audit_dependencies <- function(root) {
+  package_name <- .description_package_name(root)
   imports <- .description_packages(root, "Imports")
   suggests <- .description_packages(root, "Suggests")
-  known <- sort(unique(c(imports, suggests, "shiny.webawesome")))
-  excluded <- .base_recommended_packages()
+  known <- sort(unique(c(imports, suggests, package_name)))
+  excluded <- sort(unique(c(.base_recommended_packages(), package_name)))
 
   package_refs <- setdiff(
     .scan_package_references(.collect_code_files(root, "R")),

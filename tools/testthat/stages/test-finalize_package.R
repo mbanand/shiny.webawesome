@@ -778,6 +778,31 @@ testthat::test_that(
   }
 )
 
+testthat::test_that(
+  "dependency audit ignores references to the current package itself",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+
+    dir.create(file.path(root, "R"), recursive = TRUE, showWarnings = FALSE)
+
+    .write_file(
+      file.path(root, "R", "helper.R"),
+      c(
+        "#' @examples",
+        paste0("#' ", "library(", "fake", ")"),
+        "helper <- function() shiny::isRunning()"
+      )
+    )
+
+    audit <- .audit_dependencies(root)
+
+    testthat::expect_true(audit$ok)
+    testthat::expect_length(audit$details, 0L)
+    testthat::expect_false("fake" %in% audit$data$package_refs)
+  }
+)
+
 testthat::test_that("strict finalize no longer asserts a clean build start", {
   root <- withr::local_tempdir()
   .create_fake_repo(root)

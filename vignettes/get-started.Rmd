@@ -46,7 +46,7 @@ wa_version()
 ```
 
 ```{r get-started-preview}
-wa_button("preview_button", "Preview")
+shiny.webawesome::wa_button("preview_button", "Preview")
 ```
 
 # Basic Wrapper Usage

@@ -506,7 +506,19 @@ rm(.bootstrap_cli_ui)
   repo_url <- "https://github.com/mbanand/shiny.webawesome"
 
   c(
-    paste0("^", .regex_escape(repo_url), "/blob/HEAD/")
+    paste0("^", .regex_escape(repo_url), "/blob/HEAD/"),
+    paste(
+      "^file://.*/articles/.+_files/shiny\\.webawesome-[^/]+/",
+      "(html(?:/|$)|NEWS(?:\\.md)?$)"
+    )
+  )
+}
+
+# Return lychee path patterns that should be ignored for generated site output.
+.lychee_exclude_paths <- function(root) {
+  c(
+    ".*/articles/.+_files/shiny\\.webawesome-[^/]+/html(?:/|$)",
+    ".*/articles/.+_files/shiny\\.webawesome-[^/]+/NEWS(?:\\.md)?$"
   )
 }
 
@@ -620,6 +632,13 @@ rm(.bootstrap_cli_ui)
     }
   }
 
+  exclude_paths <- .lychee_exclude_paths(root)
+  if (length(exclude_paths) > 0L) {
+    for (pattern in exclude_paths) {
+      args <- c(args, "--exclude-path", pattern)
+    }
+  }
+
   if (!is.na(site_url)) {
     args <- c(
       args,
@@ -669,6 +688,7 @@ rm(.bootstrap_cli_ui)
   if (isTRUE(verbose)) {
     result <- pkgdown::build_site(
       pkg = root,
+      examples = FALSE,
       install = install,
       new_process = FALSE,
       preview = preview
@@ -680,6 +700,7 @@ rm(.bootstrap_cli_ui)
     result <- withCallingHandlers(
       pkgdown::build_site(
         pkg = root,
+        examples = FALSE,
         install = install,
         new_process = FALSE,
         preview = preview
