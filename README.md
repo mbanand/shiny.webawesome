@@ -3,11 +3,11 @@
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/shiny.webawesome)](https://CRAN.R-project.org/package=shiny.webawesome)
 [![shiny.webawesome status badge](https://mbanand.r-universe.dev/shiny.webawesome/badges/version)](https://mbanand.r-universe.dev/shiny.webawesome)
+[![R-CMD-check](https://github.com/mbanand/shiny.webawesome/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mbanand/shiny.webawesome/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/mbanand/shiny.webawesome/graph/badge.svg)](https://app.codecov.io/gh/mbanand/shiny.webawesome)
 <!--
 ![CRAN status](https://img.shields.io/badge/CRAN-not%20published-lightgrey)
 -->
-[![R-CMD-check](https://github.com/mbanand/shiny.webawesome/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mbanand/shiny.webawesome/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/mbanand/shiny.webawesome/graph/badge.svg)](https://app.codecov.io/gh/mbanand/shiny.webawesome)
 <!-- badges: end -->
 
 `shiny.webawesome` provides an R and [Shiny](https://shiny.posit.co)
