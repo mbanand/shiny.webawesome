@@ -1,10 +1,11 @@
 # shiny.webawesome <a href="https://www.shiny-webawesome.org"><img src="man/figures/logo.svg" align="right" height="139" alt="shiny.webawesome website" /></a>
 
 <!-- badges: start -->
-<!--
 [![CRAN status](https://www.r-pkg.org/badges/version/shiny.webawesome)](https://CRAN.R-project.org/package=shiny.webawesome)
--->
+[![shiny.webawesome status badge](https://mbanand.r-universe.dev/shiny.webawesome/badges/version)](https://mbanand.r-universe.dev/shiny.webawesome)
+<!--
 ![CRAN status](https://img.shields.io/badge/CRAN-not%20published-lightgrey)
+-->
 [![R-CMD-check](https://github.com/mbanand/shiny.webawesome/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mbanand/shiny.webawesome/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/mbanand/shiny.webawesome/graph/badge.svg)](https://app.codecov.io/gh/mbanand/shiny.webawesome)
 <!-- badges: end -->
@@ -39,6 +40,16 @@ install.packages("shiny.webawesome")
 
 ```r
 pak::pak("shiny.webawesome")
+```
+
+The package is also available from R-universe, which provides binary and
+source packages for the latest development build from this repository:
+
+```r
+install.packages(
+  "shiny.webawesome",
+  repos = c("https://mbanand.r-universe.dev", "https://cloud.r-project.org")
+)
 ```
 
 To install the development version from GitHub, use either of the following:
