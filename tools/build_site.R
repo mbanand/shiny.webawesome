@@ -485,6 +485,83 @@ rm(.bootstrap_cli_ui)
   values[[1]]
 }
 
+# Return the configured site destination path from _pkgdown.yml.
+.configured_site_destination <- function(root) {
+  value <- .pkgdown_top_level_scalar(root, "destination")
+
+  if (is.na(value) || !nzchar(value)) {
+    return(NA_character_)
+  }
+
+  normalizePath(file.path(root, value), winslash = "/", mustWork = FALSE)
+}
+
+# Return the public site URL corresponding to one built destination.
+.site_audit_url <- function(root, destination_dir) {
+  site_url <- .site_url(root)
+  if (is.na(site_url)) {
+    return(NA_character_)
+  }
+
+  configured_destination <- .configured_site_destination(root)
+  if (
+    is.na(configured_destination) ||
+      identical(destination_dir, configured_destination)
+  ) {
+    return(site_url)
+  }
+
+  parent_dir <- dirname(destination_dir)
+  if (!identical(parent_dir, configured_destination)) {
+    return(site_url)
+  }
+
+  paste0(site_url, "/", basename(destination_dir))
+}
+
+# Write a parent redirect when pkgdown builds into a nested destination.
+.write_site_root_redirect <- function(root, destination_dir) {
+  configured_destination <- .configured_site_destination(root)
+
+  if (
+    is.na(configured_destination) ||
+      identical(destination_dir, configured_destination)
+  ) {
+    return(invisible(NULL))
+  }
+
+  parent_dir <- dirname(destination_dir)
+  if (!identical(parent_dir, configured_destination)) {
+    return(invisible(NULL))
+  }
+
+  target <- paste0(basename(destination_dir), "/index.html")
+  lines <- c(
+    "<!doctype html>",
+    "<html lang=\"en\">",
+    "<head>",
+    "  <meta charset=\"utf-8\">",
+    paste0("  <meta http-equiv=\"refresh\" content=\"0; url=", target, "\">"),
+    "  <title>shiny.webawesome site redirect</title>",
+    "</head>",
+    "<body>",
+    paste0(
+      "  <p>Redirecting to <a href=\"",
+      target,
+      "\">",
+      target,
+      "</a>.</p>"
+    ),
+    "</body>",
+    "</html>"
+  )
+
+  dir.create(parent_dir, recursive = TRUE, showWarnings = FALSE)
+  writeLines(lines, file.path(parent_dir, "index.html"))
+
+  invisible(file.path(parent_dir, "index.html"))
+}
+
 # Return the configured site URL from _pkgdown.yml when present.
 .site_url <- function(root) {
   value <- .pkgdown_top_level_scalar(root, "url")
@@ -517,6 +594,7 @@ rm(.bootstrap_cli_ui)
 # Return lychee path patterns that should be ignored for generated site output.
 .lychee_exclude_paths <- function(root) {
   c(
+    ".*/website(?:/[^/]+)?/.+\\.md$",
     ".*/articles/.+_files/shiny\\.webawesome-[^/]+/html(?:/|$)",
     ".*/articles/.+_files/shiny\\.webawesome-[^/]+/NEWS(?:\\.md)?$"
   )
@@ -613,7 +691,7 @@ rm(.bootstrap_cli_ui)
     ))
   }
 
-  site_url <- .site_url(root)
+  site_url <- .site_audit_url(root, destination_dir)
 
   args <- c(
     "--no-progress",
@@ -759,6 +837,8 @@ rm(.bootstrap_cli_ui)
   } else {
     .remove_live_examples(destination_dir)
   }
+
+  .write_site_root_redirect(root = root, destination_dir = destination_dir)
 
   audit <- .audit_website_links(
     root = root,

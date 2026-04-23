@@ -181,6 +181,44 @@ that should enforce a clean release-build starting state. It also passes the
 external strict-finalize confirmation flags through to `finalize_package.R`:
 `--confirmed-rhub-pass` and `--confirmed-visual-review`.
 
+## `update_version.R`
+
+Updates the small handwritten set of package-version and bundled-upstream
+version mirrors across the repository.
+
+This tool is not a package-build stage. It is a narrow maintainer helper used
+when version bookkeeping changes need to stay aligned before later build or
+release-preparation steps run.
+
+The canonical handwritten sources remain:
+
+- `DESCRIPTION` for the package version
+- `dev/webawesome-version.txt` for the bundled upstream Web Awesome version
+
+The helper can then update the known handwritten mirrors, including:
+
+- the latest release heading in `NEWS.md`
+- mirrored version text in `_pkgdown.yml`
+
+At least one of `--package-ver` or `--upstream-ver` is required.
+
+The tool also has explicit safety checks:
+
+- it refuses to run on `main` unless `--allow-main` is supplied
+- it refuses to run with a dirty git worktree unless `--allow-dirty` is
+  supplied
+- `--check` reports the targeted rewrites without writing files
+
+For ordinary maintainer workflow, the expected pattern is:
+
+1. bump `DESCRIPTION`
+2. add the new top `NEWS.md` heading manually using `# Version x.y.z`
+3. run `./tools/update_version.R --package-ver <version>`
+
+When the bundled upstream version changes, run:
+
+`./tools/update_version.R --upstream-ver <version>`
+
 # Website Tool
 
 ## `build_site.R`
@@ -310,6 +348,7 @@ Useful entry points include:
 - [`report_components`](../tool-docs/report_components.html)
 - [`review_binding_candidates`](../tool-docs/review_binding_candidates.html)
 - [`test_tools`](../tool-docs/test_tools.html)
+- [`update_version`](../tool-docs/update_version.html)
 
 These generated docs are useful when you need the CLI and function-level
 details for a specific tool.

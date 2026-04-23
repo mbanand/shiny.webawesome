@@ -10,13 +10,13 @@ development:
 home:
   title: shiny.webawesome
   description: >-
-    Shiny bindings for Web Awesome components. Package version 1.0.0; bundled
-    upstream Web Awesome version 3.5.0.
+    Shiny bindings for Web Awesome components. Package version 1.0.0.9000;
+    bundled upstream Web Awesome version 3.5.0.
   strip:
     title: shiny.webawesome
     subtitle: >-
-      Shiny bindings for Web Awesome components. Package 1.0.0 with bundled
-      Web Awesome 3.5.0.
+      Shiny bindings for Web Awesome components. Package 1.0.0.9000 with
+      bundled Web Awesome 3.5.0.
   links:
     - text: GitHub repository
       href: https://github.com/mbanand/shiny.webawesome

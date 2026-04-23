@@ -172,6 +172,36 @@ testthat::test_that(
     )
     testthat::expect_true(any(grepl("NEWS", path_patterns, fixed = TRUE)))
     testthat::expect_true(any(grepl("html", path_patterns, fixed = TRUE)))
+    testthat::expect_true(any(grepl("website", path_patterns, fixed = TRUE)))
+    testthat::expect_true(any(grepl("\\\\.md\\$", path_patterns)))
+  }
+)
+
+testthat::test_that(
+  "site audit URL appends nested dev destination segments",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+
+    configured <- normalizePath(
+      file.path(root, "website"),
+      winslash = "/",
+      mustWork = FALSE
+    )
+    nested <- normalizePath(
+      file.path(root, "website", "dev"),
+      winslash = "/",
+      mustWork = FALSE
+    )
+
+    testthat::expect_identical(
+      .site_audit_url(root, configured),
+      "https://example.com"
+    )
+    testthat::expect_identical(
+      .site_audit_url(root, nested),
+      "https://example.com/dev"
+    )
   }
 )
 
@@ -180,31 +210,42 @@ testthat::test_that("build_site builds the configured pkgdown destination", {
   withr::local_envvar(c(SHINY_WEBAWESOME_CLI_MODE = "quiet"))
 
   root <- normalizePath(file.path("..", "..", ".."), mustWork = TRUE)
+  destination_dir <- normalizePath(
+    pkgdown::as_pkgdown(root)$dst_path,
+    winslash = "/",
+    mustWork = FALSE
+  )
   dir.create(
-    file.path(root, "website", "live-examples", "stale"),
+    file.path(destination_dir, "live-examples", "stale"),
     recursive = TRUE,
     showWarnings = FALSE
   )
 
   build_env <- environment(build_site)
   old_build <- get(".run_pkgdown_site_build", envir = build_env)
+  local_destination_dir <- destination_dir
+  # nolint start: object_usage_linter.
   assign(
     ".run_pkgdown_site_build",
     function(root, install, preview, verbose) {
       dir.create(
-        file.path(root, "website"),
+        local_destination_dir,
         recursive = TRUE,
         showWarnings = FALSE
       )
-      .write_file(file.path(root, "website", "index.html"), "<html></html>")
       .write_file(
-        file.path(root, "website", "pkgdown.yml"),
+        file.path(local_destination_dir, "index.html"),
+        "<html></html>"
+      )
+      .write_file(
+        file.path(local_destination_dir, "pkgdown.yml"),
         "destination: website"
       )
       invisible(NULL)
     },
     envir = build_env
   )
+  # nolint end
   withr::defer(
     assign(".run_pkgdown_site_build", old_build, envir = build_env)
   )
@@ -213,38 +254,96 @@ testthat::test_that("build_site builds the configured pkgdown destination", {
     build_site(root = root, install = FALSE, verbose = FALSE)
   )
 
-  testthat::expect_equal(result$destination, "website")
-  testthat::expect_true(file.exists(file.path(root, "website", "index.html")))
-  testthat::expect_true(file.exists(file.path(root, "website", "pkgdown.yml")))
+  testthat::expect_equal(
+    result$destination,
+    sub(paste0("^", root, "/?"), "", destination_dir)
+  )
+  testthat::expect_true(file.exists(file.path(destination_dir, "index.html")))
+  testthat::expect_true(file.exists(file.path(destination_dir, "pkgdown.yml")))
   testthat::expect_true(
-    file.exists(file.path(root, "website", "tool-docs", "build_site.html"))
+    file.exists(file.path(destination_dir, "tool-docs", "build_site.html"))
   )
   testthat::expect_false(
-    dir.exists(file.path(root, "website", "live-examples"))
+    dir.exists(file.path(destination_dir, "live-examples"))
   )
 })
+
+testthat::test_that(
+  "build_site writes a parent redirect for nested dev destinations",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+    destination_dir <- normalizePath(
+      file.path(root, "website", "dev"),
+      winslash = "/",
+      mustWork = FALSE
+    )
+
+    dir.create(destination_dir, recursive = TRUE, showWarnings = FALSE)
+    .write_file(file.path(destination_dir, "index.html"), "<html>dev</html>")
+
+    .write_site_root_redirect(root = root, destination_dir = destination_dir)
+
+    root_index <- file.path(root, "website", "index.html")
+    testthat::expect_true(file.exists(root_index))
+    testthat::expect_match(
+      paste(readLines(root_index, warn = FALSE), collapse = "\n"),
+      "dev/index.html"
+    )
+  }
+)
+
+testthat::test_that(
+  "build_site skips the parent redirect for base destinations",
+  {
+    root <- withr::local_tempdir()
+    .create_fake_repo(root)
+    destination_dir <- normalizePath(
+      file.path(root, "website"),
+      winslash = "/",
+      mustWork = FALSE
+    )
+
+    .write_site_root_redirect(root = root, destination_dir = destination_dir)
+
+    testthat::expect_false(
+      file.exists(file.path(root, "website", "index.html"))
+    )
+  }
+)
 
 testthat::test_that("build_site warns on non-strict lychee audit failures", {
   testthat::skip_if_not_installed("pkgdown")
 
   root <- normalizePath(file.path("..", "..", ".."), mustWork = TRUE)
+  destination_dir <- normalizePath(
+    pkgdown::as_pkgdown(root)$dst_path,
+    winslash = "/",
+    mustWork = FALSE
+  )
   build_env <- environment(build_site)
   old_build <- get(".run_pkgdown_site_build", envir = build_env)
   old_audit <- get(".audit_website_links", envir = build_env)
+  local_destination_dir <- destination_dir
 
+  # nolint start: object_usage_linter.
   assign(
     ".run_pkgdown_site_build",
     function(root, install, preview, verbose) {
       dir.create(
-        file.path(root, "website"),
+        local_destination_dir,
         recursive = TRUE,
         showWarnings = FALSE
       )
-      .write_file(file.path(root, "website", "index.html"), "<html></html>")
+      .write_file(
+        file.path(local_destination_dir, "index.html"),
+        "<html></html>"
+      )
       invisible(NULL)
     },
     envir = build_env
   )
+  # nolint end
   assign(
     ".audit_website_links",
     function(root, destination_dir, strict, runner = NULL) {
@@ -275,23 +374,34 @@ testthat::test_that(
     testthat::skip_if_not_installed("pkgdown")
 
     root <- normalizePath(file.path("..", "..", ".."), mustWork = TRUE)
+    destination_dir <- normalizePath(
+      pkgdown::as_pkgdown(root)$dst_path,
+      winslash = "/",
+      mustWork = FALSE
+    )
     build_env <- environment(build_site)
     old_build <- get(".run_pkgdown_site_build", envir = build_env)
     old_audit <- get(".audit_website_links", envir = build_env)
+    local_destination_dir <- destination_dir
 
+    # nolint start: object_usage_linter.
     assign(
       ".run_pkgdown_site_build",
       function(root, install, preview, verbose) {
         dir.create(
-          file.path(root, "website"),
+          local_destination_dir,
           recursive = TRUE,
           showWarnings = FALSE
         )
-        .write_file(file.path(root, "website", "index.html"), "<html></html>")
+        .write_file(
+          file.path(local_destination_dir, "index.html"),
+          "<html></html>"
+        )
         invisible(NULL)
       },
       envir = build_env
     )
+    # nolint end
     assign(
       ".audit_website_links",
       function(root, destination_dir, strict, runner = NULL) {
@@ -321,23 +431,34 @@ testthat::test_that("build_site fails on strict lychee audit failures", {
   testthat::skip_if_not_installed("pkgdown")
 
   root <- normalizePath(file.path("..", "..", ".."), mustWork = TRUE)
+  destination_dir <- normalizePath(
+    pkgdown::as_pkgdown(root)$dst_path,
+    winslash = "/",
+    mustWork = FALSE
+  )
   build_env <- environment(build_site)
   old_build <- get(".run_pkgdown_site_build", envir = build_env)
   old_audit <- get(".audit_website_links", envir = build_env)
+  local_destination_dir <- destination_dir
 
+  # nolint start: object_usage_linter.
   assign(
     ".run_pkgdown_site_build",
     function(root, install, preview, verbose) {
       dir.create(
-        file.path(root, "website"),
+        local_destination_dir,
         recursive = TRUE,
         showWarnings = FALSE
       )
-      .write_file(file.path(root, "website", "index.html"), "<html></html>")
+      .write_file(
+        file.path(local_destination_dir, "index.html"),
+        "<html></html>"
+      )
       invisible(NULL)
     },
     envir = build_env
   )
+  # nolint end
   assign(
     ".audit_website_links",
     function(root, destination_dir, strict, runner = NULL) {
